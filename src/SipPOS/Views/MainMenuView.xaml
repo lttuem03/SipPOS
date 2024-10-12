@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="SipPOS.Views.MainMenuView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SipPOS.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <!---->
+    <StackPanel Orientation="Vertical"
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center">
+        <!--Navigation buttons-->
+        <StackPanel Orientation="Horizontal" 
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center">
+            <!--toCreateOrderViewButton-->
+            <Button x:Name="toCreateOrderViewButton"
+                    Content="Bán hàng"/>
+
+            <!--toInventoryViewButton-->
+            <Button x:Name="toInventoryViewButton"
+                    Content="Kho"/>
+
+            <!--toStaffManagementViewButton-->
+            <Button x:Name="toStaffManagementViewButton"
+                    Content="Nhân sự"/>
+
+            <!--toFinanceViewButton-->
+            <Button x:Name="toFinanceViewButton"
+                    Content="Doanh thu"/>
+
+            <!--toStoreSettingsViewButton-->
+            <Button x:Name="toStoreSettingsViewButton"
+                    Content="Thiết đặt"/>
+        </StackPanel>
+
+        <!--Logout button-->
+        <Button x:Name="logoutButton"
+                Content="Đăng xuất"/>
+    </StackPanel>
+
+    
+</Page>

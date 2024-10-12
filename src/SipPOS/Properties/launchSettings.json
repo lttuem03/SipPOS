@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SipPOS (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "SipPOS (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
