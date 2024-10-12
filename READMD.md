@@ -1,1 +1,0 @@
-# SipPOS: Simple Point-of-Service and Store management for F&B stores
