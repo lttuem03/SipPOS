@@ -36,14 +36,14 @@ namespace SipPOS.Views
         public ProductManagementView()
         {
             ViewModel = App.GetService<ProductViewModel>();
-            ViewModel.Get();
-            Debug.WriteLine("ProductView");
+            ViewModel.GetAll();
+            Debug.WriteLine("ProductManagementView");
             InitializeComponent();
         }
 
         public void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.Get();
+            ViewModel.GetAll();
         }
 
         public async void AddButton_Click(object sender, RoutedEventArgs e)
@@ -117,7 +117,7 @@ namespace SipPOS.Views
                 CreatedBy = "Admin"
             };
 
-            ViewModel.Add(newProduct);
+            ViewModel.Insert(newProduct);
 
             DialogProductNameTextBox.Text = string.Empty;
             DialogProductCategoryComboBox.SelectedIndex = -1;
@@ -129,13 +129,5 @@ namespace SipPOS.Views
             AddProductDialog.Hide();
         }
 
-        private List<Product> GetProducts()
-        {
-            return new List<Product>
-            {
-                new Product { Id = 1, Name = "Product A", Status = "Hoạt động", CreatedAt = DateTime.Now, CreatedBy = "Admin" },
-                new Product { Id = 2, Name = "Product B", Status = "Không hoạt động", CreatedAt = DateTime.Now, CreatedBy = "User" }
-            };
-        }
     }
 }

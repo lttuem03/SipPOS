@@ -19,11 +19,11 @@ public partial class ProductViewModel : ObservableRecipient
         _productService = productService;
     }
 
-    public async void Get()
+    public void GetAll()
     {
         Products.Clear();
 
-        var data = await _productService.GetAll();
+        var data = _productService.GetAll();
 
         foreach (var item in data)
         {
@@ -31,9 +31,9 @@ public partial class ProductViewModel : ObservableRecipient
         }
     }
 
-    public async void Add(Product product)
+    public void Insert(Product product)
     {
-        await _productService.Insert(product);
+        _productService.Insert(product);
     }
 
 }

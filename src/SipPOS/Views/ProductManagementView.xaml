@@ -36,8 +36,8 @@
                 <TextBlock Text="Trạng thái" />
                 <ComboBox x:Name="StatusFilterComboBox" Width="200" PlaceholderText="Chọn trạng thái">
                     <ComboBoxItem Content="Tất cả" IsSelected="True" />
-                    <ComboBoxItem Content="Có sẵn" />
-                    <ComboBoxItem Content="Không có sẵn" />
+                    <ComboBoxItem Content="Available" />
+                    <ComboBoxItem Content="Unavailable" />
                 </ComboBox>
             </StackPanel>
         </StackPanel>
@@ -113,7 +113,6 @@
                     <ComboBoxItem Content="Đồ gia dụng" />
                     <ComboBoxItem Content="Thời trang" />
                 </ComboBox>
-
 
                 <TextBlock Text="Trạng thái" Margin="10,10,0,0"/>
                 <ComboBox x:Name="DialogProductStatusComboBox" PlaceholderText="Chọn trạng thái">
