@@ -26,14 +26,14 @@ namespace SipPOS.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ProductView : Page
+    public sealed partial class ProductManagementView : Page
     {
         public ProductViewModel ViewModel
         {
             get;
         }
 
-        public ProductView()
+        public ProductManagementView()
         {
             ViewModel = App.GetService<ProductViewModel>();
             ViewModel.Get();

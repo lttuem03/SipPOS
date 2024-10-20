@@ -22,6 +22,8 @@ using SipPOS.Views;
 using Windows.UI.ApplicationSettings;
 using SipPOS.Services;
 using SipPOS.Services.Impl;
+using SipPOS.DataAccess.Implementations;
+using SipPOS.DataAccess.Interfaces;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -46,12 +48,17 @@ namespace SipPOS
             UseContentRoot(AppContext.BaseDirectory).
             ConfigureServices((context, services) =>
             {
+                // Dao
+                services.AddSingleton<IProductDao, MockProductDao>();
+                services.AddSingleton<ICategoryDao, MockCategoryDao>();
+
                 // Services
                 services.AddSingleton<IProductService, ProductService>();
+                services.AddSingleton<ICategoryService, ICategoryService>();
 
                 // Views and ViewModels
                 services.AddTransient<ProductViewModel>();
-                services.AddTransient<ProductView>();
+                services.AddTransient<ProductManagementView>();
             }).
             Build();
         }

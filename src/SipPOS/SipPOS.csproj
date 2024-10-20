@@ -17,16 +17,15 @@
 		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 	</PropertyGroup>
 	<ItemGroup>
-	  <Compile Remove="Converters\**" />
-	  <EmbeddedResource Remove="Converters\**" />
-	  <None Remove="Converters\**" />
-	  <Page Remove="Converters\**" />
+		<Compile Remove="Converters\**" />
+		<EmbeddedResource Remove="Converters\**" />
+		<None Remove="Converters\**" />
+		<Page Remove="Converters\**" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Remove="Views\CategoriesView.xaml" />
-		<None Remove="Views\Controls\PaginationControl.xaml" />
+		<None Remove="Views\CategoryManagementView.xaml" />
 		<None Remove="Views\MainMenuView.xaml" />
-		<None Remove="Views\ProductView.xaml" />
+		<None Remove="Views\ProductManagementView.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -58,12 +57,12 @@
 		<ProjectCapability Include="Msix" />
 	</ItemGroup>
 	<ItemGroup>
-		<Page Update="Views\ProductView.xaml">
-		  <Generator>MSBuild:Compile</Generator>
+		<Page Update="Views\ProductManagementView.xaml">
+			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>
 	<ItemGroup>
-		<Page Update="Views\CategoriesView.xaml">
+		<Page Update="Views\CategoryManagementView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>
@@ -82,11 +81,6 @@
 		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
 	</PropertyGroup>
 	<ItemGroup>
-	  <PRIResource Remove="Converters\**" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="Views\Controls\PaginationControl.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
+		<PRIResource Remove="Converters\**" />
 	</ItemGroup>
 </Project>

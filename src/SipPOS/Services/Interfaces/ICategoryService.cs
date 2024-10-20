@@ -7,12 +7,12 @@ namespace SipPOS.Services;
 // Remove this class once your pages/features are using your data.
 public interface ICategoryService
 {
-    Task<IEnumerable<Category>> Get();
+    IEnumerable<Category> GetAll();
 
-    Task<Category?> Get(int id);
+    Category GetById(int id);
 
-    Task<Category> Add(Category product);
+    Category Insert(Category product);
 
-    Task<Category> Update(Category product);
+    Category UpdateById(Category product);
 
 }

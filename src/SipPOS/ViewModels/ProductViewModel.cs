@@ -23,7 +23,7 @@ public partial class ProductViewModel : ObservableRecipient
     {
         Products.Clear();
 
-        var data = await _productService.Get();
+        var data = await _productService.GetAll();
 
         foreach (var item in data)
         {
@@ -33,7 +33,7 @@ public partial class ProductViewModel : ObservableRecipient
 
     public async void Add(Product product)
     {
-        await _productService.Add(product);
+        await _productService.Insert(product);
     }
 
 }
