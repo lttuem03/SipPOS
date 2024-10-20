@@ -26,14 +26,14 @@ namespace SipPOS.Views
     /// </summary>
     public sealed partial class CategoryManagementView : Page
     {
-        public CategoryViewModel ViewModel
+        public CategoryManagementViewModel ViewModel
         {
             get;
         }
 
         public CategoryManagementView()
         {
-            ViewModel = App.GetService<CategoryViewModel>();
+            ViewModel = App.GetService<CategoryManagementViewModel>();
             ViewModel.GetAll();
             Debug.WriteLine("CategoryManagementView");
             InitializeComponent();

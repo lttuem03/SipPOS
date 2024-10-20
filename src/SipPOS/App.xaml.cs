@@ -57,9 +57,9 @@ namespace SipPOS
                 services.AddSingleton<ICategoryService, CategoryService>();
 
                 // Views and ViewModels
-                services.AddTransient<CategoryViewModel>();
+                services.AddTransient<CategoryManagementViewModel>();
                 services.AddTransient<CategoryManagementView>();
-                services.AddTransient<ProductViewModel>();
+                services.AddTransient<ProductManagementViewModel>();
                 services.AddTransient<ProductManagementView>();
             }).
             Build();

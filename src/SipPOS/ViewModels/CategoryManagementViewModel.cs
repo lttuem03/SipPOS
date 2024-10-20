@@ -6,7 +6,7 @@ using SipPOS.Services;
 
 namespace SipPOS.ViewModels;
 
-public partial class CategoryViewModel : ObservableRecipient
+public partial class CategoryManagementViewModel : ObservableRecipient
 {
     private readonly ICategoryService _categoryService;
 
@@ -14,7 +14,7 @@ public partial class CategoryViewModel : ObservableRecipient
 
     public ObservableCollection<Category> SelectedCategories { get; } = new ObservableCollection<Category>();
 
-    public CategoryViewModel(ICategoryService categoryService)
+    public CategoryManagementViewModel(ICategoryService categoryService)
     {
         _categoryService = categoryService;
     }

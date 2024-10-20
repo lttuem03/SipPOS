@@ -6,7 +6,7 @@ using SipPOS.Services;
 
 namespace SipPOS.ViewModels;
 
-public partial class ProductViewModel : ObservableRecipient
+public partial class ProductManagementViewModel : ObservableRecipient
 {
     private readonly IProductService _productService;
 
@@ -14,7 +14,7 @@ public partial class ProductViewModel : ObservableRecipient
 
     public ObservableCollection<Product> SelectedProducts { get; } = new ObservableCollection<Product>();
 
-    public ProductViewModel(IProductService productService)
+    public ProductManagementViewModel(IProductService productService)
     {
         _productService = productService;
     }
