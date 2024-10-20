@@ -15,6 +15,13 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using SipPOS.ViewModels;
+using SipPOS.Views;
+using Windows.UI.ApplicationSettings;
+using SipPOS.Services;
+using SipPOS.Services.Impl;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -33,6 +40,36 @@ namespace SipPOS
         public App()
         {
             this.InitializeComponent();
+
+            Host = Microsoft.Extensions.Hosting.Host.
+            CreateDefaultBuilder().
+            UseContentRoot(AppContext.BaseDirectory).
+            ConfigureServices((context, services) =>
+            {
+                // Services
+                services.AddSingleton<IProductService, ProductService>();
+
+                // Views and ViewModels
+                services.AddTransient<ProductViewModel>();
+                services.AddTransient<ProductView>();
+            }).
+            Build();
+        }
+
+        public IHost Host
+        {
+            get;
+        }
+
+        public static T GetService<T>()
+            where T : class
+        {
+            if ((App.Current as App)!.Host.Services.GetService(typeof(T)) is not T service)
+            {
+                throw new ArgumentException($"{typeof(T)} needs to be registered in ConfigureServices within App.xaml.cs.");
+            }
+
+            return service;
         }
 
         /// <summary>
