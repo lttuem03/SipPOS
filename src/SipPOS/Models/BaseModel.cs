@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SipPOS.Models
 {
-    public abstract class Model
+    public abstract class BaseModel
     {
         public long Id
         {
@@ -28,7 +28,7 @@ namespace SipPOS.Models
             get; set;
         }
 
-        public DateTime UpdatedAt
+        public DateTime? UpdatedAt
         {
             get; set;
         }

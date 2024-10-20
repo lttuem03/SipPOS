@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SipPOS.Models;
 
-public class Product : Model
+public class Product : BaseModel
 {
 
     public string Name

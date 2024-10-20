@@ -1,6 +1,6 @@
 ﻿namespace SipPOS.Models;
 
-public class Category: Model
+public class Category: BaseModel
 {
     public string Name
     {

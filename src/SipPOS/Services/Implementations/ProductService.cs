@@ -2,43 +2,47 @@
 using SipPOS.Models;
 using SipPOS.Services;
 using SipPOS.DataAccess.Interfaces;
+using AutoMapper;
+using SipPOS.DataTransfer;
 
 namespace SipPOS.Services.Impl;
 
 public class ProductService : IProductService
 {
-   
-    private IProductDao _productDao;
+
+    private IProductDao productDao;
+    private readonly IMapper mapper;
 
 
-    public ProductService(IProductDao productDao)
+    public ProductService(IProductDao productDao, IMapper mapper)
     {
-        _productDao = productDao;
+        this.productDao = productDao;
+        this.mapper = mapper;
     }
 
-    public IEnumerable<Product> GetAll()
+    public IEnumerable<ProductDto> GetAll()
     {
-        return _productDao.GetAll();
+        return mapper.Map<IEnumerable<ProductDto>>(productDao.GetAll());
     }
 
-    public Product GetById(int id)
+    public ProductDto GetById(int id)
     {
-        return _productDao.GetById(id);
+        return mapper.Map<ProductDto>(productDao.GetById(id));
     }
 
-    public Product Insert(Product product)
+    public ProductDto Insert(ProductDto product)
     {
-        return _productDao.Insert(product);
+        return mapper.Map<ProductDto>(productDao.Insert(mapper.Map<Product>(product)));
     }
 
-    public Product UpdateById(Product product)
+    public ProductDto UpdateById(ProductDto product)
     {
-        return _productDao.UpdateById(product);
+        return mapper.Map<ProductDto>(productDao.UpdateById(mapper.Map<Product>(product)));
     }
 
-    public Product DeleteById(int id)
+    public ProductDto DeleteById(int id)
     {
-        return _productDao.DeleteById(id);
+        return mapper.Map<ProductDto>(productDao.DeleteById(id));
     }
 
 }

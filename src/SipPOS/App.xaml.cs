@@ -61,6 +61,9 @@ namespace SipPOS
                 services.AddTransient<CategoryManagementView>();
                 services.AddTransient<ProductManagementViewModel>();
                 services.AddTransient<ProductManagementView>();
+
+                //Add AutoMapper
+                services.AddAutoMapper(typeof(App).Assembly);
             }).
             Build();
         }

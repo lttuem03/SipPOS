@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using SipPOS.Models;
 using SipPOS.Services;
+using SipPOS.DataTransfer;
 
 namespace SipPOS.ViewModels;
 
@@ -10,9 +11,9 @@ public partial class ProductManagementViewModel : ObservableRecipient
 {
     private readonly IProductService _productService;
 
-    public ObservableCollection<Product> Products { get; } = new ObservableCollection<Product>();
+    public ObservableCollection<ProductDto> Products { get; } = new ObservableCollection<ProductDto>();
 
-    public ObservableCollection<Product> SelectedProducts { get; } = new ObservableCollection<Product>();
+    public ObservableCollection<ProductDto> SelectedProducts { get; } = new ObservableCollection<ProductDto>();
 
     public ProductManagementViewModel(IProductService productService)
     {
@@ -31,9 +32,9 @@ public partial class ProductManagementViewModel : ObservableRecipient
         }
     }
 
-    public void Insert(Product product)
+    public void Insert(ProductDto productDto)
     {
-        _productService.Insert(product);
+        _productService.Insert(productDto);
     }
 
 }

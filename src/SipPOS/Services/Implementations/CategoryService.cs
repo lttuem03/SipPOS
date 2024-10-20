@@ -1,35 +1,39 @@
 ﻿using SipPOS.Models;
 using SipPOS.Services;
 using SipPOS.DataAccess.Interfaces;
+using AutoMapper;
+using SipPOS.DataTransfer;
 
 namespace SipPOS.Services.Impl;
 
 public class CategoryService : ICategoryService
 {
-    private readonly ICategoryDao _categoryDao;
+    private readonly ICategoryDao categoryDao;
+    private readonly IMapper mapper;
 
-    public CategoryService(ICategoryDao categoryDao)
+    public CategoryService(ICategoryDao categoryDao, IMapper mapper)
     {
-        _categoryDao = categoryDao;
+        this.categoryDao = categoryDao;
+        this.mapper = mapper;
     }
 
-    public IEnumerable<Category> GetAll()
+    public IEnumerable<CategoryDto> GetAll()
     {
-        return _categoryDao.GetAll();
+        return mapper.Map<IEnumerable<CategoryDto>>(categoryDao.GetAll());
     }
 
-    public Category GetById(int id)
+    public CategoryDto GetById(int id)
     {
-        return _categoryDao.GetById(id);
+        return mapper.Map<CategoryDto>(categoryDao.GetById(id));
     }
 
-    public Category Insert(Category product)
+    public CategoryDto Insert(CategoryDto productDto)
     {
-        return _categoryDao.Insert(product);
+        return mapper.Map<CategoryDto>(categoryDao.Insert(mapper.Map<Category>(productDto)));
     }
 
-    public Category UpdateById(Category product)
+    public CategoryDto UpdateById(CategoryDto productDto)
     {
-        return _categoryDao.UpdateById(product);
+        return mapper.Map<CategoryDto>(categoryDao.UpdateById(mapper.Map<Category>(productDto)));
     }
 }

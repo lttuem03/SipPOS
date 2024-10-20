@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using SipPOS.DataTransfer;
 using SipPOS.Models;
 using SipPOS.ViewModels;
 using System;
@@ -74,11 +75,11 @@ namespace SipPOS.Views
         {
             var checkBox = sender as CheckBox;
 
-            var category = (Category)checkBox.DataContext;
+            var categoryDto = (CategoryDto)checkBox.DataContext;
 
-            if (!ViewModel.SelectedCategories.Contains(category))
+            if (!ViewModel.SelectedCategories.Contains(categoryDto))
             {
-                ViewModel.SelectedCategories.Add(category);
+                ViewModel.SelectedCategories.Add(categoryDto);
             }
         }
 
@@ -86,11 +87,11 @@ namespace SipPOS.Views
         {
             var checkBox = sender as CheckBox;
 
-            var category = (Category)checkBox.DataContext;
+            var categoryDto = (CategoryDto)checkBox.DataContext;
 
-            if (ViewModel.SelectedCategories.Contains(category))
+            if (ViewModel.SelectedCategories.Contains(categoryDto))
             {
-                ViewModel.SelectedCategories.Remove(category);
+                ViewModel.SelectedCategories.Remove(categoryDto);
             }
         }
 
@@ -105,7 +106,7 @@ namespace SipPOS.Views
                 return;
             }
 
-            var newCategory = new Category
+            var newCategoryDto = new CategoryDto
             {
                 Id = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
                 Name = CategoryName,
@@ -113,7 +114,7 @@ namespace SipPOS.Views
                 CreatedBy = "Admin"
             };
 
-            ViewModel.Insert(newCategory);
+            ViewModel.Insert(newCategoryDto);
 
             DialogCategoryNameTextBox.Text = string.Empty;
             DialogCategoryStatusComboBox.SelectedIndex = 0;

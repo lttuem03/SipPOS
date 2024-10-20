@@ -17,6 +17,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using System.Diagnostics;
+using SipPOS.DataTransfer;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -75,11 +76,11 @@ namespace SipPOS.Views
         {
             var checkBox = sender as CheckBox;
 
-            var product = (Product)checkBox.DataContext;
+            var productDto = (ProductDto)checkBox.DataContext;
 
-            if (!ViewModel.SelectedProducts.Contains(product))
+            if (!ViewModel.SelectedProducts.Contains(productDto))
             {
-                ViewModel.SelectedProducts.Add(product);
+                ViewModel.SelectedProducts.Add(productDto);
             }
         }
 
@@ -87,11 +88,11 @@ namespace SipPOS.Views
         {
             var checkBox = sender as CheckBox;
 
-            var product = (Product)checkBox.DataContext;
+            var productDto = (ProductDto)checkBox.DataContext;
 
-            if (ViewModel.SelectedProducts.Contains(product))
+            if (ViewModel.SelectedProducts.Contains(productDto))
             {
-                ViewModel.SelectedProducts.Remove(product);
+                ViewModel.SelectedProducts.Remove(productDto);
             }
         }
 
@@ -107,7 +108,7 @@ namespace SipPOS.Views
                 return;
             }
 
-            var newProduct = new Product
+            var newProductDto = new ProductDto
             {
                 Id = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
                 Name = productName,
@@ -117,7 +118,7 @@ namespace SipPOS.Views
                 CreatedBy = "Admin"
             };
 
-            ViewModel.Insert(newProduct);
+            ViewModel.Insert(newProductDto);
 
             DialogProductNameTextBox.Text = string.Empty;
             DialogProductCategoryComboBox.SelectedIndex = -1;

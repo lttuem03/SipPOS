@@ -1,18 +1,19 @@
 ﻿using SipPOS.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SipPOS.DataTransfer;
 
 namespace SipPOS.Services;
 
 // Remove this class once your pages/features are using your data.
 public interface ICategoryService
 {
-    IEnumerable<Category> GetAll();
+    IEnumerable<CategoryDto> GetAll();
 
-    Category GetById(int id);
+    CategoryDto GetById(int id);
 
-    Category Insert(Category product);
+    CategoryDto Insert(CategoryDto categoryDto);
 
-    Category UpdateById(Category product);
+    CategoryDto UpdateById(CategoryDto categoryDto);
 
 }
