@@ -15,6 +15,15 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using SipPOS.ViewModels;
+using SipPOS.Views;
+using Windows.UI.ApplicationSettings;
+using SipPOS.Services;
+using SipPOS.Services.Impl;
+using SipPOS.DataAccess.Implementations;
+using SipPOS.DataAccess.Interfaces;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -33,6 +42,46 @@ namespace SipPOS
         public App()
         {
             this.InitializeComponent();
+
+            Host = Microsoft.Extensions.Hosting.Host.
+            CreateDefaultBuilder().
+            UseContentRoot(AppContext.BaseDirectory).
+            ConfigureServices((context, services) =>
+            {
+                // Dao
+                services.AddSingleton<IProductDao, MockProductDao>();
+                services.AddSingleton<ICategoryDao, MockCategoryDao>();
+
+                // Services
+                services.AddSingleton<IProductService, ProductService>();
+                services.AddSingleton<ICategoryService, CategoryService>();
+
+                // Views and ViewModels
+                services.AddTransient<CategoryManagementViewModel>();
+                services.AddTransient<CategoryManagementView>();
+                services.AddTransient<ProductManagementViewModel>();
+                services.AddTransient<ProductManagementView>();
+
+                //Add AutoMapper
+                services.AddAutoMapper(typeof(App).Assembly);
+            }).
+            Build();
+        }
+
+        public IHost Host
+        {
+            get;
+        }
+
+        public static T GetService<T>()
+            where T : class
+        {
+            if ((App.Current as App)!.Host.Services.GetService(typeof(T)) is not T service)
+            {
+                throw new ArgumentException($"{typeof(T)} needs to be registered in ConfigureServices within App.xaml.cs.");
+            }
+
+            return service;
         }
 
         /// <summary>
