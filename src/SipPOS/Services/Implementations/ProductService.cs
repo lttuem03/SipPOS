@@ -11,8 +11,8 @@ public class ProductService : IProductService
 {
 
     private IProductDao productDao;
-    private readonly IMapper mapper;
 
+    private readonly IMapper mapper;
 
     public ProductService(IProductDao productDao, IMapper mapper)
     {
@@ -20,29 +20,38 @@ public class ProductService : IProductService
         this.mapper = mapper;
     }
 
-    public IEnumerable<ProductDto> GetAll()
+    public IList<ProductDto> GetAll()
     {
-        return mapper.Map<IEnumerable<ProductDto>>(productDao.GetAll());
+        return mapper.Map<IList<ProductDto>>(productDao.GetAll());
     }
 
-    public ProductDto GetById(int id)
+    public ProductDto? GetById(long id)
     {
         return mapper.Map<ProductDto>(productDao.GetById(id));
     }
 
-    public ProductDto Insert(ProductDto product)
+    public ProductDto? Insert(ProductDto product)
     {
         return mapper.Map<ProductDto>(productDao.Insert(mapper.Map<Product>(product)));
     }
 
-    public ProductDto UpdateById(ProductDto product)
+    public ProductDto? UpdateById(ProductDto product)
     {
         return mapper.Map<ProductDto>(productDao.UpdateById(mapper.Map<Product>(product)));
     }
 
-    public ProductDto DeleteById(int id)
+    public ProductDto? DeleteById(long id)
     {
         return mapper.Map<ProductDto>(productDao.DeleteById(id));
     }
 
+    public IList<ProductDto> DeleteByIds(IList<long> ids)
+    {
+        return mapper.Map<IList<ProductDto>>(productDao.DeleteByIds(ids));
+    }
+
+    public Pagination<ProductDto> Search(IList<object> filters, IList<object> sorts, int perPage, int page)
+    {
+        return mapper.Map<Pagination<ProductDto>>(productDao.Search(filters, sorts, perPage, page));
+    }
 }

@@ -8,10 +8,11 @@ namespace SipPOS.DataTransfer
 {
     public class CategoryDto : BaseDto
     {
-        public long Id { get; set; }
-        public string Name { get; set; }
-
-        public string Desc { get; set; }
+        public string? Name { get; set; }
+        public string? Desc { get; set; }
+        public string? Status { get; set; }
+        public IList<string> ImageUrls { get; set; } = new List<string>();
+        public bool IsSeteled { get; set; } = false;
 
     }
 }

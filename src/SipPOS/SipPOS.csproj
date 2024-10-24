@@ -17,12 +17,6 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Converters\**" />
-    <EmbeddedResource Remove="Converters\**" />
-    <None Remove="Converters\**" />
-    <Page Remove="Converters\**" />
-  </ItemGroup>
-  <ItemGroup>
     <None Remove="Views\CategoryManagementView.xaml" />
     <None Remove="Views\MainMenuView.xaml" />
     <None Remove="Views\ProductManagementView.xaml" />
@@ -81,7 +75,4 @@
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
-  <ItemGroup>
-    <PRIResource Remove="Converters\**" />
-  </ItemGroup>
 </Project>

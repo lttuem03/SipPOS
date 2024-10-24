@@ -17,22 +17,37 @@ public class CategoryService : ICategoryService
         this.mapper = mapper;
     }
 
-    public IEnumerable<CategoryDto> GetAll()
+    public IList<CategoryDto> GetAll()
     {
-        return mapper.Map<IEnumerable<CategoryDto>>(categoryDao.GetAll());
+        return mapper.Map<IList<CategoryDto>>(categoryDao.GetAll());
     }
 
-    public CategoryDto GetById(int id)
+    public CategoryDto? GetById(long id)
     {
         return mapper.Map<CategoryDto>(categoryDao.GetById(id));
     }
 
-    public CategoryDto Insert(CategoryDto productDto)
+    public CategoryDto? Insert(CategoryDto productDto)
     {
         return mapper.Map<CategoryDto>(categoryDao.Insert(mapper.Map<Category>(productDto)));
     }
 
-    public CategoryDto UpdateById(CategoryDto productDto)
+    public CategoryDto? DeleteById(long id)
+    {
+        return mapper.Map<CategoryDto>(categoryDao.DeleteById(id));
+    }
+
+    public IList<CategoryDto> DeleteByIds(IList<long> ids)
+    {
+        return mapper.Map<IList<CategoryDto>>(categoryDao.DeleteByIds(ids));
+    }
+
+    public Pagination<CategoryDto> Search(IList<object> filters, IList<object> sorts, int perPage, int page)
+    {
+        return mapper.Map<Pagination<CategoryDto>>(categoryDao.Search(filters, sorts, perPage, page));
+    }
+
+    public CategoryDto? UpdateById(CategoryDto productDto)
     {
         return mapper.Map<CategoryDto>(categoryDao.UpdateById(mapper.Map<Category>(productDto)));
     }

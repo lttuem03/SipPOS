@@ -9,32 +9,70 @@ namespace SipPOS.ViewModels;
 
 public partial class CategoryManagementViewModel : ObservableRecipient
 {
-    private readonly ICategoryService _categoryService;
-
     public ObservableCollection<CategoryDto> Categories { get; } = new ObservableCollection<CategoryDto>();
+    public ObservableCollection<StatusItem> StatusItems { get; } = new ObservableCollection<StatusItem>()
+    {
+        new StatusItem { Label = "Có sẵn", Value = "Available" },
+        new StatusItem { Label = "Không có sẵn", Value = "Unavailable" }
+    };
+    public ObservableCollection<string> ImageUrls { get; set; } = new ObservableCollection<string>();
 
-    public ObservableCollection<CategoryDto> SelectedCategories { get; } = new ObservableCollection<CategoryDto>();
+    [ObservableProperty]
+    private CategoryDto? selectedCategory;
+
+    [ObservableProperty]
+    private int perPage = 5;
+
+    [ObservableProperty]
+    private int page = 1;
+
+    [ObservableProperty]
+    private int totalPage = 1;
+
+    [ObservableProperty]
+    private long totalRecord = 0;
+
+    [ObservableProperty]
+    public string actionType;
+
+
+    private readonly ICategoryService _categoryService;
 
     public CategoryManagementViewModel(ICategoryService categoryService)
     {
         _categoryService = categoryService;
     }
 
-    public void GetAll()
+    public void Search()
     {
         Categories.Clear();
-
-        var data = _categoryService.GetAll();
-
-        foreach (var item in data)
+        Pagination<CategoryDto> pagination = _categoryService.Search(new List<object>(), new List<object>(), Page, PerPage);
+        Page = pagination.Page;
+        PerPage = pagination.PerPage;
+        TotalPage = pagination.TotalPage;
+        TotalRecord = pagination.TotalRecord;
+        foreach (var item in pagination.Data)
         {
             Categories.Add(item);
         }
     }
 
-    public void Insert(CategoryDto categoryDto)
+    public void Insert()
     {
-        _categoryService.Insert(categoryDto);
+        _categoryService.Insert(SelectedCategory);
+        Search();
     }
 
+    public void UpdateById()
+    {
+        _categoryService.UpdateById(SelectedCategory);
+        Search();
+    }
+
+    public void DeleteByIds()
+    {
+        List<long> ids = Categories.Where(x => x.IsSeteled && x.Id.HasValue).Select(x => x.Id.Value).ToList();
+        _categoryService.DeleteByIds(ids);
+        Search();
+    }
 }
