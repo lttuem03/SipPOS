@@ -118,7 +118,7 @@ namespace SipPOS.Views
             await Dialog.ShowAsync();
         }
 
-        public void DeleteButton_Click(object sender, RoutedEventArgs e)
+        public async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             IList<ProductDto> selectedProducts = ViewModel.Products.Where(x => x.IsSeteled).ToList();
             if (selectedProducts.Count == 0)
@@ -126,8 +126,19 @@ namespace SipPOS.Views
                 ShowNotification("Vui lòng chọn ít nhất một sản phẩm để xóa.");
                 return;
             }
+            await DeleteConfirmationDialog.ShowAsync();
+        }
+
+        public void DeleteConfirmationDialog_YesClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
             ViewModel.DeleteByIds();
         }
+
+        public void DeleteConfirmationDialog_NoClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            DeleteConfirmationDialog.Hide();
+        }
+
 
         public void PaginationControl_PageChanged(object sender, PaginationControlValueChangedEventArgs e)
         {

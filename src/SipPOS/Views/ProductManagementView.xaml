@@ -222,6 +222,16 @@
                 </TabView.TabItems>
             </TabView>
         </ContentDialog>
+        <ContentDialog
+            x:Name="DeleteConfirmationDialog"
+            Title="THÔNG BÁO"
+            Content="Nếu 'có' thao tác này không thể hoàn tác. Bạn có chắc chắn muốn xóa sản phẩm này không? "
+            PrimaryButtonText="Có"
+            PrimaryButtonClick="DeleteConfirmationDialog_YesClick"
+            SecondaryButtonText="Không"
+            SecondaryButtonClick="DeleteConfirmationDialog_NoClick"
+            DefaultButton="Primary">
+        </ContentDialog>
         <local_controls:ToastNotificationControl x:Name="InAppToast" Visibility="Collapsed" />
     </Grid>
 </Page>
