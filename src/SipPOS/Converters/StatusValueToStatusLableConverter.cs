@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.UI.Xaml.Data;
+﻿using Microsoft.UI.Xaml.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +7,19 @@ using System.Threading.Tasks;
 
 namespace SipPOS.Converters
 {
-    public class DateDisplayConverter: IValueConverter
+    class StatusValueToStatusLableConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is DateTime)
+            if ("Available".Equals(value))
             {
-                return ((DateTime)value).ToString("dd/MM/yyyy HH:mm:ss");
+                return "Có sẵn";
             }
-            return value;
+            else if ("Unavailable".Equals(value))
+            {
+                return "Không có sẵn";
+            }
+            return "Không xác định";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

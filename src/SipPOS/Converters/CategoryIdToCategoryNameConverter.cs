@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace SipPOS.Converters
 {
-    public class CategoryConverter : IValueConverter
+    public class CategoryIdToCategoryNameConverter : IValueConverter
     {
         private readonly ICategoryService _categoryService;
 
-        public CategoryConverter()
+        public CategoryIdToCategoryNameConverter()
         {
             _categoryService = App.GetService<ICategoryService>();
         }

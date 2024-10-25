@@ -15,10 +15,10 @@
         <DataTemplate x:Key='ImageTemplate'>
             <Image Stretch = 'UniformToFill' Source = '{Binding}' Width = '200' Height = '150' AutomationProperties.AccessibilityView = 'Raw'/>
         </DataTemplate>
-        <local_conveters:NullableDoubleConverter x:Key="NullableDoubleConverter"/>
-        <local_conveters:StatusConverter x:Key="StatusConverter"/>
-        <local_conveters:CategoryConverter x:Key="CategoryConverter"/>
-        <local_conveters:DateDisplayConverter x:Key="DateDisplayConverter"/>
+        <local_conveters:DoubleToNullableDoubleConverter x:Key="DoubleToNullableDoubleConverter"/>
+        <local_conveters:StatusValueToStatusLableConverter x:Key="StatusValueToStatusLableConverter"/>
+        <local_conveters:CategoryIdToCategoryNameConverter x:Key="CategoryIdToCategoryNameConverter"/>
+        <local_conveters:DateToDisplayDateConverter x:Key="DateToDisplayDateConverter"/>
     </Page.Resources>
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -97,8 +97,8 @@
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>
-                <controls:DataGridTextColumn Binding="{Binding Status, Converter={StaticResource StatusConverter}}" Header="Trạng thái" />
-                <controls:DataGridTextColumn Binding="{Binding CreatedAt, Converter= {StaticResource DateDisplayConverter}}" Header="Ngày tạo" />
+                <controls:DataGridTextColumn Binding="{Binding Status, Converter={StaticResource StatusValueToStatusLableConverter}}" Header="Trạng thái" />
+                <controls:DataGridTextColumn Binding="{Binding CreatedAt, Converter= {StaticResource DateToDisplayDateConverter}}" Header="Ngày tạo" />
                 <controls:DataGridTextColumn Binding="{Binding CreatedBy}" Header="Người tạo" />
             </controls:DataGrid.Columns>
         </controls:DataGrid>

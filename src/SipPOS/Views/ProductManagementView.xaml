@@ -16,10 +16,10 @@
         <DataTemplate x:Key='ImageTemplate'>
             <Image Stretch = 'UniformToFill' Source = '{Binding}' Width = '200' Height = '150' AutomationProperties.AccessibilityView = 'Raw'/>
         </DataTemplate>
-        <local_conveters:NullableDoubleConverter x:Key="NullableDoubleConverter"/>
-        <local_conveters:StatusConverter x:Key="StatusConverter"/>
-        <local_conveters:CategoryConverter x:Key="CategoryConverter"/>
-        <local_conveters:DateDisplayConverter x:Key="DateDisplayConverter"/>
+        <local_conveters:DoubleToNullableDoubleConverter x:Key="DoubleToNullableDoubleConverter"/>
+        <local_conveters:StatusValueToStatusLableConverter x:Key="StatusValueToStatusLableConverter"/>
+        <local_conveters:CategoryIdToCategoryNameConverter x:Key="CategoryIdToCategoryNameConverter"/>
+        <local_conveters:DateToDisplayDateConverter x:Key="DateToDisplayDateConverter"/>
     </Page.Resources>
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -98,7 +98,7 @@
                 </controls:DataGridTemplateColumn>
                 <controls:DataGridTextColumn Binding="{Binding Id}" Header="Mã" />
                 <controls:DataGridTextColumn Binding="{Binding Name}" Header="Tên" />
-                <controls:DataGridTextColumn Binding="{Binding CategoryId, Converter={StaticResource CategoryConverter}}" Header="Danh mục" />
+                <controls:DataGridTextColumn Binding="{Binding CategoryId, Converter={StaticResource CategoryIdToCategoryNameConverter}}" Header="Danh mục" />
                 <controls:DataGridTextColumn Binding="{Binding Desc}" Header="Mô tả" />
                 <controls:DataGridTemplateColumn Header="Ảnh">
                     <controls:DataGridTemplateColumn.CellTemplate>
@@ -107,8 +107,8 @@
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>
-                <controls:DataGridTextColumn Binding="{Binding Status, Converter={StaticResource StatusConverter}}" Header="Trạng thái" />
-                <controls:DataGridTextColumn Binding="{Binding CreatedAt, Converter= {StaticResource DateDisplayConverter}}" Header="Ngày tạo" />
+                <controls:DataGridTextColumn Binding="{Binding Status, Converter={StaticResource StatusValueToStatusLableConverter}}" Header="Trạng thái" />
+                <controls:DataGridTextColumn Binding="{Binding CreatedAt, Converter= {StaticResource DateToDisplayDateConverter}}" Header="Ngày tạo" />
                 <controls:DataGridTextColumn Binding="{Binding CreatedBy}" Header="Người tạo" />
             </controls:DataGrid.Columns>
         </controls:DataGrid>
@@ -171,7 +171,7 @@
                                 SelectedValue="{x:Bind ViewModel.SelectedProduct.CategoryId, Mode=TwoWay}"
                                 ItemsSource="{x:Bind ViewModel.Categories}"/>
                             <NumberBox 
-                                Value="{x:Bind ViewModel.SelectedProduct.Price, Mode=TwoWay, Converter={StaticResource NullableDoubleConverter}}"
+                                Value="{x:Bind ViewModel.SelectedProduct.Price, Mode=TwoWay, Converter={StaticResource DoubleToNullableDoubleConverter}}"
                                 Grid.Row="1" Grid.Column="0" 
                                 Header="Giá sản phẩm" 
                                 PlaceholderText="Nhập giá sản phẩm" />
