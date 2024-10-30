@@ -1,5 +1,6 @@
 ﻿using SipPOS.DataTransfer;
 using SipPOS.Models;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,14 +9,18 @@ namespace SipPOS.Services;
 // Remove this class once your pages/features are using your data.
 public interface IProductService
 {
-    IEnumerable<ProductDto> GetAll();
+    Pagination<ProductDto> Search(IList<object> filters, IList<object> sorts, int perPage, int page);
 
-    ProductDto GetById(int id);
+    IList<ProductDto> GetAll();
 
-    ProductDto Insert(ProductDto productDto);
+    ProductDto? GetById(long id);
 
-    ProductDto UpdateById(ProductDto productDto);
+    ProductDto? Insert(ProductDto productDto);
 
-    ProductDto DeleteById(int id);
+    ProductDto? UpdateById(ProductDto productDto);
+
+    ProductDto? DeleteById(long id);
+
+    IList<ProductDto> DeleteByIds(IList<long> ids);
 
 }

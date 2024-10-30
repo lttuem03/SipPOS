@@ -18,6 +18,12 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using System.Diagnostics;
 using SipPOS.DataTransfer;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage.Pickers;
+using Windows.Storage;
+using System.Text;
+using Microsoft.Windows.AppNotifications.Builder;
+using Microsoft.Windows.AppNotifications;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -37,98 +43,196 @@ namespace SipPOS.Views
         public ProductManagementView()
         {
             ViewModel = App.GetService<ProductManagementViewModel>();
-            ViewModel.GetAll();
-            Debug.WriteLine("ProductManagementView");
+            ViewModel.Search();
+            ViewModel.GetAllCategory();
             InitializeComponent();
         }
 
         public void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.GetAll();
+            ViewModel.Search();
         }
 
         public async void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            await AddProductDialog.ShowAsync();
+            ViewModel.SelectedProduct = new ProductDto();
+            ViewModel.ImageUrls.Clear();
+            Dialog.Title = "THÊM SẢN PHẨM";
+            Dialog.IsPrimaryButtonEnabled = true;
+            ViewModel.ActionType = "ADD";
+            await Dialog.ShowAsync();
         }
 
-        public void ViewButton_Click(object sender, RoutedEventArgs e)
+        private void ShowNotification(string message)
         {
-
+            InAppToast.Show("Thông báo", message, 5000);
         }
 
-        public void EditButton_Click(object sender, RoutedEventArgs e)
+        public async void ViewButton_Click(object sender, RoutedEventArgs e)
         {
-
+            IList<ProductDto> selectedProducts = ViewModel.Products.Where(x => x.IsSeteled).ToList();
+            if (selectedProducts.Count == 0)
+            {
+                ShowNotification("Vui lòng chọn ít nhất một sản phẩm để xem.");
+                return;
+            }
+            if (selectedProducts.Count > 1)
+            {
+                ShowNotification("Vui lòng chỉ chọn một sản phẩm để xem.");
+                return;
+            }
+            ViewModel.SelectedProduct = selectedProducts[0];
+            Dialog.Title = "XEM SẢN PHẨM";
+            Dialog.IsPrimaryButtonEnabled = false;
+            ViewModel.ActionType = "VIEW";
+            ViewModel.ImageUrls.Clear();
+            foreach (var item in ViewModel.SelectedProduct.ImageUrls)
+            {
+                ViewModel.ImageUrls.Add(item);
+            }
+            await Dialog.ShowAsync();
         }
 
-        public void DeleteButton_Click(object sender, RoutedEventArgs e)
+        public async void EditButton_Click(object sender, RoutedEventArgs e)
         {
-
+            IList<ProductDto> selectedProducts = ViewModel.Products.Where(x => x.IsSeteled).ToList();
+            if (selectedProducts.Count == 0)
+            {
+                ShowNotification("Vui lòng chọn ít nhất một sản phẩm để chỉnh sửa.");
+                return;
+            }
+            if (selectedProducts.Count > 1)
+            {
+                ShowNotification("Vui lòng chỉ chọn một sản phẩm để chỉnh sửa.");
+                return;
+            }
+            ViewModel.SelectedProduct = selectedProducts[0];
+            Dialog.Title = "CHỈNH SỬA SẢN PHẨM";
+            Dialog.IsPrimaryButtonEnabled = true;
+            ViewModel.ActionType = "EDIT";
+            ViewModel.ImageUrls.Clear();
+            foreach (var item in ViewModel.SelectedProduct.ImageUrls)
+            {
+                ViewModel.ImageUrls.Add(item);
+            }
+            await Dialog.ShowAsync();
         }
+
+        public async void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            IList<ProductDto> selectedProducts = ViewModel.Products.Where(x => x.IsSeteled).ToList();
+            if (selectedProducts.Count == 0)
+            {
+                ShowNotification("Vui lòng chọn ít nhất một sản phẩm để xóa.");
+                return;
+            }
+            await DeleteConfirmationDialog.ShowAsync();
+        }
+
+        public void DeleteConfirmationDialog_YesClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            ViewModel.DeleteByIds();
+        }
+
+        public void DeleteConfirmationDialog_NoClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            DeleteConfirmationDialog.Hide();
+        }
+
 
         public void PaginationControl_PageChanged(object sender, PaginationControlValueChangedEventArgs e)
         {
-
+            ViewModel.Search();
         }
 
-        public void CheckBox_Checked(object sender, RoutedEventArgs e)
+        private void Dialog_YesClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            var checkBox = sender as CheckBox;
-
-            var productDto = (ProductDto)checkBox.DataContext;
-
-            if (!ViewModel.SelectedProducts.Contains(productDto))
+            if (string.IsNullOrEmpty(ViewModel.SelectedProduct.Name))
             {
-                ViewModel.SelectedProducts.Add(productDto);
-            }
-        }
-
-        public void CheckBox_Unchecked(object sender, RoutedEventArgs e)
-        {
-            var checkBox = sender as CheckBox;
-
-            var productDto = (ProductDto)checkBox.DataContext;
-
-            if (ViewModel.SelectedProducts.Contains(productDto))
-            {
-                ViewModel.SelectedProducts.Remove(productDto);
-            }
-        }
-
-        private void AddProductDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-            // Get the input values from the dialog
-            string productName = DialogProductNameTextBox.Text;
-            int productCategory = DialogProductCategoryComboBox.SelectedIndex; // Fixed categories
-            string productStatus = ((ComboBoxItem)DialogProductStatusComboBox.SelectedItem).Content.ToString();
-
-            if (string.IsNullOrEmpty(productName) || productCategory <= 0)
-            {
+                args.Cancel = true;
+                ShowNotification("Vui lòng nhập tên sản phẩm.");
                 return;
             }
-
-            var newProductDto = new ProductDto
+            switch (ViewModel.ActionType)
             {
-                Id = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
-                Name = productName,
-                CategoryId = productCategory,
-                Status = productStatus,
-                CreatedAt = DateTime.Now,
-                CreatedBy = "Admin"
-            };
-
-            ViewModel.Insert(newProductDto);
-
-            DialogProductNameTextBox.Text = string.Empty;
-            DialogProductCategoryComboBox.SelectedIndex = -1;
-            DialogProductStatusComboBox.SelectedIndex = 0;
+                case "ADD":
+                    ViewModel.Insert();
+                    break;
+                case "EDIT":
+                    ViewModel.UpdateById();
+                    break;
+                default:
+                    break;
+            }
         }
 
-        private void AddProductDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private void Dialog_NoButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            AddProductDialog.Hide();
+            Dialog.Hide();
         }
 
+        private async void AddImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
+
+            var window = App.MainWindow;
+
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+
+            WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hWnd);
+
+            openPicker.ViewMode = PickerViewMode.List;
+            openPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            openPicker.FileTypeFilter.Add(".jpg");
+            openPicker.FileTypeFilter.Add(".jpeg");
+            openPicker.FileTypeFilter.Add(".png");
+
+            IReadOnlyList<StorageFile> files = await openPicker.PickMultipleFilesAsync();
+            if (files.Count > 0)
+            {
+                foreach (StorageFile file in files)
+                {
+                    ViewModel.SelectedProduct.ImageUrls.Add(file.Path);
+                    ViewModel.ImageUrls.Add(file.Path);
+                }
+            }
+            else
+            {
+                // The user didn't pick any files
+            }
+        }
+        private void ImageListView_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.DataView.Contains(StandardDataFormats.StorageItems))
+            {
+                e.AcceptedOperation = DataPackageOperation.Move; // Allow move operation
+            }
+            else
+            {
+                e.AcceptedOperation = DataPackageOperation.None; // Indicate that drop is not allowed
+            }
+        }
+
+
+        private void DialogClose(object sender, ContentDialogClosedEventArgs e)
+        {
+            //reset input values
+        }
+
+        private void ContentGridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Handle selection changes if needed
+        }
+
+        private async void ContentGridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // Handle item click
+        }
+
+        private void DialogOpen(ContentDialog sender, ContentDialogOpenedEventArgs args)
+        {
+
+        }
     }
+
 }

@@ -5,48 +5,16 @@ namespace SipPOS.Models;
 
 public class Product : BaseModel
 {
+    public string? Name { get; set; }
+    
+    public string? Desc { get; set; }
+    
+    public double? Price { get; set; }
+    
+    public long? CategoryId { get; set; }
 
-    public string Name
-    {
-        get; set;
-    }
+    public IList<string>  ImageUrls { get; set; } = new List<string>();
 
-    public string Desc
-    {
-        get; set;
-    }
+    public string? Status { get; set; }
 
-    public double Price
-    {
-        get; set;
-    }
-
-    public long CategoryId
-    {
-        get; set;
-    }
-
-    public Category Category
-    {
-        get; set;
-    }
-
-    public string Status
-    {
-        get; set;
-    }
-
-    public int SymbolCode
-    {
-        get; set;
-    }
-
-    public string SymbolName
-    {
-        get; set;
-    }
-
-    public char Symbol => (char)SymbolCode;
-
-    public override string ToString() => $"{Name} {Desc}";
 }

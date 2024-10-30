@@ -9,11 +9,13 @@ namespace SipPOS.DataAccess.Interfaces
 {
     public interface IProductDao
     {
-        IEnumerable<Product> GetAll();
-        Product GetById(long Id);
-        Product DeleteById(long Id);
-        Product UpdateById(Product product);
-        Product Insert(Product product);
-
+        Pagination<Product> Search(IList<object> filters, IList<object> sorts, int page, int perPage);
+        IList<Product> GetAll();
+        Product? GetById(long id);
+        Product? DeleteById(long id);
+        IList<Product> DeleteByIds(IList<long> ids);
+        Product? UpdateById(Product product);
+        Product? Insert(Product product);
+        long Count();
     }
 }

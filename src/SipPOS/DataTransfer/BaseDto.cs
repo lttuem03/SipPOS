@@ -8,37 +8,37 @@ namespace SipPOS.DataTransfer
 {
     public abstract class BaseDto
     {
-        public long Id
+        public long? Id
         {
             get; set;
         }
 
-        public string CreatedBy
+        public string? CreatedBy
         {
             get; set;
         }
 
-        public DateTime CreatedAt
+        public DateTime? CreatedAt
         {
             get; set;
         }
 
-        public string UpdatedBy
+        public string? UpdatedBy
         {
             get; set;
         }
 
-        public DateTime UpdatedAt
+        public DateTime? UpdatedAt
         {
             get; set;
         }
 
-        public string DeletedBy
+        public string? DeletedBy
         {
             get; set;
         }
 
-        public DateTime DeletedAt
+        public DateTime? DeletedAt
         {
             get; set;
         }
