@@ -8,6 +8,12 @@ src/SipPOS/bin/
 src/SipPOS/obj/
 src/SipPOS/.vs/
 
+# Node modules
+node_modules
+
+# Secret environment variables
+.env
+
 # User-specific files
 *.rsuser
 *.suo
