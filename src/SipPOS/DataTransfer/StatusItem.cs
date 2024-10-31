@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SipPOS.DataTransfer
+namespace SipPOS.DataTransfer;
+
+public class StatusItem
 {
-    public class StatusItem
-    {
-        public string? Label { get; set; }
-        public string? Value { get; set; }
-    }
+    public string? Label { get; set; }
+    public string? Value { get; set; }
 }
