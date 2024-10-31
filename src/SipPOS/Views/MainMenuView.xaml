@@ -23,7 +23,8 @@
 
             <!--toInventoryViewButton-->
             <Button x:Name="toInventoryViewButton"
-                    Content="Kho"/>
+                    Click="toInventoryViewButton_Click"
+                    Content="Hàng hóa"/>
 
             <!--toStaffManagementViewButton-->
             <Button x:Name="toStaffManagementViewButton"

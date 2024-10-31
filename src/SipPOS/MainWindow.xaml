@@ -9,7 +9,4 @@
     mc:Ignorable="d"
     Title="SipPOS"
     Activated="Window_Activated">
-
-    <!--Used for navigation-->
-    <Frame x:Name="navigatingContentFrame"/>
 </Window>

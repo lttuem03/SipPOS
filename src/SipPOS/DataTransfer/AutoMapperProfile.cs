@@ -6,20 +6,19 @@ using System.Text;
 using System.Threading.Tasks;
 using SipPOS.Models;
 
-namespace SipPOS.DataTransfer
+namespace SipPOS.DataTransfer;
+
+public class AutoMapperProfile : Profile
 {
-    public class AutoMapperProfile : Profile
+    public AutoMapperProfile()
     {
-        public AutoMapperProfile()
-        {
-            CreateMap<Product, ProductDto>();
-            CreateMap<ProductDto, Product>();
-            CreateMap<Category, CategoryDto>();
-            CreateMap<CategoryDto, Category>();
-            CreateMap<Pagination<Product>, Pagination<ProductDto>>();
-            CreateMap<Pagination<ProductDto>, Pagination<Product>>();
-            CreateMap<Pagination<Category>, Pagination<CategoryDto>>();
-            CreateMap<Pagination<CategoryDto>, Pagination<Category>>();
-        }
+        CreateMap<Product, ProductDto>();
+        CreateMap<ProductDto, Product>();
+        CreateMap<Category, CategoryDto>();
+        CreateMap<CategoryDto, Category>();
+        CreateMap<Pagination<Product>, Pagination<ProductDto>>();
+        CreateMap<Pagination<ProductDto>, Pagination<Product>>();
+        CreateMap<Pagination<Category>, Pagination<CategoryDto>>();
+        CreateMap<Pagination<CategoryDto>, Pagination<Category>>();
     }
 }

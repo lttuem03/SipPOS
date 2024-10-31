@@ -17,8 +17,8 @@ public partial class ProductManagementViewModel : ObservableRecipient
     public ObservableCollection<CategoryDto> Categories { get; } = new ObservableCollection<CategoryDto>();
     public ObservableCollection<StatusItem> StatusItems { get; } = new ObservableCollection<StatusItem>()
     {
-        new StatusItem { Label = "Có sẵn", Value = "Available" },
-        new StatusItem { Label = "Không có sẵn", Value = "Unavailable" }
+        new() { Label = "Có sẵn", Value = "Available" },
+        new() { Label = "Không có sẵn", Value = "Unavailable" }
     };
     public ObservableCollection<string> ImageUrls { get; set; } = new ObservableCollection<string>();
 
@@ -38,7 +38,7 @@ public partial class ProductManagementViewModel : ObservableRecipient
     private long totalRecord = 0;
 
     [ObservableProperty]
-    public string actionType;
+    public string? actionType;
 
     private readonly IProductService _productService;
 
@@ -66,12 +66,22 @@ public partial class ProductManagementViewModel : ObservableRecipient
 
     public void Insert()
     {
+        if (SelectedProduct == null)
+        {
+            return;
+        }
+
         _productService.Insert(SelectedProduct);
         Search();
     }
 
     public void UpdateById()
     {
+        if (SelectedProduct == null)
+        {
+            return;
+        }
+
         _productService.UpdateById(SelectedProduct);
         Search();
     }
@@ -90,7 +100,10 @@ public partial class ProductManagementViewModel : ObservableRecipient
 
     public void DeleteByIds()
     {
-        List<long> ids = Products.Where(x => x.IsSeteled && x.Id.HasValue).Select(x => x.Id.Value).ToList();
+        List<long> ids = Products.Where(x => x.IsSeteled && x.Id.HasValue).
+                                  Select(x => x.Id.HasValue ? x.Id.Value : -1).
+                                  ToList();
+
         _productService.DeleteByIds(ids);
         Search();
     }

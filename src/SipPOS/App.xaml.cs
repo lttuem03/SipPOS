@@ -28,72 +28,95 @@ using SipPOS.DataAccess.Interfaces;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace SipPOS
+namespace SipPOS;
+
+/// <summary>
+/// Provides application-specific behavior to supplement the default Application class.
+/// </summary>
+public partial class App : Application
 {
+    public static Window? CurrentWindow { get; private set; }
+    public IHost Host { get; }
+
     /// <summary>
-    /// Provides application-specific behavior to supplement the default Application class.
+    /// Initializes the singleton application object.  This is the first line of authored code
+    /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
-    public partial class App : Application
+    public App()
     {
-        public static MainWindow MainWindow = new();
+        this.InitializeComponent();
 
-        /// <summary>
-        /// Initializes the singleton application object.  This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
-        /// </summary>
-        public App()
+        Host = Microsoft.Extensions.Hosting.Host.
+        CreateDefaultBuilder().
+        UseContentRoot(AppContext.BaseDirectory).
+        ConfigureServices((context, services) =>
         {
-            this.InitializeComponent();
+            // Dao
+            services.AddSingleton<IProductDao, MockProductDao>();
+            services.AddSingleton<ICategoryDao, MockCategoryDao>();
 
-            Host = Microsoft.Extensions.Hosting.Host.
-            CreateDefaultBuilder().
-            UseContentRoot(AppContext.BaseDirectory).
-            ConfigureServices((context, services) =>
-            {
-                // Dao
-                services.AddSingleton<IProductDao, MockProductDao>();
-                services.AddSingleton<ICategoryDao, MockCategoryDao>();
+            // Services
+            services.AddSingleton<IProductService, ProductService>();
+            services.AddSingleton<ICategoryService, CategoryService>();
 
-                // Services
-                services.AddSingleton<IProductService, ProductService>();
-                services.AddSingleton<ICategoryService, CategoryService>();
+            // Views and ViewModels
+            services.AddTransient<CategoryManagementViewModel>();
+            services.AddTransient<CategoryManagementView>();
+            services.AddTransient<ProductManagementViewModel>();
+            services.AddTransient<ProductManagementView>();
 
-                // Views and ViewModels
-                services.AddTransient<CategoryManagementViewModel>();
-                services.AddTransient<CategoryManagementView>();
-                services.AddTransient<ProductManagementViewModel>();
-                services.AddTransient<ProductManagementView>();
-
-                //Add AutoMapper
-                services.AddAutoMapper(typeof(App).Assembly);
-            }).
-            Build();
-        }
-
-        public IHost Host
-        {
-            get;
-        }
-
-        public static T GetService<T>()
-            where T : class
-        {
-            if ((App.Current as App)!.Host.Services.GetService(typeof(T)) is not T service)
-            {
-                throw new ArgumentException($"{typeof(T)} needs to be registered in ConfigureServices within App.xaml.cs.");
-            }
-
-            return service;
-        }
-
-        /// <summary>
-        /// Invoked when the application is launched.
-        /// </summary>
-        /// <param name="args">Details about the launch request and process.</param>
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
-        {
-            MainWindow.Activate();
-        }
-
+            //Add AutoMapper
+            services.AddAutoMapper(typeof(App).Assembly);
+        }).
+        Build();
     }
+
+    public static T GetService<T>()
+        where T : class
+    {
+        if ((App.Current as App)!.Host.Services.GetService(typeof(T)) is not T service)
+        {
+            throw new ArgumentException($"{typeof(T)} needs to be registered in ConfigureServices within App.xaml.cs.");
+        }
+
+        return service;
+    }
+
+    /// <summary>
+    /// Invoked when the application is launched.
+    /// </summary>
+    /// <param name="args">Details about the launch request and process.</param>
+    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    {
+        _mainWindow = new MainWindow();
+        App.CurrentWindow = _mainWindow;
+
+        Frame rootFrame = new Frame();
+        rootFrame.NavigationFailed += OnNavigationFailed;
+
+        rootFrame.Navigate(typeof(MainMenuView));
+
+        _mainWindow.Content = rootFrame;
+        _mainWindow.Activate();
+    }
+
+    private async void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+    {
+        var dialog = new ContentDialog
+        {
+            Title = "Navigation Error",
+            Content = $"Failed to load View: {e.SourcePageType.FullName}",
+            CloseButtonText = "OK"
+        };
+
+        if (App.CurrentWindow != null)
+        {
+            dialog.XamlRoot = App.CurrentWindow.Content.XamlRoot;
+            await dialog.ShowAsync();
+        }
+
+        return;
+    }
+
+    private Window? _mainWindow;
 }

@@ -12,8 +12,8 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     public ObservableCollection<CategoryDto> Categories { get; } = new ObservableCollection<CategoryDto>();
     public ObservableCollection<StatusItem> StatusItems { get; } = new ObservableCollection<StatusItem>()
     {
-        new StatusItem { Label = "Có sẵn", Value = "Available" },
-        new StatusItem { Label = "Không có sẵn", Value = "Unavailable" }
+        new() { Label = "Có sẵn", Value = "Available" },
+        new() { Label = "Không có sẵn", Value = "Unavailable" }
     };
     public ObservableCollection<string> ImageUrls { get; set; } = new ObservableCollection<string>();
 
@@ -33,8 +33,7 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     private long totalRecord = 0;
 
     [ObservableProperty]
-    public string actionType;
-
+    public string? actionType;
 
     private readonly ICategoryService _categoryService;
 
@@ -59,19 +58,32 @@ public partial class CategoryManagementViewModel : ObservableRecipient
 
     public void Insert()
     {
+        if (SelectedCategory == null)
+        {
+            return;
+        }
+
         _categoryService.Insert(SelectedCategory);
         Search();
     }
 
     public void UpdateById()
     {
+        if (SelectedCategory == null)
+        {
+            return;
+        }
+
         _categoryService.UpdateById(SelectedCategory);
         Search();
     }
 
     public void DeleteByIds()
     {
-        List<long> ids = Categories.Where(x => x.IsSeteled && x.Id.HasValue).Select(x => x.Id.Value).ToList();
+        List<long> ids = Categories.Where(x => x.IsSeteled && x.Id.HasValue).
+                                    Select(x => x.Id.HasValue ? x.Id.Value : -1).
+                                    ToList();
+
         _categoryService.DeleteByIds(ids);
         Search();
     }

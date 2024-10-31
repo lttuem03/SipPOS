@@ -16,33 +16,32 @@ using Windows.Foundation.Collections;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace SipPOS.Controls
+namespace SipPOS.Controls;
+
+public sealed partial class ToastNotificationControl : UserControl
 {
-    public sealed partial class ToastNotificationControl : UserControl
+     public ToastNotificationControl()
     {
-         public ToastNotificationControl()
-        {
-            this.InitializeComponent();
-        }
+        this.InitializeComponent();
+    }
 
-        public void Show(String title, String message, int duration = 3000)
-        {
-            NotificationTitle.Text = title;
-            NotificationMessage.Text = message;
-            this.Visibility = Visibility.Visible;
+    public void Show(String title, String message, int duration = 3000)
+    {
+        NotificationTitle.Text = title;
+        NotificationMessage.Text = message;
+        this.Visibility = Visibility.Visible;
 
-            DismissAfterDelay(duration);
-        }
+        DismissAfterDelay(duration);
+    }
 
-        private async void DismissAfterDelay(int delayInMilliseconds)
-        {
-            await Task.Delay(delayInMilliseconds);
-            this.Visibility = Visibility.Collapsed;
-        }
+    private async void DismissAfterDelay(int delayInMilliseconds)
+    {
+        await Task.Delay(delayInMilliseconds);
+        this.Visibility = Visibility.Collapsed;
+    }
 
-        private void DismissButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Visibility = Visibility.Collapsed;
-        }
+    private void DismissButton_Click(object sender, RoutedEventArgs e)
+    {
+        this.Visibility = Visibility.Collapsed;
     }
 }
