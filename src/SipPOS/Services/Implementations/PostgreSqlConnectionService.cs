@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SipPOS.Services.Interfaces;
 
 using Npgsql;
 using System.Data;
+
+using SipPOS.Services.Interfaces;
 
 namespace SipPOS.Services.Implementations;
 

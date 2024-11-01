@@ -41,6 +41,7 @@
 
         <!--Logout button-->
         <Button x:Name="logoutButton"
+                Click="logoutButton_Click"
                 Content="Đăng xuất"/>
     </StackPanel>
 

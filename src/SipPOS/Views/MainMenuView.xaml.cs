@@ -13,14 +13,8 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace SipPOS.Views;
 
-/// <summary>
-/// An empty page that can be used on its own or navigated to within a Frame.
-/// </summary>
 public sealed partial class MainMenuView : Page
 {
     public MainMenuView()
@@ -38,6 +32,30 @@ public sealed partial class MainMenuView : Page
         if (rootFrame != null)
         {
             rootFrame.Navigate(typeof(ProductManagementView));
+        }
+        else
+        {
+            var errorDialog = new ContentDialog
+            {
+                Title = "Error",
+                Content = "Navigation frame is null.",
+                CloseButtonText = "Close"
+            };
+
+            _ = errorDialog.ShowAsync();
+        }
+    }
+
+    private void logoutButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (App.CurrentWindow == null)
+            return;
+
+        var rootFrame = App.CurrentWindow.Content as Frame;
+
+        if (rootFrame != null)
+        {
+            rootFrame.Navigate(typeof(LoginView));
         }
         else
         {

@@ -1,10 +1,11 @@
-﻿using SipPOS.Models;
-using SipPOS.Services;
+﻿using AutoMapper;
+
+using SipPOS.Models;
+using SipPOS.Services.Interfaces;
 using SipPOS.DataAccess.Interfaces;
-using AutoMapper;
 using SipPOS.DataTransfer;
 
-namespace SipPOS.Services.Impl;
+namespace SipPOS.Services.Implementations;
 
 public class CategoryService : ICategoryService
 {

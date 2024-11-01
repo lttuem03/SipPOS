@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -15,24 +16,22 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.ApplicationSettings;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+using DotNetEnv;
+
 using SipPOS.ViewModels;
 using SipPOS.Views;
-using Windows.UI.ApplicationSettings;
-using SipPOS.Services;
-using SipPOS.Services.Impl;
-using SipPOS.DataAccess.Implementations;
+using SipPOS.Services.Interfaces;
+using SipPOS.Services.Implementations;
 using SipPOS.DataAccess.Interfaces;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using SipPOS.DataAccess.Implementations;
 
 namespace SipPOS;
 
-/// <summary>
-/// Provides application-specific behavior to supplement the default Application class.
-/// </summary>
 public partial class App : Application
 {
     public static Window? CurrentWindow { get; private set; }
@@ -46,29 +45,37 @@ public partial class App : Application
     {
         this.InitializeComponent();
 
+        // Database connection configuration
+        DotNetEnv.Env.TraversePath().Load();
+        var host = DotNetEnv.Env.GetString("POSTGRES_HOST");
+        var port = DotNetEnv.Env.GetInt("POSTGRES_PORT");
+        var username = DotNetEnv.Env.GetString("POSTGRES_USERNAME");
+        var password = DotNetEnv.Env.GetString("POSTGRES_PASSWORD");
+        var database = DotNetEnv.Env.GetString("POSTGRES_DATABASE");
+
         Host = Microsoft.Extensions.Hosting.Host.
-        CreateDefaultBuilder().
-        UseContentRoot(AppContext.BaseDirectory).
-        ConfigureServices((context, services) =>
-        {
-            // Dao
-            services.AddSingleton<IProductDao, MockProductDao>();
-            services.AddSingleton<ICategoryDao, MockCategoryDao>();
-
-            // Services
-            services.AddSingleton<IProductService, ProductService>();
-            services.AddSingleton<ICategoryService, CategoryService>();
-
-            // Views and ViewModels
-            services.AddTransient<CategoryManagementViewModel>();
-            services.AddTransient<CategoryManagementView>();
-            services.AddTransient<ProductManagementViewModel>();
-            services.AddTransient<ProductManagementView>();
-
-            //Add AutoMapper
-            services.AddAutoMapper(typeof(App).Assembly);
-        }).
-        Build();
+               CreateDefaultBuilder().
+               UseContentRoot(AppContext.BaseDirectory).
+               ConfigureServices((context, services) =>
+               {
+                   // Dao
+                   services.AddSingleton<IProductDao, MockProductDao>();
+                   services.AddSingleton<ICategoryDao, MockCategoryDao>();
+               
+                   // Services
+                   services.AddSingleton<IProductService, ProductService>();
+                   services.AddSingleton<ICategoryService, CategoryService>();
+               
+                   // Views and ViewModels
+                   services.AddTransient<CategoryManagementViewModel>();
+                   services.AddTransient<CategoryManagementView>();
+                   services.AddTransient<ProductManagementViewModel>();
+                   services.AddTransient<ProductManagementView>();
+               
+                   //Add AutoMapper
+                   services.AddAutoMapper(typeof(App).Assembly);
+               }).
+               Build();
     }
 
     public static T GetService<T>()

@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
-
 using CommunityToolkit.Mvvm.ComponentModel;
+
 using SipPOS.Models;
-using SipPOS.Services;
+using SipPOS.Services.Interfaces;
 using SipPOS.DataTransfer;
 
 namespace SipPOS.ViewModels;
