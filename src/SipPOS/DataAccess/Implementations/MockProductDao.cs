@@ -195,11 +195,8 @@ class MockProductDao : IProductDao
 
     public Product? UpdateById(Product product)
     {
-        if (null == product.Id)
-        {
-            throw new Exception("Product Id is required to update product");
-        }
-        Product oldProduct = GetById((long)product.Id);
+        Product oldProduct = GetById(product.Id);
+
         if (oldProduct != null)
         {
             oldProduct.Name = product.Name;

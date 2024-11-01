@@ -198,7 +198,7 @@ class MockCategoryDao : ICategoryDao
 
     public Category? UpdateById(Category category)
     {
-        var oldCategory = GetById(category.Id.HasValue ? category.Id.Value : -1);
+        var oldCategory = GetById(category.Id);
 
         if (oldCategory != null)
         {

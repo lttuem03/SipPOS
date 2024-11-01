@@ -8,7 +8,7 @@ namespace SipPOS.DataTransfer;
 
 public abstract class BaseDto
 {
-    public long? Id { get; set; }
+    public long Id { get; set; }
 
     public string? CreatedBy { get; set; }
 

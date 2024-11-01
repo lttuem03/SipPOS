@@ -100,8 +100,8 @@ public partial class ProductManagementViewModel : ObservableRecipient
 
     public void DeleteByIds()
     {
-        List<long> ids = Products.Where(x => x.IsSeteled && x.Id.HasValue).
-                                  Select(x => x.Id.HasValue ? x.Id.Value : -1).
+        List<long> ids = Products.Where(x => x.IsSeteled).
+                                  Select(x => x.Id).
                                   ToList();
 
         _productService.DeleteByIds(ids);

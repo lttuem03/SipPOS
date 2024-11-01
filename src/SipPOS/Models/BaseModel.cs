@@ -4,16 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SipPOS.Models
+namespace SipPOS.Models;
+
+public abstract class BaseModel
 {
-    public abstract class BaseModel
-    {
-        public long? Id { get; set; }
-        public string? CreatedBy { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public string? UpdatedBy { get; set; }
-        public DateTime? UpdatedAt { get; set; }
-        public string? DeletedBy { get; set; }
-        public DateTime? DeletedAt { get; set; }
-    }
+    public long Id { get; set; }
+    public string? CreatedBy { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public string? UpdatedBy { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+    public string? DeletedBy { get; set; }
+    public DateTime? DeletedAt { get; set; }
 }
