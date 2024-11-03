@@ -15,10 +15,19 @@ public partial class CategoryManagementViewModel : ObservableRecipient
         new() { Label = "Có sẵn", Value = "Available" },
         new() { Label = "Không có sẵn", Value = "Unavailable" }
     };
+    public ObservableCollection<StatusItem> StatusItemsFilter { get; } = new ObservableCollection<StatusItem>()
+    {
+        new() { Label = "Tất cả", Value = null },
+        new() { Label = "Có sẵn", Value = "Available" },
+        new() { Label = "Không có sẵn", Value = "Unavailable" }
+    };
     public ObservableCollection<string> ImageUrls { get; set; } = new ObservableCollection<string>();
 
     [ObservableProperty]
     private CategoryDto? selectedCategory;
+
+    [ObservableProperty]
+    private CategoryFilterDto categoryFilterDto = new CategoryFilterDto();
 
     [ObservableProperty]
     private int perPage = 5;
@@ -33,6 +42,9 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     private long totalRecord = 0;
 
     [ObservableProperty]
+    private SortDto sortDto = new SortDto();
+
+    [ObservableProperty]
     public string? actionType;
 
     private readonly ICategoryService _categoryService;
@@ -45,7 +57,7 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     public void Search()
     {
         Categories.Clear();
-        Pagination<CategoryDto> pagination = _categoryService.Search(new List<object>(), new List<object>(), Page, PerPage);
+        Pagination<CategoryDto> pagination = _categoryService.Search(CategoryFilterDto, SortDto, Page, PerPage);
         Page = pagination.Page;
         PerPage = pagination.PerPage;
         TotalPage = pagination.TotalPage;

@@ -43,9 +43,9 @@ public class CategoryService : ICategoryService
         return mapper.Map<IList<CategoryDto>>(categoryDao.DeleteByIds(ids));
     }
 
-    public Pagination<CategoryDto> Search(IList<object> filters, IList<object> sorts, int perPage, int page)
+    public Pagination<CategoryDto> Search(CategoryFilterDto categoryFilterDto, SortDto sortDto, int perPage, int page)
     {
-        return mapper.Map<Pagination<CategoryDto>>(categoryDao.Search(filters, sorts, perPage, page));
+        return mapper.Map<Pagination<CategoryDto>>(categoryDao.Search(categoryFilterDto, sortDto, perPage, page));
     }
 
     public CategoryDto? UpdateById(CategoryDto productDto)

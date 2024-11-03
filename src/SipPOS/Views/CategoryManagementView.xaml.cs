@@ -18,6 +18,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage.Pickers;
 using Windows.Storage;
+using CommunityToolkit.WinUI.UI.Controls;
 
 using SipPOS.DataTransfer;
 using SipPOS.Models;
@@ -134,6 +135,29 @@ public sealed partial class CategoryManagementView : Page
     public void PaginationControl_PageChanged(object sender, PaginationControlValueChangedEventArgs e)
     {
         ViewModel.Search();
+    }
+
+    public void DataGrid_Sorting(object sender, DataGridColumnEventArgs e)
+    {
+        ViewModel.SortDto.SortBy = e.Column.Tag.ToString();
+        if (e.Column.SortDirection == null || e.Column.SortDirection == DataGridSortDirection.Descending)
+        {
+            ViewModel.SortDto.SortType = "ASC";
+            e.Column.SortDirection = DataGridSortDirection.Ascending;
+        }
+        else
+        {
+            ViewModel.SortDto.SortType = "DESC";
+            e.Column.SortDirection = DataGridSortDirection.Descending;
+        }
+        ViewModel.Search();
+        foreach (var dgColumn in dg.Columns)
+        {
+            if (null != dgColumn.Tag && dgColumn.Tag.ToString() != e.Column.Tag.ToString())
+            {
+                dgColumn.SortDirection = null;
+            }
+        }
     }
 
     private void ProductDialog_YesClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)

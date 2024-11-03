@@ -10,7 +10,7 @@ namespace SipPOS.Services.Interfaces;
 // Remove this class once your pages/features are using your data.
 public interface ICategoryService
 {
-    Pagination<CategoryDto> Search(IList<object> filters, IList<object> sorts, int perPage, int page);
+    Pagination<CategoryDto> Search(CategoryFilterDto categoryFilterDto, SortDto sortDto, int perPage, int page);
 
     IList<CategoryDto> GetAll();
 

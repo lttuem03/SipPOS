@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 
-
 using SipPOS.Models;
 using SipPOS.Services.Interfaces;
+using SipPOS.DataAccess;
 using SipPOS.DataAccess.Interfaces;
 using SipPOS.DataAccess.Implementations;
 using SipPOS.DataTransfer;
@@ -52,8 +52,8 @@ public class ProductService : IProductService
         return mapper.Map<IList<ProductDto>>(productDao.DeleteByIds(ids));
     }
 
-    public Pagination<ProductDto> Search(IList<object> filters, IList<object> sorts, int perPage, int page)
+    public Pagination<ProductDto> Search(ProductFilterDto productFilterDto, SortDto sortDto, int perPage, int page)
     {
-        return mapper.Map<Pagination<ProductDto>>(productDao.Search(filters, sorts, perPage, page));
+        return mapper.Map<Pagination<ProductDto>>(productDao.Search(productFilterDto, sortDto, perPage, page));
     }
 }

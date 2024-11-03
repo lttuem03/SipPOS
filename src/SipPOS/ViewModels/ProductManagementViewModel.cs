@@ -15,8 +15,15 @@ public partial class ProductManagementViewModel : ObservableRecipient
 {
     public ObservableCollection<ProductDto> Products { get; } = new ObservableCollection<ProductDto>();
     public ObservableCollection<CategoryDto> Categories { get; } = new ObservableCollection<CategoryDto>();
+    public ObservableCollection<CategoryDto> CategoriesFilter { get; } = new ObservableCollection<CategoryDto>();
     public ObservableCollection<StatusItem> StatusItems { get; } = new ObservableCollection<StatusItem>()
     {
+        new() { Label = "Có sẵn", Value = "Available" },
+        new() { Label = "Không có sẵn", Value = "Unavailable" }
+    };
+    public ObservableCollection<StatusItem> StatusItemsFilter { get; } = new ObservableCollection<StatusItem>()
+    {
+        new() { Label = "Tất cả", Value = null },
         new() { Label = "Có sẵn", Value = "Available" },
         new() { Label = "Không có sẵn", Value = "Unavailable" }
     };
@@ -24,6 +31,9 @@ public partial class ProductManagementViewModel : ObservableRecipient
 
     [ObservableProperty]
     private ProductDto? selectedProduct;
+
+    [ObservableProperty]
+    private ProductFilterDto productFilterDto = new ProductFilterDto();
 
     [ObservableProperty]
     private int perPage = 5;
@@ -36,6 +46,9 @@ public partial class ProductManagementViewModel : ObservableRecipient
 
     [ObservableProperty]
     private long totalRecord = 0;
+    
+    [ObservableProperty]
+    private SortDto sortDto = new SortDto();
 
     [ObservableProperty]
     public string? actionType;
@@ -53,7 +66,7 @@ public partial class ProductManagementViewModel : ObservableRecipient
     public void Search()
     {
         Products.Clear();
-        Pagination<ProductDto> pagination = _productService.Search(new List<object>(), new List<object>(), Page, PerPage);
+        Pagination<ProductDto> pagination = _productService.Search(ProductFilterDto, SortDto, Page, PerPage);
         Page = pagination.Page;
         PerPage = pagination.PerPage;
         TotalPage = pagination.TotalPage;
@@ -89,12 +102,14 @@ public partial class ProductManagementViewModel : ObservableRecipient
     public void GetAllCategory()
     {
         Categories.Clear();
+        CategoriesFilter.Clear();
+        CategoriesFilter.Add(new CategoryDto { Id = null, Name = "Tất cả" });
 
         var data = _categoryService.GetAll();
-
         foreach (var item in data)
         {
             Categories.Add(item);
+            CategoriesFilter.Add(item);
         }
     }
 
