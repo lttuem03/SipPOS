@@ -21,6 +21,9 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     private CategoryDto? selectedCategory;
 
     [ObservableProperty]
+    private CategoryFilterDto? categoryFilterDto = new CategoryFilterDto();
+
+    [ObservableProperty]
     private int perPage = 5;
 
     [ObservableProperty]
@@ -31,6 +34,9 @@ public partial class CategoryManagementViewModel : ObservableRecipient
 
     [ObservableProperty]
     private long totalRecord = 0;
+
+    [ObservableProperty]
+    private SortDto sortDto = new SortDto();
 
     [ObservableProperty]
     public string? actionType;
@@ -45,7 +51,7 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     public void Search()
     {
         Categories.Clear();
-        Pagination<CategoryDto> pagination = _categoryService.Search(new List<object>(), new List<object>(), Page, PerPage);
+        Pagination<CategoryDto> pagination = _categoryService.Search(CategoryFilterDto, SortDto, Page, PerPage);
         Page = pagination.Page;
         PerPage = pagination.PerPage;
         TotalPage = pagination.TotalPage;

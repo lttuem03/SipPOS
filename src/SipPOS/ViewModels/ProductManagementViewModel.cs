@@ -26,6 +26,9 @@ public partial class ProductManagementViewModel : ObservableRecipient
     private ProductDto? selectedProduct;
 
     [ObservableProperty]
+    private ProductFilterDto? productFilterDto = new ProductFilterDto();
+
+    [ObservableProperty]
     private int perPage = 5;
 
     [ObservableProperty]
@@ -36,6 +39,9 @@ public partial class ProductManagementViewModel : ObservableRecipient
 
     [ObservableProperty]
     private long totalRecord = 0;
+    
+    [ObservableProperty]
+    private SortDto sortDto = new SortDto();
 
     [ObservableProperty]
     public string? actionType;
@@ -53,7 +59,7 @@ public partial class ProductManagementViewModel : ObservableRecipient
     public void Search()
     {
         Products.Clear();
-        Pagination<ProductDto> pagination = _productService.Search(new List<object>(), new List<object>(), Page, PerPage);
+        Pagination<ProductDto> pagination = _productService.Search(ProductFilterDto, SortDto, Page, PerPage);
         Page = pagination.Page;
         PerPage = pagination.PerPage;
         TotalPage = pagination.TotalPage;
@@ -91,7 +97,6 @@ public partial class ProductManagementViewModel : ObservableRecipient
         Categories.Clear();
 
         var data = _categoryService.GetAll();
-
         foreach (var item in data)
         {
             Categories.Add(item);

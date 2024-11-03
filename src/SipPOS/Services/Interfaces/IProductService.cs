@@ -9,7 +9,7 @@ namespace SipPOS.Services;
 // Remove this class once your pages/features are using your data.
 public interface IProductService
 {
-    Pagination<ProductDto> Search(IList<object> filters, IList<object> sorts, int perPage, int page);
+    Pagination<ProductDto> Search(ProductFilterDto productFilterDto, SortDto sortDto, int perPage, int page);
 
     IList<ProductDto> GetAll();
 

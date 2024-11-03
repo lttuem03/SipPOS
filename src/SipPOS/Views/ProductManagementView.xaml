@@ -43,6 +43,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBox 
+                Text="{x:Bind ViewModel.ProductFilterDto.Name, Mode=TwoWay}"
                 Grid.Row="0" Grid.Column="0" 
                 Header="Tên sản phẩm"
                 PlaceholderText="Nhập tên sản phẩm" />
@@ -53,6 +54,7 @@
                 HorizontalAlignment="Stretch"
                 DisplayMemberPath="Name" 
                 SelectedValuePath="Id"
+                SelectedValue="{x:Bind ViewModel.ProductFilterDto.CategoryId, Mode=TwoWay}"
                 ItemsSource="{x:Bind ViewModel.Categories}"/>
             <ComboBox 
                 Grid.Row="0" Grid.Column="3" 
@@ -61,6 +63,7 @@
                 HorizontalAlignment="Stretch"
                 DisplayMemberPath="Label" 
                 SelectedValuePath="Value"
+                SelectedValue="{x:Bind ViewModel.ProductFilterDto.Status, Mode=TwoWay}"
                 ItemsSource="{x:Bind ViewModel.StatusItems}"/>
         </Grid>
 
@@ -75,6 +78,7 @@
         </StackPanel>
 
         <controls:DataGrid
+            x:Name="dg"
             Grid.Row="3"
             AutoGenerateColumns="False"
             GridLinesVisibility="Horizontal"
@@ -84,32 +88,33 @@
             Width="Auto" Height="Auto"
             HorizontalScrollBarVisibility="Visible"
             MaxHeight="400"
+            Sorting="DataGrid_Sorting"
             ColumnWidth="*">
             <controls:DataGrid.Resources>
                 <SolidColorBrush x:Key="DataGridColumnHeaderBackgroundColor" Color="Transparent" />
             </controls:DataGrid.Resources>
             <controls:DataGrid.Columns>
-                <controls:DataGridTemplateColumn Header="Chọn" Width="80">
+                <controls:DataGridTemplateColumn Header="Chọn" Width="80" CanUserSort="False">
                     <controls:DataGridTemplateColumn.CellTemplate >
                         <DataTemplate >
                             <CheckBox IsChecked="{Binding IsSeteled, Mode=TwoWay}"/>
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>
-                <controls:DataGridTextColumn Binding="{Binding Id}" Header="Mã" />
-                <controls:DataGridTextColumn Binding="{Binding Name}" Header="Tên" />
-                <controls:DataGridTextColumn Binding="{Binding CategoryId, Converter={StaticResource CategoryIdToCategoryNameConverter}}" Header="Danh mục" />
-                <controls:DataGridTextColumn Binding="{Binding Desc}" Header="Mô tả" />
-                <controls:DataGridTemplateColumn Header="Ảnh">
+                <controls:DataGridTextColumn Binding="{Binding Id}" Header="Mã" Tag="Id" />
+                <controls:DataGridTextColumn Binding="{Binding Name}" Header="Tên" Tag="Name" />
+                <controls:DataGridTextColumn Binding="{Binding CategoryId, Converter={StaticResource CategoryIdToCategoryNameConverter}}" Header="Danh mục" Tag="Category" />
+                <controls:DataGridTextColumn Binding="{Binding Desc}" Header="Mô tả" Tag="Desc" />
+                <controls:DataGridTemplateColumn Header="Ảnh" CanUserSort="False">
                     <controls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Image Source="{Binding ImageUrls[0]}" Width="80" Height="80" Stretch="Uniform" />
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>
-                <controls:DataGridTextColumn Binding="{Binding Status, Converter={StaticResource StatusValueToStatusLableConverter}}" Header="Trạng thái" />
-                <controls:DataGridTextColumn Binding="{Binding CreatedAt, Converter= {StaticResource DateToDisplayDateConverter}}" Header="Ngày tạo" />
-                <controls:DataGridTextColumn Binding="{Binding CreatedBy}" Header="Người tạo" />
+                <controls:DataGridTextColumn Binding="{Binding Status, Converter={StaticResource StatusValueToStatusLableConverter}}" Header="Trạng thái" Tag="Status" />
+                <controls:DataGridTextColumn Binding="{Binding CreatedAt, Converter= {StaticResource DateToDisplayDateConverter}}" Header="Ngày tạo"  Tag="CreatedAt" />
+                <controls:DataGridTextColumn Binding="{Binding CreatedBy}" Header="Người tạo" Tag="CreatedBy" />
             </controls:DataGrid.Columns>
         </controls:DataGrid>
 
