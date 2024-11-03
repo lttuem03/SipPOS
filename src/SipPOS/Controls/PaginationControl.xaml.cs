@@ -144,7 +144,7 @@ public sealed partial class PaginationControl : UserControl
         IsNextPageButtonEnabled = CurrentPage < TotalPage;
         IsPreviousPageButtonEnabled = CurrentPage > MinPage;
         var maxRecordShow = CurrentPage * PerPage > TotalRecord ? TotalRecord : CurrentPage * PerPage;
-        var minRecordShow = CurrentPage * PerPage - PerPage + 1 >= 0 ? CurrentPage * PerPage - PerPage + 1: 0;
+        var minRecordShow = CurrentPage * PerPage - PerPage + 1 >= 0 ? CurrentPage * PerPage - PerPage + 1 : 0;
         Notify = $"{minRecordShow} - {maxRecordShow} của {TotalRecord}";
     }
 
@@ -190,13 +190,13 @@ public sealed partial class PaginationControl : UserControl
 
 public sealed class PaginationControlValueChangedEventArgs
 {
-public PaginationControlValueChangedEventArgs(int CurrentPage, int PerPage)
-{
-    this.CurrentPage = CurrentPage;
-    this.PerPage = PerPage;
-}
+    public PaginationControlValueChangedEventArgs(int CurrentPage, int PerPage)
+    {
+        this.CurrentPage = CurrentPage;
+        this.PerPage = PerPage;
+    }
 
-public int CurrentPage { get; }
+    public int CurrentPage { get; }
 
-public int PerPage { get; }
+    public int PerPage { get; }
 }
