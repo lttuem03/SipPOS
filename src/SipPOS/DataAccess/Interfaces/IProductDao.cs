@@ -1,12 +1,14 @@
-﻿using SipPOS.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SipPOS.DataTransfer;
 
-namespace SipPOS.DataAccess.Implementations;
+using SipPOS.Models;
+using SipPOS.DataTransfer;
+using SipPOS.DataAccess.Implementations;
+
+namespace SipPOS.DataAccess.Interfaces;
 
 public interface IProductDao
 {

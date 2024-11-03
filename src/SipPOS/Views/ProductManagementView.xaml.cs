@@ -6,35 +6,31 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using SipPOS.Models;
-using SipPOS.ViewModels;
-using SipPOS.Controls;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Diagnostics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using System.Diagnostics;
-using SipPOS.DataTransfer;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Pickers;
 using Windows.Storage;
-using System.Text;
 using Microsoft.Windows.AppNotifications.Builder;
 using Microsoft.Windows.AppNotifications;
 using CommunityToolkit.WinUI.UI.Controls;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using SipPOS.Models;
+using SipPOS.ViewModels;
+using SipPOS.Controls;
+using SipPOS.DataTransfer;
 
 namespace SipPOS.Views;
 
-/// <summary>
-/// An empty page that can be used on its own or navigated to within a Frame.
-/// </summary>
 public sealed partial class ProductManagementView : Page
 {
     public ProductManagementViewModel ViewModel

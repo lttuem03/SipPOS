@@ -1,12 +1,13 @@
-﻿using SipPOS.DataAccess.Implementations;
+﻿using AutoMapper;
+
 using SipPOS.Models;
-using SipPOS.Services;
-using SipPOS.DataAccess.Interfaces;
-using AutoMapper;
+using SipPOS.Services.Interfaces;
 using SipPOS.DataAccess;
+using SipPOS.DataAccess.Interfaces;
+using SipPOS.DataAccess.Implementations;
 using SipPOS.DataTransfer;
 
-namespace SipPOS.Services.Impl;
+namespace SipPOS.Services.Implementations;
 
 public class ProductService : IProductService
 {

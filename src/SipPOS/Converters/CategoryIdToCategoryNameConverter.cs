@@ -1,11 +1,13 @@
 ﻿using Microsoft.UI.Xaml.Data;
-using SipPOS.DataTransfer;
-using SipPOS.Services;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using SipPOS.DataTransfer;
+using SipPOS.Services.Interfaces;
 
 namespace SipPOS.Converters;
 

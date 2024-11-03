@@ -1,13 +1,13 @@
-﻿using System.Collections.ObjectModel;
-
+﻿using System.ComponentModel;
+using System.Collections.Immutable;
+using System.Collections.ObjectModel;
+using WinRT;
 using CommunityToolkit.Mvvm.ComponentModel;
+
 using SipPOS.Models;
-using SipPOS.Services;
+using SipPOS.Services.Interfaces;
 using SipPOS.DataTransfer;
 using SipPOS.Views;
-using System.ComponentModel;
-using System.Collections.Immutable;
-using WinRT;
 
 namespace SipPOS.ViewModels;
 

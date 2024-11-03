@@ -1,13 +1,14 @@
-﻿using SipPOS.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SipPOS.DataAccess.Interfaces;
 using System.Collections;
 using Windows.Data.Pdf;
 using SipPOS.DataTransfer;
+
+using SipPOS.Models;
+using SipPOS.DataAccess.Interfaces;
 
 namespace SipPOS.DataAccess.Implementations;
 
@@ -196,11 +197,8 @@ class MockProductDao : IProductDao
 
     public Product? UpdateById(Product product)
     {
-        if (null == product.Id)
-        {
-            throw new Exception("Product Id is required to update product");
-        }
-        Product oldProduct = GetById((long)product.Id);
+        Product oldProduct = GetById(product.Id);
+
         if (oldProduct != null)
         {
             oldProduct.Name = product.Name;

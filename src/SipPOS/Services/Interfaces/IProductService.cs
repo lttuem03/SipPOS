@@ -1,10 +1,11 @@
-﻿using SipPOS.DataTransfer;
-using SipPOS.Models;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SipPOS.Services;
+using SipPOS.Models;
+using SipPOS.DataTransfer;
+
+namespace SipPOS.Services.Interfaces;
 
 // Remove this class once your pages/features are using your data.
 public interface IProductService

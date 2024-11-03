@@ -1,9 +1,10 @@
-﻿using SipPOS.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using SipPOS.Models;
 using SipPOS.DataAccess.Interfaces;
 using SipPOS.DataTransfer;
 
@@ -199,7 +200,7 @@ class MockCategoryDao : ICategoryDao
 
     public Category? UpdateById(Category category)
     {
-        var oldCategory = GetById(category.Id.HasValue ? category.Id.Value : -1);
+        var oldCategory = GetById(category.Id);
 
         if (oldCategory != null)
         {
