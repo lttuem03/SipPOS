@@ -15,8 +15,15 @@ public partial class ProductManagementViewModel : ObservableRecipient
 {
     public ObservableCollection<ProductDto> Products { get; } = new ObservableCollection<ProductDto>();
     public ObservableCollection<CategoryDto> Categories { get; } = new ObservableCollection<CategoryDto>();
+    public ObservableCollection<CategoryDto> CategoriesFilter { get; } = new ObservableCollection<CategoryDto>();
     public ObservableCollection<StatusItem> StatusItems { get; } = new ObservableCollection<StatusItem>()
     {
+        new() { Label = "Có sẵn", Value = "Available" },
+        new() { Label = "Không có sẵn", Value = "Unavailable" }
+    };
+    public ObservableCollection<StatusItem> StatusItemsFilter { get; } = new ObservableCollection<StatusItem>()
+    {
+        new() { Label = "Tất cả", Value = null },
         new() { Label = "Có sẵn", Value = "Available" },
         new() { Label = "Không có sẵn", Value = "Unavailable" }
     };
@@ -95,11 +102,14 @@ public partial class ProductManagementViewModel : ObservableRecipient
     public void GetAllCategory()
     {
         Categories.Clear();
+        CategoriesFilter.Clear();
+        CategoriesFilter.Add(new CategoryDto { Id = null, Name = "Tất cả" });
 
         var data = _categoryService.GetAll();
         foreach (var item in data)
         {
             Categories.Add(item);
+            CategoriesFilter.Add(item);
         }
     }
 

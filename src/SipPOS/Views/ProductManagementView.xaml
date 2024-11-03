@@ -55,7 +55,7 @@
                 DisplayMemberPath="Name" 
                 SelectedValuePath="Id"
                 SelectedValue="{x:Bind ViewModel.ProductFilterDto.CategoryId, Mode=TwoWay}"
-                ItemsSource="{x:Bind ViewModel.Categories}"/>
+                ItemsSource="{x:Bind ViewModel.CategoriesFilter}"/>
             <ComboBox 
                 Grid.Row="0" Grid.Column="3" 
                 Header="Chọn trạng thái"
@@ -64,7 +64,7 @@
                 DisplayMemberPath="Label" 
                 SelectedValuePath="Value"
                 SelectedValue="{x:Bind ViewModel.ProductFilterDto.Status, Mode=TwoWay}"
-                ItemsSource="{x:Bind ViewModel.StatusItems}"/>
+                ItemsSource="{x:Bind ViewModel.StatusItemsFilter}"/>
         </Grid>
 
         <StackPanel Grid.Row="2" Orientation="Vertical">

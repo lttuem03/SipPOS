@@ -15,6 +15,12 @@ public partial class CategoryManagementViewModel : ObservableRecipient
         new() { Label = "Có sẵn", Value = "Available" },
         new() { Label = "Không có sẵn", Value = "Unavailable" }
     };
+    public ObservableCollection<StatusItem> StatusItemsFilter { get; } = new ObservableCollection<StatusItem>()
+    {
+        new() { Label = "Tất cả", Value = null },
+        new() { Label = "Có sẵn", Value = "Available" },
+        new() { Label = "Không có sẵn", Value = "Unavailable" }
+    };
     public ObservableCollection<string> ImageUrls { get; set; } = new ObservableCollection<string>();
 
     [ObservableProperty]
