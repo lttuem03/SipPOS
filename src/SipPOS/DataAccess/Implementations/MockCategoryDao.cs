@@ -242,7 +242,7 @@ class MockCategoryDao : ICategoryDao
 
         Func<Category, object> keySelector = x => sortDto.SortBy switch
         {
-            "Id" => x.Id ?? 0,
+            "Id" => x.Id,
             "Name" => x.Name ?? string.Empty,
             "Desc" => x.Desc ?? string.Empty,
             "Status" => x.Status ?? string.Empty,
