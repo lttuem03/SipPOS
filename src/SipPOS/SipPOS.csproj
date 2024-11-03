@@ -20,6 +20,7 @@
     <None Remove="Views\CategoryManagementView.xaml" />
     <None Remove="Views\MainMenuView.xaml" />
     <None Remove="Views\ProductManagementView.xaml" />
+    <None Remove="Views\StoreSettingsView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +41,7 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -52,6 +54,9 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Views\StoreSettingsView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
     <Page Update="Views\ProductManagementView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="SipPOS.Views.StoreSettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SipPOS.Views">
+
+    <Page.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="0,5,0,0"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="0,5,0,0"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Width" Value="auto"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="0,5,0,0"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Width" Value="300"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="0,10,0,0"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Width" Value="100"/>
+        </Style>
+    </Page.Resources>
+ 
+
+
+    <ScrollViewer>
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Thông tin cửa hàng" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
+            <StackPanel Grid.Row="1" Margin="0,10,0,0">
+                <!-- Basic Information -->
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Tên cửa hàng"/>
+                    <TextBox Text="{Binding StoreName, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Địa chỉ"/>
+                    <TextBox Text="{Binding Address, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Tỉnh thành"/>
+                    <ComboBox SelectedItem="{Binding City, Mode=TwoWay}">
+                        <ComboBoxItem>Hà Nội</ComboBoxItem>
+                        <ComboBoxItem>TP Hồ Chí Minh</ComboBoxItem>
+                        <ComboBoxItem>Đà Nẵng</ComboBoxItem>
+                        <!-- Add other cities as needed -->
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Điện thoại"/>
+                    <TextBox Text="{Binding Phone, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Điện thoại chi nhánh"/>
+                    <TextBox Text="{Binding BranchPhone, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="URL"/>
+                    <TextBox Text="{Binding Url, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Logo"/>
+                    <Button Content="Chọn file" Click="ChooseFileButton_Click"/>
+                    <TextBlock Text="Dung lượng tệp không được vượt quá 100KB" FontSize="10" Foreground="Gray"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Ghi chú"/>
+                    <TextBox Text="{Binding Note, Mode=TwoWay}" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
+                </StackPanel>
+
+                <!-- Financial Information -->
+                <TextBlock Text="Thông tin tài chính" FontSize="20" FontWeight="Bold" Margin="0,20,0,10"/>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Mã số thuế"/>
+                    <TextBox Text="{Binding TaxCode, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Phương thức thanh toán"/>
+                    <TextBox Text="{Binding PaymentMethods, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Tiền tệ"/>
+                    <TextBox Text="{Binding Currency, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Tỷ giá"/>
+                    <TextBox Text="{Binding ExchangeRate, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <!-- Product and Category Configuration -->
+                <TextBlock Text="Cấu hình sản phẩm và danh mục" FontSize="20" FontWeight="Bold" Margin="0,20,0,10"/>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Đơn vị đo lường"/>
+                    <TextBox Text="{Binding MeasurementUnits, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Nổi bật sản phẩm"/>
+                    <CheckBox IsChecked="{Binding HighlightFeaturedProducts, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Nổi bật sản phẩm giảm giá"/>
+                    <CheckBox IsChecked="{Binding HighlightDiscountedProducts, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <!-- Tax and Fee Settings -->
+                <TextBlock Text="Cài đặt thuế và phí" FontSize="20" FontWeight="Bold" Margin="0,20,0,10"/>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Thuế VAT"/>
+                    <TextBox Text="{Binding TaxRate, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Phí dịch vụ"/>
+                    <TextBox Text="{Binding ServiceFee, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Phí vận chuyển"/>
+                    <TextBox Text="{Binding ShippingFee, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <!-- Operating Hours -->
+                <TextBlock Text="Giờ hoạt động" FontSize="20" FontWeight="Bold" Margin="0,20,0,10"/>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Giờ mở cửa"/>
+                    <TimePicker  SelectedTime="{Binding OpeningTime, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Giờ đóng cửa"/>
+                    <TimePicker  SelectedTime="{Binding ClosingTime, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <!-- Promotion and Discount Settings -->
+                <TextBlock Text="Cài đặt khuyến mãi và giảm giá" FontSize="20" FontWeight="Bold" Margin="0,20,0,10"/>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Cho phép giảm giá"/>
+                    <CheckBox IsChecked="{Binding AllowDiscounts, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Khuyến mãi"/>
+                    <TextBox Text="{Binding Promotions, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Phiếu giảm giá"/>
+                    <TextBox Text="{Binding Coupons, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Điểm thưởng"/>
+                    <TextBox Text="{Binding RewardPoints, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <!-- UI Configuration -->
+                <TextBlock Text="Cấu hình giao diện" FontSize="20" FontWeight="Bold" Margin="0,20,0,10"/>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Bố cục"/>
+                    <ComboBox SelectedItem="{Binding Layout, Mode=TwoWay}">
+                        <ComboBoxItem>Kiểu 1</ComboBoxItem>
+                        <ComboBoxItem>Kiểu 2</ComboBoxItem>
+                        <ComboBoxItem>Kiểu 3</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Màu chủ đề"/>
+                    <ComboBox SelectedItem="{Binding ThemeColor, Mode=TwoWay}">
+                        <ComboBoxItem Content="Red" />
+                        <ComboBoxItem Content="Green" />
+                        <ComboBoxItem Content="Blue" />
+                        <ComboBoxItem Content="Yellow" />
+                        <ComboBoxItem Content="Purple" />
+                        <!-- Add other colors as needed -->
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Ngôn ngữ"/>
+                    <ComboBox SelectedItem="{Binding Language, Mode=TwoWay}">
+                        <ComboBoxItem Content="Tiếng Việt"/>
+                        <ComboBoxItem Content="English"/>
+                        <ComboBoxItem Content="Français"/>
+                        <ComboBoxItem Content="Español"/>
+                        <!-- Add other languages as needed -->
+                    </ComboBox>
+                </StackPanel>
+
+                    <!-- Reporting and Data Analysis -->
+                <TextBlock Text="Báo cáo và phân tích dữ liệu" FontSize="20" FontWeight="Bold" Margin="0,20,0,10"/>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Báo cáo bán hàng"/>
+                    <CheckBox IsChecked="{Binding EnableSalesReport, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Báo cáo tồn kho"/>
+                    <CheckBox IsChecked="{Binding EnableInventoryReport, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Báo cáo hàng tháng"/>
+                    <CheckBox IsChecked="{Binding EnableMonthlyReport, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Tham số báo cáo"/>
+                    <TextBox Text="{Binding ReportParameters, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10">
+                    <Button Content="Quay lại" Width="100" Height="30" Click="BackButton_Click"/>
+                    <Button Content="Lưu" Click="SaveSetting_Click" Width="100" Height="30" Margin="10,10,0,0"/>
+                </StackPanel>
+
+
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Page>

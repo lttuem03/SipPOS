@@ -20,6 +20,7 @@ namespace SipPOS.DataTransfer
             CreateMap<Pagination<ProductDto>, Pagination<Product>>();
             CreateMap<Pagination<Category>, Pagination<CategoryDto>>();
             CreateMap<Pagination<CategoryDto>, Pagination<Category>>();
+           
         }
     }
 }

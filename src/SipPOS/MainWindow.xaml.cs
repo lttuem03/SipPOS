@@ -18,7 +18,7 @@ namespace SipPOS
         public MainWindow()
         {
             this.InitializeComponent();
-            navigatingContentFrame.Navigate(typeof(ProductManagementView));
+            navigatingContentFrame.Navigate(typeof(StoreSettingsView));
         }
 
         private void Window_Activated(object sender, Microsoft.UI.Xaml.WindowActivatedEventArgs args)
