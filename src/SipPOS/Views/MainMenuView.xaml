@@ -13,6 +13,10 @@
     <StackPanel Orientation="Vertical"
                 HorizontalAlignment="Center" 
                 VerticalAlignment="Center">
+        <!--Authentication status-->
+        <TextBlock
+            Text="{x:Bind ViewModel.CurrentStoreAuthenticationStatus}"/>
+
         <!--Navigation buttons-->
         <StackPanel Orientation="Horizontal" 
                     HorizontalAlignment="Center" 
@@ -39,10 +43,10 @@
                     Content="Thiết đặt"/>
         </StackPanel>
 
-        <!--Logout button-->
-        <Button x:Name="logoutButton"
-                Click="logoutButton_Click"
-                Content="Đăng xuất"/>
+        <!--Change ID button-->
+        <Button x:Name="changeIdButton"
+                Click="changeIdButton_Click"
+                Content="Đổi ID"/>
     </StackPanel>
 
     

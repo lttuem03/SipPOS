@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using SipPOS.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,9 +18,12 @@ namespace SipPOS.Views;
 
 public sealed partial class MainMenuView : Page
 {
+    public MainMenuViewModel ViewModel { get; }
+
     public MainMenuView()
     {
         this.InitializeComponent();
+        ViewModel = new MainMenuViewModel();
     }
 
     private void toInventoryViewButton_Click(object sender, RoutedEventArgs e)
@@ -46,7 +50,7 @@ public sealed partial class MainMenuView : Page
         }
     }
 
-    private void logoutButton_Click(object sender, RoutedEventArgs e)
+    private void changeIdButton_Click(object sender, RoutedEventArgs e)
     {
         if (App.CurrentWindow == null)
             return;

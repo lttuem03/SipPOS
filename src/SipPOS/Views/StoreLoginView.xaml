@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="SipPOS.Views.StoreLoginView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SipPOS.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid 
+        Width="400" 
+        Height="250" 
+        BorderBrush="Black" 
+        BorderThickness="1">
+        <StackPanel 
+            Orientation="Vertical"
+            VerticalAlignment="Center"
+            Margin="10">
+            <TextBox    
+                Name="storeUsernameTextBox"
+                PlaceholderText="Tên đăng nhập" 
+                Margin="0,0,0,10"/>
+            <PasswordBox 
+                Name="storePasswordBox"
+                PlaceholderText="Mật khẩu" 
+                Margin="0,0,0,10"/>
+            <TextBlock 
+                Name="errorMessageTextBlock"
+                HorizontalAlignment="Center"
+                Foreground="Red"
+                Opacity="0.0"
+                Margin="0,0,0,10"
+                Text="Sai tên đăng nhập hoặc mật khẩu"/>
+            <Button 
+                Name="storeLoginButton"
+                Click="storeLoginButton_Click"
+                HorizontalAlignment="Center"
+                Margin="0,0,0,10"
+                Content="Đăng nhập"/>
+            <Button 
+                Name="createNewStoreAccountButton"
+                Click="createNewStoreAccountButton_Click"
+                Content="Tạo cửa hàng mới" 
+                HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Page>

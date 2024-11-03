@@ -9,114 +9,28 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <StackPanel 
-        Orientation="Vertical"
+    <Grid
         HorizontalAlignment="Center"
-        VerticalAlignment="Center">
-        <TabView 
-            CanDrag="False"
-            CanDragTabs="False"
-            CanReorderTabs="False" 
-            TabWidthMode="SizeToContent"
-            IsAddTabButtonVisible="False">
-            <TabView.TabItems>
-                <!--Tab: Đăng nhập nhân viên-->
-                <TabViewItem 
-                    Header="Đăng nhập nhân viên"
-                    IsClosable="False">
-                    <Grid 
-                        Width="400" 
-                        Height="200" 
-                        BorderBrush="Black" 
-                        BorderThickness="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="1*" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel 
-                            Orientation="Vertical"
-                            VerticalAlignment="Center"
-                            Grid.Column="0" 
-                            Margin="10">
-                            <!--Cấp + Mã nhân viên-->
-                            <StackPanel
-                                Orientation="Horizontal"
-                                HorizontalAlignment="Left">
-                                <ComboBox
-                                    Name="selectPrefixComboBox"
-                                    PlaceholderText="Cấp"
-                                    GotFocus="selectPrefixComboBox_GotFocus">
-                                    <x:String>ST</x:String>
-                                    <x:String>AM</x:String>
-                                    <x:String>SM</x:String>
-                                </ComboBox>
-                                <TextBox 
-                                    PlaceholderText="Mã nhân viên" 
-                                    GotFocus="TextBox_GotFocus"
-                                    Margin="5,0,0,10"
-                                    Width="175"/>
-                            </StackPanel>
-                            <!--Mật khẩu-->
-                            <PasswordBox 
-                                PlaceholderText="Mật khẩu" 
-                                GotFocus="PasswordBox_GotFocus"
-                                Margin="0,0,0,10"/>
-                            <Button 
-                                Content="Đăng nhập" 
-                                HorizontalAlignment="Center"/>
-                        </StackPanel>
-                        <!--Numpad-->
-                        <Grid Grid.Column="1" Margin="10">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Button Content="1" Grid.Row="0" Grid.Column="0" Click="NumpadButton_Click"/>
-                            <Button Content="2" Grid.Row="0" Grid.Column="1" Click="NumpadButton_Click"/>
-                            <Button Content="3" Grid.Row="0" Grid.Column="2" Click="NumpadButton_Click"/>
-                            <Button Content="4" Grid.Row="1" Grid.Column="0" Click="NumpadButton_Click"/>
-                            <Button Content="5" Grid.Row="1" Grid.Column="1" Click="NumpadButton_Click"/>
-                            <Button Content="6" Grid.Row="1" Grid.Column="2" Click="NumpadButton_Click"/>
-                            <Button Content="7" Grid.Row="2" Grid.Column="0" Click="NumpadButton_Click"/>
-                            <Button Content="8" Grid.Row="2" Grid.Column="1" Click="NumpadButton_Click"/>
-                            <Button Content="9" Grid.Row="2" Grid.Column="2" Click="NumpadButton_Click"/>
-                            <Button Content="0" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Click="NumpadButton_Click"/>
-                        </Grid>
-                    </Grid>
-                </TabViewItem>
-                <!--Tab: Đăng nhập cửa hàng-->
-                <TabViewItem 
-                    Header="Đăng nhập cửa hàng"
-                    IsClosable="False">
-                    <Grid 
-                        Width="400" 
-                        Height="200" 
-                        BorderBrush="Black" 
-                        BorderThickness="1">
-                        <StackPanel 
-                            Orientation="Vertical"
-                            VerticalAlignment="Center"
-                            Margin="10">
-                            <TextBox 
-                                PlaceholderText="Tên đăng nhập hoặc Email" 
-                                Margin="0,0,0,10"/>
-                            <PasswordBox 
-                                PlaceholderText="Mật khẩu" 
-                                Margin="0,0,0,10"/>
-                            <Button 
-                                Content="Đăng nhập" 
-                                HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Grid>
-                </TabViewItem>
-            </TabView.TabItems>
-        </TabView>
-    </StackPanel>
+        VerticalAlignment="Center"
+        Width="700"
+        Height="300">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <NavigationView
+            Name="loginNavigationView"
+            PaneDisplayMode="Top"
+            IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False"
+            SelectionChanged="loginNavigationView_SelectionChanged">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Đăng nhập nhân viên" Tag="StaffLogin" Icon="Contact"/>
+                <NavigationViewItem Content="Đăng nhập cửa hàng" Tag="StoreLogin" Icon="Shop"/>
+            </NavigationView.MenuItems>
+        </NavigationView>
+
+        <Frame x:Name="loginNavigationFrame" Grid.Row="1"/>
+    </Grid>
 </Page>

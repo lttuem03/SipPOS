@@ -46,42 +46,54 @@ public partial class App : Application
         this.InitializeComponent();
 
         // Database connection configuration
-        DotNetEnv.Env.TraversePath().Load();
-        var host = DotNetEnv.Env.GetString("POSTGRES_HOST");
-        var port = DotNetEnv.Env.GetInt("POSTGRES_PORT");
-        var username = DotNetEnv.Env.GetString("POSTGRES_USERNAME");
-        var password = DotNetEnv.Env.GetString("POSTGRES_PASSWORD");
-        var database = DotNetEnv.Env.GetString("POSTGRES_DATABASE");
+        DotNetEnv.Env.TraversePath().Load(AppContext.BaseDirectory);
+        var postgres_host = DotNetEnv.Env.GetString("POSTGRES_HOST");
+        var postgres_port = DotNetEnv.Env.GetInt("POSTGRES_PORT");
+        var postgres_username = DotNetEnv.Env.GetString("POSTGRES_USERNAME");
+        var postgres_password = DotNetEnv.Env.GetString("POSTGRES_PASSWORD");
+        var postgres_database = DotNetEnv.Env.GetString("POSTGRES_DATABASE");
 
         Host = Microsoft.Extensions.Hosting.Host.
-               CreateDefaultBuilder().
-               UseContentRoot(AppContext.BaseDirectory).
-               ConfigureServices((context, services) =>
-               {
-                   // Dao
-                   services.AddSingleton<IProductDao, MockProductDao>();
-                   services.AddSingleton<ICategoryDao, MockCategoryDao>();
-               
-                   // Services
-                   services.AddSingleton<IProductService, ProductService>();
-                   services.AddSingleton<ICategoryService, CategoryService>();
-               
-                   // Views and ViewModels
-                   services.AddTransient<CategoryManagementViewModel>();
-                   services.AddTransient<CategoryManagementView>();
-                   services.AddTransient<ProductManagementViewModel>();
-                   services.AddTransient<ProductManagementView>();
-               
-                   //Add AutoMapper
-                   services.AddAutoMapper(typeof(App).Assembly);
-               }).
-               Build();
+        CreateDefaultBuilder().
+        UseContentRoot(AppContext.BaseDirectory).
+        ConfigureServices((context, services) =>
+        {
+            // Dao
+            services.AddSingleton<IProductDao, MockProductDao>();
+            services.AddSingleton<ICategoryDao, MockCategoryDao>();
+            services.AddSingleton<IStoreDao, PostgreStoreDao>();
+        
+            // Services
+            services.AddSingleton<IProductService, ProductService>();
+            services.AddSingleton<ICategoryService, CategoryService>();
+            services.AddSingleton<IDatabaseConnectionService>(new PostgreSqlConnectionService(
+                        host: postgres_host,
+                        port: postgres_port,
+                        username: postgres_username,
+                        password: postgres_password,
+                        database: postgres_database
+                    )); // please use arcordingly with the DAOs using the database connections
+            services.AddSingleton<IPasswordEncryptionService>(new PasswordEncryptionService());
+            services.AddSingleton<IStoreAccountCreationService>(new StoreAccountCreationService());
+            services.AddSingleton<IStoreAuthenticationService>(new StoreAuthenticationService());
+    
+
+            // Views and ViewModels
+            services.AddTransient<CategoryManagementViewModel>();
+            services.AddTransient<CategoryManagementView>();
+            services.AddTransient<ProductManagementViewModel>();
+            services.AddTransient<ProductManagementView>();
+        
+            //Add AutoMapper
+            services.AddAutoMapper(typeof(App).Assembly);
+        }).
+        Build();
     }
 
     public static T GetService<T>()
         where T : class
     {
-        if ((App.Current as App)!.Host.Services.GetService(typeof(T)) is not T service)
+        if ((Current as App)!.Host.Services.GetService(typeof(T)) is not T service)
         {
             throw new ArgumentException($"{typeof(T)} needs to be registered in ConfigureServices within App.xaml.cs.");
         }

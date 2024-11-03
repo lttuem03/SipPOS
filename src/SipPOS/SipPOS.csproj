@@ -3,7 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-    <WindowsSdkPackageVersion>10.0.22621.38</WindowsSdkPackageVersion>
+    <WindowsSdkPackageVersion>10.0.26100.54</WindowsSdkPackageVersion>
     <RootNamespace>SipPOS</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x86;x64;ARM64</Platforms>
@@ -16,12 +16,16 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <UserSecretsId>5c942361-fdf4-4fdd-ab3c-9b0616975bf2</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Views\CategoryManagementView.xaml" />
     <None Remove="Views\LoginView.xaml" />
     <None Remove="Views\MainMenuView.xaml" />
     <None Remove="Views\ProductManagementView.xaml" />
+    <None Remove="Views\StaffLoginView.xaml" />
+    <None Remove="Views\StoreAccountCreationView.xaml" />
+    <None Remove="Views\StoreLoginView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,6 +58,21 @@
   -->
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\StoreLoginView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\StaffLoginView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\StoreAccountCreationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\LoginView.xaml">

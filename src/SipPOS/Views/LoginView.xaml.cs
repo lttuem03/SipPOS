@@ -13,56 +13,23 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 
+using SipPOS.ViewModels;
 
 namespace SipPOS.Views;
 
-
 public sealed partial class LoginView : Page
 {
-    private TextBox? _selectedTextBox;
-    private PasswordBox? _selectedPasswordBox;
+    public LoginViewModel ViewModel { get; }
 
     public LoginView()
     {
         this.InitializeComponent();
+        ViewModel = new LoginViewModel();
+        ViewModel.SelectViewUponLoad(loginNavigationView, loginNavigationFrame);
     }
 
-    private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+    private void loginNavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
-        _selectedTextBox = sender as TextBox;
-        _selectedPasswordBox = null;
-    }
-
-    private void PasswordBox_GotFocus(object sender, RoutedEventArgs e)
-    {
-        _selectedPasswordBox = sender as PasswordBox;
-        _selectedTextBox = null;
-    }
-
-    private void NumpadButton_Click(object sender, RoutedEventArgs e)
-    {
-        var button = sender as Button;
-
-        if (button == null)
-        {
-            return;
-        }
-
-        var number = button.Content.ToString();
-
-        if (_selectedTextBox != null)
-        {
-            _selectedTextBox.Text += number;
-        }
-        else if (_selectedPasswordBox != null)
-        {
-            _selectedPasswordBox.Password += number;
-        }
-    }
-
-    private void selectPrefixComboBox_GotFocus(object sender, RoutedEventArgs e)
-    {
-        _selectedTextBox = null;
-        _selectedPasswordBox = null;
+        ViewModel.HandleLoginNavigationViewSelectionChanged(loginNavigationFrame, args);
     }
 }

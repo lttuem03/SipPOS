@@ -80,8 +80,8 @@ public partial class CategoryManagementViewModel : ObservableRecipient
 
     public void DeleteByIds()
     {
-        List<long> ids = Categories.Where(x => x.IsSeteled).
-                                    Select(x => x.Id).
+        List<long> ids = Categories.Where(x => x.IsSeteled && x.Id.HasValue).
+                                    Select(x => x.Id.HasValue ? x.Id.Value : -1).
                                     ToList();
 
         _categoryService.DeleteByIds(ids);
