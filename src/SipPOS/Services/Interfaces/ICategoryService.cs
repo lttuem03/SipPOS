@@ -1,10 +1,11 @@
-﻿using SipPOS.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+
+using SipPOS.Models;
 using SipPOS.DataTransfer;
 using SipPOS.DataAccess.Interfaces;
 
-namespace SipPOS.Services;
+namespace SipPOS.Services.Interfaces;
 
 // Remove this class once your pages/features are using your data.
 public interface ICategoryService
