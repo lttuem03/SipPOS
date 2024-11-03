@@ -26,7 +26,7 @@ public partial class ProductManagementViewModel : ObservableRecipient
     private ProductDto? selectedProduct;
 
     [ObservableProperty]
-    private ProductFilterDto? productFilterDto = new ProductFilterDto();
+    private ProductFilterDto productFilterDto = new ProductFilterDto();
 
     [ObservableProperty]
     private int perPage = 5;

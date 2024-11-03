@@ -21,7 +21,7 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     private CategoryDto? selectedCategory;
 
     [ObservableProperty]
-    private CategoryFilterDto? categoryFilterDto = new CategoryFilterDto();
+    private CategoryFilterDto categoryFilterDto = new CategoryFilterDto();
 
     [ObservableProperty]
     private int perPage = 5;
