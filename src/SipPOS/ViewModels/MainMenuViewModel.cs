@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using SipPOS.Services.Implementations;
 using SipPOS.Services.Interfaces;
+using SipPOS.Views;
 
 namespace SipPOS.ViewModels;
 
@@ -43,6 +44,22 @@ public class MainMenuViewModel : INotifyPropertyChanged
     /// Event triggered when a property value changes.
     /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <summary>
+    /// Handles the event when the button to navigate to the product management view is clicked.
+    /// </summary>
+    public void HandleToProductManagementViewButtonClick()
+    {
+        App.NavigateTo(typeof(ProductManagementView));
+    }
+
+    /// <summary>
+    /// Handles the event when the change ID button is clicked.
+    /// </summary>
+    public void HandleChangeIdButtonClick()
+    {
+        App.NavigateTo(typeof(LoginView));
+    }
 
     /// <summary>
     /// Raises the <see cref="PropertyChanged"/> event.
