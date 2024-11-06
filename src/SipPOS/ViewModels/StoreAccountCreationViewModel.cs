@@ -43,6 +43,9 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
     private float _otherErrorMessageOpacity;
     private string _otherErrorMessageMessageText;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StoreAccountCreationViewModel"/> class.
+    /// </summary>
     public StoreAccountCreationViewModel()
     {
         _storeNameErrorMessageOpacity = 0.0F;
@@ -70,6 +73,11 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         _otherErrorMessageMessageText = String.Empty;
     }
 
+    /// <summary>
+    /// Handles the event when the confirm store account creation button is clicked.
+    /// </summary>
+    /// <param name="rawInfoStoreDto">The raw information of the store entered in the fields.</param>
+    /// <param name="repeatPasswordString">The repeated password string.</param>
     public async void HandleConfirmStoreAccountCreationButtonClick(StoreDto rawInfoStoreDto, string repeatPasswordString)
     {
         if (rawInfoStoreDto.PasswordHash == null)
@@ -178,14 +186,23 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Event triggered when a property value changes.
+    /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    /// <summary>
+    /// Raises the <see cref="PropertyChanged"/> event.
+    /// </summary>
+    /// <param name="propertyName">The name of the property that changed.</param>
     public void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    // Store Name error-handling properties
+    /// <summary>
+    /// Gets or sets the opacity of the store name error message.
+    /// </summary>
     public float StoreNameErrorMessageOpacity
     {
         get => _storeNameErrorMessageOpacity;
@@ -195,6 +212,9 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(StoreNameErrorMessageOpacity));
         }
     }
+    /// <summary>
+    /// Gets or sets the text of the store name error message.
+    /// </summary>
     public string StoreNameErrorMessageText
     {
         get => _storeNameErrorMessageText;
@@ -205,7 +225,9 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         }
     }
 
-    // Store Address error-handling properties
+    /// <summary>
+    /// Gets or sets the opacity of the store address error message.
+    /// </summary>
     public float StoreAddressErrorMessageOpacity
     {
         get => _storeAddressErrorMessageOpacity;
@@ -216,6 +238,9 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text of the store address error message.
+    /// </summary>
     public string StoreAddressErrorMessageText
     {
         get => _storeAddressErrorMessageText;
@@ -226,7 +251,9 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         }
     }
 
-    // Store Email error-handling properties
+    /// <summary>
+    /// Gets or sets the opacity of the store email error message.
+    /// </summary>
     public float StoreEmailErrorMessageOpacity
     {
         get => _storeEmailErrorMessageOpacity;
@@ -237,6 +264,9 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text of the store email error message.
+    /// </summary>
     public string StoreEmailErrorMessageText
     {
         get => _storeEmailErrorMessageText;
@@ -247,7 +277,9 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         }
     }
 
-    // Store Tel error-handling properties
+    /// <summary>
+    /// Gets or sets the opacity of the store telephone error message.
+    /// </summary>
     public float StoreTelErrorMessageOpacity
     {
         get => _storeTelErrorMessageOpacity;
@@ -258,6 +290,9 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text of the store telephone error message.
+    /// </summary>
     public string StoreTelErrorMessageText
     {
         get => _storeTelErrorMessageText;
@@ -268,7 +303,9 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         }
     }
 
-    // Store Username error-handling properties
+    /// <summary>
+    /// Gets or sets the opacity of the store username error message.
+    /// </summary>
     public float StoreUsernameErrorMessageOpacity
     {
         get => _storeUsernameErrorMessageOpacity;
@@ -279,6 +316,9 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text of the store username error message.
+    /// </summary>
     public string StoreUsernameErrorMessageText
     {
         get => _storeUsernameErrorMessageText;
@@ -289,7 +329,9 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         }
     }
 
-    // Store Password error-handling properties
+    /// <summary>
+    /// Gets or sets the opacity of the store password error message.
+    /// </summary>
     public float StorePasswordErrorMessageOpacity
     {
         get => _storePasswordErrorMessageOpacity;
@@ -300,6 +342,9 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text of the store password error message.
+    /// </summary>
     public string StorePasswordErrorMessageText
     {
         get => _storePasswordErrorMessageText;
@@ -310,7 +355,9 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         }
     }
 
-    // Store ConfirmPassword error-handling properties
+    /// <summary>
+    /// Gets or sets the opacity of the confirm password error message.
+    /// </summary>
     public float ConfirmPasswordErrorMessageOpacity
     {
         get => _confirmPasswordErrorMessageOpacity;
@@ -321,6 +368,9 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text of the confirm password error message.
+    /// </summary>
     public string ConfirmPasswordErrorMessageText
     {
         get => _confirmPasswordErrorMessageText;
@@ -331,7 +381,9 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         }
     }
 
-    // Other error-handling properties
+    /// <summary>
+    /// Gets or sets the opacity of other error messages.
+    /// </summary>
     public float OtherErrorMessageOpacity
     {
         get => _otherErrorMessageOpacity;
@@ -342,6 +394,9 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text of other error messages.
+    /// </summary>
     public string OtherErrorMessageText
     {
         get => _otherErrorMessageMessageText;

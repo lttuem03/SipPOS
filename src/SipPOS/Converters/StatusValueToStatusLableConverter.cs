@@ -7,8 +7,19 @@ using System.Threading.Tasks;
 
 namespace SipPOS.Converters;
 
+/// <summary>
+/// Converts a status value to a status label.
+/// </summary>
 class StatusValueToStatusLableConverter : IValueConverter
 {
+    /// <summary>
+    /// Converts a status value to a status label.
+    /// </summary>
+    /// <param name="value">The status value to convert.</param>
+    /// <param name="targetType">The target type.</param>
+    /// <param name="parameter">The converter parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>A status label based on the status value.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
         if ("Available".Equals(value))
@@ -22,6 +33,15 @@ class StatusValueToStatusLableConverter : IValueConverter
         return "Không xác định";
     }
 
+    /// <summary>
+    /// Converts a status label back to a status value. This method is not implemented.
+    /// </summary>
+    /// <param name="value">The status label to convert.</param>
+    /// <param name="targetType">The target type.</param>
+    /// <param name="parameter">The converter parameter.</param>
+    /// <param name="language">The language.</param>
+    /// <returns>Throws a <see cref="NotImplementedException"/>.</returns>
+    /// <exception cref="NotImplementedException">Always thrown as this method is not implemented.</exception>
     public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
         throw new NotImplementedException();

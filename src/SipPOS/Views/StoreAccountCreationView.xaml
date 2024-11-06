@@ -13,12 +13,12 @@
         Orientation="Vertical"
         HorizontalAlignment="Left"
         Margin="50,50,0,0">
-        <!--Tiêu đề trang-->
+        <!--Page title-->
         <TextBlock
             Style="{StaticResource TitleLargeTextBlockStyle}"
             Text="TẠO TÀI KHOẢN CỬA HÀNG MỚI"
             Margin="0,0,0,30"/>
-        <!--Tên cửa hàng-->
+        <!--Store name field-->
         <StackPanel
             Orientation="Horizontal"
             HorizontalAlignment="Left"
@@ -41,7 +41,7 @@
                 Text="{x:Bind ViewModel.StoreNameErrorMessageText,
                               Mode=TwoWay}"/>
         </StackPanel>
-        <!--Địa chỉ cửa hàng-->
+        <!--Store address field-->
         <StackPanel
             Orientation="Horizontal"
             HorizontalAlignment="Left"
@@ -64,7 +64,7 @@
                 Text="{x:Bind ViewModel.StoreAddressErrorMessageText,
                                 Mode=TwoWay}"/>
         </StackPanel>
-        <!--Email cửa hàng-->
+        <!--Store email field-->
         <StackPanel
             Orientation="Horizontal"
             HorizontalAlignment="Left"
@@ -87,7 +87,7 @@
                 Text="{x:Bind ViewModel.StoreEmailErrorMessageText,
                                 Mode=TwoWay}"/>
         </StackPanel>
-        <!--SĐT cửa hàng-->
+        <!--Store telephone number field-->
         <StackPanel
             Orientation="Horizontal"
             HorizontalAlignment="Left"
@@ -110,7 +110,7 @@
                 Text="{x:Bind ViewModel.StoreTelErrorMessageText,
                                 Mode=TwoWay}"/>
         </StackPanel>
-        <!--Tên đăng nhập-->
+        <!--Store username field-->
         <StackPanel
             Orientation="Horizontal"
             HorizontalAlignment="Left"
@@ -133,7 +133,7 @@
                 Text="{x:Bind ViewModel.StoreUsernameErrorMessageText,
                                 Mode=TwoWay}"/>
         </StackPanel>
-        <!--Mật khẩu-->
+        <!--Store password field-->
         <StackPanel
             Orientation="Horizontal"
             HorizontalAlignment="Left"
@@ -156,7 +156,7 @@
                 Text="{x:Bind ViewModel.StorePasswordErrorMessageText,
                                 Mode=TwoWay}"/>
         </StackPanel>
-        <!--Xác nhận mật khẩu-->
+        <!--Confirm store password field-->
         <StackPanel
             Orientation="Horizontal"
             HorizontalAlignment="Left"
@@ -179,7 +179,7 @@
                 Text="{x:Bind ViewModel.ConfirmPasswordErrorMessageText,
                                 Mode=TwoWay}"/>
         </StackPanel>
-        <!--Thông báo kết quả tạo tài khoản-->
+        <!--Account creation result-->
         <TextBlock 
             HorizontalAlignment="Center"
             Foreground="Red"
@@ -188,7 +188,7 @@
             Margin="0,0,0,0"
             Text="{x:Bind ViewModel.OtherErrorMessageText,
                             Mode=TwoWay}"/>
-        <!--Nút xác nhận / Nút hủy-->
+        <!--Confirm account creation Button / Cancel button-->
         <StackPanel
             Orientation="Horizontal"
             HorizontalAlignment="Center"

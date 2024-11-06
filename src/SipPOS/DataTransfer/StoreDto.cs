@@ -6,17 +6,54 @@ using System.Threading.Tasks;
 
 namespace SipPOS.DataTransfer;
 
+/// <summary>
+/// Data transfer object for Store.
+/// </summary>
 public class StoreDto : BaseDto
 {
+    /// <summary>
+    /// Gets or sets the name of the store.
+    /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// Gets or sets the address of the store.
+    /// </summary>
     public string Address { get; set; }
+
+    /// <summary>
+    /// Gets or sets the email of the store.
+    /// </summary>
     public string Email { get; set; }
+
+    /// <summary>
+    /// Gets or sets the telephone number of the store.
+    /// </summary>
     public string Tel { get; set; }
+
+    /// <summary>
+    /// Gets or sets the username of the store.
+    /// </summary>
     public string Username { get; set; }
+
+    /// <summary>
+    /// Gets or sets the password hash of the store.
+    /// </summary>
     public string? PasswordHash { get; set; }
+
+    /// <summary>
+    /// Gets or sets the salt used for hashing the password.
+    /// </summary>
     public string? Salt { get; set; }
+
+    /// <summary>
+    /// Gets or sets the last login date and time of the store.
+    /// </summary>
     public DateTime LastLogin { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StoreDto"/> class.
+    /// </summary>
     public StoreDto()
     {
         Id = null;

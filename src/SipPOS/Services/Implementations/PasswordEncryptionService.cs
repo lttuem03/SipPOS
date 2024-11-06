@@ -9,6 +9,9 @@ using SipPOS.Services.Interfaces;
 
 namespace SipPOS.Services.Implementations;
 
+/// <summary>
+/// Service for password encryption and verification.
+/// </summary>
 public class PasswordEncryptionService : IPasswordEncryptionService
 {
     // ref: https://code-maze.com/csharp-hashing-salting-passwords-best-practices/
@@ -17,6 +20,11 @@ public class PasswordEncryptionService : IPasswordEncryptionService
     const int ITERATIONS = 300000;
     static readonly HashAlgorithmName HASH_ALGORITHM = HashAlgorithmName.SHA256;
 
+    /// <summary>
+    /// Hashes the specified password using a generated salt.
+    /// </summary>
+    /// <param name="password">The password to hash.</param>
+    /// <returns>A tuple containing the hashed password and the salt.</returns>
     public (string encryptedPassword, string salt) Hash(string password)
     {
         var saltAsBytes = RandomNumberGenerator.GetBytes(SALT_SIZE);
@@ -35,6 +43,13 @@ public class PasswordEncryptionService : IPasswordEncryptionService
         );
     }
 
+    /// <summary>
+    /// Verifies the specified password against the given hash and salt.
+    /// </summary>
+    /// <param name="password">The password to verify against the hashed password.</param>
+    /// <param name="passwordHash">The hashed password.</param>
+    /// <param name="salt">The salt used to hash the password.</param>
+    /// <returns>True if the password is the right password before hashing; otherwise, false.</returns>
     public bool Verify(string password, string passwordHash, string salt)
     {
         var verifyingPasswordHashAsBytes = Rfc2898DeriveBytes.Pbkdf2(
@@ -46,7 +61,7 @@ public class PasswordEncryptionService : IPasswordEncryptionService
         );
 
         return CryptographicOperations.FixedTimeEquals(
-            left: verifyingPasswordHashAsBytes, 
+            left: verifyingPasswordHashAsBytes,
             right: Convert.FromHexString(passwordHash)
         );
     }

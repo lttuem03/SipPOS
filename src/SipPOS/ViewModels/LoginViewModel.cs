@@ -11,13 +11,16 @@ using SipPOS.Views;
 
 namespace SipPOS.ViewModels;
 
+/// <summary>  
+/// ViewModel for handling navigation to other sub-LoginView in the LoginView.  
+/// </summary>  
 public class LoginViewModel
 {
-    public LoginViewModel()
-    {
-
-    }
-
+    /// <summary>  
+    /// Handles the selection change in the login navigation view.  
+    /// </summary>  
+    /// <param name="loginNavigationFrame">The frame to navigate within.</param>  
+    /// <param name="args">The event arguments containing the selected item.</param>  
     public void HandleLoginNavigationViewSelectionChanged(Frame loginNavigationFrame, NavigationViewSelectionChangedEventArgs args)
     {
         if (args.SelectedItemContainer != null)
@@ -36,6 +39,11 @@ public class LoginViewModel
         }
     }
 
+    /// <summary>  
+    /// Selects the initial view upon loading based on the authentication state.  
+    /// </summary>  
+    /// <param name="navigationView">The navigation view to select the item in.</param>  
+    /// <param name="loginNavigationFrame">The frame to navigate within.</param>  
     public void SelectViewUponLoad(NavigationView navigationView, Frame loginNavigationFrame)
     {
         if (App.GetService<IStoreAuthenticationService>() is not StoreAuthenticationService storeAuthenticationService)

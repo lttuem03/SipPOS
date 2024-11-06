@@ -11,15 +11,30 @@ using SipPOS.DataAccess.Interfaces;
 
 namespace SipPOS.Services.Implementations;
 
+/// <summary>
+/// Service for authenticating store accounts. Meant to be used along with a global Store Data Access Object.
+/// </summary>
 public class StoreAuthenticationService : IStoreAuthenticationService
 {
+    /// <summary>
+    /// Gets the authentication context.
+    /// </summary>
     public StoreAuthenticationContext Context { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StoreAuthenticationService"/> class.
+    /// </summary>
     public StoreAuthenticationService()
     {
         Context = new StoreAuthenticationContext();
     }
 
+    /// <summary>
+    /// Logs in a store asynchronously using the provided username and password.
+    /// </summary>
+    /// <param name="username">The username of the store.</param>
+    /// <param name="password">The password of the store.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a boolean indicating whether the login was successful.</returns>
     public async Task<bool> LoginAsync(string username, string password)
     {
         var storeDao = App.GetService<IStoreDao>();
@@ -55,7 +70,7 @@ public class StoreAuthenticationService : IStoreAuthenticationService
             {
                 return false;
             }
-            
+
             var store = new Store(storeDto.Id.Value, updateResultDto);
             Context.SetStore(store);
 
@@ -65,6 +80,11 @@ public class StoreAuthenticationService : IStoreAuthenticationService
         return false;
     }
 
+    /// <summary>
+    /// Logs in a freshly created store asynchronously.
+    /// </summary>
+    /// <param name="freshlyCreatedStore">The freshly created store.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a boolean indicating whether the login was successful.</returns>
     public Task<bool> LoginAsync(Store freshlyCreatedStore)
     {
         Context.SetStore(freshlyCreatedStore);
@@ -72,5 +92,16 @@ public class StoreAuthenticationService : IStoreAuthenticationService
         return Task.FromResult(true);
     }
 
-    public Task LogoutAsync() => throw new NotImplementedException();
+    /// <summary>
+    /// Logs out the current store.
+    /// </summary>
+    public void Logout()
+    {
+        if (Context.CurrentStore != null)
+        {
+            Context.ClearStore();
+        }
+
+        return;
+    }
 }

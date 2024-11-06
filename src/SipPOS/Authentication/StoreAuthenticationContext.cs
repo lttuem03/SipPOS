@@ -8,16 +8,26 @@ using SipPOS.Models;
 
 namespace SipPOS.Authentication;
 
+/// <summary>
+/// Represents the context for store authentication within the SipPOS application.
+/// </summary>
 public class StoreAuthenticationContext
 {
-    public bool LoggedIn
-    {
-        get; private set;
-    }
-    public DateTime? LoginTime
-    {
-        get; private set;
-    }
+    /// <summary>
+    /// Gets a value indicating whether a store is logged in.
+    /// </summary>
+    public bool LoggedIn { get; private set; }
+
+    /// <summary>
+    /// Gets the login time of the current store.
+    /// </summary>
+    public DateTime? LoginTime { get; private set; }
+
+    private Store? _currentStore;
+
+    /// <summary>
+    /// Gets or sets the current authenticated store.
+    /// </summary>
     public Store? CurrentStore
     {
         get => _currentStore;
@@ -38,6 +48,9 @@ public class StoreAuthenticationContext
         }
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StoreAuthenticationContext"/> class.
+    /// </summary>
     public StoreAuthenticationContext()
     {
         LoggedIn = false;
@@ -45,16 +58,20 @@ public class StoreAuthenticationContext
         CurrentStore = null;
     }
 
+    /// <summary>
+    /// Sets the authenticated store as the current store.
+    /// </summary>
+    /// <param name="authenticatedStore">The store to authenticate.</param>
     public void SetStore(Store authenticatedStore)
     {
         CurrentStore = authenticatedStore;
     }
 
+    /// <summary>
+    /// Clears the current authenticated store.
+    /// </summary>
     public void ClearStore()
     {
         CurrentStore = null;
     }
-
-    // backup fields
-    private Store? _currentStore;
 }

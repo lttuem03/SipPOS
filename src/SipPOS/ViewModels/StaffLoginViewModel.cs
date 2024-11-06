@@ -8,47 +8,64 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace SipPOS.ViewModels;
 
+/// <summary>
+/// ViewModel for handling staff login, managing data for data-binding and the logic in the StaffLoginView.
+/// </summary>
 public class StaffLoginViewModel : INotifyPropertyChanged
 {
     // No need to bind these properties
     private bool _staffIdTextBoxFocused;
     private bool _staffPasswordBoxFocused;
-    private bool _staffPasswordVisible;
 
     // Properties used for data binding -> Implement setter that fires a PropertyChanged event
     private string _staffId;
     private string _staffPassword;
     private string _selectedPrefix;
-    
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StaffLoginViewModel"/> class.
+    /// </summary>
     public StaffLoginViewModel()
     {
         _staffIdTextBoxFocused = false;
         _staffPasswordBoxFocused = false;
-        _staffPasswordVisible = false;
 
         _staffId = "";
         _staffPassword = "";
         _selectedPrefix = "";
     }
 
+    /// <summary>
+    /// Handles the event when the staff ID text box gets focus.
+    /// </summary>
     public void HandleStaffIdTextBoxGotFocus()
     {
         _staffIdTextBoxFocused = true;
         _staffPasswordBoxFocused = false;
     }
 
+    /// <summary>
+    /// Handles the event when the staff password box gets focus.
+    /// </summary>
     public void HandleStaffPasswordBoxGotFocus()
     {
         _staffIdTextBoxFocused = false;
         _staffPasswordBoxFocused = true;
     }
 
+    /// <summary>
+    /// Handles the event when the select prefix combo box gets focus.
+    /// </summary>
     public void HandleSelectPrefixComboBoxGotFocus()
     {
         _staffIdTextBoxFocused = false;
         _staffPasswordBoxFocused = false;
     }
 
+    /// <summary>
+    /// Handles the event when a numpad button is clicked.
+    /// </summary>
+    /// <param name="number">The number clicked on the numpad.</param>
     public void HandleNumpadButtonClick(string number)
     {
         if (_staffIdTextBoxFocused)
@@ -61,27 +78,33 @@ public class StaffLoginViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the event when the staff password visibility checkbox is changed.
+    /// </summary>
+    /// <param name="staffPasswordBox">The password box for the staff password.</param>
     public void HandleStaffPasswordVisibleCheckBoxChanged(PasswordBox staffPasswordBox)
     {
-        _staffPasswordVisible = !_staffPasswordVisible;
-
-        if (_staffPasswordVisible)
-        {
-            staffPasswordBox.PasswordRevealMode = PasswordRevealMode.Visible;
-        }
-        else
-        {
-            staffPasswordBox.PasswordRevealMode = PasswordRevealMode.Hidden;
-        }
+        staffPasswordBox.PasswordRevealMode = (staffPasswordBox.PasswordRevealMode == PasswordRevealMode.Hidden) ?
+                                              PasswordRevealMode.Visible : PasswordRevealMode.Hidden;
     }
 
+    /// <summary>
+    /// Event triggered when a property value changes.
+    /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    /// <summary>
+    /// Raises the <see cref="PropertyChanged"/> event.
+    /// </summary>
+    /// <param name="propertyName">The name of the property that changed.</param>
     public void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
+    /// <summary>
+    /// Gets or sets the staff ID.
+    /// </summary>
     public string StaffId
     {
         get => _staffId;
@@ -96,6 +119,9 @@ public class StaffLoginViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff password.
+    /// </summary>
     public string StaffPassword
     {
         get => _staffPassword;
@@ -110,6 +136,9 @@ public class StaffLoginViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the selected prefix.
+    /// </summary>
     public string SelectedPrefix
     {
         get => _selectedPrefix;

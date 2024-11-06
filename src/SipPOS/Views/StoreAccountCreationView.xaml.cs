@@ -18,16 +18,30 @@ using SipPOS.ViewModels;
 
 namespace SipPOS.Views;
 
+/// <summary>
+/// Represents the StoreAccountCreationView.
+/// </summary>
 public sealed partial class StoreAccountCreationView : Page
 {
+    /// <summary>
+    /// Gets the view model for the store account creation view.
+    /// </summary>
     public StoreAccountCreationViewModel ViewModel { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StoreAccountCreationView"/> class.
+    /// </summary>
     public StoreAccountCreationView()
     {
         this.InitializeComponent();
         ViewModel = new StoreAccountCreationViewModel();
     }
 
+    /// <summary>
+    /// Handles the Click event of the confirm store account creation button.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void confirmStoreAccountCreationButton_Click(object sender, RoutedEventArgs e)
     {
         StoreDto rawInfoStoreDto = new StoreDto
@@ -45,6 +59,11 @@ public sealed partial class StoreAccountCreationView : Page
         ViewModel.HandleConfirmStoreAccountCreationButtonClick(rawInfoStoreDto, repeatPasswordString);
     }
 
+    /// <summary>
+    /// Handles the Click event of the cancel store account creation button.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void cancelStoreAccountCreationButton_Click(object sender, RoutedEventArgs e)
     {
         if (App.CurrentWindow == null)

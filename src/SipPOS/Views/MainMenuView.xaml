@@ -9,7 +9,6 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <!---->
     <StackPanel Orientation="Vertical"
                 HorizontalAlignment="Center" 
                 VerticalAlignment="Center">
@@ -21,29 +20,29 @@
         <StackPanel Orientation="Horizontal" 
                     HorizontalAlignment="Center" 
                     VerticalAlignment="Center">
-            <!--toCreateOrderViewButton-->
+            <!--To CreateOrderView Button-->
             <Button x:Name="toCreateOrderViewButton"
                     Content="Bán hàng"/>
 
-            <!--toInventoryViewButton-->
+            <!--To InventoryView Button-->
             <Button x:Name="toInventoryViewButton"
                     Click="toInventoryViewButton_Click"
                     Content="Hàng hóa"/>
 
-            <!--toStaffManagementViewButton-->
+            <!--To StaffManagementView Button-->
             <Button x:Name="toStaffManagementViewButton"
                     Content="Nhân sự"/>
 
-            <!--toFinanceViewButton-->
+            <!--To FinanceView Button-->
             <Button x:Name="toFinanceViewButton"
                     Content="Doanh thu"/>
 
-            <!--toStoreSettingsViewButton-->
+            <!--To StoreSettingsView Button-->
             <Button x:Name="toStoreSettingsViewButton"
                     Content="Thiết đặt"/>
         </StackPanel>
 
-        <!--Change ID button-->
+        <!--Change ID button (staff logout)-->
         <Button x:Name="changeIdButton"
                 Click="changeIdButton_Click"
                 Content="Đổi ID"/>
