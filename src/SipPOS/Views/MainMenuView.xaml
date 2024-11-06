@@ -24,9 +24,9 @@
             <Button x:Name="toCreateOrderViewButton"
                     Content="Bán hàng"/>
 
-            <!--To InventoryView Button-->
-            <Button x:Name="toInventoryViewButton"
-                    Click="toInventoryViewButton_Click"
+            <!--To ProductMangementView Button-->
+            <Button x:Name="toProductManagementViewButton"
+                    Click="toProductManagementViewButton_Click"
                     Content="Hàng hóa"/>
 
             <!--To StaffManagementView Button-->

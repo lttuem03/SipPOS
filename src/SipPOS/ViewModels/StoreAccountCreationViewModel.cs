@@ -152,26 +152,7 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
                 OtherErrorMessageOpacity = 1.0F;
 
                 // Navigate to the main page
-                if (App.CurrentWindow == null)
-                    return;
-
-                var rootFrame = App.CurrentWindow.Content as Frame;
-
-                if (rootFrame != null)
-                {
-                    rootFrame.Navigate(typeof(MainMenuView));
-                }
-                else
-                {
-                    var errorDialog = new ContentDialog
-                    {
-                        Title = "Error",
-                        Content = "Navigation frame is null.",
-                        CloseButtonText = "Close"
-                    };
-
-                    _ = errorDialog.ShowAsync();
-                }
+                App.NavigateTo(typeof(MainMenuView));
             }
             else
             {
@@ -184,6 +165,14 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
             OtherErrorMessageText = "Tạo tài khoản thất bại, có trường không hợp lệ";
             OtherErrorMessageOpacity = 1.0F;
         }
+    }
+
+    /// <summary>
+    /// Handles the event when the cancel store account creation button is clicked.
+    /// </summary>
+    public void HandleCancelStoreAccountCreationButtonClick()
+    {
+        App.NavigateTo(typeof(LoginView));
     }
 
     /// <summary>

@@ -40,28 +40,9 @@ public sealed partial class MainMenuView : Page
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The event data.</param>
-    private void toInventoryViewButton_Click(object sender, RoutedEventArgs e)
+    private void toProductManagementViewButton_Click(object sender, RoutedEventArgs e)
     {
-        if (App.CurrentWindow == null)
-            return;
-
-        var rootFrame = App.CurrentWindow.Content as Frame;
-
-        if (rootFrame != null)
-        {
-            rootFrame.Navigate(typeof(ProductManagementView));
-        }
-        else
-        {
-            var errorDialog = new ContentDialog
-            {
-                Title = "Error",
-                Content = "Navigation frame is null.",
-                CloseButtonText = "Close"
-            };
-
-            _ = errorDialog.ShowAsync();
-        }
+        ViewModel.HandleToProductManagementViewButtonClick();
     }
 
     /// <summary>
@@ -71,25 +52,6 @@ public sealed partial class MainMenuView : Page
     /// <param name="e">The event data.</param>
     private void changeIdButton_Click(object sender, RoutedEventArgs e)
     {
-        if (App.CurrentWindow == null)
-            return;
-
-        var rootFrame = App.CurrentWindow.Content as Frame;
-
-        if (rootFrame != null)
-        {
-            rootFrame.Navigate(typeof(LoginView));
-        }
-        else
-        {
-            var errorDialog = new ContentDialog
-            {
-                Title = "Error",
-                Content = "Navigation frame is null.",
-                CloseButtonText = "Close"
-            };
-
-            _ = errorDialog.ShowAsync();
-        }
+        ViewModel.HandleChangeIdButtonClick();
     }
 }

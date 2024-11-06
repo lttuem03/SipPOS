@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -133,6 +134,36 @@ public partial class App : Application
 
         _mainWindow.Content = rootFrame;
         _mainWindow.Activate();
+    }
+
+    /// <summary>
+    /// Navigates to the specified page type. Show an error dialog if somehow navigation'd failed.
+    /// </summary>
+    /// <param name="pageType">The type of the page to navigate to.</param>
+    /// <param name="parameter">The parameter to pass to the page.</param>
+    /// <param name="infoOverride">The navigation transition information.</param>
+    public static void NavigateTo(Type pageType, object? parameter=null, NavigationTransitionInfo? infoOverride=null)
+    {
+        if (App.CurrentWindow == null)
+            return;
+
+        var rootFrame = App.CurrentWindow.Content as Frame;
+
+        if (rootFrame != null)
+        {
+            rootFrame.Navigate(pageType);
+        }
+        else
+        {
+            var errorDialog = new ContentDialog
+            {
+                Title = "Error",
+                Content = "Navigation frame is null.",
+                CloseButtonText = "Close"
+            };
+
+            _ = errorDialog.ShowAsync();
+        }
     }
 
     /// <summary>

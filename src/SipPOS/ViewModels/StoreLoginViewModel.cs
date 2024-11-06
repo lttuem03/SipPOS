@@ -32,27 +32,7 @@ public class StoreLoginViewModel
         }
         else
         {
-            // Navigate to the main menu view
-            if (App.CurrentWindow == null)
-                return;
-
-            var rootFrame = App.CurrentWindow.Content as Frame;
-
-            if (rootFrame != null)
-            {
-                rootFrame.Navigate(typeof(MainMenuView));
-            }
-            else
-            {
-                var errorDialog = new ContentDialog
-                {
-                    Title = "Error",
-                    Content = "Navigation frame is null.",
-                    CloseButtonText = "Close"
-                };
-
-                _ = errorDialog.ShowAsync();
-            }
+            App.NavigateTo(typeof(MainMenuView));
         }
     }
 
@@ -64,5 +44,13 @@ public class StoreLoginViewModel
     {
         storePasswordBox.PasswordRevealMode = (storePasswordBox.PasswordRevealMode == PasswordRevealMode.Hidden) ?
                                               PasswordRevealMode.Visible : PasswordRevealMode.Hidden;
+    }
+
+    /// <summary>
+    /// Handles the event when the create new store account button is clicked.
+    /// </summary>
+    public void HandleCreateNewStoreAccountButtonClick()
+    {
+        App.NavigateTo(typeof(StoreAccountCreationView));
     }
 }

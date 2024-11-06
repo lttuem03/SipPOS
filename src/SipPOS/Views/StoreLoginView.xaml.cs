@@ -55,26 +55,7 @@ public sealed partial class StoreLoginView : Page
     /// <param name="e">The event data.</param>
     private void createNewStoreAccountButton_Click(object sender, RoutedEventArgs e)
     {
-        if (App.CurrentWindow == null)
-            return;
-
-        var rootFrame = App.CurrentWindow.Content as Frame;
-
-        if (rootFrame != null)
-        {
-            rootFrame.Navigate(typeof(StoreAccountCreationView));
-        }
-        else
-        {
-            var errorDialog = new ContentDialog
-            {
-                Title = "Error",
-                Content = "Navigation frame is null.",
-                CloseButtonText = "Close"
-            };
-
-            _ = errorDialog.ShowAsync();
-        }
+        ViewModel.HandleCreateNewStoreAccountButtonClick();
     }
 
     /// <summary>
