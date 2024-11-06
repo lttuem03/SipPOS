@@ -22,6 +22,7 @@ using Windows.Storage.Pickers;
 using Windows.Storage;
 using Microsoft.Windows.AppNotifications.Builder;
 using Microsoft.Windows.AppNotifications;
+using CommunityToolkit.WinUI.UI.Controls;
 
 using SipPOS.Models;
 using SipPOS.ViewModels;
@@ -193,6 +194,34 @@ public sealed partial class ProductManagementView : Page
     {
         ViewModel.Search();
     }
+    
+    /// <summary>
+    /// Handles the sorting event of the data grid.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
+    public void DataGrid_Sorting(object sender, DataGridColumnEventArgs e)
+    {
+        ViewModel.SortDto.SortBy = e.Column.Tag.ToString();
+        if (e.Column.SortDirection == null || e.Column.SortDirection == DataGridSortDirection.Descending)
+        {
+            ViewModel.SortDto.SortType = "ASC";
+            e.Column.SortDirection = DataGridSortDirection.Ascending;
+        }
+        else
+        {
+            ViewModel.SortDto.SortType = "DESC";
+            e.Column.SortDirection = DataGridSortDirection.Descending;
+        }
+        ViewModel.Search();
+        foreach (var dgColumn in dg.Columns)
+        {
+            if (null != dgColumn.Tag && dgColumn.Tag.ToString() != e.Column.Tag.ToString())
+            {
+                dgColumn.SortDirection = null;
+            }
+        }
+    }
 
     /// <summary>
     /// Handles the click event of the "Yes" button in the dialog.
@@ -203,7 +232,7 @@ public sealed partial class ProductManagementView : Page
     {
         if (ViewModel.SelectedProduct == null)
         {
-            return; 
+            return;
         }
 
         if (string.IsNullOrEmpty(ViewModel.SelectedProduct.Name))
@@ -342,4 +371,5 @@ public sealed partial class ProductManagementView : Page
     {
 
     }
+
 }

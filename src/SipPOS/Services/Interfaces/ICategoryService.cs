@@ -15,12 +15,12 @@ public interface ICategoryService
     /// <summary>
     /// Searches for categories based on filters and sorts.
     /// </summary>
-    /// <param name="filters">The filters to apply.</param>
-    /// <param name="sorts">The sorts to apply.</param>
+    /// <param name="categoryFilterDto">The filters to apply.</param>
+    /// <param name="sortDto">The sorts to apply.</param>
     /// <param name="perPage">The number of items per page.</param>
     /// <param name="page">The page number.</param>
     /// <returns>A pagination object containing the search results.</returns>
-    Pagination<CategoryDto> Search(IList<object> filters, IList<object> sorts, int perPage, int page);
+    Pagination<CategoryDto> Search(CategoryFilterDto categoryFilterDto, SortDto sortDto, int perPage, int page);
 
     /// <summary>
     /// Gets all categories.

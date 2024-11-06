@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using SipPOS.Models;
+using SipPOS.DataTransfer;
 
 namespace SipPOS.DataAccess.Interfaces;
 
@@ -16,13 +17,13 @@ public interface ICategoryDao
     /// <summary>
     /// Searches for categories based on filters and sorts, with pagination.
     /// </summary>
-    /// <param name="filters">The filters to apply.</param>
-    /// <param name="sorts">The sorts to apply.</param>
+    /// <param name="categoryFilterDto">The filters to apply.</param>
+    /// <param name="sortDto">The sorts to apply.</param>
     /// <param name="page">The page number to retrieve.</param>
     /// <param name="perPage">The number of items per page.</param>
     /// <returns>A paginated list of categories.</returns>
-    Pagination<Category> Search(IList<object> filters, IList<object> sorts, int page, int perPage);
-
+    Pagination<Category> Search(CategoryFilterDto categoryFilterDto, SortDto sortDto, int page, int perPage);
+  
     /// <summary>
     /// Retrieves all categories.
     /// </summary>

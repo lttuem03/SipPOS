@@ -18,6 +18,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage.Pickers;
 using Windows.Storage;
+using CommunityToolkit.WinUI.UI.Controls;
 
 using SipPOS.DataTransfer;
 using SipPOS.Models;
@@ -187,6 +188,34 @@ public sealed partial class CategoryManagementView : Page
     public void PaginationControl_PageChanged(object sender, PaginationControlValueChangedEventArgs e)
     {
         ViewModel.Search();
+    }
+
+    /// <summary>
+    /// Handles the sorting event of the data grid.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
+    public void DataGrid_Sorting(object sender, DataGridColumnEventArgs e)
+    {
+        ViewModel.SortDto.SortBy = e.Column.Tag.ToString();
+        if (e.Column.SortDirection == null || e.Column.SortDirection == DataGridSortDirection.Descending)
+        {
+            ViewModel.SortDto.SortType = "ASC";
+            e.Column.SortDirection = DataGridSortDirection.Ascending;
+        }
+        else
+        {
+            ViewModel.SortDto.SortType = "DESC";
+            e.Column.SortDirection = DataGridSortDirection.Descending;
+        }
+        ViewModel.Search();
+        foreach (var dgColumn in dg.Columns)
+        {
+            if (null != dgColumn.Tag && dgColumn.Tag.ToString() != e.Column.Tag.ToString())
+            {
+                dgColumn.SortDirection = null;
+            }
+        }
     }
 
     /// <summary>

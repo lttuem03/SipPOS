@@ -78,14 +78,14 @@ public class CategoryService : ICategoryService
     /// <summary>
     /// Searches for categories based on filters and sorts.
     /// </summary>
-    /// <param name="filters">The filters to apply.</param>
-    /// <param name="sorts">The sorts to apply.</param>
+    /// <param name="categoryFilterDto">The filters to apply.</param>
+    /// <param name="sortDto">The sorts to apply.</param>
     /// <param name="perPage">The number of items per page.</param>
     /// <param name="page">The page number.</param>
     /// <returns>A paginated list of category DTOs.</returns>
-    public Pagination<CategoryDto> Search(IList<object> filters, IList<object> sorts, int perPage, int page)
+    public Pagination<CategoryDto> Search(CategoryFilterDto categoryFilterDto, SortDto sortDto, int perPage, int page)
     {
-        return mapper.Map<Pagination<CategoryDto>>(categoryDao.Search(filters, sorts, perPage, page));
+        return mapper.Map<Pagination<CategoryDto>>(categoryDao.Search(categoryFilterDto, sortDto, perPage, page));
     }
 
     /// <summary>

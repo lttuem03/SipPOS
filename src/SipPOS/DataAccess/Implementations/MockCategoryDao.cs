@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using SipPOS.Models;
 using SipPOS.DataAccess.Interfaces;
+using SipPOS.DataTransfer;
 
 namespace SipPOS.DataAccess.Implementations;
 
@@ -257,21 +258,52 @@ public class MockCategoryDao : ICategoryDao
     /// <summary>
     /// Searches for categories with pagination.
     /// </summary>
-    /// <param name="filters">The filters to apply.</param>
-    /// <param name="sorts">The sorting options to apply.</param>
+    /// <param name="categoryFilterDto">The filters to apply.</param>
+    /// <param name="sortDto">The sorting options to apply.</param>
     /// <param name="page">The page number to retrieve.</param>
     /// <param name="perPage">The number of categories per page.</param>
     /// <returns>A pagination object containing the search results.</returns>
-    public Pagination<Category> Search(IList<object> filters, IList<object> sorts, int page, int perPage)
+    public Pagination<Category> Search(CategoryFilterDto categoryFilterDto, SortDto sortDto, int page, int perPage)
     {
-        IList<Category> _allCategory = GetAll();
+        IList<Category> _allCategories = GetAll();
         Pagination<Category> pagination = new Pagination<Category>();
-        pagination.Data = _allCategory.OrderByDescending(x => x.CreatedAt)
-            .Skip((page - 1) * perPage).Take(perPage).ToList();
+
+        var filteredCategories = _allCategories.AsQueryable();
+
+        if (!string.IsNullOrEmpty(categoryFilterDto.Name))
+        {
+            filteredCategories = filteredCategories.Where(x => x.Name != null && x.Name.Contains(categoryFilterDto.Name));
+        }
+
+        if (!string.IsNullOrEmpty(categoryFilterDto.Desc))
+        {
+            filteredCategories = filteredCategories.Where(x => x.Desc != null && x.Desc.Contains(categoryFilterDto.Desc));
+        }
+
+        if (!string.IsNullOrEmpty(categoryFilterDto.Status))
+        {
+            filteredCategories = filteredCategories.Where(x => x.Status != null && x.Status == categoryFilterDto.Status);
+        }
+
+        Func<Category, object> keySelector = x => sortDto.SortBy switch
+        {
+            "Id" => x.Id,
+            "Name" => x.Name ?? string.Empty,
+            "Desc" => x.Desc ?? string.Empty,
+            "Status" => x.Status ?? string.Empty,
+            "CreatedBy" => x.CreatedBy ?? string.Empty,
+            _ => x.CreatedAt ?? new DateTime()
+        };
+        pagination.Data = (sortDto.SortType == "DESC"
+            ? filteredCategories.OrderByDescending(keySelector)
+            : filteredCategories.OrderBy(keySelector))
+            .Skip((page - 1) * perPage)
+            .Take(perPage)
+            .ToList();
         pagination.Page = page;
         pagination.PerPage = perPage;
-        pagination.TotalRecord = _allCategory.Count;
-        pagination.TotalPage = (int)Math.Ceiling((double)_allCategory.Count / perPage);
+        pagination.TotalRecord = filteredCategories.Count();
+        pagination.TotalPage = (int)Math.Ceiling((double)filteredCategories.Count() / perPage);
         return pagination;
     }
 }

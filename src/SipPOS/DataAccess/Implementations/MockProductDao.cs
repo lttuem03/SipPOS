@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
 using Windows.Data.Pdf;
+using SipPOS.DataTransfer;
 
 using SipPOS.Models;
 using SipPOS.DataAccess.Interfaces;
@@ -252,21 +253,58 @@ public class MockProductDao : IProductDao
     /// <summary>
     /// Perform a search for products in a pagination.
     /// </summary>
-    /// <param name="filters">The filters to apply.</param>
-    /// <param name="sorts">The sorting options to apply.</param>
+    /// <param name="productFilterDto">The filters to apply.</param>
+    /// <param name="sortDto">The sorting options to apply.</param>
     /// <param name="page">The page number to retrieve.</param>
     /// <param name="perPage">The number of products per page.</param>
     /// <returns>A pagination object containing the search results.</returns>
-    public Pagination<Product> Search(IList<object> filters, IList<object> sorts, int page,  int perPage)
+    public Pagination<Product> Search(ProductFilterDto productFilterDto, SortDto sortDto, int page, int perPage)
     {
         IList<Product> _allProducts = GetAll();
         Pagination<Product> pagination = new Pagination<Product>();
-        pagination.Data = _allProducts.OrderByDescending(x => x.CreatedAt)
-            .Skip((page - 1) * perPage).Take(perPage).ToList();
+
+        var filteredProducts = _allProducts.AsQueryable();
+
+        if (!string.IsNullOrEmpty(productFilterDto.Name))
+        {
+            filteredProducts = filteredProducts.Where(x => x.Name != null && x.Name.Contains(productFilterDto.Name));
+        }
+
+        if (!string.IsNullOrEmpty(productFilterDto.Desc))
+        {
+            filteredProducts = filteredProducts.Where(x => x.Desc != null && x.Desc.Contains(productFilterDto.Desc));
+        }
+
+        if (productFilterDto.CategoryId.HasValue)
+        {
+            filteredProducts = filteredProducts.Where(x => x.CategoryId == productFilterDto.CategoryId.Value);
+        }
+
+        if (!string.IsNullOrEmpty(productFilterDto.Status))
+        {
+            filteredProducts = filteredProducts.Where(x => x.Status != null && x.Status == productFilterDto.Status);
+        }
+        Func<Product, object> keySelector = x => sortDto.SortBy switch
+        {
+            "Id" => x.Id,
+            "Name" => x.Name ?? string.Empty,
+            "Desc" => x.Desc ?? string.Empty,
+            "Price" => x.Price ?? 0,
+            "Category" => x.CategoryId ?? 0,
+            "Status" => x.Status ?? string.Empty,
+            "CreatedBy" => x.CreatedBy ?? string.Empty,
+            _ => x.CreatedAt ?? new DateTime()
+        };
+        pagination.Data = (sortDto.SortType == "DESC"
+            ? filteredProducts.OrderByDescending(keySelector)
+            : filteredProducts.OrderBy(keySelector))
+            .Skip((page - 1) * perPage)
+            .Take(perPage)
+            .ToList();
         pagination.Page = page;
         pagination.PerPage = perPage;
-        pagination.TotalRecord = _allProducts.Count;
-        pagination.TotalPage = (int)Math.Ceiling((double)_allProducts.Count / perPage);
+        pagination.TotalRecord = filteredProducts.Count();
+        pagination.TotalPage = (int)Math.Ceiling((double)filteredProducts.Count() / perPage);
         return pagination;
     }
 }

@@ -32,6 +32,16 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     public ObservableCollection<string> ImageUrls { get; set; } = new ObservableCollection<string>();
 
     /// <summary>
+    /// Gets the collection of status item filters.
+    /// </summary>
+    public ObservableCollection<StatusItem> StatusItemsFilter { get; } = new ObservableCollection<StatusItem>()
+    {
+        new() { Label = "Tất cả", Value = null },
+        new() { Label = "Có sẵn", Value = "Available" },
+        new() { Label = "Không có sẵn", Value = "Unavailable" }
+    };
+
+    /// <summary>
     /// Gets or sets the selected category.
     /// </summary>
     [ObservableProperty]
@@ -40,6 +50,9 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     /// <summary>
     /// Gets or sets the number of items per page.
     /// </summary>
+    [ObservableProperty]
+    private CategoryFilterDto categoryFilterDto = new CategoryFilterDto();
+
     [ObservableProperty]
     private int perPage = 5;
 
@@ -65,6 +78,9 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     /// Gets or sets the action type.
     /// </summary>
     [ObservableProperty]
+    private SortDto sortDto = new SortDto();
+
+    [ObservableProperty]
     public string? actionType;
 
     private readonly ICategoryService _categoryService;
@@ -84,7 +100,7 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     public void Search()
     {
         Categories.Clear();
-        Pagination<CategoryDto> pagination = _categoryService.Search(new List<object>(), new List<object>(), Page, PerPage);
+        Pagination<CategoryDto> pagination = _categoryService.Search(CategoryFilterDto, SortDto, Page, PerPage);
         Page = pagination.Page;
         PerPage = pagination.PerPage;
         TotalPage = pagination.TotalPage;
