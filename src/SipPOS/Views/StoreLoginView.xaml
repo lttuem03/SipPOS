@@ -18,14 +18,24 @@
             Orientation="Vertical"
             VerticalAlignment="Center"
             Margin="10">
+            <!--Username TextBox-->
             <TextBox    
                 Name="storeUsernameTextBox"
                 PlaceholderText="Tên đăng nhập" 
                 Margin="0,0,0,10"/>
+            <!--Password PasswordBox-->
             <PasswordBox 
                 Name="storePasswordBox"
                 PlaceholderText="Mật khẩu" 
+                PasswordRevealMode="Hidden"
                 Margin="0,0,0,10"/>
+            <!--Show password CheckBox-->
+            <CheckBox
+                Name="storePasswordVisibleCheckBox"
+                Checked="storePasswordVisibleCheckBox_Changed"
+                Unchecked="storePasswordVisibleCheckBox_Changed"
+                Content="Hiển thị mật khẩu"/>
+            <!--Error message TextBlock-->
             <TextBlock 
                 Name="errorMessageTextBlock"
                 HorizontalAlignment="Center"
@@ -33,12 +43,14 @@
                 Opacity="0.0"
                 Margin="0,0,0,10"
                 Text="Sai tên đăng nhập hoặc mật khẩu"/>
+            <!--Login Button-->
             <Button 
                 Name="storeLoginButton"
                 Click="storeLoginButton_Click"
                 HorizontalAlignment="Center"
                 Margin="0,0,0,10"
                 Content="Đăng nhập"/>
+            <!--Account creation Button-->
             <Button 
                 Name="createNewStoreAccountButton"
                 Click="createNewStoreAccountButton_Click"

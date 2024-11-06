@@ -10,7 +10,11 @@ using SipPOS.DataTransfer;
 
 namespace SipPOS.DataAccess.Implementations;
 
-class MockCategoryDao : ICategoryDao
+/// <summary>
+/// Mock implementation of the ICategoryDao interface for testing purposes.
+/// Providing mock data for a few Category objects.
+/// </summary>
+public class MockCategoryDao : ICategoryDao
 {
     private readonly List<Category> _allCategory =
     [
@@ -151,6 +155,11 @@ class MockCategoryDao : ICategoryDao
         },
     ];
 
+    /// <summary>
+    /// Deletes a category by its ID.
+    /// </summary>
+    /// <param name="id">The ID of the category to delete.</param>
+    /// <returns>The deleted category if found; otherwise, null.</returns>
     public Category? DeleteById(long id)
     {
         Category? category = GetById(id);
@@ -163,6 +172,11 @@ class MockCategoryDao : ICategoryDao
         return category;
     }
 
+    /// <summary>
+    /// Deletes multiple categories by their IDs.
+    /// </summary>
+    /// <param name="ids">The list of IDs of the categories to delete.</param>
+    /// <returns>A list of deleted categories.</returns>
     public IList<Category> DeleteByIds(IList<long> ids)
     {
         List<Category> products = new List<Category>();
@@ -180,16 +194,30 @@ class MockCategoryDao : ICategoryDao
         return products;
     }
 
+    /// <summary>
+    /// Retrieves all categories that are not marked as deleted.
+    /// </summary>
+    /// <returns>A list of all available categories.</returns>
     public IList<Category> GetAll()
     {
         return _allCategory.Where(x => x.DeletedAt == null).ToList();
     }
 
+    /// <summary>
+    /// Retrieves a category by its ID.
+    /// </summary>
+    /// <param name="id">The ID of the category to retrieve.</param>
+    /// <returns>The category if found; otherwise, null.</returns>
     public Category? GetById(long id)
     {
         return _allCategory.FirstOrDefault(x => x.Id == id);
     }
 
+    /// <summary>
+    /// Inserts a new category.
+    /// </summary>
+    /// <param name="category">The category to insert.</param>
+    /// <returns>The inserted category.</returns>
     public Category? Insert(Category category)
     {
         _allCategory.Add(category);
@@ -198,6 +226,11 @@ class MockCategoryDao : ICategoryDao
         return category;
     }
 
+    /// <summary>
+    /// Updates an existing category by its ID.
+    /// </summary>
+    /// <param name="category">The category with updated information.</param>
+    /// <returns>The updated category if found; otherwise, null.</returns>
     public Category? UpdateById(Category category)
     {
         var oldCategory = GetById(category.Id);
@@ -213,11 +246,23 @@ class MockCategoryDao : ICategoryDao
         return oldCategory;
     }
 
+    /// <summary>
+    /// Counts the total number of categories.
+    /// </summary>
+    /// <returns>The total number of categories.</returns>
     public long Count()
     {
         return _allCategory.Count;
     }
 
+    /// <summary>
+    /// Searches for categories with pagination.
+    /// </summary>
+    /// <param name="categoryFilterDto">The filters to apply.</param>
+    /// <param name="sortDto">The sorting options to apply.</param>
+    /// <param name="page">The page number to retrieve.</param>
+    /// <param name="perPage">The number of categories per page.</param>
+    /// <returns>A pagination object containing the search results.</returns>
     public Pagination<Category> Search(CategoryFilterDto categoryFilterDto, SortDto sortDto, int page, int perPage)
     {
         IList<Category> _allCategories = GetAll();

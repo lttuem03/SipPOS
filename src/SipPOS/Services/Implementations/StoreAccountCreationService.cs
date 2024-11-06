@@ -11,8 +11,17 @@ using SipPOS.DataAccess.Interfaces;
 using Microsoft.UI.Windowing;
 
 namespace SipPOS.Services.Implementations;
+
+/// <summary>
+/// Service for creating store accounts.
+/// </summary>
 public class StoreAccountCreationService : IStoreAccountCreationService
 {
+    /// <summary>
+    /// Creates a new store account asynchronously.
+    /// </summary>
+    /// <param name="storeDtoWithUnhashPassword">The store DTO with an unhashed password stored in its PasswordHash field.</param>
+    /// <returns>The created store if successful (to authenticate immediately); otherwise, null.</returns>
     public async Task<Store?> CreateAccountAsync(StoreDto storeDtoWithUnhashPassword)
     {
         if (storeDtoWithUnhashPassword.PasswordHash == null) // UN-HASHED PASSWORD
@@ -21,7 +30,7 @@ public class StoreAccountCreationService : IStoreAccountCreationService
         }
 
         // ASSUMING ALL VALIDATIONS PASSED        
-        
+
         // Hash password
         var passwordEncryptionService = App.GetService<IPasswordEncryptionService>();
 
@@ -36,30 +45,41 @@ public class StoreAccountCreationService : IStoreAccountCreationService
 
         // Insert new row to database
         var storeDao = App.GetService<IStoreDao>();
-        
+
         Store? newStore = await storeDao.InsertAsync(storeDto); // wait for the task to complete
 
         return newStore;
     }
-    
+
+    /// <summary>
+    /// Validates the fields when creating a new store.
+    /// </summary>
+    /// <param name="storeDto">The store DTO with raw field informations to validate.</param>
+    /// <returns>A dictionary containing validation results (with each field, result is "OK" or details of the
+    /// failed validation).</returns>
     public Dictionary<string, string> ValidateFields(StoreDto storeDto)
     {
         var validationResults = new Dictionary<string, string>();
 
-        validationResults.Add("name", validateName(storeDto.Name));
-        validationResults.Add("address", validateAddress(storeDto.Address));
-        validationResults.Add("email", validateEmail(storeDto.Email));
-        validationResults.Add("tel", validateTel(storeDto.Tel));
-        
-        validationResults.Add("username", validateUsername(storeDto.Username));
-        validationResults.Add("password", validatePassword(storeDto.PasswordHash)); // UN-HASHED PASSWORD
-        
+        validationResults.Add("name", _validateName(storeDto.Name));
+        validationResults.Add("address", _validateAddress(storeDto.Address));
+        validationResults.Add("email", _validateEmail(storeDto.Email));
+        validationResults.Add("tel", _validateTel(storeDto.Tel));
+
+        validationResults.Add("username", _validateUsername(storeDto.Username));
+        validationResults.Add("password", _validatePassword(storeDto.PasswordHash)); // UN-HASHED PASSWORD
+
         // add more if needed
 
         return validationResults;
     }
 
-    private string validateName(string name)
+    /// <summary>
+    /// Validates the store name.
+    /// </summary>
+    /// <param name="name">The store name to validate.</param>
+    /// <returns>A validation message.</returns>
+    private string _validateName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -69,7 +89,12 @@ public class StoreAccountCreationService : IStoreAccountCreationService
         return "OK";
     }
 
-    private string validateAddress(string address)
+    /// <summary>
+    /// Validates the store address.
+    /// </summary>
+    /// <param name="address">The store address to validate.</param>
+    /// <returns>A validation message.</returns>
+    private string _validateAddress(string address)
     {
         if (string.IsNullOrWhiteSpace(address))
         {
@@ -79,7 +104,12 @@ public class StoreAccountCreationService : IStoreAccountCreationService
         return "OK";
     }
 
-    private string validateEmail(string email)
+    /// <summary>
+    /// Validates the store email.
+    /// </summary>
+    /// <param name="email">The store email to validate.</param>
+    /// <returns>A validation message.</returns>
+    private string _validateEmail(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
         {
@@ -96,7 +126,12 @@ public class StoreAccountCreationService : IStoreAccountCreationService
         return "Email sai định dạng";
     }
 
-    private string validateTel(string tel)
+    /// <summary>
+    /// Validates the store telephone number.
+    /// </summary>
+    /// <param name="tel">The store telephone number to validate.</param>
+    /// <returns>A validation message.</returns>
+    private string _validateTel(string tel)
     {
         if (string.IsNullOrWhiteSpace(tel))
         {
@@ -113,7 +148,12 @@ public class StoreAccountCreationService : IStoreAccountCreationService
         return "Số điện thoại sai định dạng";
     }
 
-    private string validateUsername(string username)
+    /// <summary>
+    /// Validates the store username.
+    /// </summary>
+    /// <param name="username">The store username to validate.</param>
+    /// <returns>A validation message.</returns>
+    private string _validateUsername(string username)
     {
         if (string.IsNullOrWhiteSpace(username))
         {
@@ -121,7 +161,7 @@ public class StoreAccountCreationService : IStoreAccountCreationService
         }
 
         var storeDao = App.GetService<IStoreDao>();
-        
+
         var storeWithUsernameExists = storeDao.GetByUsernameAsync(username).Result;
 
         if (storeWithUsernameExists != null)
@@ -132,7 +172,12 @@ public class StoreAccountCreationService : IStoreAccountCreationService
         return "OK";
     }
 
-    private string validatePassword(string? password)
+    /// <summary>
+    /// Validates the store password.
+    /// </summary>
+    /// <param name="password">The store password to validate.</param>
+    /// <returns>A validation message.</returns>
+    private string _validatePassword(string? password)
     {
         if (string.IsNullOrWhiteSpace(password))
         {

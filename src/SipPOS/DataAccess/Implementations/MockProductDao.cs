@@ -12,7 +12,7 @@ using SipPOS.DataAccess.Interfaces;
 
 namespace SipPOS.DataAccess.Implementations;
 
-class MockProductDao : IProductDao
+public class MockProductDao : IProductDao
 {
     private readonly List<Product> _allProducts = new()
     {
@@ -147,6 +147,11 @@ class MockProductDao : IProductDao
         },
     };
 
+    /// <summary>
+    /// Deletes a product by its ID.
+    /// </summary>
+    /// <param name="id">The ID of the product to delete.</param>
+    /// <returns>The deleted product if found; otherwise, null.</returns>
     public Product? DeleteById(long id)
     {
         Product product = GetById(id);
@@ -159,6 +164,11 @@ class MockProductDao : IProductDao
         return product;
     }
 
+    /// <summary>
+    /// Deletes multiple products by their IDs.
+    /// </summary>
+    /// <param name="ids">The list of IDs of the products to delete.</param>
+    /// <returns>A list of deleted products.</returns>
     public IList<Product> DeleteByIds(IList<long> ids)
     {
         List<Product> products = new List<Product>();
@@ -176,16 +186,30 @@ class MockProductDao : IProductDao
         return products;
     }
 
+    /// <summary>
+    /// Retrieves all products that are not marked as deleted.
+    /// </summary>
+    /// <returns>A list of all available products.</returns>
     public IList<Product> GetAll()
     {
         return _allProducts.Where(_allProducts => _allProducts.DeletedAt == null).ToList();
     }
 
+    /// <summary>
+    /// Retrieves a product by its ID.
+    /// </summary>
+    /// <param name="id">The ID of the product to retrieve.</param>
+    /// <returns>The product if found; otherwise, null.</returns>
     public Product GetById(long id)
     {
         return _allProducts.First(x => x.Id == id);
     }
 
+    /// <summary>
+    /// Inserts a new product.
+    /// </summary>
+    /// <param name="product">The product to insert.</param>
+    /// <returns>The inserted product.</returns>
     public Product? Insert(Product product)
     {
         product.Id = new DateTime().Ticks;
@@ -195,6 +219,11 @@ class MockProductDao : IProductDao
         return product;
     }
 
+    /// <summary>
+    /// Updates an existing product by its ID.
+    /// </summary>
+    /// <param name="product">The product with updated information.</param>
+    /// <returns>The updated product if found; otherwise, null.</returns>
     public Product? UpdateById(Product product)
     {
         Product oldProduct = GetById(product.Id);
@@ -212,11 +241,23 @@ class MockProductDao : IProductDao
         return oldProduct;
     }
 
+    /// <summary>
+    /// Counts the total number of products.
+    /// </summary>
+    /// <returns>The total number of products.</returns>
     public long Count()
     {
         return _allProducts.Count;
     }
 
+    /// <summary>
+    /// Perform a search for products in a pagination.
+    /// </summary>
+    /// <param name="productFilterDto">The filters to apply.</param>
+    /// <param name="sortDto">The sorting options to apply.</param>
+    /// <param name="page">The page number to retrieve.</param>
+    /// <param name="perPage">The number of products per page.</param>
+    /// <returns>A pagination object containing the search results.</returns>
     public Pagination<Product> Search(ProductFilterDto productFilterDto, SortDto sortDto, int page, int perPage)
     {
         IList<Product> _allProducts = GetAll();

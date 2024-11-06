@@ -16,16 +16,30 @@ using Windows.Foundation.Collections;
 
 namespace SipPOS.Views;
 
+/// <summary>
+/// Represents the MainMenuView.
+/// </summary>
 public sealed partial class MainMenuView : Page
 {
+    /// <summary>
+    /// Gets the view model for the main menu view.
+    /// </summary>
     public MainMenuViewModel ViewModel { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MainMenuView"/> class.
+    /// </summary>
     public MainMenuView()
     {
         this.InitializeComponent();
         ViewModel = new MainMenuViewModel();
     }
 
+    /// <summary>
+    /// Handles the click event of the button to navigate to the inventory view.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void toInventoryViewButton_Click(object sender, RoutedEventArgs e)
     {
         if (App.CurrentWindow == null)
@@ -50,6 +64,11 @@ public sealed partial class MainMenuView : Page
         }
     }
 
+    /// <summary>
+    /// Handles the click event of the button to change the ID.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void changeIdButton_Click(object sender, RoutedEventArgs e)
     {
         if (App.CurrentWindow == null)

@@ -9,7 +9,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <!--Tab: Đăng nhập nhân viên-->
+    <!--Tab: Staff login-->
     <Grid 
         Width="400" 
         Height="250" 
@@ -24,7 +24,7 @@
             VerticalAlignment="Center"
             Grid.Column="0" 
             Margin="10">
-            <!--Cấp + Mã nhân viên-->
+            <!--Staff prefix + Staff ID-->
             <StackPanel
                 Orientation="Horizontal"
                 HorizontalAlignment="Left">
@@ -45,23 +45,24 @@
                     Text="{x:Bind ViewModel.StaffId, 
                                   Mode=TwoWay}"/>
             </StackPanel>
-            <!--Mật khẩu-->
+            <!--Staff password-->
             <PasswordBox 
                 Name="staffPasswordBox"
                 PlaceholderText="Mật khẩu" 
                 GotFocus="staffPasswordBox_GotFocus"
                 Margin="0,0,0,10"
+                PasswordRevealMode="Hidden"
                 Password="{x:Bind ViewModel.StaffPassword, 
                                   Mode=TwoWay}"/>
 
-            <!--Hiển thị mật khẩu-->
+            <!--Show password CheckBox-->
             <CheckBox
                 Name="staffPasswordVisibleCheckBox"
                 Checked="staffPasswordVisibleCheckBox_Changed"
                 Unchecked="staffPasswordVisibleCheckBox_Changed"
                 Content="Hiển thị mật khẩu"/>
 
-            <!--Nút đăng nhập-->
+            <!--Staff login Button-->
             <Button 
                 Content="Đăng nhập" 
                 HorizontalAlignment="Center"/>

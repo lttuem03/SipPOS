@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SipPOS.Models;
 
+/// <summary>
+/// Represents a staff entity.
+/// </summary>
 public class Staff : BaseModel
 {
 

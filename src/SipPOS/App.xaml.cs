@@ -32,13 +32,23 @@ using SipPOS.DataAccess.Implementations;
 
 namespace SipPOS;
 
+/// <summary>
+/// Provides application-specific behavior to supplement the default Application class.
+/// </summary>
 public partial class App : Application
 {
+    /// <summary>
+    /// Gets the current window of the application.
+    /// </summary>
     public static Window? CurrentWindow { get; private set; }
+
+    /// <summary>
+    /// Gets the host for dependency injection.
+    /// </summary>
     public IHost Host { get; }
 
     /// <summary>
-    /// Initializes the singleton application object.  This is the first line of authored code
+    /// Initializes the singleton application object. This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
     public App()
@@ -62,7 +72,7 @@ public partial class App : Application
             services.AddSingleton<IProductDao, MockProductDao>();
             services.AddSingleton<ICategoryDao, MockCategoryDao>();
             services.AddSingleton<IStoreDao, PostgreStoreDao>();
-        
+
             // Services
             services.AddSingleton<IProductService, ProductService>();
             services.AddSingleton<ICategoryService, CategoryService>();
@@ -76,20 +86,26 @@ public partial class App : Application
             services.AddSingleton<IPasswordEncryptionService>(new PasswordEncryptionService());
             services.AddSingleton<IStoreAccountCreationService>(new StoreAccountCreationService());
             services.AddSingleton<IStoreAuthenticationService>(new StoreAuthenticationService());
-    
+
 
             // Views and ViewModels
             services.AddTransient<CategoryManagementViewModel>();
             services.AddTransient<CategoryManagementView>();
             services.AddTransient<ProductManagementViewModel>();
             services.AddTransient<ProductManagementView>();
-        
+
             //Add AutoMapper
             services.AddAutoMapper(typeof(App).Assembly);
         }).
         Build();
     }
 
+    /// <summary>
+    /// Gets a service of the specified type from the host's service provider.
+    /// </summary>
+    /// <typeparam name="T">The type of service to get.</typeparam>
+    /// <returns>The service of type <typeparamref name="T"/>.</returns>
+    /// <exception cref="ArgumentException">Thrown when the service is not registered.</exception>
     public static T GetService<T>()
         where T : class
     {
@@ -111,7 +127,7 @@ public partial class App : Application
         App.CurrentWindow = _mainWindow;
 
         Frame rootFrame = new Frame();
-        rootFrame.NavigationFailed += OnNavigationFailed;
+        rootFrame.NavigationFailed += _onNavigationFailed;
 
         rootFrame.Navigate(typeof(MainMenuView));
 
@@ -119,7 +135,12 @@ public partial class App : Application
         _mainWindow.Activate();
     }
 
-    private async void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+    /// <summary>
+    /// Handles navigation failures.
+    /// </summary>
+    /// <param name="sender">The source of the navigation failure.</param>
+    /// <param name="e">Details about the navigation failure.</param>
+    private async void _onNavigationFailed(object sender, NavigationFailedEventArgs e)
     {
         var dialog = new ContentDialog
         {
