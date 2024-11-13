@@ -94,6 +94,8 @@ public partial class App : Application
             services.AddTransient<CategoryManagementView>();
             services.AddTransient<ProductManagementViewModel>();
             services.AddTransient<ProductManagementView>();
+            services.AddTransient<CustomerPaymentViewModel>();
+            services.AddTransient<CustomerPaymentView>();
 
             //Add AutoMapper
             services.AddAutoMapper(typeof(App).Assembly);
@@ -151,7 +153,7 @@ public partial class App : Application
 
         if (rootFrame != null)
         {
-            rootFrame.Navigate(pageType);
+            rootFrame.Navigate(pageType, parameter);
         }
         else
         {

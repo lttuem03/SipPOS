@@ -45,6 +45,17 @@ public sealed partial class MainMenuView : Page
         ViewModel.HandleToProductManagementViewButtonClick();
     }
 
+    private void toCategoryManagementViewButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleToCategoryManagementViewButtonClick();
+    }
+
+    private void toCustomerPaymentViewButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleToCustomerPaymentViewButtonClick();
+    }
+
+
     /// <summary>
     /// Handles the click event of the button to change the ID.
     /// </summary>

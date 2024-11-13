@@ -29,6 +29,16 @@
                     Click="toProductManagementViewButton_Click"
                     Content="Hàng hóa"/>
 
+            <!--To CategoryMangementView Button-->
+            <Button x:Name="toCategoryManagementViewButton"
+                    Click="toCategoryManagementViewButton_Click"
+                    Content="Danh mục"/>
+
+            <!--To CustomerPaymentView Button-->
+            <Button x:Name="toCustomerPaymentViewButton"
+                    Click="toCustomerPaymentViewButton_Click"
+                    Content="Thanh toán"/>
+
             <!--To StaffManagementView Button-->
             <Button x:Name="toStaffManagementViewButton"
                     Content="Nhân sự"/>

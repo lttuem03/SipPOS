@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using SipPOS.DataTransfer;
 using SipPOS.Services.Implementations;
 using SipPOS.Services.Interfaces;
 using SipPOS.Views;
@@ -51,6 +51,89 @@ public class MainMenuViewModel : INotifyPropertyChanged
     public void HandleToProductManagementViewButtonClick()
     {
         App.NavigateTo(typeof(ProductManagementView));
+    }
+
+    public void HandleToCategoryManagementViewButtonClick()
+    {
+        App.NavigateTo(typeof(CategoryManagementView));
+    }
+
+    public void HandleToCustomerPaymentViewButtonClick()
+    {
+        IList<ProductDto> productDtos = new List<ProductDto>
+        {
+            new ProductDto
+            {
+                Id = 1,
+                Name = "Cà phê sữa",
+                Price = 1000,
+                Quantity = 1
+            },
+            new ProductDto
+            {
+                Id = 2,
+                Name = "Trà sữa",
+                Price = 1000,
+                Quantity = 1
+            },
+            new ProductDto
+            {
+                Id = 3,
+                Name = "Nước mía",
+                Price = 1000,
+                Quantity = 1
+            },
+            new ProductDto
+            {
+                Id = 4,
+                Name = "Nước lọc",
+                Price = 1000,
+                Quantity = 1
+            },
+            new ProductDto
+            {
+                Id = 5,
+                Name = "Nước ngọt",
+                Price = 1000,
+                Quantity = 1
+            },
+            new ProductDto
+            {
+                Id = 6,
+                Name = "Cà phê đen",
+                Price = 1000,
+                Quantity = 1
+            },
+            new ProductDto
+            {
+                Id = 7,
+                Name = "Cà phê sữa đá",
+                Price = 1000,
+                Quantity = 1
+            },
+            new ProductDto
+            {
+                Id = 8,
+                Name = "Trà sữa đá",
+                Price = 1000,
+                Quantity = 1
+            },
+            new ProductDto
+            {
+                Id = 9,
+                Name = "Nước mía đá",
+                Price = 1000,
+                Quantity = 1
+            },
+            new ProductDto
+            {
+                Id = 10,
+                Name = "Nước lọc đá",
+                Price = 1000,
+                Quantity = 1
+            },
+        };
+        App.NavigateTo(typeof(CustomerPaymentView), productDtos);
     }
 
     /// <summary>
