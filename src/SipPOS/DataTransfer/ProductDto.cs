@@ -45,4 +45,6 @@ public class ProductDto : BaseDto
     /// Gets or sets a value indicating whether the product is settled.
     /// </summary>
     public bool IsSeteled { get; set; } = false;
+
+    public int? Quantity { get; set; }
 }
