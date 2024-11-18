@@ -1,13 +1,13 @@
-﻿using System.ComponentModel;
+﻿using WinRT;
+using System.ComponentModel;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
-using WinRT;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-using SipPOS.Models;
-using SipPOS.Services.Interfaces;
-using SipPOS.DataTransfer;
-using SipPOS.Views;
+using SipPOS.Services.Entity.Interfaces;
+using SipPOS.DataTransfer.Entity;
+using SipPOS.DataTransfer.General;
+using SipPOS.Models.General;
 
 namespace SipPOS.ViewModels;
 
@@ -65,7 +65,7 @@ public partial class ProductManagementViewModel : ObservableRecipient
     /// Gets or sets the number of items per page.
     /// </summary>
     [ObservableProperty]
-    private ProductFilterDto productFilterDto = new ProductFilterDto();
+    private ProductFilterDto productFilterDto = new();
 
     [ObservableProperty]
     private int perPage = 5;
@@ -89,7 +89,7 @@ public partial class ProductManagementViewModel : ObservableRecipient
     private long totalRecord = 0;
     
     [ObservableProperty]
-    private SortDto sortDto = new SortDto();
+    private SortDto sortDto = new();
 
     /// <summary>
     /// Gets or sets the action type.

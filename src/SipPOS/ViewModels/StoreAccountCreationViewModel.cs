@@ -5,14 +5,13 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Microsoft.UI.Xaml.Controls;
 
-using SipPOS.Models;
-using SipPOS.DataTransfer;
-using SipPOS.Services.Interfaces;
-using SipPOS.Services.Implementations;
+using SipPOS.DataTransfer.Entity;
+using SipPOS.Services.General.Interfaces;
+using SipPOS.Services.General.Implementations;
 using SipPOS.Views;
+using SipPOS.Models.Entity;
 
 namespace SipPOS.ViewModels;
 

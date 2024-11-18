@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 
-using SipPOS.Services.Interfaces;
-using SipPOS.Services.Implementations;
+using SipPOS.Services.General.Interfaces;
+using SipPOS.Services.General.Implementations;
 using SipPOS.Views;
 
 namespace SipPOS.ViewModels;

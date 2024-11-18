@@ -26,8 +26,8 @@ using CommunityToolkit.WinUI.UI.Controls;
 
 using SipPOS.Models;
 using SipPOS.ViewModels;
-using SipPOS.Controls;
-using SipPOS.DataTransfer;
+using SipPOS.Resources.Controls;
+using SipPOS.DataTransfer.Entity;
 
 namespace SipPOS.Views;
 

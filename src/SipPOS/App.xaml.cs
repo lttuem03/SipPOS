@@ -26,10 +26,12 @@ using DotNetEnv;
 
 using SipPOS.ViewModels;
 using SipPOS.Views;
-using SipPOS.Services.Interfaces;
-using SipPOS.Services.Implementations;
-using SipPOS.DataAccess.Interfaces;
-using SipPOS.DataAccess.Implementations;
+using SipPOS.Services.General.Interfaces;
+using SipPOS.Services.General.Implementations;
+using SipPOS.Services.Entity.Interfaces;
+using SipPOS.Services.Entity.Implementations;
+using SipPOS.Services.DataAccess.Interfaces;
+using SipPOS.Services.DataAccess.Implementations;
 
 namespace SipPOS;
 
@@ -78,12 +80,12 @@ public partial class App : Application
             services.AddSingleton<IProductService, ProductService>();
             services.AddSingleton<ICategoryService, CategoryService>();
             services.AddSingleton<IDatabaseConnectionService>(new PostgreSqlConnectionService(
-                        host: postgres_host,
-                        port: postgres_port,
-                        username: postgres_username,
-                        password: postgres_password,
-                        database: postgres_database
-                    )); // please use arcordingly with the DAOs using the database connections
+                host: postgres_host,
+                port: postgres_port,
+                username: postgres_username,
+                password: postgres_password,
+                database: postgres_database
+            )); // please use arcordingly with the DAOs using the database connections
             services.AddSingleton<IPasswordEncryptionService>(new PasswordEncryptionService());
             services.AddSingleton<IStoreAccountCreationService>(new StoreAccountCreationService());
             services.AddSingleton<IStoreAuthenticationService>(new StoreAuthenticationService());
