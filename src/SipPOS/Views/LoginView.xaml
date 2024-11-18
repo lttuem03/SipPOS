@@ -13,7 +13,7 @@
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
         Width="700"
-        Height="300">
+        Height="500">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -24,13 +24,18 @@
             PaneDisplayMode="Top"
             IsBackButtonVisible="Collapsed"
             IsSettingsVisible="False"
-            SelectionChanged="loginNavigationView_SelectionChanged">
+            SelectionChanged="loginNavigationView_SelectionChanged"
+            Grid.Row="0"
+            Margin="0,50,0,0">
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="Đăng nhập nhân viên" Tag="StaffLogin" Icon="Contact"/>
                 <NavigationViewItem Content="Đăng nhập cửa hàng" Tag="StoreLogin" Icon="Shop"/>
             </NavigationView.MenuItems>
         </NavigationView>
 
-        <Frame x:Name="loginNavigationFrame" Grid.Row="1"/>
+        <Frame 
+            x:Name="loginNavigationFrame" 
+            Grid.Row="1"
+            Margin="0,0,0,50"/>
     </Grid>
 </Page>

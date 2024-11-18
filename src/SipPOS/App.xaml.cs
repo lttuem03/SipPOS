@@ -74,7 +74,7 @@ public partial class App : Application
             // Dao
             services.AddSingleton<IProductDao, MockProductDao>();
             services.AddSingleton<ICategoryDao, MockCategoryDao>();
-            services.AddSingleton<IStoreDao, PostgreStoreDao>();
+            services.AddSingleton<IStoreDao, MockStoreDao>();
 
             // Services
             services.AddSingleton<IProductService, ProductService>();
@@ -89,7 +89,7 @@ public partial class App : Application
             services.AddSingleton<IPasswordEncryptionService>(new PasswordEncryptionService());
             services.AddSingleton<IStoreAccountCreationService>(new StoreAccountCreationService());
             services.AddSingleton<IStoreAuthenticationService>(new StoreAuthenticationService());
-
+            services.AddSingleton<IStoreCredentialsService>(new StoreCredentialsService());
 
             // Views and ViewModels
             services.AddTransient<CategoryManagementViewModel>();
@@ -126,7 +126,7 @@ public partial class App : Application
     /// Invoked when the application is launched.
     /// </summary>
     /// <param name="args">Details about the launch request and process.</param>
-    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    protected async override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
         _mainWindow = new MainWindow();
         App.CurrentWindow = _mainWindow;
@@ -134,8 +134,28 @@ public partial class App : Application
         Frame rootFrame = new Frame();
         rootFrame.NavigationFailed += _onNavigationFailed;
 
-        rootFrame.Navigate(typeof(MainMenuView));
+        // Check if a Store's credentials is saved for authentication (clicked "Save credentials" on last authentication)
+        var storeCredentialsService = App.GetService<IStoreCredentialsService>();
 
+        (var storeUsername, var storePassword) = storeCredentialsService.LoadCredentials();
+
+        if (storeUsername != null && storePassword != null)
+        {
+            var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
+
+            var loginSuccessful = await storeAuthenticationService.LoginAsync(storeUsername, storePassword);
+
+            if (loginSuccessful)
+            {
+                rootFrame.Navigate(typeof(MainMenuView));
+                _mainWindow.Content = rootFrame;
+                _mainWindow.Activate();
+
+                return;
+            }
+        }
+         
+        rootFrame.Navigate(typeof(LoginView));
         _mainWindow.Content = rootFrame;
         _mainWindow.Activate();
     }
@@ -149,7 +169,9 @@ public partial class App : Application
     public static void NavigateTo(Type pageType, object? parameter=null, NavigationTransitionInfo? infoOverride=null)
     {
         if (App.CurrentWindow == null)
+        {
             return;
+        }
 
         var rootFrame = App.CurrentWindow.Content as Frame;
 

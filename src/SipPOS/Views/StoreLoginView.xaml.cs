@@ -67,4 +67,24 @@ public sealed partial class StoreLoginView : Page
     {
         ViewModel.HandleStorePasswordVisibleCheckBoxChanged(storePasswordBox);
     }
+
+    /// <summary>
+    /// Handles the Checked event of the save store credentials check box.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
+    private void saveStoreCredentialsCheckBox_Checked(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleSaveStoreCredentialsCheckBoxChecked();
+    }
+
+    /// <summary>
+    /// Handles the Unchecked event of the save store credentials check box.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
+    private void saveStoreCredentialsCheckBox_Unchecked(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleSaveStoreCredentialsCheckBoxUnchecked();
+    }
 }

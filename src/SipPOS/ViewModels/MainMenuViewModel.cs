@@ -142,6 +142,12 @@ public class MainMenuViewModel : INotifyPropertyChanged
     /// </summary>
     public void HandleChangeIdButtonClick()
     {
+        var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
+        var storeCredentialsService = App.GetService<IStoreCredentialsService>();
+
+        storeAuthenticationService.Logout();
+        storeCredentialsService.ClearCredentials();
+
         App.NavigateTo(typeof(LoginView));
     }
 

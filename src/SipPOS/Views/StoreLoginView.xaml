@@ -10,8 +10,8 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid 
-        Width="400" 
-        Height="250" 
+        Width="500" 
+        Height="300" 
         BorderBrush="Black" 
         BorderThickness="1">
         <StackPanel 
@@ -35,6 +35,12 @@
                 Checked="storePasswordVisibleCheckBox_Changed"
                 Unchecked="storePasswordVisibleCheckBox_Changed"
                 Content="Hiển thị mật khẩu"/>
+            <!--Save store credentials CheckBox-->
+            <CheckBox
+                Name="saveStoreCredentialsCheckBox"
+                Checked="saveStoreCredentialsCheckBox_Checked"
+                Unchecked="saveStoreCredentialsCheckBox_Unchecked"
+                Content="Lưu thông tin đăng nhập"/>
             <!--Error message TextBlock-->
             <TextBlock 
                 Name="errorMessageTextBlock"
@@ -42,7 +48,7 @@
                 Foreground="Red"
                 Opacity="0.0"
                 Margin="0,0,0,10"
-                Text="Sai tên đăng nhập hoặc mật khẩu"/>
+                Text="Sai thông tin đăng nhập"/>
             <!--Login Button-->
             <Button 
                 Name="storeLoginButton"
