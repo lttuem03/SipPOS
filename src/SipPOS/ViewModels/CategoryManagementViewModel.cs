@@ -1,9 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-using SipPOS.Models;
-using SipPOS.Services.Interfaces;
-using SipPOS.DataTransfer;
+using SipPOS.Services.Entity.Interfaces;
+using SipPOS.DataTransfer.Entity;
+using SipPOS.DataTransfer.General;
+using SipPOS.Models.General;
 
 namespace SipPOS.ViewModels;
 
@@ -51,7 +52,7 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     /// Gets or sets the number of items per page.
     /// </summary>
     [ObservableProperty]
-    private CategoryFilterDto categoryFilterDto = new CategoryFilterDto();
+    private CategoryFilterDto categoryFilterDto = new();
 
     [ObservableProperty]
     private int perPage = 5;
@@ -78,7 +79,7 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     /// Gets or sets the action type.
     /// </summary>
     [ObservableProperty]
-    private SortDto sortDto = new SortDto();
+    private SortDto sortDto = new();
 
     [ObservableProperty]
     public string? actionType;

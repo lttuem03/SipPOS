@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
-using SipPOS.DataTransfer;
+using SipPOS.DataTransfer.Entity;
 using SipPOS.ViewModels;
 
 namespace SipPOS.Views;

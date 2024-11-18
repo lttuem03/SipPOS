@@ -4,9 +4,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SipPOS.DataTransfer;
-using SipPOS.Services.Implementations;
-using SipPOS.Services.Interfaces;
+
+using SipPOS.DataTransfer.Entity;
+using SipPOS.Services.General.Implementations;
+using SipPOS.Services.General.Interfaces;
 using SipPOS.Views;
 
 namespace SipPOS.ViewModels;
@@ -62,70 +63,70 @@ public class MainMenuViewModel : INotifyPropertyChanged
     {
         IList<ProductDto> productDtos = new List<ProductDto>
         {
-            new ProductDto
+            new() 
             {
                 Id = 1,
                 Name = "Cà phê sữa",
                 Price = 1000,
                 Quantity = 1
             },
-            new ProductDto
+            new()
             {
                 Id = 2,
                 Name = "Trà sữa",
                 Price = 1000,
                 Quantity = 1
             },
-            new ProductDto
+            new()
             {
                 Id = 3,
                 Name = "Nước mía",
                 Price = 1000,
                 Quantity = 1
             },
-            new ProductDto
+            new()
             {
                 Id = 4,
                 Name = "Nước lọc",
                 Price = 1000,
                 Quantity = 1
             },
-            new ProductDto
+            new()
             {
                 Id = 5,
                 Name = "Nước ngọt",
                 Price = 1000,
                 Quantity = 1
             },
-            new ProductDto
+            new()
             {
                 Id = 6,
                 Name = "Cà phê đen",
                 Price = 1000,
                 Quantity = 1
             },
-            new ProductDto
+            new()
             {
                 Id = 7,
                 Name = "Cà phê sữa đá",
                 Price = 1000,
                 Quantity = 1
             },
-            new ProductDto
+            new()
             {
                 Id = 8,
                 Name = "Trà sữa đá",
                 Price = 1000,
                 Quantity = 1
             },
-            new ProductDto
+            new()
             {
                 Id = 9,
                 Name = "Nước mía đá",
                 Price = 1000,
                 Quantity = 1
             },
-            new ProductDto
+            new()
             {
                 Id = 10,
                 Name = "Nước lọc đá",

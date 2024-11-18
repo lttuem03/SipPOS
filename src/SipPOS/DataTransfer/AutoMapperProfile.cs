@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 using AutoMapper;
-
-using SipPOS.Models;
+using SipPOS.DataTransfer.Entity;
+using SipPOS.Models.Entity;
+using SipPOS.Models.General;
 
 namespace SipPOS.DataTransfer;
 

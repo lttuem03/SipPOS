@@ -6,7 +6,6 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,10 +19,10 @@ using Windows.Storage.Pickers;
 using Windows.Storage;
 using CommunityToolkit.WinUI.UI.Controls;
 
-using SipPOS.DataTransfer;
+using SipPOS.DataTransfer.Entity;
 using SipPOS.Models;
 using SipPOS.ViewModels;
-using SipPOS.Controls;
+using SipPOS.Resources.Controls;
 
 namespace SipPOS.Views;
 

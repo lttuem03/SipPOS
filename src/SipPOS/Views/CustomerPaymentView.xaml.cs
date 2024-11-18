@@ -19,53 +19,62 @@ using Windows.Foundation.Collections;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using CommunityToolkit.WinUI.UI.Controls;
-
-using SipPOS.DataTransfer;
-using SipPOS.Models;
-using SipPOS.ViewModels;
-using SipPOS.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using SipPOS.DataTransfer.Entity;
+using SipPOS.ViewModels;
 
-namespace SipPOS.Views
+namespace SipPOS.Views;
+
+/// <summary>
+/// A page that handles customer payments.
+/// </summary>
+public sealed partial class CustomerPaymentView : Page
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// Gets the ViewModel for the customer payment.
     /// </summary>
-    public sealed partial class CustomerPaymentView : Page
+    public CustomerPaymentViewModel ViewModel { get; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CustomerPaymentView"/> class.
+    /// </summary>
+    public CustomerPaymentView()
     {
-        public CustomerPaymentViewModel ViewModel { get; }
+        ViewModel = App.GetService<CustomerPaymentViewModel>();
+        InitializeComponent();
+        VietQRLogo.Source = new BitmapImage(new Uri("ms-appx:///Assets/Vietqr-Logo.png"));
+    }
 
-        public CustomerPaymentView()
+    /// <summary>
+    /// Called when the page is navigated to.
+    /// </summary>
+    /// <param name="e">The event data.</param>
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+        ViewModel.Products.Clear();
+        if (e.Parameter is IList<ProductDto> productList)
         {
-            ViewModel = App.GetService<CustomerPaymentViewModel>();
-            InitializeComponent();
-            VietQRLogo.Source = new BitmapImage(new Uri("ms-appx:///Assets/Vietqr-Logo.png"));
-        }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            ViewModel.Products.Clear();
-            if (e.Parameter is IList<ProductDto> productList)
+            foreach (var item in productList)
             {
-                foreach (var item in productList)
-                {
-                    ViewModel.Products.Add(item);     
-                }
-                ViewModel.CalculateTotalPrice();
-            } else
-            {
-                //handle error or navigate back
+                ViewModel.Products.Add(item);
             }
+            ViewModel.CalculateTotalPrice();
         }
-
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        else
         {
-            base.OnNavigatedFrom(e);
-            _ = ViewModel.CancelPayment();
+            //handle error or navigate back
         }
+    }
+
+    /// <summary>
+    /// Called when the page is navigated from.
+    /// </summary>
+    /// <param name="e">The event data.</param>
+    protected override void OnNavigatedFrom(NavigationEventArgs e)
+    {
+        base.OnNavigatedFrom(e);
+        _ = ViewModel.CancelPayment();
     }
 }

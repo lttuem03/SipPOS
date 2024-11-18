@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using SipPOS.DataTransfer;
-using SipPOS.Services.Interfaces;
+using SipPOS.DataTransfer.Entity;
+using SipPOS.Services.Entity.Interfaces;
 
 namespace SipPOS.Converters;
 

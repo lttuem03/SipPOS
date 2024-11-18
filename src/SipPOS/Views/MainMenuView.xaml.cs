@@ -5,7 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using SipPOS.ViewModels;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +13,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+
+using SipPOS.ViewModels;
 
 namespace SipPOS.Views;
 
