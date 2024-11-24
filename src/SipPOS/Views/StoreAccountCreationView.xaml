@@ -188,6 +188,85 @@
             Margin="0,0,0,0"
             Text="{x:Bind ViewModel.OtherErrorMessageText,
                             Mode=TwoWay}"/>
+        <!--Confirm information dialog-->
+        <ContentDialog
+            Name="confirmStoreInformationContentDialog"
+            Title="Xác nhận thông tin cửa hàng"
+            PrimaryButtonText="Xác nhận"
+            PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
+            CloseButtonText="Hủy bỏ"
+            Opened="confirmStoreInformationContentDialog_Opened"
+            Width="1500"
+            MaxHeight="1000">
+            <StackPanel
+                Orientation="Vertical"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top">
+                <TextBlock 
+                    TextWrapping="Wrap"
+                    Margin="0,0,0,15">
+                    <Span>
+                        Hãy đảm bảo các thông tin đã điền là chính xác <LineBreak/>
+                        (Trong tương lai, bạn có thể chỉnh sửa tất cả trừ <Bold>tên đăng nhập</Bold>)
+                    </Span>
+                </TextBlock>
+                <!--Confirm store name-->
+                <TextBlock
+                    TextWrapping="Wrap"
+                    Margin="0,0,0,5">
+                    <Span>
+                        <Bold>Tên cửa hàng: </Bold>
+                        <Run
+                            x:Name="confirmStoreNameTextBlock"
+                            Text="placeholder"/>
+                    </Span>
+                </TextBlock>
+                <!--Confirm store address-->
+                <TextBlock
+                    TextWrapping="Wrap"
+                    Margin="0,0,0,5">
+                    <Span>
+                        <Bold>Địa chỉ cửa hàng: </Bold>
+                        <Run
+                            x:Name="confirmStoreAddressTextBlock"
+                            Text="placeholder"/>
+                    </Span>
+                </TextBlock>
+                <!--Confirm store email-->
+                <TextBlock
+                    TextWrapping="Wrap"
+                    Margin="0,0,0,5">
+                    <Span>
+                        <Bold>Email cửa hàng: </Bold>
+                        <Run
+                            x:Name="confirmStoreEmailTextBlock"
+                            Text="placeholder"/>
+                    </Span>
+                </TextBlock>
+                <!--Confirm store telephone number-->
+                <TextBlock
+                    TextWrapping="Wrap"
+                    Margin="0,0,0,5">
+                    <Span>
+                        <Bold>SĐT cửa hàng: </Bold>
+                        <Run
+                            x:Name="confirmStoreTelTextBlock"
+                            Text="placeholder"/>
+                    </Span>
+                </TextBlock>
+                <!--Confirm store username-->
+                <TextBlock
+                    TextWrapping="Wrap"
+                    Foreground="Red">
+                    <Span>
+                        <Bold>Tên đăng nhập: </Bold>
+                        <Run
+                            x:Name="confirmStoreUsernameTextBlock"
+                            Text="placeholder"/>
+                    </Span>
+                </TextBlock>
+            </StackPanel>
+        </ContentDialog>
         <!--Confirm account creation Button / Cancel button-->
         <StackPanel
             Orientation="Horizontal"

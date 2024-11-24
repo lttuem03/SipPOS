@@ -45,6 +45,12 @@ public class StoreAuthenticationService : IStoreAuthenticationService
             return false;
         }
 
+        // check if the store returned had been marked as "Deleted" or not
+        if (storeDto.DeletedAt != null)
+        {
+            return false;
+        }
+
         // null checks to please the compiler
         if (storeDto.PasswordHash == null ||
             storeDto.Salt == null ||

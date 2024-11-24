@@ -54,11 +54,11 @@ public class MockStoreDao : IStoreDao
     // Moc StoreDao should not have the methods below implemented, because it is used for the quick-login
     // when developing only
 
-    public Task<StoreDto?> DeleteByIdAsync(int id) => throw new NotImplementedException();
+    public Task<StoreDto?> DeleteByIdAsync(long id) => throw new NotImplementedException();
     public Task<StoreDto?> DeleteByUsernameAsync(string username) => throw new NotImplementedException();
-    public Task<StoreDto?> GetByIdAsync(int id) => throw new NotImplementedException();
-    public Task<Store?> InsertAsync(StoreDto storeDto) => throw new NotImplementedException();
-    public Task<StoreDto?> UpdateByIdAsync(int id, StoreDto updatedStoreDto) => throw new NotImplementedException();
+    public Task<StoreDto?> GetByIdAsync(long id) => throw new NotImplementedException();
+    public Task<(long id, StoreDto? dto)> InsertAsync(StoreDto storeDto) => throw new NotImplementedException();
+    public Task<StoreDto?> UpdateByIdAsync(long id, StoreDto updatedStoreDto) => throw new NotImplementedException();
     public Task<StoreDto?> UpdateByUsernameAsync(string username, StoreDto updatedStoreDto)
     {
         // The only usage of this method is when the mock store is 

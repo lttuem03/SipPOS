@@ -55,8 +55,6 @@ public class StoreAuthenticationContext
     /// </summary>
     public StoreAuthenticationContext()
     {
-        LoggedIn = false;
-        LoginTime = null;
         CurrentStore = null;
     }
 

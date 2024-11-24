@@ -27,14 +27,14 @@ public interface IStoreDao
     /// </summary>
     /// <param name="storeDto">The store data transfer object containing store details.</param>
     /// <returns>The inserted store if successful; otherwise, null.</returns>
-    Task<Store?> InsertAsync(StoreDto storeDto);
+    Task<(long id, StoreDto? dto)> InsertAsync(StoreDto storeDto);
 
     /// <summary>
     /// Retrieves a store by its ID asynchronously.
     /// </summary>
     /// <param name="id">The ID of the store to retrieve.</param>
     /// <returns>The store data transfer object if found; otherwise, null.</returns>
-    Task<StoreDto?> GetByIdAsync(int id);
+    Task<StoreDto?> GetByIdAsync(long id);
 
     /// <summary>
     /// Retrieves a store by its username asynchronously.
@@ -49,7 +49,7 @@ public interface IStoreDao
     /// <param name="id">The ID of the store to update.</param>
     /// <param name="updatedStoreDto">The updated store data transfer object.</param>
     /// <returns>The updated store data transfer object if successful; otherwise, null.</returns>
-    Task<StoreDto?> UpdateByIdAsync(int id, StoreDto updatedStoreDto);
+    Task<StoreDto?> UpdateByIdAsync(long id, StoreDto updatedStoreDto);
 
     /// <summary>
     /// Updates a store by its username asynchronously.
@@ -64,7 +64,7 @@ public interface IStoreDao
     /// </summary>
     /// <param name="id">The ID of the store to delete.</param>
     /// <returns>The deleted store data transfer object if successful; otherwise, null.</returns>
-    Task<StoreDto?> DeleteByIdAsync(int id);
+    Task<StoreDto?> DeleteByIdAsync(long id);
 
     /// <summary>
     /// Deletes a store by its username asynchronously.

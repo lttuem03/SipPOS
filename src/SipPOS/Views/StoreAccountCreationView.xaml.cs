@@ -56,7 +56,7 @@ public sealed partial class StoreAccountCreationView : Page
 
         var repeatPasswordString = confirmStorePasswordFieldPasswordBox.Password;
 
-        ViewModel.HandleConfirmStoreAccountCreationButtonClick(rawInfoStoreDto, repeatPasswordString);
+        ViewModel.HandleConfirmStoreAccountCreationButtonClick(rawInfoStoreDto, repeatPasswordString, confirmStoreInformationContentDialog);
     }
 
     /// <summary>
@@ -67,5 +67,19 @@ public sealed partial class StoreAccountCreationView : Page
     private void cancelStoreAccountCreationButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.HandleCancelStoreAccountCreationButtonClick();
+    }
+
+    private void confirmStoreInformationContentDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
+    {
+        // Load the information into the content dialog
+
+        // Doing it this way is way more straight-forward than create Dto
+        // and pass it to a ViewModel's method
+
+        confirmStoreNameTextBlock.Text = storeNameFieldTextBox.Text;
+        confirmStoreAddressTextBlock.Text = storeAddressFieldTextBox.Text;
+        confirmStoreEmailTextBlock.Text = storeEmailFieldTextBox.Text;
+        confirmStoreTelTextBlock.Text = storeTelFieldTextBox.Text;
+        confirmStoreUsernameTextBlock.Text = storeUsernameFieldTextBox.Text;
     }
 }

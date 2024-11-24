@@ -48,7 +48,7 @@
                 Foreground="Red"
                 Opacity="0.0"
                 Margin="0,0,0,10"
-                Text="Sai thông tin đăng nhập"/>
+                Text="Sai thông tin đăng nhập hoặc tài khoản đã bị vô hiệu"/>
             <!--Login Button-->
             <Button 
                 Name="storeLoginButton"

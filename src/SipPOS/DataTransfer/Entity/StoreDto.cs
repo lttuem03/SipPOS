@@ -9,7 +9,7 @@ namespace SipPOS.DataTransfer.Entity;
 /// <summary>
 /// Data transfer object for Store.
 /// </summary>
-public class StoreDto : BaseDto
+public class StoreDto : BaseEntityDto
 {
     /// <summary>
     /// Gets or sets the name of the store.

@@ -9,7 +9,7 @@ namespace SipPOS.DataTransfer.Entity;
 /// <summary>
 /// Base data transfer object class containing common properties.
 /// </summary>
-public abstract class BaseDto
+public abstract class BaseEntityDto
 {
     /// <summary>
     /// Gets or sets the unique identifier.

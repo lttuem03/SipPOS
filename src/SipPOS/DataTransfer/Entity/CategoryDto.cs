@@ -9,7 +9,7 @@ namespace SipPOS.DataTransfer.Entity;
 /// <summary>
 /// Data transfer object for Category.
 /// </summary>
-public class CategoryDto : BaseDto
+public class CategoryDto : BaseEntityDto
 {
     /// <summary>
     /// Gets or sets the name of the category.

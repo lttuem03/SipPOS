@@ -45,10 +45,14 @@ public class StoreAccountCreationService : IStoreAccountCreationService
 
         // Insert new row to database
         var storeDao = App.GetService<IStoreDao>();
+        var insertResult = await storeDao.InsertAsync(storeDto); // Result: (id, dto)
 
-        var newStore = await storeDao.InsertAsync(storeDto); // wait for the task to complete
+        if (insertResult.dto == null)
+        {
+            return null;
+        }
 
-        return newStore;
+        return new Store(insertResult.id, insertResult.dto);
     }
 
     /// <summary>

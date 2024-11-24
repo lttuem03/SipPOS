@@ -77,8 +77,10 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
     /// </summary>
     /// <param name="rawInfoStoreDto">The raw information of the store entered in the fields.</param>
     /// <param name="repeatPasswordString">The repeated password string.</param>
-    public async void HandleConfirmStoreAccountCreationButtonClick(StoreDto rawInfoStoreDto, string repeatPasswordString)
+    public async void HandleConfirmStoreAccountCreationButtonClick(StoreDto rawInfoStoreDto, string repeatPasswordString, ContentDialog comfirmationDialog)
     {
+        var allFieldsValid = true;
+
         if (rawInfoStoreDto.PasswordHash == null)
         {
             return;
@@ -88,13 +90,12 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         {
             ConfirmPasswordErrorMessageText = "Xác nhận mật khẩu không khớp.";
             ConfirmPasswordErrorMessageOpacity = 1.0F;
+            allFieldsValid = false;
         }
 
         var storeAccountCreationService = App.GetService<IStoreAccountCreationService>();
-
         var fieldValidationResults = storeAccountCreationService.ValidateFields(rawInfoStoreDto);
-        var allFieldsValid = true;
-
+        
         foreach (var fieldValidationResult in fieldValidationResults)
         {
             var field = fieldValidationResult.Key;
@@ -137,9 +138,21 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
             }
         }
 
-        // ACCOUNT CREATION
-        if (allFieldsValid)
+        if (!allFieldsValid)
         {
+            OtherErrorMessageText = "Tạo tài khoản thất bại, có trường không hợp lệ";
+            OtherErrorMessageOpacity = 1.0F;
+            return;
+        }
+
+        OtherErrorMessageOpacity = 0.0F;
+
+        // COMFIRMATION DIALOG
+        ContentDialogResult result = await comfirmationDialog.ShowAsync();
+
+        if (result == ContentDialogResult.Primary)
+        {
+            // ACCOUNT CREATION
             Store? loggedInStore = await storeAccountCreationService.CreateAccountAsync(rawInfoStoreDto);
 
             if (loggedInStore != null) // SUCCESSFUL
@@ -158,11 +171,6 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
                 OtherErrorMessageText = "Tạo tài khoản thất bại, đã có lỗi xảy ra";
                 OtherErrorMessageOpacity = 1.0F;
             }
-        }
-        else
-        {
-            OtherErrorMessageText = "Tạo tài khoản thất bại, có trường không hợp lệ";
-            OtherErrorMessageOpacity = 1.0F;
         }
     }
 
