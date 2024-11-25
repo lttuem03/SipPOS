@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="SipPOS.Views.Configuration.ConfigurationMenuView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SipPOS.Views.Configuration"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <StackPanel
+        Orientation="Vertical"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center">
+
+        <Button 
+            Click="goBackButton_Click"
+            Content="Quay lại"
+            Margin="-100,0,0,20"/>
+        <TextBlock Text="CÀI ĐẶT" Style="{StaticResource TitleLargeTextBlockStyle}"/>
+        
+        <Grid
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Width="700"
+            Height="500">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <NavigationView
+                Name="configurationMenuNavigationView"
+                PaneDisplayMode="Top"
+                IsBackButtonVisible="Collapsed"
+                IsSettingsVisible="False"
+                SelectionChanged="configurationMenuNavigationView_SelectionChanged"
+                Grid.Row="0">
+                <NavigationView.MenuItems>
+                    <NavigationViewItem Content="Cửa hàng" Tag="StoreConfiguration"/>
+                    <NavigationViewItem Content="Thanh toán" Tag="PaymentConfiguration"/>
+                    <NavigationViewItem Content="Hóa đơn" Tag="ReceiptConfiguration"/>
+                </NavigationView.MenuItems>
+            </NavigationView>
+
+            <Frame 
+                x:Name="configurationMenuNavigationFrame" 
+                Grid.Row="1"
+                Margin="0,0,0,50"/>
+        </Grid>
+    </StackPanel>
+
+    
+</Page>

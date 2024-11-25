@@ -20,6 +20,8 @@ using SipPOS.Services.Entity.Interfaces;
 using SipPOS.Services.Entity.Implementations;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.DataAccess.Implementations;
+using SipPOS.Services.Authentication.Interfaces;
+using SipPOS.Services.Authentication.Implementations;
 
 namespace SipPOS;
 
@@ -45,6 +47,7 @@ public partial class App : Application
     public App()
     {
         this.InitializeComponent();
+        this.RequestedTheme = ApplicationTheme.Light; // FIXED LIGHT THEME ONLY
 
         // Database connection configuration
         DotNetEnv.Env.TraversePath().Load(AppContext.BaseDirectory);
@@ -62,7 +65,8 @@ public partial class App : Application
             // Dao
             services.AddSingleton<IProductDao, MockProductDao>();
             services.AddSingleton<ICategoryDao, MockCategoryDao>();
-            services.AddSingleton<IStoreDao, MockStoreDao>();
+            services.AddSingleton<IStoreDao, PostgreStoreDao>();
+            services.AddSingleton<IStaffDao, PostgresStaffDao>();
 
             // Services
             services.AddSingleton<IProductService, ProductService>();
@@ -78,6 +82,7 @@ public partial class App : Application
             services.AddSingleton<IStoreAccountCreationService>(new StoreAccountCreationService());
             services.AddSingleton<IStoreAuthenticationService>(new StoreAuthenticationService());
             services.AddSingleton<IStoreCredentialsService>(new StoreCredentialsService());
+            services.AddSingleton<IStaffAuthenticationService>(new StaffAuthenticationService());
 
             // Views and ViewModels
             services.AddTransient<CategoryManagementViewModel>();
@@ -123,6 +128,9 @@ public partial class App : Application
         if (_mainWindow.AppWindow.Presenter is OverlappedPresenter presenter)
         {
             presenter.Maximize();
+            presenter.IsResizable = false;
+            presenter.IsMinimizable = false;
+            presenter.SetBorderAndTitleBar(false, false);
         }
 
         Frame rootFrame = new Frame();
@@ -136,19 +144,12 @@ public partial class App : Application
         if (storeUsername != null && storePassword != null)
         {
             var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
-
             var loginSuccessful = await storeAuthenticationService.LoginAsync(storeUsername, storePassword);
 
-            if (loginSuccessful)
-            {
-                rootFrame.Navigate(typeof(MainMenuView));
-                _mainWindow.Content = rootFrame;
-                _mainWindow.Activate();
-
-                return;
-            }
+            // Even if store authentication succeeded, we still navigate to the login page
+            // and set the login tab to StaffLogin
         }
-         
+
         rootFrame.Navigate(typeof(LoginView));
         _mainWindow.Content = rootFrame;
         _mainWindow.Activate();

@@ -20,6 +20,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Assets\Iconography\coffee-pot.png" />
+    <Content Remove="Assets\Iconography\people.png" />
     <Content Remove="Assets\LockScreenLogo.scale-200.png" />
     <Content Remove="Assets\Payed.png" />
     <Content Remove="Assets\SplashScreen.scale-200.png" />
@@ -70,6 +71,12 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Assets\Iconography\coffee-pot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Iconography\people.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\LockScreenLogo.scale-200.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

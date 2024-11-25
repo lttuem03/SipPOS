@@ -307,7 +307,7 @@ public class PostgresStaffDao : IStaffDao
 
         await using var command = new NpgsqlCommand(@"
             SELECT * FROM staff 
-            WHERE position_prefix = $1 store_id = $2 AND id = $3
+            WHERE position_prefix = $1 AND store_id = $2 AND id = $3
         ", connection)
         {
             Parameters =

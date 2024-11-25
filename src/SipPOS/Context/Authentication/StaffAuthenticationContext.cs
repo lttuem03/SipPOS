@@ -53,6 +53,7 @@ public class StaffAuthenticationContext
     /// </summary>
     public StaffAuthenticationContext()
     {
+        _currentStaff = null;
         CurrentStaff = null;
     }
 

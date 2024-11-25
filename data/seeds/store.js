@@ -10,7 +10,7 @@ exports.seed = async function(knex) {
     {
         id: 0,
         created_by: 'system',
-        name: "Món Ông Cảnh Khéo Quán",
+        name: "Mộc Ông Công Kính Quán",
         address: "123 Đường Mộc Oanh Cửa Khẩu, Phường 9, Quận Tân Bình, Thành phố Hồ Chí Minh",
         email: "canhkheoquan@gmail.com",
         tel: "09323654213",
