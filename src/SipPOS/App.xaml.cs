@@ -65,8 +65,8 @@ public partial class App : Application
             // Dao
             services.AddSingleton<IProductDao, MockProductDao>();
             services.AddSingleton<ICategoryDao, MockCategoryDao>();
-            services.AddSingleton<IStoreDao, PostgreStoreDao>();
-            services.AddSingleton<IStaffDao, PostgresStaffDao>();
+            services.AddSingleton<IStoreDao, MockStoreDao>();
+            services.AddSingleton<IStaffDao, MockStaffDao>();
 
             // Services
             services.AddSingleton<IProductService, ProductService>();

@@ -20,7 +20,8 @@ public class MockStoreDao : IStoreDao
                 Username = "mock",
                 // Password for authentication: mock
                 LastLogin = DateTime.Now
-            })
+            }
+        )
     ];
 
     public Task<StoreDto?> GetByUsernameAsync(string username)
@@ -47,7 +48,7 @@ public class MockStoreDao : IStoreDao
         });
     }
 
-    // Moc StoreDao should not have the methods below implemented, because it is used for the quick-login
+    // MockStoreDao should not have the methods below implemented, because it is used for the quick-login
     // when developing only
 
     public Task<StoreDto?> DeleteByIdAsync(long id) => throw new NotImplementedException();
