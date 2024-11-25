@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SipPOS.DataTransfer.Entity;
+﻿namespace SipPOS.DataTransfer.Entity;
 
 /// <summary>
 /// Base data transfer object class containing common properties.
 /// </summary>
-public abstract class BaseDto
+public abstract class BaseEntityDto
 {
     /// <summary>
     /// Gets or sets the unique identifier.

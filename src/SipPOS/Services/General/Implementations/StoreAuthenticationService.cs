@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using SipPOS.Models.Entity;
 using SipPOS.Context.Authentication;
-using SipPOS.Models.Entity;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.General.Interfaces;
 
@@ -41,6 +35,12 @@ public class StoreAuthenticationService : IStoreAuthenticationService
         var storeDto = await storeDao.GetByUsernameAsync(username);
 
         if (storeDto == null) // username not exists in database
+        {
+            return false;
+        }
+
+        // check if the store returned had been marked as "Deleted" or not
+        if (storeDto.DeletedAt != null)
         {
             return false;
         }

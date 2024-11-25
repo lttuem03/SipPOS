@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 
 using Npgsql;
-using System.Data;
+
 using SipPOS.Services.General.Interfaces;
 
 namespace SipPOS.Services.General.Implementations;

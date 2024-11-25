@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.UI.Windowing;
-
+﻿using SipPOS.Models.Entity;
+using SipPOS.DataTransfer.Entity;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.General.Interfaces;
-using SipPOS.Models.Entity;
-using SipPOS.DataTransfer.Entity;
 
 namespace SipPOS.Services.General.Implementations;
 
@@ -45,10 +38,14 @@ public class StoreAccountCreationService : IStoreAccountCreationService
 
         // Insert new row to database
         var storeDao = App.GetService<IStoreDao>();
+        var insertResult = await storeDao.InsertAsync(storeDto); // Result: (id, dto)
 
-        var newStore = await storeDao.InsertAsync(storeDto); // wait for the task to complete
+        if (insertResult.dto == null)
+        {
+            return null;
+        }
 
-        return newStore;
+        return new Store(insertResult.id, insertResult.dto);
     }
 
     /// <summary>

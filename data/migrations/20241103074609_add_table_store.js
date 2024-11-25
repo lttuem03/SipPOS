@@ -16,10 +16,11 @@ exports.up = async function(knex) {
             address VARCHAR(255) NOT NULL,
             email VARCHAR(64) NOT NULL,
             tel VARCHAR(16) NOT NULL,
+            tax_code VARCHAR(13) NOT NULL,
             username VARCHAR(32) UNIQUE NOT NULL,
             password_hash VARCHAR(64) NOT NULL CHECK (LENGTH(password_hash) = 64),
             salt VARCHAR(64) NOT NULL CHECK (LENGTH(salt) = 64),
-            last_login TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            last_login TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
         )
     `);
 };

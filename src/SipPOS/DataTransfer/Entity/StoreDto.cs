@@ -1,53 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SipPOS.DataTransfer.Entity;
+﻿namespace SipPOS.DataTransfer.Entity;
 
 /// <summary>
 /// Data transfer object for Store.
 /// </summary>
-public class StoreDto : BaseDto
+public class StoreDto : BaseEntityDto
 {
     /// <summary>
-    /// Gets or sets the name of the store.
+    /// Gets or sets the name of the store DTO.
     /// </summary>
     public string Name { get; set; }
 
     /// <summary>
-    /// Gets or sets the address of the store.
+    /// Gets or sets the address of the store DTO.
     /// </summary>
     public string Address { get; set; }
 
     /// <summary>
-    /// Gets or sets the email of the store.
+    /// Gets or sets the email of the store DTO.
     /// </summary>
     public string Email { get; set; }
 
     /// <summary>
-    /// Gets or sets the telephone number of the store.
+    /// Gets or sets the telephone number of the store DTO.
     /// </summary>
     public string Tel { get; set; }
 
     /// <summary>
-    /// Gets or sets the username of the store.
+    /// Gets or sets the tax code of the store DTO.
+    /// </summary>
+    public string TaxCode { get; set; }
+
+    /// <summary>
+    /// Gets or sets the username of the store DTO.
     /// </summary>
     public string Username { get; set; }
 
     /// <summary>
-    /// Gets or sets the password hash of the store.
+    /// Gets or sets the password hash of the store DTO.
     /// </summary>
     public string? PasswordHash { get; set; }
 
     /// <summary>
-    /// Gets or sets the salt used for hashing the password.
+    /// Gets or sets the salt used for hashing the password DTO.
     /// </summary>
     public string? Salt { get; set; }
 
     /// <summary>
-    /// Gets or sets the last login date and time of the store.
+    /// Gets or sets the last login date and time of the store DTO.
     /// </summary>
     public DateTime LastLogin { get; set; }
 
@@ -68,6 +67,7 @@ public class StoreDto : BaseDto
         Address = string.Empty;
         Email = string.Empty;
         Tel = string.Empty;
+        TaxCode = string.Empty;
         Username = string.Empty;
 
         PasswordHash = null;

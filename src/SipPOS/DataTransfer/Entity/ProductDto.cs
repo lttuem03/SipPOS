@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SipPOS.DataTransfer.Entity;
+﻿namespace SipPOS.DataTransfer.Entity;
 
 /// <summary>
 /// Data transfer object for Product.
 /// </summary>
-public class ProductDto : BaseDto
+public class ProductDto : BaseEntityDto
 {
     /// <summary>
     /// Gets or sets the name of the product.
