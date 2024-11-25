@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Npgsql;
 
-using Npgsql;
 using SipPOS.DataTransfer.Entity;
-using SipPOS.Models.Entity;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.General.Interfaces;
 
@@ -44,6 +38,7 @@ public class PostgreStoreDao : IStoreDao
                 address,
                 email,
                 tel,
+                tax_code,
                 username,
                 password_hash,
                 salt,
@@ -52,13 +47,14 @@ public class PostgreStoreDao : IStoreDao
                 created_at
             )
             VALUES 
-                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
             RETURNING 
                 id,
                 name,
                 address,
                 email,
                 tel,
+                tax_code,
                 username,
                 password_hash,
                 salt,
@@ -73,6 +69,7 @@ public class PostgreStoreDao : IStoreDao
                 new() { Value = storeDto.Address },
                 new() { Value = storeDto.Email },
                 new() { Value = storeDto.Tel },
+                new() { Value = storeDto.TaxCode },
                 new() { Value = storeDto.Username },
                 new() { Value = storeDto.PasswordHash },
                 new() { Value = storeDto.Salt },
@@ -100,6 +97,7 @@ public class PostgreStoreDao : IStoreDao
                         Address = reader.GetString(reader.GetOrdinal("address")),
                         Email = reader.GetString(reader.GetOrdinal("email")),
                         Tel = reader.GetString(reader.GetOrdinal("tel")),
+                        TaxCode = reader.GetString(reader.GetOrdinal("tax_code")),
                         Username = reader.GetString(reader.GetOrdinal("username")),
                         PasswordHash = reader.GetString(reader.GetOrdinal("password_hash")),
                         Salt = reader.GetString(reader.GetOrdinal("salt")),
@@ -156,6 +154,7 @@ public class PostgreStoreDao : IStoreDao
                     Address = reader.GetString(reader.GetOrdinal("address")),
                     Email = reader.GetString(reader.GetOrdinal("email")),
                     Tel = reader.GetString(reader.GetOrdinal("tel")),
+                    TaxCode = reader.GetString(reader.GetOrdinal("tax_code")),
                     Username = reader.GetString(reader.GetOrdinal("username")),
                     PasswordHash = reader.GetString(reader.GetOrdinal("password_hash")),
                     Salt = reader.GetString(reader.GetOrdinal("salt")),
@@ -223,12 +222,13 @@ public class PostgreStoreDao : IStoreDao
                 address = $2,
                 email = $3,
                 tel = $4,
-                password_hash = $5,
-                salt = $6,
-                last_login = $7,
-                updated_by = $8,
-                updated_at = $9
-            WHERE username = $10
+                tax_code = $5,
+                password_hash = $6,
+                salt = $7,
+                last_login = $8,
+                updated_by = $9,
+                updated_at = $10
+            WHERE username = $11
             RETURNING *
         ", connection)
         {
@@ -238,6 +238,7 @@ public class PostgreStoreDao : IStoreDao
                 new() { Value = updatedStoreDto.Address },
                 new() { Value = updatedStoreDto.Email },
                 new() { Value = updatedStoreDto.Tel },
+                new() { Value = updatedStoreDto.TaxCode },
                 new() { Value = updatedStoreDto.PasswordHash },
                 new() { Value = updatedStoreDto.Salt },
                 new() { Value = updatedStoreDto.LastLogin },
@@ -268,6 +269,7 @@ public class PostgreStoreDao : IStoreDao
                     Address = reader.GetString(reader.GetOrdinal("address")),
                     Email = reader.GetString(reader.GetOrdinal("email")),
                     Tel = reader.GetString(reader.GetOrdinal("tel")),
+                    TaxCode = reader.GetString(reader.GetOrdinal("tax_code")),
                     Username = reader.GetString(reader.GetOrdinal("username")),
                     PasswordHash = reader.GetString(reader.GetOrdinal("password_hash")),
                     Salt = reader.GetString(reader.GetOrdinal("salt")),

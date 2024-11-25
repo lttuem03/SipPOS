@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SipPOS.Models.Entity;
+﻿using SipPOS.Models.Entity;
 
 namespace SipPOS.Services.General.Interfaces;
 

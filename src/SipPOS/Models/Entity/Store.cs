@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using SipPOS.DataTransfer.Entity;
+﻿using SipPOS.DataTransfer.Entity;
 
 namespace SipPOS.Models.Entity;
 
@@ -35,6 +28,11 @@ public class Store : BaseEntity
     public string Tel { get; }
 
     /// <summary>
+    /// Gets the tax code of the store.
+    /// </summary>
+    public string TaxCode { get; }
+
+    /// <summary>
     /// Gets the username associated with the store.
     /// </summary>
     public string Username { get; }
@@ -56,6 +54,7 @@ public class Store : BaseEntity
         Address = dto.Address;
         Email = dto.Email;
         Tel = dto.Tel;
+        TaxCode = dto.TaxCode;
         Username = dto.Username;
         LastLogin = dto.LastLogin;
     }

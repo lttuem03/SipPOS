@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections;
-using Windows.Data.Pdf;
-using SipPOS.Services.DataAccess.Interfaces;
-using SipPOS.Models.Entity;
+﻿using SipPOS.Models.Entity;
 using SipPOS.Models.General;
 using SipPOS.DataTransfer.General;
+using SipPOS.Services.DataAccess.Interfaces;
 
 namespace SipPOS.Services.DataAccess.Implementations;
 

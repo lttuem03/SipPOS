@@ -31,13 +31,18 @@
     <Content Remove="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Resources\Controls\EditableTextField.xaml" />
     <None Remove="Resources\Styles\Background.xaml" />
     <None Remove="Views\CategoryManagementView.xaml" />
+    <None Remove="Views\ConfigurationMenuView.xaml" />
     <None Remove="Views\LoginView.xaml" />
     <None Remove="Views\MainMenuView.xaml" />
+    <None Remove="Views\PaymentConfigurationView.xaml" />
     <None Remove="Views\ProductManagementView.xaml" />
+    <None Remove="Views\ReceiptConfigurationView.xaml" />
     <None Remove="Views\StaffLoginView.xaml" />
     <None Remove="Views\StoreAccountCreationView.xaml" />
+    <None Remove="Views\StoreConfigurationView.xaml" />
     <None Remove="Views\StoreLoginView.xaml" />
   </ItemGroup>
 
@@ -94,6 +99,21 @@
     <None Update="Assets\StoreLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Resources\Controls\EditableTextField.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\ReceiptConfigurationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\PaymentConfigurationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\StoreConfigurationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\ConfigurationMenuView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Resources\Styles\Background.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -132,6 +152,13 @@
     <Page Update="Views\MainMenuView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Login\" />
+    <Folder Include="Views\Configuration\" />
+    <Folder Include="Views\Cashier\" />
+    <Folder Include="Views\Management\" />
+    <Folder Include="Views\General\" />
   </ItemGroup>
 
   <!--

@@ -1,31 +1,19 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
 using Microsoft.UI.Xaml.Media.Animation;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.ApplicationSettings;
-
+using Microsoft.UI.Windowing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using DotNetEnv;
+using SipPOS.Views.Login;
+using SipPOS.Views.Cashier;
+using SipPOS.Views.General;
+using SipPOS.Views.Management;
 
-using SipPOS.ViewModels;
-using SipPOS.Views;
+using SipPOS.ViewModels.Cashier;
+using SipPOS.ViewModels.Management;
+
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.Entity.Interfaces;
@@ -130,6 +118,12 @@ public partial class App : Application
     {
         _mainWindow = new MainWindow();
         App.CurrentWindow = _mainWindow;
+
+        // Always start app maximized
+        if (_mainWindow.AppWindow.Presenter is OverlappedPresenter presenter)
+        {
+            presenter.Maximize();
+        }
 
         Frame rootFrame = new Frame();
         rootFrame.NavigationFailed += _onNavigationFailed;

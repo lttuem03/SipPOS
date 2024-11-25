@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 
-using AutoMapper;
-using SipPOS.DataTransfer.Entity;
+
 using SipPOS.Models.Entity;
 using SipPOS.Models.General;
+using SipPOS.DataTransfer.Entity;
 
 namespace SipPOS.DataTransfer;
 

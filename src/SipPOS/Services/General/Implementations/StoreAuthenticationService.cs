@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using SipPOS.Models.Entity;
 using SipPOS.Context.Authentication;
-using SipPOS.Models.Entity;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.General.Interfaces;
 

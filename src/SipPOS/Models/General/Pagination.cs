@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SipPOS.Models.General;
+﻿namespace SipPOS.Models.General;
 
 /// <summary>
 /// Represents a paginated list of items.

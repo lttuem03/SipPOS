@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SipPOS.Models.Entity;
+﻿namespace SipPOS.Models.Entity;
 
 /// <summary>
 /// Represents a product entity.

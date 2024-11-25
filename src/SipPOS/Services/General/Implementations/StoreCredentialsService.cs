@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Windows.Storage;
+﻿using Windows.Storage;
 using Windows.Security.Credentials;
 
 using SipPOS.Services.General.Interfaces;
 
 namespace SipPOS.Services.General.Implementations;
+
 public class StoreCredentialsService : IStoreCredentialsService
 {
     // Implemented using: https://learn.microsoft.com/en-us/windows/apps/develop/security/credential-locker

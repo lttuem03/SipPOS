@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SipPOS.Services.General.Interfaces;
+﻿namespace SipPOS.Services.General.Interfaces;
 
 /// <summary>
 /// Store credentials saving/loading service. Used to implement the "Save credentials" when logging in.
