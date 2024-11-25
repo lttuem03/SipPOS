@@ -101,7 +101,5 @@ public class StoreAuthenticationService : IStoreAuthenticationService
         {
             Context.ClearStore();
         }
-
-        return;
     }
 }

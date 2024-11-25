@@ -67,6 +67,7 @@ public class StaffDto : BaseEntityDto
 
     /// <summary>
     /// Gets or sets the employment status of the staff.
+    /// Possible values: "In employment", "Out of employment".
     /// </summary>
     public string EmploymentStatus { get; set; }
 

@@ -21,7 +21,7 @@ exports.up = async function(knex) {
             email VARCHAR(64) NOT NULL,
             tel VARCHAR(16) NOT NULL,
             address VARCHAR(255) NOT NULL,
-            employment_status VARCHAR(24) NOT NULL,
+            employment_status VARCHAR(24) NOT NULL CHECK (employment_status IN ('InEmployment', 'OutOfEmployment')),
             employment_start_date DATE NOT NULL,
             employment_end_date DATE,
 

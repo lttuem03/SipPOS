@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="SipPOS.Views.Configuration.StoreConfigurationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SipPOS.Views.Configuration"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:SipPOS.Resources.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <StackPanel
+        Orientation="Vertical"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Top">
+
+        <Grid
+            Width="1500"
+            Height="800"
+            ColumnSpacing="10"
+            RowSpacing="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="Tên cửa hàng: " FontWeight="Bold" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="0" Grid.Row="1" Text="Địa chỉ: "      FontWeight="Bold" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="0" Grid.Row="2" Text="Email: "        FontWeight="Bold" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="0" Grid.Row="3" Text="SĐT: "          FontWeight="Bold" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="0" Grid.Row="4" Text="Mã số thuế: "   FontWeight="Bold" VerticalAlignment="Center"/>
+
+            <controls:EditableTextField 
+                Text="{x:Bind ViewModel.EditStoreNameText, 
+                              Mode=TwoWay, 
+                              UpdateSourceTrigger=PropertyChanged}"
+                Grid.Column="1" Grid.Row="0"/>
+
+            <controls:EditableTextField 
+                Text="{x:Bind ViewModel.EditStoreAddressText, 
+                              Mode=TwoWay, 
+                              UpdateSourceTrigger=PropertyChanged}"
+                Grid.Column="1" Grid.Row="1"/>
+
+            <controls:EditableTextField 
+                Text="{x:Bind ViewModel.EditStoreEmailText, 
+                              Mode=TwoWay, 
+                              UpdateSourceTrigger=PropertyChanged}"
+                Grid.Column="1" Grid.Row="2"/>
+
+            <controls:EditableTextField 
+                Text="{x:Bind ViewModel.EditStoreTelText, 
+                              Mode=TwoWay, 
+                              UpdateSourceTrigger=PropertyChanged}"
+                Grid.Column="1" Grid.Row="3"/>
+
+            <controls:EditableTextField 
+                Text="{x:Bind ViewModel.EditStoreTaxCodeText, 
+                              Mode=TwoWay, 
+                              UpdateSourceTrigger=PropertyChanged}"
+                Grid.Column="1" Grid.Row="4"/>
+        </Grid>
+
+    </StackPanel>
+</Page>
