@@ -3,12 +3,14 @@
 using SipPOS.Views.Login;
 using SipPOS.Views.Cashier;
 using SipPOS.Views.Configuration;
-using SipPOS.Views.Management;
+using SipPOS.Views.Inventory;
 using SipPOS.DataTransfer.Entity;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Services.Authentication.Implementations;
+using System.Collections.ObjectModel;
+using SipPOS.Context.Shift.Interface;
 
 namespace SipPOS.ViewModels.General;
 
@@ -20,14 +22,21 @@ public class MainMenuViewModel : INotifyPropertyChanged
     // Data-bound properties
     private string _pageTilte;
     private string _currentStaffAuthenticationStatus;
+    private string _clock;
+    public ObservableCollection<StaffDto> OnShiftStaffs { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MainMenuViewModel"/> class.
     /// </summary>
     public MainMenuViewModel()
     {
+        var staffShiftContext = App.GetService<IStaffShiftContext>();
+
+        OnShiftStaffs = staffShiftContext.OnShiftStaffs;
+
         _pageTilte = "Cửa hàng: CHƯA ĐĂNG NHẬP";
         _currentStaffAuthenticationStatus = "Nhân viên: CHƯA MỞ CA";
+        _clock = DateTime.Now.ToString("HH:mm:ss");
 
         // Check store authentication status
         if (App.GetService<IStoreAuthenticationService>() is not StoreAuthenticationService storeAuthenticationService)
@@ -70,6 +79,11 @@ public class MainMenuViewModel : INotifyPropertyChanged
     public void HandleToProductManagementViewButtonClick()
     {
         App.NavigateTo(typeof(ProductManagementView));
+    }
+
+    public void HandleToInventoryMenuViewClick()
+    {
+        App.NavigateTo(typeof(InventoryMenuView));
     }
 
     public void HandleToCategoryManagementViewButtonClick()
@@ -197,6 +211,16 @@ public class MainMenuViewModel : INotifyPropertyChanged
         {
             _currentStaffAuthenticationStatus = value;
             OnPropertyChanged(nameof(CurrentStaffAuthenticationStatus));
+        }
+    }
+
+    public string Clock
+    {
+        get => _clock;
+        set
+        {
+            _clock = value;
+            OnPropertyChanged(nameof(Clock));
         }
     }
 }

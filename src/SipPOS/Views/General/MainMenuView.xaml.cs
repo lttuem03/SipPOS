@@ -15,6 +15,8 @@ public sealed partial class MainMenuView : Page
     /// </summary>
     public MainMenuViewModel ViewModel { get; }
 
+    private readonly DispatcherTimer _timer;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="MainMenuView"/> class.
     /// </summary>
@@ -22,6 +24,16 @@ public sealed partial class MainMenuView : Page
     {
         this.InitializeComponent();
         ViewModel = new MainMenuViewModel();
+        clockTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
+
+        // Because the timer needs to be instantiated in the UI thread, it is done here.
+        _timer = new DispatcherTimer();
+        _timer.Interval = TimeSpan.FromSeconds(1);
+        _timer.Tick += (sender, e) =>
+        {
+            clockTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
+        };
+        _timer.Start();
     }
 
     /// <summary>
@@ -44,7 +56,6 @@ public sealed partial class MainMenuView : Page
         ViewModel.HandleToCustomerPaymentViewButtonClick();
     }
 
-
     /// <summary>
     /// Handles the click event of the button to change the ID.
     /// </summary>
@@ -59,6 +70,10 @@ public sealed partial class MainMenuView : Page
     {
         ViewModel.HandleToConfigurationMenuViewButtonClick();
     }
+    private void toInventoryMenuView_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleToInventoryMenuViewClick();
+    }
 
     private void returnToLoginViewButton_Click(object sender, RoutedEventArgs e)
     {
@@ -68,5 +83,25 @@ public sealed partial class MainMenuView : Page
     private void exitProgramButton_Click(object sender, RoutedEventArgs e)
     {
         App.Current.Exit();
+    }
+
+    private void toProfileViewMangement_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void toProfileViewButton_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void toSpecialOffersManagementView_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void openSlashCloseShiftButton_Click(object sender, RoutedEventArgs e)
+    {
+
     }
 }
