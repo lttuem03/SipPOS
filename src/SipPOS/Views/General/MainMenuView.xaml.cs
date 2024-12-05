@@ -36,72 +36,58 @@ public sealed partial class MainMenuView : Page
         _timer.Start();
     }
 
-    /// <summary>
-    /// Handles the click event of the button to navigate to the inventory view.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The event data.</param>
-    private void toProductManagementViewButton_Click(object sender, RoutedEventArgs e)
+    private void toCashierMenuViewButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleToProductManagementViewButtonClick();
+        ViewModel.HandleToCashierMenuViewButtonClick();
     }
 
-    private void toCategoryManagementViewButton_Click(object sender, RoutedEventArgs e)
+    private void toInventoryMenuView_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleToCategoryManagementViewButtonClick();
+        ViewModel.HandleToInventoryMenuViewClick();
     }
 
-    private void toCustomerPaymentViewButton_Click(object sender, RoutedEventArgs e)
+    private void toStaffManagementViewButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleToCustomerPaymentViewButtonClick();
+        ViewModel.HandleToStaffManagementViewButtonClick();
     }
 
-    /// <summary>
-    /// Handles the click event of the button to change the ID.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The event data.</param>
-    private void changeIdButton_Click(object sender, RoutedEventArgs e)
+    private void toProfileViewButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleChangeIdButtonClick();
+        ViewModel.HandleToProfileViewButtonClick();
+    }
+
+    private void toRevenueDashboardViewButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleToRevenueDashboardViewButtonClick();
+    }
+
+    private void toSpecialOffersManagementViewButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleToSpecialOffersManagementViewButtonClick();
     }
 
     private void toConfigurationMenuViewButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.HandleToConfigurationMenuViewButtonClick();
     }
-    private void toInventoryMenuView_Click(object sender, RoutedEventArgs e)
+
+    private void openSlashCloseShiftButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleToInventoryMenuViewClick();
+        ViewModel.HandleOpenSlashCloseShiftButtonClick();
     }
 
     private void returnToLoginViewButton_Click(object sender, RoutedEventArgs e)
     {
+        ViewModel.HandleReturnToLoginViewButtonClick();
+    }
 
+    private void changeIdButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleChangeIdButtonClick();
     }
 
     private void exitProgramButton_Click(object sender, RoutedEventArgs e)
     {
         App.Current.Exit();
-    }
-
-    private void toProfileViewMangement_Click(object sender, RoutedEventArgs e)
-    {
-
-    }
-
-    private void toProfileViewButton_Click(object sender, RoutedEventArgs e)
-    {
-
-    }
-
-    private void toSpecialOffersManagementView_Click(object sender, RoutedEventArgs e)
-    {
-
-    }
-
-    private void openSlashCloseShiftButton_Click(object sender, RoutedEventArgs e)
-    {
-
     }
 }

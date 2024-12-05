@@ -84,7 +84,8 @@
                 <!--To CashierMenuView Button-->
                 <Button 
                     Grid.Row="0" Grid.Column="0"
-                    x:Name="toCashierMenuViewButton">
+                    x:Name="toCashierMenuViewButton"
+                    Click="toCashierMenuViewButton_Click">
                     <StackPanel 
                         Orientation="Vertical"
                         HorizontalAlignment="Center"
@@ -122,6 +123,7 @@
                 <Button
                     Grid.Row="0" Grid.Column="2"
                     x:Name="toStaffManagementViewButton"
+                    Click="toStaffManagementViewButton_Click"
                     Width="132" Height="132">
                     <Grid
                         RowSpacing="10">
@@ -190,7 +192,8 @@
                 <!--To FinanceView Button-->
                 <Button 
                     Grid.Row="0" Grid.Column="0"
-                    x:Name="toRevenueViewButton">
+                    x:Name="toRevenueDashboardViewButton"
+                    Click="toRevenueDashboardViewButton_Click">
                     <StackPanel
                         Orientation="Vertical"
                         HorizontalAlignment="Center"
@@ -208,8 +211,8 @@
                 <!--To SpecialOffersManagementView Button-->
                 <Button
                     Grid.Row="0" Grid.Column="1"
-                    x:Name="toSpecialOffersManagementView"
-                    Click="toSpecialOffersManagementView_Click">
+                    x:Name="toSpecialOffersManagementViewButton"
+                    Click="toSpecialOffersManagementViewButton_Click">
                     <StackPanel
                         Orientation="Vertical"
                         HorizontalAlignment="Center"
