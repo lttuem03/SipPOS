@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="SipPOS.Views.Management.ProductManagementView"
+    x:Class="SipPOS.Views.Inventory.CategoryManagementView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:SipPOS.Views.Management"
+    xmlns:local="using:SipPOS.Views.Inventory"
     xmlns:local_controls="using:SipPOS.Resources.Controls"
     xmlns:local_conveters="using:SipPOS.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <!-- Add your ToastNotificationControl -->
     <Page.Resources>
         <DataTemplate x:Key='ImageTemplate'>
             <Image Stretch = 'UniformToFill' Source = '{Binding}' Width = '200' Height = '150' AutomationProperties.AccessibilityView = 'Raw'/>
@@ -32,7 +31,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlockStyle}" Text="QUẢN LÝ SẢN PHẨM" />
+        <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlockStyle}" Text="QUẢN LÝ DANH MỤC" />
         <Grid Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,10,0,10" ColumnSpacing="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -43,19 +42,10 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBox 
-                Text="{x:Bind ViewModel.ProductFilterDto.Name, Mode=TwoWay}"
+                Text="{x:Bind ViewModel.CategoryFilterDto.Name}"
                 Grid.Row="0" Grid.Column="0" 
-                Header="Tên sản phẩm"
-                PlaceholderText="Nhập tên sản phẩm" />
-            <ComboBox
-                Grid.Row="0" Grid.Column="1"
-                Header="Chọn danh mục"
-                PlaceholderText="Chọn danh mục"  
-                HorizontalAlignment="Stretch"
-                DisplayMemberPath="Name" 
-                SelectedValuePath="Id"
-                SelectedValue="{x:Bind ViewModel.ProductFilterDto.CategoryId, Mode=TwoWay}"
-                ItemsSource="{x:Bind ViewModel.CategoriesFilter}"/>
+                Header="Tên danh mục"
+                PlaceholderText="Nhập tên danh mục" />
             <ComboBox 
                 Grid.Row="0" Grid.Column="3" 
                 Header="Chọn trạng thái"
@@ -63,7 +53,7 @@
                 HorizontalAlignment="Stretch"
                 DisplayMemberPath="Label" 
                 SelectedValuePath="Value"
-                SelectedValue="{x:Bind ViewModel.ProductFilterDto.Status, Mode=TwoWay}"
+                SelectedValue="{x:Bind ViewModel.CategoryFilterDto.Status, Mode=TwoWay}"
                 ItemsSource="{x:Bind ViewModel.StatusItemsFilter}"/>
         </Grid>
 
@@ -82,7 +72,7 @@
             Grid.Row="3"
             AutoGenerateColumns="False"
             GridLinesVisibility="Horizontal"
-            ItemsSource="{x:Bind ViewModel.Products, Mode=OneWay}"
+            ItemsSource="{x:Bind ViewModel.Categories, Mode=OneWay}"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             Width="Auto" Height="Auto"
@@ -103,7 +93,6 @@
                 </controls:DataGridTemplateColumn>
                 <controls:DataGridTextColumn Binding="{Binding Id}" Header="Mã" Tag="Id" />
                 <controls:DataGridTextColumn Binding="{Binding Name}" Header="Tên" Tag="Name" />
-                <controls:DataGridTextColumn Binding="{Binding CategoryId, Converter={StaticResource CategoryIdToCategoryNameConverter}}" Header="Danh mục" Tag="Category" />
                 <controls:DataGridTextColumn Binding="{Binding Desc}" Header="Mô tả" Tag="Desc" />
                 <controls:DataGridTemplateColumn Header="Ảnh" CanUserSort="False">
                     <controls:DataGridTemplateColumn.CellTemplate>
@@ -113,7 +102,7 @@
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>
                 <controls:DataGridTextColumn Binding="{Binding Status, Converter={StaticResource StatusValueToStatusLableConverter}}" Header="Trạng thái" Tag="Status" />
-                <controls:DataGridTextColumn Binding="{Binding CreatedAt, Converter= {StaticResource DateToDisplayDateConverter}}" Header="Ngày tạo"  Tag="CreatedAt" />
+                <controls:DataGridTextColumn Binding="{Binding CreatedAt, Converter= {StaticResource DateToDisplayDateConverter}}" Header="Ngày tạo" Tag="CreatedAt" />
                 <controls:DataGridTextColumn Binding="{Binding CreatedBy}" Header="Người tạo" Tag="CreatedBy" />
             </controls:DataGrid.Columns>
         </controls:DataGrid>
@@ -130,12 +119,12 @@
 
         <ContentDialog
             x:Name="Dialog"
-            Title="THÊM MỚI SẢN PHẨM"
+            Title="THÊM MỚI DANH MỤC"
             PrimaryButtonText="Lưu"
             SecondaryButtonText="Quay lại"
             Closed="DialogClose"
             Opened="DialogOpen"
-            PrimaryButtonClick="Dialog_YesClick"
+            PrimaryButtonClick="ProductDialog_YesClick"
             SecondaryButtonClick="Dialog_NoButtonClick"
             DefaultButton="Primary">
             <ContentDialog.Resources>
@@ -144,15 +133,12 @@
             </ContentDialog.Resources>
             <TabView IsAddTabButtonVisible="False" Width="800">
                 <TabView.TabItems>
-                    <TabViewItem Header="Thông tin sản phẩm" IsClosable="False">
+                    <TabViewItem Header="Thông tin danh mục" IsClosable="False">
                         <TabViewItem.IconSource>
                             <SymbolIconSource Symbol="Bookmarks" />
                         </TabViewItem.IconSource>
                         <Grid ColumnSpacing="10" RowSpacing="10" Padding="10,20,10,10">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
@@ -161,43 +147,28 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBox
-                                Text="{x:Bind ViewModel.SelectedProduct.Name, Mode=TwoWay}"
+                                Text="{x:Bind ViewModel.SelectedCategory.Name, Mode=TwoWay}"
                                 Grid.Row="0" Grid.Column="0" 
-                                Header="Tên sản phẩm" 
-                                PlaceholderText="Nhập tên sản phẩm" />
-                            <ComboBox 
-                                Header="Danh mục"
-                                Grid.Row="0" Grid.Column="1"
-                                x:Name="DialogProductCategoryComboBox" 
-                                PlaceholderText="Chọn danh mục"  
-                                HorizontalAlignment="Stretch"
-                                DisplayMemberPath="Name" 
-                                SelectedValuePath="Id"
-                                SelectedValue="{x:Bind ViewModel.SelectedProduct.CategoryId, Mode=TwoWay}"
-                                ItemsSource="{x:Bind ViewModel.Categories}"/>
-                            <NumberBox 
-                                Value="{x:Bind ViewModel.SelectedProduct.Price, Mode=TwoWay, Converter={StaticResource DoubleToNullableDoubleConverter}}"
-                                Grid.Row="1" Grid.Column="0" 
-                                Header="Giá sản phẩm" 
-                                PlaceholderText="Nhập giá sản phẩm" />
+                                Header="Tên danh mục" 
+                                PlaceholderText="Nhập tên danh mục" />
                             <ComboBox 
                                 Header="Trạng thái"
-                                Grid.Row="1" Grid.Column="1" 
+                                Grid.Row="0" Grid.Column="1" 
                                 PlaceholderText="Chọn trạng thái"  
                                 HorizontalAlignment="Stretch"
                                 DisplayMemberPath="Label" 
                                 SelectedValuePath="Value"
-                                SelectedValue="{x:Bind ViewModel.SelectedProduct.Status, Mode=TwoWay}"
+                                SelectedValue="{x:Bind ViewModel.SelectedCategory.Status, Mode=TwoWay}"
                                 ItemsSource="{x:Bind ViewModel.StatusItems}"/>
                             <TextBox 
                                 AcceptsReturn="True"
-                                Text="{x:Bind ViewModel.SelectedProduct.Desc, Mode=TwoWay}"
-                                Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
-                                Header="Mô tả sản phẩm" Height="100"
-                                PlaceholderText="Nhập mô tả sản phẩm" />
+                                Text="{x:Bind ViewModel.SelectedCategory.Desc, Mode=TwoWay}"
+                                Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+                                Header="Mô tả danh mục" Height="100"
+                                PlaceholderText="Nhập mô tả danh mục" />
                         </Grid>
                     </TabViewItem>
-                    <TabViewItem Header="Hình ảnh sản phẩm" IsClosable="False">
+                    <TabViewItem Header="Hình ảnh danh mục" IsClosable="False">
                         <TabViewItem.IconSource>
                             <SymbolIconSource Symbol="Pictures" />
                         </TabViewItem.IconSource>
@@ -230,7 +201,7 @@
         <ContentDialog
             x:Name="DeleteConfirmationDialog"
             Title="THÔNG BÁO"
-            Content="Nếu 'có' thao tác này không thể hoàn tác. Bạn có chắc chắn muốn xóa sản phẩm này không? "
+            Content="Nếu 'có' thao tác này không thể hoàn tác. Bạn có chắc chắn muốn xóa danh mục này không?"
             PrimaryButtonText="Có"
             PrimaryButtonClick="DeleteConfirmationDialog_YesClick"
             SecondaryButtonText="Không"

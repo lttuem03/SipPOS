@@ -4,123 +4,332 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SipPOS.Views.General"
+    xmlns:data="using:SipPOS.DataTransfer.Entity"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <StackPanel Orientation="Vertical"
-                HorizontalAlignment="Left" 
-                VerticalAlignment="Top">
+    <Page.Resources>
+        <!--Data Template for ListView-->
+        <DataTemplate 
+            x:Name="OnShiftStaffListViewDataTemplate" 
+            x:DataType="data:StaffDto">
+            <StackPanel
+                Orientation="Vertical"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center">
+                <TextBlock 
+                    Grid.Column="1"
+                    Text="{x:Bind Name}"
+                    x:Phase="1"
+                    Style="{ThemeResource BaseTextBlockStyle}"
+                    Margin="5,6,0,0"/>
+                <TextBlock  Grid.Column="1"
+                    Grid.Row="1"
+                    Text="{x:Bind CompositeUsername}"
+                    x:Phase="2"
+                    Style="{ThemeResource BodyTextBlockStyle}"
+                    Margin="5,0,0,6"/>
+
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Canvas
+        Background="AliceBlue">
         <!--Page title: Store name-->
         <TextBlock
+            Canvas.Left="50" Canvas.Top="50"
             Text="{x:Bind ViewModel.PageTitle}"
             Style="{StaticResource TitleLargeTextBlockStyle}"/>
 
         <!--Staff authentication status-->
         <TextBlock
-            Text="{x:Bind ViewModel.CurrentStaffAuthenticationStatus}"/>
+            Canvas.Left="50" Canvas.Top="110"
+            Text="{x:Bind ViewModel.CurrentStaffAuthenticationStatus}"
+            FontSize="28"
+            FontStyle="Normal"/>
+
+        <!--Clock-->
+        <TextBlock
+            Canvas.Left="1300" Canvas.Top="50"
+            Name="clockTextBlock"
+            Text="00:00:00"
+            Style="{StaticResource TitleLargeTextBlockStyle}"/>
 
         <!--Main buttons-->
+        <StackPanel
+            Canvas.Left="350" Canvas.Top="270"
+            Orientation="Vertical" 
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Top">
+            
+            <!--Top buttons-->
+            <Grid
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                ColumnSpacing="50">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!--To CashierMenuView Button-->
+                <Button 
+                    Grid.Row="0" Grid.Column="0"
+                    x:Name="toCashierMenuViewButton"
+                    Click="toCashierMenuViewButton_Click">
+                    <StackPanel 
+                        Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <Image Source="/Assets/Iconography/food-and-beverages.png" Width="100" Height="100"/>
+                        <TextBlock 
+                            Text="Bán hàng" 
+                            HorizontalAlignment="Center" 
+                            Margin="5,0,0,0"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            FontSize="16"/>
+                    </StackPanel>
+                </Button>
+
+                <!--To InventoryMenuView Button-->
+                <Button
+                    Grid.Row="0" Grid.Column="1"
+                    x:Name="toInventoryMenuView"
+                    Click="toInventoryMenuView_Click">
+                    <StackPanel
+                        Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <Image Source="/Assets/Iconography/recipe-book.png" Width="100" Height="100"/>
+                        <TextBlock 
+                            Text="Hàng hóa" 
+                            HorizontalAlignment="Center" 
+                            Margin="5,0,0,0"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            FontSize="16"/>
+                    </StackPanel>
+                </Button>
+
+                <!--To StaffManagementView Button-->
+                <Button
+                    Grid.Row="0" Grid.Column="2"
+                    x:Name="toStaffManagementViewButton"
+                    Click="toStaffManagementViewButton_Click"
+                    Width="132" Height="132">
+                    <Grid
+                        RowSpacing="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image 
+        Source="/Assets/Iconography/people.png"
+        MaxHeight="75"
+        Margin="0,10,0,0"
+        Grid.Row="0" Grid.Column="0"/>
+                        <TextBlock 
+        Text="Nhân sự" 
+        HorizontalAlignment="Center" 
+        VerticalAlignment="Bottom"
+        Style="{StaticResource SubtitleTextBlockStyle}"
+        FontSize="16"
+        Margin="5,0,0,0"
+        Grid.Row="1" Grid.Column="0"/>
+                    </Grid>
+
+                </Button>
+
+                <!--To ProfileView Button-->
+                <Button
+                    Grid.Row="0" Grid.Column="3"
+                    x:Name="toProfileViewButton"
+                    Click="toProfileViewButton_Click">
+                    <StackPanel
+                        Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <Image Source="/Assets/Iconography/id-card.png" Width="100" Height="100"/>
+                        <TextBlock 
+                            Text="Cá nhân" 
+                            HorizontalAlignment="Center" 
+                            Margin="5,0,0,0"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            FontSize="16"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <!--Bottom buttons-->
+            <Grid
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                ColumnSpacing="50"
+                Margin="0,50,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!--To FinanceView Button-->
+                <Button 
+                    Grid.Row="0" Grid.Column="0"
+                    x:Name="toRevenueDashboardViewButton"
+                    Click="toRevenueDashboardViewButton_Click">
+                    <StackPanel
+                        Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <Image Source="/Assets/Iconography/dashboard.png" Width="100" Height="100"/>
+                        <TextBlock 
+                            Text="Doanh thu" 
+                            HorizontalAlignment="Center" 
+                            Margin="5,0,0,0"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            FontSize="16"/>
+                    </StackPanel>
+                </Button>
+
+                <!--To SpecialOffersManagementView Button-->
+                <Button
+                    Grid.Row="0" Grid.Column="1"
+                    x:Name="toSpecialOffersManagementViewButton"
+                    Click="toSpecialOffersManagementViewButton_Click">
+                    <StackPanel
+                        Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <Image Source="/Assets/Iconography/voucher.png" Width="100" Height="100"/>
+                        <TextBlock 
+                            Text="Khuyến mãi" 
+                            HorizontalAlignment="Center" 
+                            Margin="5,0,0,0"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            FontSize="16"/>
+                    </StackPanel>
+                </Button>
+
+                <!--To ConfigurationMenuView Button-->
+                <Button 
+                    Grid.Row="0" Grid.Column="2"
+                    x:Name="toConfigurationMenuViewButton"
+                    Click="toConfigurationMenuViewButton_Click">
+                    <StackPanel
+                        Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <Image Source="/Assets/Iconography/settings.png" Width="100" Height="100"/>
+                        <TextBlock 
+                            Text="Thiết đặt" 
+                            HorizontalAlignment="Center" 
+                            Margin="5,0,0,0"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            FontSize="16"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </StackPanel>
         
-        <StackPanel Orientation="Horizontal" 
-                    HorizontalAlignment="Center" 
-                    VerticalAlignment="Center">
-            <!--To CreateOrderView Button-->
-            <Button 
-                x:Name="toCashierMenuViewButton">
-                <StackPanel 
-                    Orientation="Vertical"
+        <!-- Shift related stuffs-->
+        <StackPanel
+            Canvas.Left="1240" Canvas.Top="175"
+            Orientation="Vertical"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center">
+            <!--Open/Close shift button-->
+            <Button
+                x:Name="openSlashCloseShiftButton"
+                Click="openSlashCloseShiftButton_Click"
+                Width="250"
+                Height="50"
+                Margin="0,0,0,10"
+                Content="Mở ca">
+                
+            </Button>
+            
+            <!--Currently in-shift staffs ListView-->
+            <Grid
+                BorderBrush="Gray"
+                BorderThickness="1"
+                >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    Grid.Row="0"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-                    <Image Source="/Assets/Iconography/food-and-beverages.png" Width="100" Height="100"/>
-                    <TextBlock 
-                        Text="Bán hàng" 
-                        HorizontalAlignment="Center" 
-                        Margin="5,0,0,0"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        FontSize="16"/>
-                </StackPanel>
-            </Button>
+                    Margin="0,5,0,0"
+                    Text="Danh sách nhân viên trong ca"/>
 
-            <!--To ProductMangementView Button-->
-            <Button x:Name="toProductManagementViewButton"
-                    Click="toProductManagementViewButton_Click"
-                    Content="Hàng hóa"/>
+                <ListView
+                    Grid.Row="1"
+                    SelectionMode="None"
+                    ItemTemplate="{StaticResource OnShiftStaffListViewDataTemplate}"
+                    ItemsSource="{x:Bind ViewModel.OnShiftStaffs}"
+                    Width="250"
+                    MaxHeight="400"
+                    HorizontalAlignment="Center"/>
+            </Grid>
 
-            <!--To CategoryMangementView Button-->
-            <Button x:Name="toCategoryManagementViewButton"
-                    Click="toCategoryManagementViewButton_Click"
-                    Content="Danh mục"/>
-
-            <!--To CustomerPaymentView Button-->
-            <Button x:Name="toCustomerPaymentViewButton"
-                    Click="toCustomerPaymentViewButton_Click"
-                    Content="Thanh toán"/>
-
-            <!--To StaffManagementView Button-->
-            <Button 
-                x:Name="toStaffManagementViewButton"
-                Width="150" Height="150">
-                <Grid
-                    RowSpacing="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Image 
-                        Source="/Assets/Iconography/people.png"
-                        MaxHeight="100"
-                        Margin="0,10,0,0"
-                        Grid.Row="0" Grid.Column="0"/>
-                    <TextBlock 
-                        Text="Nhân sự" 
-                        HorizontalAlignment="Center" 
-                        VerticalAlignment="Bottom"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        FontSize="16"
-                        Margin="5,0,0,0"
-                        Grid.Row="1" Grid.Column="0"/>
-                </Grid>
-            </Button>
-
-            <!--To FinanceView Button-->
-            <Button x:Name="toFinanceViewButton"
-                    Content="Doanh thu"/>
-
-            <!--To ConfigurationMenuView Button-->
-            <Button x:Name="toConfigurationMenuViewButton"
-                    Click="toConfigurationMenuViewButton_Click"
-                    Content="Thiết đặt"/>
+            
         </StackPanel>
 
         <!--Returns to LoginViews buttons-->
         <StackPanel
+            Canvas.Left="50" Canvas.Top="730"
             Orientation="Horizontal"
             HorizontalAlignment="Left"
-            VerticalAlignment="Bottom">
+            VerticalAlignment="Top">
             <Button 
+                Height="75"
+                Margin="0,0,20,0"
                 x:Name="returnToLoginViewButton"
                 Click="returnToLoginViewButton_Click"
                 Content="Về menu đăng nhập"/>
             <Button 
+                Height="75"
                 x:Name="changeStaffIdButton"
                 Click="changeIdButton_Click"
                 Content="Đổi ID nhân viên"/>
         </StackPanel>
-        
+
         <!--Exit program button-->
         <Button
+            Canvas.Left="1340" Canvas.Top="730"
             x:Name="exitProgramButton"
             Click="exitProgramButton_Click">
-            Thoát phần mềm
+            <StackPanel
+                Orientation="Vertical"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <Image Source="/Assets/Iconography/cancel.png" Width="35" Height="35"/>
+                <TextBlock 
+                    Text="Thoát phần mềm" 
+                    HorizontalAlignment="Center" 
+                    Margin="5,5,0,0"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    FontSize="16"/>
+            </StackPanel>
         </Button>
-    </StackPanel>
-
-    
+    </Canvas>
 </Page>

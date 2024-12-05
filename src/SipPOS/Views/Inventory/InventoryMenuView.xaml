@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="SipPOS.Views.Configuration.ConfigurationMenuView"
+    x:Class="SipPOS.Views.Inventory.InventoryMenuView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:SipPOS.Views.Configuration"
+    xmlns:local="using:SipPOS.Views.Inventory"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -30,8 +30,10 @@
                     FontSize="16"/>
             </StackPanel>
         </Button>
-        <TextBlock Text="CÀI ĐẶT" Style="{StaticResource TitleLargeTextBlockStyle}"/>
-        
+        <TextBlock 
+            Text="KHO HÀNG" 
+            Style="{StaticResource TitleLargeTextBlockStyle}"/>
+
         <Grid
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
@@ -44,25 +46,23 @@
             </Grid.RowDefinitions>
 
             <NavigationView
-                Name="configurationMenuNavigationView"
+                Name="inventoryMenuNavigationView"
                 PaneDisplayMode="Top"
                 IsBackButtonVisible="Collapsed"
                 IsSettingsVisible="False"
-                SelectionChanged="configurationMenuNavigationView_SelectionChanged"
+                SelectionChanged="inventoryMenuNavigationView_SelectionChanged"
                 Grid.Row="0">
                 <NavigationView.MenuItems>
-                    <NavigationViewItem Content="Cửa hàng" Tag="StoreConfiguration"/>
-                    <NavigationViewItem Content="Thanh toán" Tag="PaymentConfiguration"/>
-                    <NavigationViewItem Content="Hóa đơn" Tag="ReceiptConfiguration"/>
+                    <NavigationViewItem Content="Món" Tag="ProductManagement"/>
+                    <NavigationViewItem Content="Danh mục hàng" Tag="CategoryManagement"/>
+                    <NavigationViewItem Content="Nguyên liệu" Tag="IngredientsManagement"/>
                 </NavigationView.MenuItems>
             </NavigationView>
 
             <Frame 
-                x:Name="configurationMenuNavigationFrame" 
+                x:Name="inventoryMenuNavigationFrame" 
                 Grid.Row="1"
                 Margin="0,0,0,50"/>
         </Grid>
     </StackPanel>
-
-    
 </Page>

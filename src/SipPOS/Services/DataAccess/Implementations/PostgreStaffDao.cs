@@ -12,7 +12,7 @@ namespace SipPOS.Services.DataAccess.Implementations;
 /// <summary>
 /// Data Access Object for Staff using PostgreSQL database.
 /// </summary>
-public class PostgresStaffDao : IStaffDao
+public class PostgreStaffDao : IStaffDao
 {
     /// <summary>
     /// Inserts a new staff record into the database.

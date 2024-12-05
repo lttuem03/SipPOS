@@ -8,11 +8,10 @@ using Microsoft.Extensions.Hosting;
 
 using SipPOS.Views.Login;
 using SipPOS.Views.Cashier;
-using SipPOS.Views.General;
-using SipPOS.Views.Management;
+using SipPOS.Views.Inventory;
 
 using SipPOS.ViewModels.Cashier;
-using SipPOS.ViewModels.Management;
+using SipPOS.ViewModels.Inventory;
 
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.General.Implementations;
@@ -22,6 +21,9 @@ using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.DataAccess.Implementations;
 using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Services.Authentication.Implementations;
+
+using SipPOS.Context.Shift.Interface;
+using SipPOS.Context.Shift.Implementation;
 
 namespace SipPOS;
 
@@ -48,7 +50,7 @@ public partial class App : Application
     {
         this.InitializeComponent();
         this.RequestedTheme = ApplicationTheme.Light; // FIXED LIGHT THEME ONLY
-
+        
         // Database connection configuration
         DotNetEnv.Env.TraversePath().Load(AppContext.BaseDirectory);
         var postgres_host = DotNetEnv.Env.GetString("POSTGRES_HOST");
@@ -62,11 +64,14 @@ public partial class App : Application
         UseContentRoot(AppContext.BaseDirectory).
         ConfigureServices((context, services) =>
         {
+            // Contexts
+            services.AddSingleton<IStaffShiftContext, StaffShiftContext>();
+
             // Dao
             services.AddSingleton<IProductDao, MockProductDao>();
             services.AddSingleton<ICategoryDao, MockCategoryDao>();
-            services.AddSingleton<IStoreDao, MockStoreDao>();
-            services.AddSingleton<IStaffDao, MockStaffDao>();
+            services.AddSingleton<IStoreDao, PostgreStoreDao>();
+            services.AddSingleton<IStaffDao, PostgreStaffDao>();
 
             // Services
             services.AddSingleton<IProductService, ProductService>();
@@ -116,6 +121,38 @@ public partial class App : Application
     }
 
     /// <summary>
+    /// Navigates to the specified page type. Show an error dialog if somehow navigation'd failed.
+    /// </summary>
+    /// <param name="pageType">The type of the page to navigate to.</param>
+    /// <param name="parameter">The parameter to pass to the page.</param>
+    /// <param name="infoOverride">The navigation transition information.</param>
+    public static void NavigateTo(Type pageType, object? parameter = null, NavigationTransitionInfo? infoOverride = null)
+    {
+        if (App.CurrentWindow == null)
+        {
+            return;
+        }
+
+        var rootFrame = App.CurrentWindow.Content as Frame;
+
+        if (rootFrame != null)
+        {
+            rootFrame.Navigate(pageType, parameter);
+        }
+        else
+        {
+            var errorDialog = new ContentDialog
+            {
+                Title = "Error",
+                Content = "Navigation frame is null.",
+                CloseButtonText = "Close"
+            };
+
+            _ = errorDialog.ShowAsync();
+        }
+    }
+
+    /// <summary>
     /// Invoked when the application is launched.
     /// </summary>
     /// <param name="args">Details about the launch request and process.</param>
@@ -153,38 +190,6 @@ public partial class App : Application
         rootFrame.Navigate(typeof(LoginView));
         _mainWindow.Content = rootFrame;
         _mainWindow.Activate();
-    }
-
-    /// <summary>
-    /// Navigates to the specified page type. Show an error dialog if somehow navigation'd failed.
-    /// </summary>
-    /// <param name="pageType">The type of the page to navigate to.</param>
-    /// <param name="parameter">The parameter to pass to the page.</param>
-    /// <param name="infoOverride">The navigation transition information.</param>
-    public static void NavigateTo(Type pageType, object? parameter=null, NavigationTransitionInfo? infoOverride=null)
-    {
-        if (App.CurrentWindow == null)
-        {
-            return;
-        }
-
-        var rootFrame = App.CurrentWindow.Content as Frame;
-
-        if (rootFrame != null)
-        {
-            rootFrame.Navigate(pageType, parameter);
-        }
-        else
-        {
-            var errorDialog = new ContentDialog
-            {
-                Title = "Error",
-                Content = "Navigation frame is null.",
-                CloseButtonText = "Close"
-            };
-
-            _ = errorDialog.ShowAsync();
-        }
     }
 
     /// <summary>

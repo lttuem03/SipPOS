@@ -31,6 +31,20 @@ public class StaffDto : BaseEntityDto
     }
 
     /// <summary>
+    /// The composite username used for authentication.
+    /// </summary>
+    public string CompositeUsername
+    {
+        get
+        {
+            if (Id.HasValue)
+                return $"{PositionPrefix}{StoreId.ToString("000")}{Id.Value.ToString("000")}";
+            else
+                return "Id not set";
+        }
+    }
+
+    /// <summary>
     /// Gets or sets the password hash.
     /// </summary>
     public string PasswordHash { get; set; }

@@ -2,13 +2,16 @@
 
 using SipPOS.Views.Login;
 using SipPOS.Views.Cashier;
+using SipPOS.Views.Staff;
 using SipPOS.Views.Configuration;
-using SipPOS.Views.Management;
+using SipPOS.Views.Inventory;
 using SipPOS.DataTransfer.Entity;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Services.Authentication.Implementations;
+using System.Collections.ObjectModel;
+using SipPOS.Context.Shift.Interface;
 
 namespace SipPOS.ViewModels.General;
 
@@ -21,11 +24,17 @@ public class MainMenuViewModel : INotifyPropertyChanged
     private string _pageTilte;
     private string _currentStaffAuthenticationStatus;
 
+    public ObservableCollection<StaffDto> OnShiftStaffs { get; private set; }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="MainMenuViewModel"/> class.
     /// </summary>
     public MainMenuViewModel()
     {
+        var staffShiftContext = App.GetService<IStaffShiftContext>();
+
+        OnShiftStaffs = staffShiftContext.OnShiftStaffs;
+
         _pageTilte = "Cửa hàng: CHƯA ĐĂNG NHẬP";
         _currentStaffAuthenticationStatus = "Nhân viên: CHƯA MỞ CA";
 
@@ -64,95 +73,34 @@ public class MainMenuViewModel : INotifyPropertyChanged
     /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    /// <summary>
-    /// Handles the event when the button to navigate to the product management view is clicked.
-    /// </summary>
-    public void HandleToProductManagementViewButtonClick()
+    public void HandleToCashierMenuViewButtonClick()
     {
-        App.NavigateTo(typeof(ProductManagementView));
+        
     }
 
-    public void HandleToCategoryManagementViewButtonClick()
+    public void HandleToInventoryMenuViewClick()
     {
-        App.NavigateTo(typeof(CategoryManagementView));
+        App.NavigateTo(typeof(InventoryMenuView));
     }
 
-    public void HandleToCustomerPaymentViewButtonClick()
+    public void HandleToStaffManagementViewButtonClick()
     {
-        IList<ProductDto> productDtos = new List<ProductDto>
-        {
-            new()
-            {
-                Id = 1,
-                Name = "Cà phê sữa",
-                Price = 1000,
-                Quantity = 1
-            },
-            new()
-            {
-                Id = 2,
-                Name = "Trà sữa",
-                Price = 1000,
-                Quantity = 1
-            },
-            new()
-            {
-                Id = 3,
-                Name = "Nước mía",
-                Price = 1000,
-                Quantity = 1
-            },
-            new()
-            {
-                Id = 4,
-                Name = "Nước lọc",
-                Price = 1000,
-                Quantity = 1
-            },
-            new()
-            {
-                Id = 5,
-                Name = "Nước ngọt",
-                Price = 1000,
-                Quantity = 1
-            },
-            new()
-            {
-                Id = 6,
-                Name = "Cà phê đen",
-                Price = 1000,
-                Quantity = 1
-            },
-            new()
-            {
-                Id = 7,
-                Name = "Cà phê sữa đá",
-                Price = 1000,
-                Quantity = 1
-            },
-            new()
-            {
-                Id = 8,
-                Name = "Trà sữa đá",
-                Price = 1000,
-                Quantity = 1
-            },
-            new()
-            {
-                Id = 9,
-                Name = "Nước mía đá",
-                Price = 1000,
-                Quantity = 1
-            },
-            new()
-            {
-                Id = 10,
-                Name = "Nước lọc đá",
-                Price = 1000,
-                Quantity = 1
-            },
-        };
-        App.NavigateTo(typeof(CustomerPaymentView), productDtos);
+        App.NavigateTo(typeof(StaffManagementView));
+    }
+
+    public void HandleToProfileViewButtonClick()
+    {
+        
+    }
+
+    public void HandleToRevenueDashboardViewButtonClick()
+    {
+    
+    }
+
+    public void HandleToSpecialOffersManagementViewButtonClick()
+    {
+    
     }
 
     public void HandleToConfigurationMenuViewButtonClick()
@@ -160,9 +108,16 @@ public class MainMenuViewModel : INotifyPropertyChanged
         App.NavigateTo(typeof(ConfigurationMenuView));
     }
 
-    /// <summary>
-    /// Handles the event when the change ID button is clicked.
-    /// </summary>
+    public void HandleOpenSlashCloseShiftButtonClick()
+    {
+    
+    }
+
+    public void HandleReturnToLoginViewButtonClick()
+    {
+        App.NavigateTo(typeof(LoginView));
+    }
+
     public void HandleChangeIdButtonClick()
     {
         // Store is logged in, so return to LoginView
