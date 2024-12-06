@@ -21,9 +21,9 @@
         <local_conveters:CategoryIdToCategoryNameConverter x:Key="CategoryIdToCategoryNameConverter"/>
         <local_conveters:DateToDisplayDateConverter x:Key="DateToDisplayDateConverter"/>
     </Page.Resources>
+
     <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -32,8 +32,11 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlockStyle}" Text="QUẢN LÝ SẢN PHẨM" />
-        <Grid Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,10,0,10" ColumnSpacing="10">
+        <Grid 
+            Grid.Row="0" 
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Center"
+            ColumnSpacing="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -67,7 +70,7 @@
                 ItemsSource="{x:Bind ViewModel.StatusItemsFilter}"/>
         </Grid>
 
-        <StackPanel Grid.Row="2" Orientation="Vertical">
+        <StackPanel Grid.Row="1" Orientation="Vertical">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,10,0,10">
                 <Button Content="Tìm kiếm" Click="RefreshButton_Click" />
                 <Button Content="Thêm mới" Click="AddButton_Click" Margin="10,0,0,0" />
@@ -79,7 +82,7 @@
 
         <controls:DataGrid
             x:Name="dg"
-            Grid.Row="3"
+            Grid.Row="2"
             AutoGenerateColumns="False"
             GridLinesVisibility="Horizontal"
             ItemsSource="{x:Bind ViewModel.Products, Mode=OneWay}"
@@ -118,7 +121,7 @@
             </controls:DataGrid.Columns>
         </controls:DataGrid>
 
-        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0">
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0">
             <local_controls:PaginationControl 
                 PerPages="5,10,20,30" 
                 CurrentPage="{x:Bind ViewModel.Page, Mode=TwoWay}"

@@ -3,20 +3,24 @@ using Microsoft.UI.Xaml.Controls;
 
 using SipPOS.Views.General;
 using SipPOS.Views.Login;
+using SipPOS.ViewModels.Login;
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Services.Authentication.Implementations;
-using SipPOS.Context.Authentication;
+using System.ComponentModel;
 
 namespace SipPOS.ViewModels.Login;
 
-public class StoreLoginViewModel
+public class StoreLoginViewModel : INotifyPropertyChanged
 {
-    public Visibility StoreLoginFormVisibility { get; private set; }
-    public Visibility StoreLogoutButtonVisibility { get; private set; }
+    // Data-bound properties
+    private Visibility _storeLoginFormVisibility;
+    private Visibility _storeLogoutButtonVisibility;
 
     private bool _saveStoreCredentials;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public StoreLoginViewModel()
     {
@@ -59,6 +63,14 @@ public class StoreLoginViewModel
             storeCredentialsService.SaveCredentials(storeUsername, storePassword);
         }
 
+        // Change the contents of StoreLoginView
+        if (storeAuthenticationService is StoreAuthenticationService service)
+        {
+            StoreLoginFormVisibility = (service.Context.LoggedIn == true) ? Visibility.Collapsed : Visibility.Visible;
+            StoreLogoutButtonVisibility = (service.Context.LoggedIn == true) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        LoginViewModel.UpdateView();
         App.NavigateTo(typeof(LoginView));
     }
 
@@ -95,6 +107,11 @@ public class StoreLoginViewModel
 
         // Clear current shift if needed
 
+        // Change the contents of StoreLoginView
+        StoreLoginFormVisibility = (storeAuthenticationService.Context.LoggedIn == true) ? Visibility.Collapsed : Visibility.Visible;
+        StoreLogoutButtonVisibility = (storeAuthenticationService.Context.LoggedIn == true) ? Visibility.Visible : Visibility.Collapsed;
+
+        LoginViewModel.UpdateView();
         App.NavigateTo(typeof(LoginView));
     }
 
@@ -130,5 +147,30 @@ public class StoreLoginViewModel
     public void HandleCreateNewStoreAccountButtonClick()
     {
         App.NavigateTo(typeof(StoreAccountCreationView));
+    }
+
+    public void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public Visibility StoreLoginFormVisibility
+    {
+        get => _storeLoginFormVisibility;
+        set
+        {
+            _storeLoginFormVisibility = value;
+            OnPropertyChanged(nameof(StoreLoginFormVisibility));
+        }
+    }
+
+    public Visibility StoreLogoutButtonVisibility
+    {
+        get => _storeLogoutButtonVisibility;
+        set
+        {
+            _storeLogoutButtonVisibility = value;
+            OnPropertyChanged(nameof(StoreLogoutButtonVisibility));
+        }
     }
 }

@@ -33,14 +33,21 @@
         <!--Page title-->
         <TextBlock 
             Canvas.Left="50" Canvas.Top="100"
-            Text="QUẢN LÝ NHÂN SỰ" Style="{StaticResource TitleLargeTextBlockStyle}"/>
+            Text="QUẢN LÝ NHÂN SỰ" 
+            Style="{StaticResource TitleLargeTextBlockStyle}"/>
 
-        <!--Staff list DataGrid-->
-        <controls:DataGrid>
-            
+        <!--Staff list-->
+        <Grid>
+            <!--Data grid-->
+            <controls:DataGrid
+                AutoGenerateColumns="False"
+                ItemsSource="{x:Bind ViewModel.CurrentPageStaffList}">
 
-        </controls:DataGrid>
-        
+            </controls:DataGrid>
+
+            <!--Pagination control-->
+        </Grid>
+
         <!--Operation buttons-->
         <Grid
             Canvas.Left="1225" Canvas.Top="200"

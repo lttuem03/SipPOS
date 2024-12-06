@@ -156,12 +156,24 @@ public partial class App : Application
     /// Invoked when the application is launched.
     /// </summary>
     /// <param name="args">Details about the launch request and process.</param>
-    protected async override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        _mainWindow = new MainWindow();
-        App.CurrentWindow = _mainWindow;
+        // In the App startup check Window, we check for the 
+        // prequisite for the app to run, such as database connection
 
-        // Always start app maximized
+        // If everything is ready, we change the instance of _mainWindow
+        // from AppStartupCheckWindow to MainWindow.
+
+        // Otherwise, we show an error dialog and exit the app.
+
+        _mainWindow = new AppStartupCheckWindow();
+
+        if (_mainWindow.Content is FrameworkElement rootElement)
+        {
+            rootElement.Loaded += AppStartupCheck;
+        }
+
+        // Always start app maximized and unresizable
         if (_mainWindow.AppWindow.Presenter is OverlappedPresenter presenter)
         {
             presenter.Maximize();
@@ -170,26 +182,114 @@ public partial class App : Application
             presenter.SetBorderAndTitleBar(false, false);
         }
 
+        _mainWindow.Activate();
+
+        //_mainWindow = new MainWindow();
+        //App.CurrentWindow = _mainWindow;
+        //
+        
+        //
+        //Frame rootFrame = new Frame();
+        //rootFrame.NavigationFailed += _onNavigationFailed;
+        //
+        //_mainWindow.Content = rootFrame;
+        //_mainWindow.Activate();
+
+        //// Check if a Store's credentials is saved for authentication (clicked "Save credentials" on last authentication)
+        //var storeCredentialsService = App.GetService<IStoreCredentialsService>();
+        //
+        //(var storeUsername, var storePassword) = storeCredentialsService.LoadCredentials();
+        //
+        //if (storeUsername != null && storePassword != null)
+        //{
+        //    var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
+        //    var loginSuccessful = await storeAuthenticationService.LoginAsync(storeUsername, storePassword);
+        //
+        //    // Even if store authentication succeeded, we still navigate to the login page
+        //    // and set the login tab to StaffLogin
+        //}
+        //
+        //rootFrame.Navigate(typeof(LoginView));
+    }
+
+    private async void AppStartupCheck(object sender, RoutedEventArgs e)
+    {
+        if (_mainWindow == null)
+        {
+            return;
+        }
+
+        if (_mainWindow.Content is FrameworkElement rootElement)
+        {
+            // we only want do this event once
+            rootElement.Loaded -= AppStartupCheck;
+        }
+
+        // Check if the database connection service is working (if the app is using a database)
+        var storeDao = App.GetService<IStoreDao>();
+        var staffDao = App.GetService<IStaffDao>();
+        
+        if (storeDao is PostgreStoreDao || staffDao is PostgreStaffDao)
+        {
+            try
+            {
+                var connectionService = App.GetService<IDatabaseConnectionService>();
+                using var connection = connectionService.GetOpenConnection();
+                // Connection successful, proceed with application startup
+            }
+            catch (Exception)
+            {
+                var errorDialog = new ContentDialog
+                {
+                    Title = "Lỗi kết nối",
+                    Content = "Không thể thiết lập kết nối tới cơ sở dữ liệu",
+                    CloseButtonText = "Thoát chương trình",
+                    XamlRoot = _mainWindow.Content.XamlRoot
+                };
+        
+                await errorDialog.ShowAsync();
+                App.Current.Exit();
+                return;
+            }
+        }
+
+        // Everything is ready, we configure and change the instance of _mainWindow
+        var mainWindow = new MainWindow();
+
         Frame rootFrame = new Frame();
         rootFrame.NavigationFailed += _onNavigationFailed;
+        
+        mainWindow.Content = rootFrame;
+        mainWindow.Activate();
+
+        // Always start app maximized and unresizable
+        if (mainWindow.AppWindow.Presenter is OverlappedPresenter presenter)
+        {
+            presenter.Maximize();
+            presenter.IsResizable = false;
+            presenter.IsMinimizable = false;
+            presenter.SetBorderAndTitleBar(false, false);
+        }
 
         // Check if a Store's credentials is saved for authentication (clicked "Save credentials" on last authentication)
         var storeCredentialsService = App.GetService<IStoreCredentialsService>();
-
+        
         (var storeUsername, var storePassword) = storeCredentialsService.LoadCredentials();
-
+        
         if (storeUsername != null && storePassword != null)
         {
             var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
             var loginSuccessful = await storeAuthenticationService.LoginAsync(storeUsername, storePassword);
-
+        
             // Even if store authentication succeeded, we still navigate to the login page
             // and set the login tab to StaffLogin
         }
-
+        
         rootFrame.Navigate(typeof(LoginView));
-        _mainWindow.Content = rootFrame;
-        _mainWindow.Activate();
+
+        // Close the AppStartupCheckWindow and change the instance of _mainWindow
+        _mainWindow.Close();
+        _mainWindow = mainWindow;
     }
 
     /// <summary>

@@ -60,6 +60,11 @@ public class StaffDto : BaseEntityDto
     public string Name { get; set; }
 
     /// <summary>
+    /// Gets or sets the gender of the staff.
+    /// </summary>
+    public string Gender { get; set; }
+
+    /// <summary>
     /// Gets or sets the date of birth of the staff.
     /// </summary>
     public DateOnly DateOfBirth { get; set; }
@@ -110,6 +115,7 @@ public class StaffDto : BaseEntityDto
         PasswordHash = string.Empty;
         Salt = string.Empty;
         Name = string.Empty;
+        Gender = string.Empty;
         DateOfBirth = DateOnly.MinValue;
         Email = string.Empty;
         Tel = string.Empty;

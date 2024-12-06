@@ -1,4 +1,5 @@
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
 using SipPOS.ViewModels.Login;
 
@@ -20,8 +21,8 @@ public sealed partial class LoginView : Page
     public LoginView()
     {
         this.InitializeComponent();
-        ViewModel = new LoginViewModel();
-        ViewModel.SelectViewUponLoad(loginNavigationView, storeLoginNavigationViewItem, loginNavigationFrame);
+        ViewModel = new LoginViewModel(loginNavigationView, storeLoginNavigationViewItem, loginNavigationFrame);
+        LoginViewModel.UpdateView();
     }
 
     /// <summary>
@@ -37,5 +38,14 @@ public sealed partial class LoginView : Page
     private void exitProgramButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         App.Current.Exit();
+    }
+
+    /// <summary>
+    /// Called when the page is navigated to.
+    /// </summary>
+    /// <param name="e">The event data.</param>
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        LoginViewModel.UpdateView();
     }
 }
