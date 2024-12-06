@@ -39,13 +39,4 @@ public sealed partial class LoginView : Page
     {
         App.Current.Exit();
     }
-
-    /// <summary>
-    /// Called when the page is navigated to.
-    /// </summary>
-    /// <param name="e">The event data.</param>
-    protected override void OnNavigatedTo(NavigationEventArgs e)
-    {
-        LoginViewModel.UpdateView();
-    }
 }

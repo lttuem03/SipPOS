@@ -183,33 +183,6 @@ public partial class App : Application
         }
 
         _mainWindow.Activate();
-
-        //_mainWindow = new MainWindow();
-        //App.CurrentWindow = _mainWindow;
-        //
-        
-        //
-        //Frame rootFrame = new Frame();
-        //rootFrame.NavigationFailed += _onNavigationFailed;
-        //
-        //_mainWindow.Content = rootFrame;
-        //_mainWindow.Activate();
-
-        //// Check if a Store's credentials is saved for authentication (clicked "Save credentials" on last authentication)
-        //var storeCredentialsService = App.GetService<IStoreCredentialsService>();
-        //
-        //(var storeUsername, var storePassword) = storeCredentialsService.LoadCredentials();
-        //
-        //if (storeUsername != null && storePassword != null)
-        //{
-        //    var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
-        //    var loginSuccessful = await storeAuthenticationService.LoginAsync(storeUsername, storePassword);
-        //
-        //    // Even if store authentication succeeded, we still navigate to the login page
-        //    // and set the login tab to StaffLogin
-        //}
-        //
-        //rootFrame.Navigate(typeof(LoginView));
     }
 
     private async void AppStartupCheck(object sender, RoutedEventArgs e)
@@ -290,6 +263,7 @@ public partial class App : Application
         // Close the AppStartupCheckWindow and change the instance of _mainWindow
         _mainWindow.Close();
         _mainWindow = mainWindow;
+        CurrentWindow = mainWindow;
     }
 
     /// <summary>
