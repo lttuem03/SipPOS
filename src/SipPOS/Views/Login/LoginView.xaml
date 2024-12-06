@@ -13,7 +13,7 @@
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
         Width="700"
-        Height="500">
+        Height="550">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -50,7 +50,8 @@
         <Button
             x:Name="exitProgramButton"
             Click="exitProgramButton_Click"
-            Grid.Row="2">
+            Grid.Row="2"
+            HorizontalAlignment="Center">
             <StackPanel
                 Orientation="Vertical"
                 HorizontalAlignment="Center"

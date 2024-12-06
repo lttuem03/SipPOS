@@ -17,6 +17,7 @@ exports.up = async function(knex) {
             password_hash VARCHAR(64) NOT NULL CHECK (LENGTH(password_hash) = 64),
             salt VARCHAR(64) NOT NULL CHECK (LENGTH(salt) = 64),
             name VARCHAR(64) NOT NULL,
+            gender VARCHAR(3) NOT NULL CHECK (gender IN ('Nam', 'Nữ')),
             date_of_birth DATE NOT NULL,
             email VARCHAR(64) NOT NULL,
             tel VARCHAR(16) NOT NULL,

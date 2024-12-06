@@ -46,6 +46,7 @@
     <Content Remove="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="AppStartupCheckWindow.xaml" />
     <None Remove="Resources\Controls\EditableTextField.xaml" />
     <None Remove="Resources\Styles\Background.xaml" />
     <None Remove="Views\CategoryManagementView.xaml" />
@@ -87,6 +88,9 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="AppStartupCheckWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <None Update="Assets\Iconography\back-button.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
