@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="SipPOS.Views.Setup.StoreSetupView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SipPOS.Views.Setup"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Canvas
+    Background="AliceBlue">
+        <!--Page title-->
+        <TextBlock
+        Canvas.Left="50" Canvas.Top="50"
+        Text="{x:Bind ViewModel.PageNumberStatus, Mode=TwoWay}"
+        Style="{StaticResource TitleLargeTextBlockStyle}"/>
+
+        <!--Step-by-step pages navigation frame-->
+        <Frame 
+            Canvas.Left="0" Canvas.Top="60"
+            x:Name="storeSetupNavigationFrame"/>
+        <!--No back button at this point-->
+        <!--No exit program button either-->
+
+        <!--Next/prev step buttons-->
+        <Grid
+            Canvas.Left="100" Canvas.Top="700"
+            Width="1360">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="75"/>
+            </Grid.RowDefinitions>
+
+            <!--Previous step button-->
+            <Button
+                Grid.Column="0"
+                Width="300"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Stretch"
+                x:Name="toPreviousStepButton"
+                Click="toPreviousStepButton_Click">
+                <StackPanel 
+                Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                    <Image Source="/Assets/Iconography/back-button.png" Width="25" Height="25"/>
+                    <TextBlock 
+                    Text="Quay lại" 
+                    VerticalAlignment="Center"
+                    Margin="10,0,0,0"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    FontSize="16"/>
+                </StackPanel>
+            </Button>
+
+            <!--Next step button-->
+            <Button
+                Grid.Column="1"
+                Width="300"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Stretch"
+                x:Name="toNextStepButton"
+                Click="toNextStepButton_Click">
+                <StackPanel 
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                    <Image Source="/Assets/Iconography/next-button.png" Width="25" Height="25"/>
+                    <TextBlock 
+                        Text="{x:Bind ViewModel.NextButtonText, Mode=TwoWay}" 
+                        VerticalAlignment="Center"
+                        Margin="10,0,0,0"
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        FontSize="16"/>
+                </StackPanel>
+            </Button>
+
+        </Grid>
+
+        <!--Setup complete confirmation content dialog-->
+        <ContentDialog
+            x:Name="setupCompleteContentDialog"
+            Title="Hoàn thành thiết lập cửa hàng"
+            PrimaryButtonText="Xác nhận"
+            PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
+            CloseButtonText="Kiểm tra lại">
+            <StackPanel
+                Orientation="Vertical"
+                HorizontalAlignment="Center">
+                <TextBlock
+                    HorizontalAlignment="Left">
+                    <Run Text="Hãy đảm bảo rằng tất cả những thông tin là đúng."/>
+                    <LineBreak/> <LineBreak/>
+                    <Run Text="Trong tương lai bạn có thể chỉnh sửa tất cả các trường, trừ các trường"/>
+                    <Run Text="màu đỏ." Foreground="Red" FontWeight="Bold"/>
+                </TextBlock>
+            </StackPanel>
+        </ContentDialog>
+
+        
+    </Canvas>
+</Page>

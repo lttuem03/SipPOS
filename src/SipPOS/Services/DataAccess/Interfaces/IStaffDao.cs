@@ -20,9 +20,8 @@ public interface IStaffDao
     /// </summary>
     /// <param name="storeId">The ID of the store.</param>
     /// <param name="staffDto">The data transfer object containing staff details.</param>
-    /// <param name="author">The author of the operation. Presumably is the current staff.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the inserted StaffDto object, or null if the operation failed.</returns>
-    Task<(long id, StaffDto? dto)> InsertAsync(long storeId, StaffDto staffDto, Staff author);
+    Task<(long id, StaffDto? dto)> InsertAsync(long storeId, StaffDto staffDto);
 
     /// <summary>
     /// Retrieves all staff members for a specific store.

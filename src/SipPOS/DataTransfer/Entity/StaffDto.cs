@@ -60,6 +60,42 @@ public class StaffDto : BaseEntityDto
     public string Name { get; set; }
 
     /// <summary>
+    /// Gets the first name of the staff.
+    /// (In Vietnamese this includes everything upto the LastName).
+    /// </summary>
+    public string FirstName
+    {
+        get
+        {
+            var subs = Name.Split(' ');
+
+            if (subs.Length == 0)
+                return "";
+            
+            subs = subs.Skip(subs.Length - 1).ToArray();
+
+            return string.Join(' ', subs);
+        }
+    }
+
+    /// <summary>
+    /// Gets the last name of the staff.
+    /// (In Vietnamese that is the name after the family name and the middle name).
+    /// </summary>
+    public string LastName
+    {
+        get
+        {
+            var subs = Name.Split(' ');
+
+            if (subs.Length == 0)
+                return "";
+
+            return subs[subs.Length - 1];
+        }
+    }
+
+    /// <summary>
     /// Gets or sets the gender of the staff.
     /// </summary>
     public string Gender { get; set; }
@@ -116,13 +152,13 @@ public class StaffDto : BaseEntityDto
         Salt = string.Empty;
         Name = string.Empty;
         Gender = string.Empty;
-        DateOfBirth = DateOnly.MinValue;
+        DateOfBirth = new DateOnly(2000, 1, 1);
         Email = string.Empty;
         Tel = string.Empty;
         Address = string.Empty;
         EmploymentStatus = string.Empty;
 
-        EmploymentStartDate = DateOnly.MinValue;
+        EmploymentStartDate = new DateOnly(2000,1,1);
         EmploymentEndDate = null;
 
         CreatedAt = null;

@@ -9,185 +9,237 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <StackPanel 
-        Orientation="Vertical"
-        HorizontalAlignment="Left"
-        Margin="50,50,0,0">
+    <Canvas
+        Background="AliceBlue">
+        <!--Go back button-->
+        <Button 
+            Canvas.Left="50" Canvas.Top="50"
+            Click="goBackButton_Click">
+            <StackPanel 
+                Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <Image Source="/Assets/Iconography/back-button.png" Width="25" Height="25"/>
+                <TextBlock 
+                    Text="Quay lại" 
+                    VerticalAlignment="Center"
+                    Margin="10,0,0,0"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    FontSize="16"/>
+            </StackPanel>
+        </Button>
+
         <!--Page title-->
         <TextBlock
+            Canvas.Left="50" Canvas.Top="100"
             Style="{StaticResource TitleLargeTextBlockStyle}"
-            Text="TẠO TÀI KHOẢN CỬA HÀNG MỚI"
-            Margin="0,0,0,30"/>
-        <!--Store name field-->
-        <StackPanel
-            Orientation="Horizontal"
-            HorizontalAlignment="Left"
-            Margin="30,0,0,10">
-            <TextBlock
-                Style="{StaticResource BodyTextBlockStyle}"
-                Margin="0,5,21,0"
-                Text="Tên cửa hàng:"/>
+            Text="TẠO TÀI KHOẢN CỬA HÀNG MỚI"/>
+
+        <!--Store basic information grid-->
+        <Grid
+            Canvas.Left="50" Canvas.Top="200"
+            RowSpacing="20"
+            ColumnSpacing="10"
+            BorderBrush="DarkGray"
+            BorderThickness="2"
+            CornerRadius="5">
+            <!--Store name, address, email, telephone number-->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <!--Fields and Validation errors-->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="500"/>
+                <ColumnDefinition Width="240"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Fields-->
             <TextBox
+                Grid.Row="0" Grid.Column="0"
                 Name="storeNameFieldTextBox"
+                Header="Tên cửa hàng"
                 PlaceholderText="Điền tên cửa hàng"
-                Width="500"
-                Margin="10,0,10,0"/>
+                IsSpellCheckEnabled="False"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                Margin="20,20,0,0"/>
+            <TextBox
+                Grid.Row="1" Grid.Column="0"
+                Name="storeAddressFieldTextBox"
+                Header="Địa chỉ cửa hàng"
+                PlaceholderText="Điền địa chỉ cửa hàng"
+                IsSpellCheckEnabled="False"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                Margin="20,0,0,0"/>
+            <TextBox
+                Grid.Row="2" Grid.Column="0"
+                Name="storeEmailFieldTextBox"
+                Header="Email cửa hàng"
+                PlaceholderText="Điền email cửa hàng"
+                IsSpellCheckEnabled="False"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                Margin="20,0,0,0"/>
+            <TextBox
+                Grid.Row="3" Grid.Column="0"
+                Name="storeTelFieldTextBox"
+                Header="SĐT cửa hàng"
+                PlaceholderText="Điền SĐT cửa hàng"
+                IsSpellCheckEnabled="False"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                Margin="20,0,0,20"/>
+
+            <!--Validation errors-->
             <TextBlock 
-                HorizontalAlignment="Center"
+                Grid.Row="0" Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Margin="0,0,0,5"
                 Foreground="Red"
                 Opacity="{x:Bind ViewModel.StoreNameErrorMessageOpacity,
                                  Mode=TwoWay}"
-                Margin="0,10,0,10"
                 Text="{x:Bind ViewModel.StoreNameErrorMessageText,
                               Mode=TwoWay}"/>
-        </StackPanel>
-        <!--Store address field-->
-        <StackPanel
-            Orientation="Horizontal"
-            HorizontalAlignment="Left"
-            Margin="30,0,0,10">
-            <TextBlock
-                Style="{StaticResource BodyTextBlockStyle}"
-                Margin="0,5,0,0"
-                Text="Địa chỉ cửa hàng:"/>
-            <TextBox
-                Name="storeAddressFieldTextBox"
-                PlaceholderText="Điền địa chỉ cửa hàng"
-                Width="500"
-                Margin="10,0,10,0"/>
             <TextBlock 
-                HorizontalAlignment="Center"
+                Grid.Row="1" Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Margin="0,0,0,5"
                 Foreground="Red"
                 Opacity="{x:Bind ViewModel.StoreAddressErrorMessageOpacity,
-                                 Mode=TwoWay}"
-                Margin="0,10,0,10"
+                                 Mode=TwoWay}"   
                 Text="{x:Bind ViewModel.StoreAddressErrorMessageText,
                                 Mode=TwoWay}"/>
-        </StackPanel>
-        <!--Store email field-->
-        <StackPanel
-            Orientation="Horizontal"
-            HorizontalAlignment="Left"
-            Margin="30,0,0,10">
-            <TextBlock
-                Style="{StaticResource BodyTextBlockStyle}"
-                Margin="0,5,10,0"
-                Text="Email cửa hàng:"/>
-            <TextBox
-                Name="storeEmailFieldTextBox"
-                PlaceholderText="Điền email cửa hàng"
-                Width="500"
-                Margin="10,0,10,0"/>
             <TextBlock 
-                HorizontalAlignment="Center"
+                Grid.Row="2" Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Margin="0,0,0,5"
                 Foreground="Red"
                 Opacity="{x:Bind ViewModel.StoreEmailErrorMessageOpacity,
                                  Mode=TwoWay}"
-                Margin="0,10,0,10"
                 Text="{x:Bind ViewModel.StoreEmailErrorMessageText,
                                 Mode=TwoWay}"/>
-        </StackPanel>
-        <!--Store telephone number field-->
-        <StackPanel
-            Orientation="Horizontal"
-            HorizontalAlignment="Left"
-            Margin="30,0,0,10">
-            <TextBlock
-                Style="{StaticResource BodyTextBlockStyle}"
-                Margin="0,5,18,0"
-                Text="SĐT cửa hàng:"/>
-            <TextBox
-                Name="storeTelFieldTextBox"
-                PlaceholderText="Điền SĐT cửa hàng"
-                Width="500"
-                Margin="10,0,10,0"/>
             <TextBlock 
-                HorizontalAlignment="Center"
+                Grid.Row="3" Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Margin="0,0,0,25"
                 Foreground="Red"
                 Opacity="{x:Bind ViewModel.StoreTelErrorMessageOpacity,
                                  Mode=TwoWay}"
-                Margin="0,10,0,10"
                 Text="{x:Bind ViewModel.StoreTelErrorMessageText,
                                 Mode=TwoWay}"/>
-        </StackPanel>
-        <!--Store username field-->
-        <StackPanel
-            Orientation="Horizontal"
-            HorizontalAlignment="Left"
-            Margin="30,20,0,10">
-            <TextBlock
-                Style="{StaticResource BodyTextBlockStyle}"
-                Margin="0,5,38,0"
-                Text="Tên đăng nhập:"/>
+        </Grid>
+
+        <!--Store authentication information grid-->
+        <Grid
+            Canvas.Left="860" Canvas.Top="278"
+            RowSpacing="20"
+            ColumnSpacing="10"
+            BorderBrush="DarkGray"
+            BorderThickness="2"
+            CornerRadius="5">
+            <!--Store username, password, confirm password fieldss-->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <!--Field names and Validation errors-->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="270"/>
+                <ColumnDefinition Width="300"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Fields-->
             <TextBox
+                Grid.Row="0" Grid.Column="0"
                 Name="storeUsernameFieldTextBox"
+                Header="Tên đăng nhập"
                 PlaceholderText="Điền tên đăng nhập"
-                Width="300"
-                Margin="10,0,10,0"/>
+                IsSpellCheckEnabled="False"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                Margin="20,20,0,0"/>
+            <PasswordBox
+                Grid.Row="1" Grid.Column="0"
+                Name="storePasswordFieldPasswordBox"
+                Header="Mật khẩu"
+                PlaceholderText="Điền mật khẩu"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                Margin="20,0,0,0"/>
+            <PasswordBox
+                Grid.Row="2" Grid.Column="0"
+                Name="confirmStorePasswordFieldPasswordBox"
+                Header="Xác nhận mật khẩu"
+                PlaceholderText="Lặp lại mật khẩu"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                Margin="20,0,0,20"/>
+
+            <!--Validation errors-->
             <TextBlock 
-                HorizontalAlignment="Center"
+                Grid.Row="0" Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Margin="0,0,0,5"
                 Foreground="Red"
                 Opacity="{x:Bind ViewModel.StoreUsernameErrorMessageOpacity,
                                  Mode=TwoWay}"
-                Margin="0,10,0,10"
                 Text="{x:Bind ViewModel.StoreUsernameErrorMessageText,
                                 Mode=TwoWay}"/>
-        </StackPanel>
-        <!--Store password field-->
-        <StackPanel
-            Orientation="Horizontal"
-            HorizontalAlignment="Left"
-            Margin="30,0,0,10">
-            <TextBlock
-                Style="{StaticResource BodyTextBlockStyle}"
-                Margin="0,5,70,0"
-                Text="Mật khẩu:"/>
-            <PasswordBox
-                Name="storePasswordFieldPasswordBox"
-                PlaceholderText="Điền mật khẩu"
-                Width="300"
-                Margin="10,0,10,0"/>
             <TextBlock 
-                HorizontalAlignment="Center"
+                Grid.Row="1" Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Margin="0,0,0,5"
                 Foreground="Red"
                 Opacity="{x:Bind ViewModel.StorePasswordErrorMessageOpacity,
                                  Mode=TwoWay}"
-                Margin="0,10,0,10"
                 Text="{x:Bind ViewModel.StorePasswordErrorMessageText,
                                 Mode=TwoWay}"/>
-        </StackPanel>
-        <!--Confirm store password field-->
-        <StackPanel
-            Orientation="Horizontal"
-            HorizontalAlignment="Left"
-            Margin="30,0,0,10">
-            <TextBlock
-                Style="{StaticResource BodyTextBlockStyle}"
-                Margin="0,5,10,0"
-                Text="Xác nhận mật khẩu:"/>
-            <PasswordBox
-                Name="confirmStorePasswordFieldPasswordBox"
-                PlaceholderText="Lặp lại mật khẩu"
-                Width="300"
-                Margin="10,0,10,0"/>
             <TextBlock 
-                HorizontalAlignment="Center"
+                Grid.Row="2" Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Margin="0,0,0,25"
                 Foreground="Red"
                 Opacity="{x:Bind ViewModel.ConfirmPasswordErrorMessageOpacity,
                                  Mode=TwoWay}"
-                Margin="0,10,0,10"
                 Text="{x:Bind ViewModel.ConfirmPasswordErrorMessageText,
                                 Mode=TwoWay}"/>
-        </StackPanel>
+        </Grid>
+
         <!--Account creation result-->
         <TextBlock 
-            HorizontalAlignment="Center"
+            Canvas.Left="650" Canvas.Top="570"
+            HorizontalAlignment="Left"
             Foreground="Red"
             Opacity="{x:Bind ViewModel.OtherErrorMessageOpacity,
                              Mode=TwoWay}"
-            Margin="0,0,0,0"
             Text="{x:Bind ViewModel.OtherErrorMessageText,
                             Mode=TwoWay}"/>
+
+        <!--Confirm account creation Button / Cancel button-->
+        <Button
+            Canvas.Left="700" Canvas.Top="600"
+            Name="confirmStoreAccountCreationButton"
+            Click="confirmStoreAccountCreationButton_Click"
+            Width="200" Height="50">
+            <TextBlock 
+                Text="Tạo tài khoản" 
+                HorizontalAlignment="Center" 
+                Style="{StaticResource SubtitleTextBlockStyle}"
+                FontSize="16"/>
+        </Button>
+
         <!--Confirm information dialog-->
         <ContentDialog
             Name="confirmStoreInformationContentDialog"
@@ -267,21 +319,5 @@
                 </TextBlock>
             </StackPanel>
         </ContentDialog>
-        <!--Confirm account creation Button / Cancel button-->
-        <StackPanel
-            Orientation="Horizontal"
-            HorizontalAlignment="Center"
-            Margin="300,10,0,0">
-            <Button
-                Name="confirmStoreAccountCreationButton"
-                Click="confirmStoreAccountCreationButton_Click"
-                Style="{StaticResource AccentButtonStyle}"
-                Content="Tạo tài khoản"
-                Margin="0,0,50,0"/>
-            <Button
-                Name="cancelStoreAccountCreationButton"
-                Click="cancelStoreAccountCreationButton_Click"
-                Content="Hủy"/>
-        </StackPanel>
-    </StackPanel>
+    </Canvas>
 </Page>

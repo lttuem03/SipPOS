@@ -100,7 +100,7 @@ class MockStaffDao : IStaffDao
     // MockStaffDao should not have the methods below implemented, because it is used for the quick-login
     // when developing only
 
-    public Task<(long id, StaffDto? dto)> InsertAsync(long storeId, StaffDto staffDto, Staff author) => throw new NotImplementedException();
+    public Task<(long id, StaffDto? dto)> InsertAsync(long storeId, StaffDto staffDto) => throw new NotImplementedException();
     public Task<List<StaffDto>?> GetAllAsync(long storeId) => throw new NotImplementedException();
     public Task<StaffDto?> GetByIdAsync(long storeId, long id) => throw new NotImplementedException();
     public Task<StaffDto?> UpdateByIdAsync(long storeId, long id, StaffDto updatedStaffDto, Staff author) => throw new NotImplementedException();

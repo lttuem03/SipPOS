@@ -1,14 +1,16 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System.ComponentModel;
+
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 using SipPOS.Views.General;
 using SipPOS.Views.Login;
+using SipPOS.Views.Setup;
 using SipPOS.ViewModels.Login;
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Services.Authentication.Implementations;
-using System.ComponentModel;
 
 namespace SipPOS.ViewModels.Login;
 
@@ -17,6 +19,7 @@ public class StoreLoginViewModel : INotifyPropertyChanged
     // Data-bound properties
     private Visibility _storeLoginFormVisibility;
     private Visibility _storeLogoutButtonVisibility;
+    private string _storeLastLoginStatus;
 
     private bool _saveStoreCredentials;
 
@@ -24,7 +27,8 @@ public class StoreLoginViewModel : INotifyPropertyChanged
 
     public StoreLoginViewModel()
     {
-        _saveStoreCredentials = true;
+        _saveStoreCredentials = false;
+        _storeLastLoginStatus = string.Empty;
 
         if (App.GetService<IStoreAuthenticationService>() is not StoreAuthenticationService storeAuthenticationService)
         {
@@ -35,6 +39,12 @@ public class StoreLoginViewModel : INotifyPropertyChanged
 
         StoreLoginFormVisibility = (storeAuthenticationService.Context.LoggedIn == true) ? Visibility.Collapsed : Visibility.Visible;
         StoreLogoutButtonVisibility = (storeAuthenticationService.Context.LoggedIn == true) ? Visibility.Visible : Visibility.Collapsed;
+
+        if (storeAuthenticationService.Context.LoggedIn == true &&
+            storeAuthenticationService.Context.CurrentStore != null)
+        {
+            _storeLastLoginStatus = $"Đăng nhập lần cuối: {storeAuthenticationService.Context.CurrentStore.LastLogin.ToString()}";
+        }
     }
 
     /// <summary>
@@ -55,12 +65,16 @@ public class StoreLoginViewModel : INotifyPropertyChanged
             return;
         }
 
-        // Save credentials if "Save credentials" was checked
+        // Save credentials if "Save credentials" was checked or clear credentials if it was unchecked
+        var storeCredentialsService = App.GetService<IStoreCredentialsService>();
+
         if (_saveStoreCredentials)
         {
-            var storeCredentialsService = App.GetService<IStoreCredentialsService>();
-
             storeCredentialsService.SaveCredentials(storeUsername, storePassword);
+        }
+        else
+        {
+            storeCredentialsService.ClearCredentials();
         }
 
         // Change the contents of StoreLoginView
@@ -72,6 +86,8 @@ public class StoreLoginViewModel : INotifyPropertyChanged
 
         LoginViewModel.UpdateView();
         App.NavigateTo(typeof(LoginView));
+        // UNDO THIS WHEN DONE DEVELOPING THE STORE SETUP PAGES
+        //App.NavigateTo(typeof(StoreSetupView));
     }
 
     public async void HandleStoreLogoutButtonClick(XamlRoot xamlRoot)
@@ -171,6 +187,16 @@ public class StoreLoginViewModel : INotifyPropertyChanged
         {
             _storeLogoutButtonVisibility = value;
             OnPropertyChanged(nameof(StoreLogoutButtonVisibility));
+        }
+    }
+
+    public string StoreLastLoginStatus
+    {
+        get => _storeLastLoginStatus;
+        set
+        {
+            _storeLastLoginStatus = value;
+            OnPropertyChanged(nameof(StoreLastLoginStatus));
         }
     }
 }

@@ -2,10 +2,10 @@
 
 using Microsoft.UI.Xaml.Controls;
 
-using SipPOS.Views.General;
-using SipPOS.Views.Login;
+using SipPOS.Views.Setup;
 using SipPOS.Models.Entity;
 using SipPOS.DataTransfer.Entity;
+using SipPOS.Services.Account.Interfaces;
 using SipPOS.Services.General.Interfaces;
 
 namespace SipPOS.ViewModels.General;
@@ -159,7 +159,7 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
                 OtherErrorMessageOpacity = 1.0F;
 
                 // Navigate to the main page
-                App.NavigateTo(typeof(MainMenuView));
+                App.NavigateTo(typeof(StoreSetupView));
             }
             else
             {
@@ -167,14 +167,6 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
                 OtherErrorMessageOpacity = 1.0F;
             }
         }
-    }
-
-    /// <summary>
-    /// Handles the event when the cancel store account creation button is clicked.
-    /// </summary>
-    public void HandleCancelStoreAccountCreationButtonClick()
-    {
-        App.NavigateTo(typeof(LoginView));
     }
 
     /// <summary>

@@ -36,13 +36,40 @@
             Text="QUẢN LÝ NHÂN SỰ" 
             Style="{StaticResource TitleLargeTextBlockStyle}"/>
 
+        <!--Search, filter, checkboxes-->
+
         <!--Staff list-->
-        <Grid>
+        <Grid
+            Canvas.Left="50" Canvas.Top="300">
             <!--Data grid-->
             <controls:DataGrid
                 AutoGenerateColumns="False"
+                ColumnHeaderStyle="{StaticResource PivotTitleContentControlStyle}"
                 ItemsSource="{x:Bind ViewModel.CurrentPageStaffList}">
-
+                <!--Columns-->
+                <controls:DataGrid.Columns>
+                    <!--Composite username (Staff ID)-->
+                    <controls:DataGridTextColumn
+                        Header="Mã nhân viên"
+                        Tag="CompositeUsername"
+                        Binding="{Binding CompositeUsername}"/>
+                    <!--Staff first names-->
+                    <controls:DataGridTextColumn
+                        Header="Họ và tên đệm"
+                        Tag="FirstName"
+                        Binding="{Binding FirstName}"/>
+                    <!--Staff last name-->
+                    <controls:DataGridTextColumn
+                        Header="Tên"
+                        Tag="LastName"
+                        Binding="{Binding LastName}"/>
+                    <!--Staff position-->
+                    <controls:DataGridTextColumn
+                        Header="Chức vụ"
+                        Tag="Position"
+                        Binding="{Binding Position}"/>
+                    <!--Actions-->
+                </controls:DataGrid.Columns>
             </controls:DataGrid>
 
             <!--Pagination control-->

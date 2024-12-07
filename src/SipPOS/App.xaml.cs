@@ -13,6 +13,8 @@ using SipPOS.Views.Inventory;
 using SipPOS.ViewModels.Cashier;
 using SipPOS.ViewModels.Inventory;
 
+using SipPOS.Services.Account.Interfaces;
+using SipPOS.Services.Account.Implementations;
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.Entity.Interfaces;
@@ -24,6 +26,7 @@ using SipPOS.Services.Authentication.Implementations;
 
 using SipPOS.Context.Shift.Interface;
 using SipPOS.Context.Shift.Implementation;
+using SipPOS.ViewModels.Setup;
 
 namespace SipPOS;
 
@@ -59,6 +62,11 @@ public partial class App : Application
         var postgres_password = DotNetEnv.Env.GetString("POSTGRES_PASSWORD");
         var postgres_database = DotNetEnv.Env.GetString("POSTGRES_DATABASE");
 
+        // Configure culture
+        System.Globalization.CultureInfo cultureInfo = new System.Globalization.CultureInfo("vi-VN");
+        System.Threading.Thread.CurrentThread.CurrentCulture = cultureInfo;
+        System.Threading.Thread.CurrentThread.CurrentUICulture = cultureInfo;
+
         Host = Microsoft.Extensions.Hosting.Host.
         CreateDefaultBuilder().
         UseContentRoot(AppContext.BaseDirectory).
@@ -87,6 +95,7 @@ public partial class App : Application
             services.AddSingleton<IStoreAccountCreationService>(new StoreAccountCreationService());
             services.AddSingleton<IStoreAuthenticationService>(new StoreAuthenticationService());
             services.AddSingleton<IStoreCredentialsService>(new StoreCredentialsService());
+            services.AddSingleton<IStaffAccountCreationService>(new StaffAccountCreationService());
             services.AddSingleton<IStaffAuthenticationService>(new StaffAuthenticationService());
 
             // Views and ViewModels
@@ -96,6 +105,8 @@ public partial class App : Application
             services.AddTransient<ProductManagementView>();
             services.AddTransient<CustomerPaymentViewModel>();
             services.AddTransient<CustomerPaymentView>();
+
+            services.AddSingleton<IStoreSetupViewModel, StoreSetupViewModel>();
 
             //Add AutoMapper
             services.AddAutoMapper(typeof(App).Assembly);
@@ -137,6 +148,7 @@ public partial class App : Application
 
         if (rootFrame != null)
         {
+            rootFrame.BackStack.Clear();
             rootFrame.Navigate(pageType, parameter);
         }
         else

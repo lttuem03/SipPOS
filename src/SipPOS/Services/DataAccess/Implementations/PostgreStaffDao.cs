@@ -24,7 +24,7 @@ public class PostgreStaffDao : IStaffDao
     /// <remarks>
     /// All field validations must be done before calling this method. In this codebase, validations are done via StaffAccountCreationService.ValidateFields().
     /// </remarks>
-    public async Task<(long id, StaffDto? dto)> InsertAsync(long storeId, StaffDto staffDto, Staff author)
+    public async Task<(long id, StaffDto? dto)> InsertAsync(long storeId, StaffDto staffDto)
     {
         if (staffDto.PasswordHash == null ||
             staffDto.Salt == null ||
@@ -91,8 +91,8 @@ public class PostgreStaffDao : IStaffDao
                 new() { Value = staffDto.Address },
                 new() { Value = staffDto.EmploymentStatus },
                 new() { Value = staffDto.EmploymentStartDate },
-                new() { Value = author.CompositeUsername },
-                new() { Value = DateTime.Now }
+                new() { Value = staffDto.CreatedBy },
+                new() { Value = staffDto.CreatedAt }
             }
         };
 
