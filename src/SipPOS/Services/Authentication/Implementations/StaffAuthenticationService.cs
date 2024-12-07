@@ -3,6 +3,8 @@ using SipPOS.DataTransfer.Entity;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Models.Entity;
+using SipPOS.Services.General.Interfaces;
+using SipPOS.Services.General.Implementations;
 
 namespace SipPOS.Services.Authentication.Implementations;
 
@@ -45,6 +47,23 @@ public class StaffAuthenticationService : IStaffAuthenticationService
 
         // remark: A staff can be authenticated using only their composite username.
         // Their password is used to open shifts.
+
+        // Check if the storeId of Staff is the same as the currently authenticated store
+        if (App.GetService<IStoreAuthenticationService>() is not StoreAuthenticationService storeAuthenticationService)
+        {
+            return (false, "Lỗi đăng nhập cửa hàng.");
+        }
+
+        if (storeAuthenticationService.Context.CurrentStore == null)
+        {
+            return (false, "Lỗi đăng nhập cửa hàng.");
+        }
+    
+
+        if (staffDto.StoreId != storeAuthenticationService.Context.CurrentStore.Id)
+        {
+            return (false, "Nhân viên không thuộc cửa hàng này");
+        }
 
         // LOGIN SUCCESSFUL
         var staff = new Staff(staffDto.Id.Value, staffDto);
