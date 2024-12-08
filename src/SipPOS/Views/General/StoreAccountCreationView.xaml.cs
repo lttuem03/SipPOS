@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 
 using SipPOS.ViewModels.General;
 using SipPOS.DataTransfer.Entity;
+using SipPOS.Views.Login;
 
 namespace SipPOS.Views.General;
 
@@ -48,15 +49,10 @@ public sealed partial class StoreAccountCreationView : Page
     }
 
     /// <summary>
-    /// Handles the Click event of the cancel store account creation button.
+    /// Handles the Opened event of the confirm store information content dialog.
     /// </summary>
     /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The event data.</param>
-    private void cancelStoreAccountCreationButton_Click(object sender, RoutedEventArgs e)
-    {
-        ViewModel.HandleCancelStoreAccountCreationButtonClick();
-    }
-
+    /// <param name="args">The event data.</param>
     private void confirmStoreInformationContentDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
     {
         // Load the information into the content dialog
@@ -69,5 +65,15 @@ public sealed partial class StoreAccountCreationView : Page
         confirmStoreEmailTextBlock.Text = storeEmailFieldTextBox.Text;
         confirmStoreTelTextBlock.Text = storeTelFieldTextBox.Text;
         confirmStoreUsernameTextBlock.Text = storeUsernameFieldTextBox.Text;
+    }
+
+    /// <summary>
+    /// Handles the Click event of the go back button.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
+    private void goBackButton_Click(object sender, RoutedEventArgs e)
+    {
+        App.NavigateTo(typeof(LoginView));
     }
 }

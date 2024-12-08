@@ -4,26 +4,34 @@ using SipPOS.Services.DataAccess.Interfaces;
 
 namespace SipPOS.Services.DataAccess.Implementations;
 
+/// <summary>
+/// Mock implementation of the IStoreDao interface for testing purposes.
+/// </summary>
 public class MockStoreDao : IStoreDao
 {
     private readonly List<Store> _stores =
     [
         new Store(
-            id: 0, 
-            dto: new StoreDto()
-            {
-                Name = "Món Ông Cảnh Khéo Quán",
-                Address = "123 Đường Mộc Oanh Cửa Khẩu, Phường 9, Quận Tân Bình, Thành phố Hồ Chí Minh",
-                Email = "canhkheoquan@gmail.com",
-                Tel = "09323654213",
-                TaxCode = "7200000010001",
-                Username = "mock",
-                // Password for authentication: mock
-                LastLogin = DateTime.Now
-            }
-        )
+                        id: 0,
+                        dto: new StoreDto()
+                        {
+                            Name = "Món Ông Cảnh Khéo Quán",
+                            Address = "123 Đường Mộc Oanh Cửa Khẩu, Phường 9, Quận Tân Bình, Thành phố Hồ Chí Minh",
+                            Email = "canhkheoquan@gmail.com",
+                            Tel = "09323654213",
+                            TaxCode = "7200000010001",
+                            Username = "mock",
+                            // Password for authentication: mock
+                            LastLogin = DateTime.Now
+                        }
+                    )
     ];
 
+    /// <summary>
+    /// Gets a store by its username asynchronously.
+    /// </summary>
+    /// <param name="username">The username of the store.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the store DTO if found, otherwise null.</returns>
     public Task<StoreDto?> GetByUsernameAsync(string username)
     {
         var store = _stores.FirstOrDefault(store => store.Username == username);
@@ -56,13 +64,21 @@ public class MockStoreDao : IStoreDao
     public Task<StoreDto?> GetByIdAsync(long id) => throw new NotImplementedException();
     public Task<(long id, StoreDto? dto)> InsertAsync(StoreDto storeDto) => throw new NotImplementedException();
     public Task<StoreDto?> UpdateByIdAsync(long id, StoreDto updatedStoreDto) => throw new NotImplementedException();
+
+    /// <summary>
+    /// Updates a store by its username asynchronously.
+    /// </summary>
+    /// <param name="username">The username of the store.</param>
+    /// <param name="updatedStoreDto">The updated store DTO.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the updated store DTO.</returns>
     public Task<StoreDto?> UpdateByUsernameAsync(string username, StoreDto updatedStoreDto)
     {
         // The only usage of this method is when the mock store is 
         // authenticated and the last login time is updated
         // so we don't need to check the store by username
 
-        return Task.FromResult<StoreDto?>(new StoreDto(){
+        return Task.FromResult<StoreDto?>(new StoreDto()
+        {
             Id = 0,
             Name = updatedStoreDto.Name,
             Address = updatedStoreDto.Address,

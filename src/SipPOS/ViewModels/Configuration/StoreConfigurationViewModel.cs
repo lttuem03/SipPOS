@@ -5,6 +5,9 @@ using SipPOS.Services.General.Implementations;
 
 namespace SipPOS.ViewModels.Configuration;
 
+/// <summary>
+/// ViewModel for store configuration.
+/// </summary>
 public class StoreConfigurationViewModel : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -15,13 +18,16 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
     private string _editStoreTelText = string.Empty;
     private string _editStoreTaxCodeText = string.Empty;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StoreConfigurationViewModel"/> class.
+    /// </summary>
     public StoreConfigurationViewModel()
     {
         if (App.GetService<IStoreAuthenticationService>() is not StoreAuthenticationService storeAuthenticationService)
         {
             return;
         }
-        
+
         if (storeAuthenticationService.Context.CurrentStore == null)
         {
             EditStoreNameText = "Chưa đăng nhập";
@@ -33,7 +39,6 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
             return;
         }
 
-
         EditStoreNameText = storeAuthenticationService.Context.CurrentStore.Name;
         EditStoreAddressText = storeAuthenticationService.Context.CurrentStore.Address;
         EditStoreEmailText = storeAuthenticationService.Context.CurrentStore.Email;
@@ -41,6 +46,9 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         EditStoreTaxCodeText = storeAuthenticationService.Context.CurrentStore.TaxCode;
     }
 
+    /// <summary>
+    /// Gets or sets the store name text.
+    /// </summary>
     public string EditStoreNameText
     {
         get => _editStoreNameText;
@@ -51,6 +59,9 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the store address text.
+    /// </summary>
     public string EditStoreAddressText
     {
         get => _editStoreAddressText;
@@ -61,6 +72,9 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the store email text.
+    /// </summary>
     public string EditStoreEmailText
     {
         get => _editStoreEmailText;
@@ -71,6 +85,9 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the store telephone text.
+    /// </summary>
     public string EditStoreTelText
     {
         get => _editStoreTelText;
@@ -81,6 +98,9 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the store tax code text.
+    /// </summary>
     public string EditStoreTaxCodeText
     {
         get => _editStoreTaxCodeText;
@@ -90,5 +110,4 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EditStoreTaxCodeText)));
         }
     }
-
 }

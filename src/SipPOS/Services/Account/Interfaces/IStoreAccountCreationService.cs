@@ -1,7 +1,7 @@
 ﻿using SipPOS.Models.Entity;
 using SipPOS.DataTransfer.Entity;
 
-namespace SipPOS.Services.General.Interfaces;
+namespace SipPOS.Services.Account.Interfaces;
 
 /// <summary>
 /// Service interface for creating store accounts.
