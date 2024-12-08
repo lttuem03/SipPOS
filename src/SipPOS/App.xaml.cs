@@ -1,35 +1,27 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
 using Microsoft.UI.Xaml.Media.Animation;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.ApplicationSettings;
-
+using Microsoft.UI.Windowing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using DotNetEnv;
+using SipPOS.Views.Login;
+using SipPOS.Views.Cashier;
+using SipPOS.Views.General;
+using SipPOS.Views.Management;
 
-using SipPOS.ViewModels;
-using SipPOS.Views;
-using SipPOS.Services.Interfaces;
-using SipPOS.Services.Implementations;
-using SipPOS.DataAccess.Interfaces;
-using SipPOS.DataAccess.Implementations;
+using SipPOS.ViewModels.Cashier;
+using SipPOS.ViewModels.Management;
+
+using SipPOS.Services.General.Interfaces;
+using SipPOS.Services.General.Implementations;
+using SipPOS.Services.Entity.Interfaces;
+using SipPOS.Services.Entity.Implementations;
+using SipPOS.Services.DataAccess.Interfaces;
+using SipPOS.Services.DataAccess.Implementations;
+using SipPOS.Services.Authentication.Interfaces;
+using SipPOS.Services.Authentication.Implementations;
 
 namespace SipPOS;
 
@@ -55,6 +47,7 @@ public partial class App : Application
     public App()
     {
         this.InitializeComponent();
+        this.RequestedTheme = ApplicationTheme.Light; // FIXED LIGHT THEME ONLY
 
         // Database connection configuration
         DotNetEnv.Env.TraversePath().Load(AppContext.BaseDirectory);
@@ -73,21 +66,24 @@ public partial class App : Application
             services.AddSingleton<IProductDao, PostgresProductDao>();
             services.AddSingleton<ICategoryDao, PostgresCategoryDao>();
             services.AddSingleton<IStoreDao, PostgreStoreDao>();
+            services.AddSingleton<IStoreDao, MockStoreDao>();
+            services.AddSingleton<IStaffDao, MockStaffDao>();
 
             // Services
             services.AddSingleton<IProductService, ProductService>();
             services.AddSingleton<ICategoryService, CategoryService>();
             services.AddSingleton<IDatabaseConnectionService>(new PostgreSqlConnectionService(
-                        host: postgres_host,
-                        port: postgres_port,
-                        username: postgres_username,
-                        password: postgres_password,
-                        database: postgres_database
-                    )); // please use arcordingly with the DAOs using the database connections
+                host: postgres_host,
+                port: postgres_port,
+                username: postgres_username,
+                password: postgres_password,
+                database: postgres_database
+            )); // please use arcordingly with the DAOs using the database connections
             services.AddSingleton<IPasswordEncryptionService>(new PasswordEncryptionService());
             services.AddSingleton<IStoreAccountCreationService>(new StoreAccountCreationService());
             services.AddSingleton<IStoreAuthenticationService>(new StoreAuthenticationService());
-
+            services.AddSingleton<IStoreCredentialsService>(new StoreCredentialsService());
+            services.AddSingleton<IStaffAuthenticationService>(new StaffAuthenticationService());
 
             // Views and ViewModels
             services.AddTransient<CategoryManagementViewModel>();
@@ -124,16 +120,38 @@ public partial class App : Application
     /// Invoked when the application is launched.
     /// </summary>
     /// <param name="args">Details about the launch request and process.</param>
-    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    protected async override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
         _mainWindow = new MainWindow();
         App.CurrentWindow = _mainWindow;
 
+        // Always start app maximized
+        if (_mainWindow.AppWindow.Presenter is OverlappedPresenter presenter)
+        {
+            presenter.Maximize();
+            presenter.IsResizable = false;
+            presenter.IsMinimizable = false;
+            presenter.SetBorderAndTitleBar(false, false);
+        }
+
         Frame rootFrame = new Frame();
         rootFrame.NavigationFailed += _onNavigationFailed;
 
-        rootFrame.Navigate(typeof(MainMenuView));
+        // Check if a Store's credentials is saved for authentication (clicked "Save credentials" on last authentication)
+        var storeCredentialsService = App.GetService<IStoreCredentialsService>();
 
+        (var storeUsername, var storePassword) = storeCredentialsService.LoadCredentials();
+
+        if (storeUsername != null && storePassword != null)
+        {
+            var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
+            var loginSuccessful = await storeAuthenticationService.LoginAsync(storeUsername, storePassword);
+
+            // Even if store authentication succeeded, we still navigate to the login page
+            // and set the login tab to StaffLogin
+        }
+
+        rootFrame.Navigate(typeof(LoginView));
         _mainWindow.Content = rootFrame;
         _mainWindow.Activate();
     }
@@ -147,7 +165,9 @@ public partial class App : Application
     public static void NavigateTo(Type pageType, object? parameter=null, NavigationTransitionInfo? infoOverride=null)
     {
         if (App.CurrentWindow == null)
+        {
             return;
+        }
 
         var rootFrame = App.CurrentWindow.Content as Frame;
 

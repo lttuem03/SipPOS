@@ -316,21 +316,21 @@ public class PostgresCategoryDao : ICategoryDao
         int index = 1;
         if (categoryFilterDto.Name != null)
         {
-            query.Append(" AND name ILIKE '%' || $" + index++ + " || '%'");
+            query.Append(" AND name ILIKE '%' || $" + index + " || '%'");
             parameters.Add(new() { Value = categoryFilterDto.Name });
             index++;
         }
 
         if (categoryFilterDto.Desc != null)
         {
-            query.Append(" AND desc ILIKE '%' || $" + index++ + " || '%'");
+            query.Append(" AND desc ILIKE '%' || $" + index + " || '%'");
             parameters.Add(new() { Value = categoryFilterDto.Desc });
             index++;
         }
 
         if (categoryFilterDto.Status != null)
         {
-            query.Append(" AND status = $" + index++);
+            query.Append(" AND status = $" + index);
             parameters.Add(new() { Value = categoryFilterDto.Status });
             index++;
         }
@@ -340,7 +340,9 @@ public class PostgresCategoryDao : ICategoryDao
         parameters.Add(new() { Value = (page - 1) * perPage });
 
         using var command = new NpgsqlCommand(query.ToString(), connection);
-        command.Parameters.AddRange(parameters.ToArray());
+        //command.Parameters.AddRange(parameters.ToArray());
+
+        parameters.ForEach(p => command.Parameters.Ad(p));
 
         using var reader = command.ExecuteReader();
 

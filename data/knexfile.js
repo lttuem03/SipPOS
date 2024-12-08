@@ -14,12 +14,24 @@ module.exports = {
             user: process.env.POSTGRES_USERNAME,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DATABASE,
+            timezone: 'Asia/Bangkok'
         },
         migrations: {
             directory: './migrations'
         },
         seeds: {
             directory: './seeds'
+        },
+        pool: {
+            afterCreate: (conn, done) => {
+                conn.query('SET timezone="Asia/Bangkok";', (err) => {
+                    if (err) {
+                        done(err, conn);
+                    } else {
+                        done(null, conn);
+                    }
+                });
+            }
         }
     }
 };

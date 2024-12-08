@@ -1,16 +1,9 @@
 ﻿using Microsoft.UI.Xaml.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SipPOS.Converters;
 
-
 public class PriceToDisplayPriceConverter : IValueConverter
 {
-
     public object Convert(object value, Type targetType, object parameter, string language)
     {
         if (value is int)
@@ -28,7 +21,6 @@ public class PriceToDisplayPriceConverter : IValueConverter
         }
         return value;
     }
-
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
