@@ -1,4 +1,5 @@
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
 using SipPOS.ViewModels.Login;
 
@@ -20,8 +21,8 @@ public sealed partial class LoginView : Page
     public LoginView()
     {
         this.InitializeComponent();
-        ViewModel = new LoginViewModel();
-        ViewModel.SelectViewUponLoad(loginNavigationView, storeLoginNavigationViewItem, loginNavigationFrame);
+        ViewModel = new LoginViewModel(loginNavigationView, storeLoginNavigationViewItem, loginNavigationFrame);
+        LoginViewModel.UpdateView();
     }
 
     /// <summary>

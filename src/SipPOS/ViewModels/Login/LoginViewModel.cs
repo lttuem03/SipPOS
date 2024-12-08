@@ -11,6 +11,29 @@ namespace SipPOS.ViewModels.Login;
 /// </summary>  
 public class LoginViewModel
 {
+    public static bool Instantiated {  get; private set; }
+
+    // UI Elements of the LoginView itself, we need it here
+    // to update the view based on the authentication state
+    private static NavigationView? _navigationView;
+    private static NavigationViewItem? _storeLoginNavigationViewItem;
+    private static Frame? _loginNavigationFrame;
+
+    private LoginViewModel()
+    {
+    
+    }
+
+    public LoginViewModel(NavigationView navigationView,
+                          NavigationViewItem storeLoginNavigationViewItem,
+                          Frame loginNavigationFrame)
+    {
+        Instantiated = true;
+        _navigationView = navigationView;
+        _storeLoginNavigationViewItem = storeLoginNavigationViewItem;
+        _loginNavigationFrame = loginNavigationFrame;
+    }
+
     /// <summary>  
     /// Handles the selection change in the login navigation view.  
     /// </summary>  
@@ -39,10 +62,20 @@ public class LoginViewModel
     /// </summary>  
     /// <param name="navigationView">The navigation view to select the item in.</param>  
     /// <param name="loginNavigationFrame">The frame to navigate within.</param>  
-    public void SelectViewUponLoad(NavigationView navigationView, 
-                                   NavigationViewItem storeLoginNavigationViewItem, 
-                                   Frame loginNavigationFrame)
+    public static void UpdateView()
     {
+        if (!Instantiated)
+        {
+            return;
+        }
+
+        if (_navigationView == null ||
+            _storeLoginNavigationViewItem == null ||
+            _loginNavigationFrame == null)
+        {
+            return;
+        }
+
         if (App.GetService<IStoreAuthenticationService>() is not StoreAuthenticationService storeAuthenticationService)
         {
             return;
@@ -56,29 +89,29 @@ public class LoginViewModel
 
             if (storeAuthenticationService.Context.CurrentStore != null)
             {
-                storeLoginNavigationViewItem.Content = $"Đã đăng nhập ({storeAuthenticationService.Context.CurrentStore.Username})";
+               _storeLoginNavigationViewItem.Content = $"Đã đăng nhập ({storeAuthenticationService.Context.CurrentStore.Username})";
             }
         }
         else
         {
             initialViewTag = "StoreLogin";
-            storeLoginNavigationViewItem.Content = "Đăng nhập cửa hàng";
+            _storeLoginNavigationViewItem.Content = "Đăng nhập cửa hàng";
         }
 
-        var initialItem = navigationView.MenuItems
+        var initialItem = _navigationView.MenuItems
             .OfType<NavigationViewItem>()
             .FirstOrDefault(item => item.Tag.ToString() == initialViewTag);
 
         if (initialItem != null)
         {
-            navigationView.SelectedItem = initialItem;
+            _navigationView.SelectedItem = initialItem;
             switch (initialViewTag)
             {
                 case "StaffLogin":
-                    loginNavigationFrame.Navigate(typeof(StaffLoginView));
+                    _loginNavigationFrame.Navigate(typeof(StaffLoginView));
                     break;
                 case "StoreLogin":
-                    loginNavigationFrame.Navigate(typeof(StoreLoginView));
+                    _loginNavigationFrame.Navigate(typeof(StoreLoginView));
                     break;
             }
         }

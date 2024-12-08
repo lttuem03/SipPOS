@@ -13,7 +13,7 @@
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
         Width="700"
-        Height="500">
+        Height="550">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -46,11 +46,24 @@
             Grid.Row="1"
             Margin="0,0,0,50"/>
 
+        <!--Exit program button-->
         <Button
             x:Name="exitProgramButton"
             Click="exitProgramButton_Click"
-            Grid.Row="2">
-            Thoát chương trình
+            Grid.Row="2"
+            HorizontalAlignment="Center">
+            <StackPanel
+                Orientation="Vertical"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <Image Source="/Assets/Iconography/cancel.png" Width="35" Height="35"/>
+                <TextBlock 
+                    Text="Thoát phần mềm" 
+                    HorizontalAlignment="Center" 
+                    Margin="5,5,0,0"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    FontSize="16"/>
+            </StackPanel>
         </Button>
     </Grid>
 </Page>

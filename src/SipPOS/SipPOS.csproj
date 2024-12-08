@@ -5,7 +5,6 @@
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <WindowsSdkPackageVersion>10.0.26100.54</WindowsSdkPackageVersion>
     <RootNamespace>SipPOS</RootNamespace>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x86;x64;ARM64</Platforms>
     <RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 8">win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
@@ -17,10 +16,25 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <UserSecretsId>5c942361-fdf4-4fdd-ab3c-9b0616975bf2</UserSecretsId>
+    <ApplicationIcon>Assets\Iconography\icon.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Views\Management\**" />
+    <EmbeddedResource Remove="Views\Management\**" />
+    <None Remove="Views\Management\**" />
+    <Page Remove="Views\Management\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Assets\Iconography\back-button.png" />
+    <Content Remove="Assets\Iconography\cancel.png" />
     <Content Remove="Assets\Iconography\coffee-pot.png" />
+    <Content Remove="Assets\Iconography\dashboard.png" />
+    <Content Remove="Assets\Iconography\id-card.png" />
     <Content Remove="Assets\Iconography\people.png" />
+    <Content Remove="Assets\Iconography\recipe-book.png" />
+    <Content Remove="Assets\Iconography\settings.png" />
+    <Content Remove="Assets\Iconography\voucher.png" />
     <Content Remove="Assets\LockScreenLogo.scale-200.png" />
     <Content Remove="Assets\Payed.png" />
     <Content Remove="Assets\SplashScreen.scale-200.png" />
@@ -32,16 +46,19 @@
     <Content Remove="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="AppStartupCheckWindow.xaml" />
     <None Remove="Resources\Controls\EditableTextField.xaml" />
     <None Remove="Resources\Styles\Background.xaml" />
     <None Remove="Views\CategoryManagementView.xaml" />
     <None Remove="Views\ConfigurationMenuView.xaml" />
+    <None Remove="Views\General\InventoryMenuView.xaml" />
     <None Remove="Views\LoginView.xaml" />
     <None Remove="Views\MainMenuView.xaml" />
     <None Remove="Views\PaymentConfigurationView.xaml" />
     <None Remove="Views\ProductManagementView.xaml" />
     <None Remove="Views\ReceiptConfigurationView.xaml" />
     <None Remove="Views\StaffLoginView.xaml" />
+    <None Remove="Views\Staff\StaffManagementView.xaml" />
     <None Remove="Views\StoreAccountCreationView.xaml" />
     <None Remove="Views\StoreConfigurationView.xaml" />
     <None Remove="Views\StoreLoginView.xaml" />
@@ -71,10 +88,34 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="AppStartupCheckWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <None Update="Assets\Iconography\back-button.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Iconography\cancel.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Iconography\coffee-pot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Iconography\dashboard.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Iconography\id-card.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Iconography\people.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Iconography\recipe-book.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Iconography\settings.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Iconography\voucher.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\LockScreenLogo.scale-200.png">
@@ -106,6 +147,12 @@
     <None Update="Assets\StoreLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\Staff\StaffManagementView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\General\InventoryMenuView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Resources\Controls\EditableTextField.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -164,8 +211,6 @@
     <Folder Include="Views\Login\" />
     <Folder Include="Views\Configuration\" />
     <Folder Include="Views\Cashier\" />
-    <Folder Include="Views\Management\" />
-    <Folder Include="Views\General\" />
   </ItemGroup>
 
   <!--
@@ -176,4 +221,7 @@
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
+  <ItemGroup>
+    <PRIResource Remove="Views\Management\**" />
+  </ItemGroup>
 </Project>

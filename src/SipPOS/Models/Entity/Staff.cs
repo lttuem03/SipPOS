@@ -50,6 +50,11 @@ public class Staff : BaseEntity
     public string Name { get; }
 
     /// <summary>
+    /// Gets the gender of the staff.
+    /// </summary>
+    public string Gender { get; }
+
+    /// <summary>
     /// Gets the date of birth of the staff.
     /// </summary>
     public DateOnly DateOfBirth { get; }
@@ -99,6 +104,7 @@ public class Staff : BaseEntity
         PositionPrefix = dto.PositionPrefix;
 
         Name = dto.Name;
+        Gender = dto.Gender;
         DateOfBirth = dto.DateOfBirth;
         Email = dto.Email;
         Tel = dto.Tel;

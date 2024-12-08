@@ -7,10 +7,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource LayerOnMicaBaseAltFillColorDefault}">
 
     <!--Tab: Staff login-->
     <StackPanel>
+        <!--Message box to display if store is not logged in-->
         <TextBlock
             Text="Vui lòng đăng nhập tài khoản cửa hàng trước"
             Foreground="Red"
@@ -18,66 +19,92 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Visibility="{x:Bind ViewModel.StoreNotLoggedInTextBlockVisibility}"/>
+
+        <!---->
         <Grid
-            Visibility="{x:Bind ViewModel.StaffLoginFormVisibility}"
-            Width="500" 
-            Height="300" 
-            BorderBrush="Black" 
-            BorderThickness="1">
+            Visibility="{x:Bind ViewModel.StaffLoginFormVisibility}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
+
+            <!--Staff login form-->
             <StackPanel 
                 Orientation="Vertical"
                 VerticalAlignment="Center"
                 Grid.Column="0" 
-                Margin="10">
-            <!--Staff prefix + Staff ID-->
-            <StackPanel
-                Orientation="Horizontal"
-                HorizontalAlignment="Left">
-                <ComboBox
-                    Name="selectPrefixComboBox"
-                    PlaceholderText="Cấp nhân viên"
-                    GotFocus="selectPrefixComboBox_GotFocus"
-                    SelectedValue="{x:Bind ViewModel.SelectedPrefix, Mode=TwoWay}">
-                    <x:String>ST</x:String>
-                    <x:String>AM</x:String>
-                    <x:String>SM</x:String>
-                </ComboBox>
-                <TextBox 
-                    Name="staffIdTextBox"
-                    PlaceholderText="Mã nhân viên" 
-                    GotFocus="staffIdTextBox_GotFocus"
-                    Margin="5,0,0,10"
-                    Width="175"
-                    MaxLength="6"
-                    Text="{x:Bind ViewModel.StaffId, Mode=TwoWay}"/>
+                Margin="30,70,0,0">
+                <!--Staff prefix + Staff ID-->
+                <Grid
+                    ColumnSpacing="5">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100"/>
+                    </Grid.RowDefinitions>
+
+                    <!--Select prefix-->
+                    <ComboBox
+                        Grid.Column="0"
+                        Width="120"
+                        Height="100"
+                        VerticalAlignment="Center"
+                        Name="selectPrefixComboBox"
+                        Header="Cấp nhân viên"
+                        GotFocus="selectPrefixComboBox_GotFocus"
+                        SelectedValue="{x:Bind ViewModel.SelectedPrefix, Mode=TwoWay}">
+                        <x:String>ST</x:String>
+                        <x:String>AM</x:String>
+                        <x:String>SM</x:String>
+                    </ComboBox>
+                    <!--Staff Id field-->
+                    <TextBox 
+                        Grid.Column="1"
+                        Name="staffIdTextBox"
+                        GotFocus="staffIdTextBox_GotFocus"
+                        MaxLength="6"
+                        Height="95"
+                        Padding="25"
+                        VerticalAlignment="Center"
+                        TextAlignment="Left"
+                        Header="Mã nhân viên"
+                        Text="{x:Bind ViewModel.StaffId, Mode=TwoWay}"/>
+                </Grid>
+
+                <!--Error message box-->
+                <TextBlock 
+                    Name="errorMessageTextBlock"
+                    HorizontalAlignment="Center"
+                    Foreground="Red"
+                    Opacity="0.0"
+                    Margin="0,20,0,20"
+                    Text=""/>
+
+                <!--Staff login Button-->
+                <Button 
+                    Name="staffLoginButton"
+                    Click="staffLoginButton_Click"
+                    HorizontalAlignment="Center"
+                    Width="150" Height="50">
+                    <TextBlock 
+                        Text="Đăng nhập" 
+                        HorizontalAlignment="Center" 
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        FontSize="16"/>
+                </Button>
             </StackPanel>
-
-            <!--Error message box-->
-            <TextBlock 
-                Name="errorMessageTextBlock"
-                HorizontalAlignment="Center"
-                Foreground="Red"
-                Opacity="0.0"
-                Margin="0,0,0,10"
-                Text=""/>
-
-            <!--Staff login Button-->
-            <Button 
-                Name="staffLoginButton"
-                Click="staffLoginButton_Click"
-                Content="Đăng nhập"
-                HorizontalAlignment="Center"/>
-        </StackPanel>
             <!--Numpad-->
             <Grid 
                 Grid.Column="1" 
-                Margin="10"
-                Width="100"
-                Height="200">
+                Margin="10,10,0,0"
+                Width="200"
+                Height="300"
+                RowSpacing="3"
+                ColumnSpacing="3">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
@@ -89,16 +116,78 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Button Content="1" Grid.Row="0" Grid.Column="0" Click="numpadButton_Click"/>
-                <Button Content="2" Grid.Row="0" Grid.Column="1" Click="numpadButton_Click"/>
-                <Button Content="3" Grid.Row="0" Grid.Column="2" Click="numpadButton_Click"/>
-                <Button Content="4" Grid.Row="1" Grid.Column="0" Click="numpadButton_Click"/>
-                <Button Content="5" Grid.Row="1" Grid.Column="1" Click="numpadButton_Click"/>
-                <Button Content="6" Grid.Row="1" Grid.Column="2" Click="numpadButton_Click"/>
-                <Button Content="7" Grid.Row="2" Grid.Column="0" Click="numpadButton_Click"/>
-                <Button Content="8" Grid.Row="2" Grid.Column="1" Click="numpadButton_Click"/>
-                <Button Content="9" Grid.Row="2" Grid.Column="2" Click="numpadButton_Click"/>
-                <Button Content="0" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Click="numpadButton_Click"/>
+
+                <!--1-->
+                <Button 
+                    Grid.Row="0" Grid.Column="0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Content="1"
+                    Click="numpadButton_Click"/>
+                <!--2-->
+                <Button 
+                    Grid.Row="0" Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Content="2"
+                    Click="numpadButton_Click"/>
+                <!--3-->
+                <Button
+                    Grid.Row="0" Grid.Column="2" 
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Content="3" 
+                    Click="numpadButton_Click"/>
+                <!--4-->
+                <Button 
+                    Grid.Row="1" Grid.Column="0" 
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Content="4"
+                    Click="numpadButton_Click"/>
+                <!--5-->
+                <Button 
+                    Grid.Row="1" Grid.Column="1" 
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Content="5"
+                    Click="numpadButton_Click"/>
+                <!--6-->
+                <Button
+                    Grid.Row="1" Grid.Column="2" 
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Content="6"
+                    Click="numpadButton_Click"/>
+                <!--7-->
+                <Button 
+                    Grid.Row="2" Grid.Column="0" 
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Content="7"
+                    Click="numpadButton_Click"/>
+                <!--8-->
+                <Button 
+                    Grid.Row="2" Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Content="8"
+                    Click="numpadButton_Click"/>
+                <!--9-->
+                <Button 
+                    Grid.Row="2" Grid.Column="2" 
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Content="9"
+                    Click="numpadButton_Click"/>
+                <!--0-->
+                <Button 
+                    Grid.Row="3" Grid.Column="0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Content="0"
+                    Grid.ColumnSpan="3" 
+                    Click="numpadButton_Click"/>
             </Grid>
         </Grid>
     </StackPanel>

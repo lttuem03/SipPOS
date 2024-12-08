@@ -7,7 +7,7 @@ using SipPOS.DataTransfer.Entity;
 using SipPOS.DataTransfer.General;
 using SipPOS.Models.General;
 
-namespace SipPOS.ViewModels.Management;
+namespace SipPOS.ViewModels.Inventory;
 
 /// <summary>
 /// ViewModel for managing categories, handling data for data-binding and the logic in the CategoryManagementView.

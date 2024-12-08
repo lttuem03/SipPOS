@@ -12,7 +12,7 @@ namespace SipPOS.Services.DataAccess.Implementations;
 /// <summary>
 /// Data Access Object for Staff using PostgreSQL database.
 /// </summary>
-public class PostgresStaffDao : IStaffDao
+public class PostgreStaffDao : IStaffDao
 {
     /// <summary>
     /// Inserts a new staff record into the database.
@@ -47,6 +47,7 @@ public class PostgresStaffDao : IStaffDao
                 password_hash, 
                 salt, 
                 name, 
+                gender,
                 date_of_birth, 
                 email, 
                 tel, 
@@ -57,7 +58,7 @@ public class PostgresStaffDao : IStaffDao
                 created_at
             )
             VALUES 
-                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
             RETURNING 
                 id,
                 store_id, 
@@ -65,6 +66,7 @@ public class PostgresStaffDao : IStaffDao
                 password_hash, 
                 salt, 
                 name, 
+                gender,
                 date_of_birth, 
                 email, 
                 tel, 
@@ -82,6 +84,7 @@ public class PostgresStaffDao : IStaffDao
                 new() { Value = staffDto.PasswordHash },
                 new() { Value = staffDto.Salt },
                 new() { Value = staffDto.Name },
+                new() { Value = staffDto.Gender },
                 new() { Value = staffDto.DateOfBirth },
                 new() { Value = staffDto.Email },
                 new() { Value = staffDto.Tel },
@@ -112,6 +115,7 @@ public class PostgresStaffDao : IStaffDao
                         PasswordHash = reader.GetString(reader.GetOrdinal("password_hash")),
                         Salt = reader.GetString(reader.GetOrdinal("salt")),
                         Name = reader.GetString(reader.GetOrdinal("name")),
+                        Gender = reader.GetString(reader.GetOrdinal("gender")),
                         DateOfBirth = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date_of_birth"))),
                         Email = reader.GetString(reader.GetOrdinal("email")),
                         Tel = reader.GetString(reader.GetOrdinal("tel")),
@@ -164,6 +168,7 @@ public class PostgresStaffDao : IStaffDao
                     PasswordHash = string.Empty,    // not needed in the context of GetAll
                     Salt = string.Empty,            // not needed in the context of GetAll
                     Name = reader.GetString(reader.GetOrdinal("name")),
+                    Gender = reader.GetString(reader.GetOrdinal("gender")),
                     DateOfBirth = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date_of_birth"))),
                     Email = reader.GetString(reader.GetOrdinal("email")),
                     Tel = reader.GetString(reader.GetOrdinal("tel")),
@@ -239,6 +244,7 @@ public class PostgresStaffDao : IStaffDao
                     PasswordHash = string.Empty,    // not needed in the context of GetById
                     Salt = string.Empty,            // not needed in the context of GetById
                     Name = reader.GetString(reader.GetOrdinal("name")),
+                    Gender = reader.GetString(reader.GetOrdinal("gender")),
                     DateOfBirth = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date_of_birth"))),
                     Email = reader.GetString(reader.GetOrdinal("email")),
                     Tel = reader.GetString(reader.GetOrdinal("tel")),
@@ -336,6 +342,7 @@ public class PostgresStaffDao : IStaffDao
                     PasswordHash = reader.GetString(reader.GetOrdinal("password_hash")),
                     Salt = reader.GetString(reader.GetOrdinal("salt")),
                     Name = reader.GetString(reader.GetOrdinal("name")),
+                    Gender = reader.GetString(reader.GetOrdinal("gender")),
                     DateOfBirth = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date_of_birth"))),
                     Email = reader.GetString(reader.GetOrdinal("email")),
                     Tel = reader.GetString(reader.GetOrdinal("tel")),
@@ -401,14 +408,15 @@ public class PostgresStaffDao : IStaffDao
                 password_hash = $4,
                 salt = $5,
                 name = $6,
-                date_of_birth = $7,
-                email = $8,
-                tel = $9,
-                address = $10,
-                employment_status = $11,
-                employment_start_date = $12,
-                employment_end_date = $13
-            WHERE store_id = $14 AND id = $15
+                gender = $7,
+                date_of_birth = $8,
+                email = $9,
+                tel = $10,
+                address = $11,
+                employment_status = $12,
+                employment_start_date = $13,
+                employment_end_date = $14
+            WHERE store_id = $15 AND id = $16
             RETURNING *
         ", connection)
         {
@@ -420,6 +428,7 @@ public class PostgresStaffDao : IStaffDao
                 new() { Value = updatedStaffDto.PasswordHash },
                 new() { Value = updatedStaffDto.Salt },
                 new() { Value = updatedStaffDto.Name },
+                new() { Value = updatedStaffDto.Gender },
                 new() { Value = updatedStaffDto.DateOfBirth },
                 new() { Value = updatedStaffDto.Email },
                 new() { Value = updatedStaffDto.Tel },
@@ -452,6 +461,7 @@ public class PostgresStaffDao : IStaffDao
                     PasswordHash = string.Empty,    // not needed in the context of Update (meaning you should NOT Update using the same Dto manytimes over)
                     Salt = string.Empty,            // not needed in the context of Update 
                     Name = reader.GetString(reader.GetOrdinal("name")),
+                    Gender = reader.GetString(reader.GetOrdinal("gender")),
                     DateOfBirth = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date_of_birth"))),
                     Email = reader.GetString(reader.GetOrdinal("email")),
                     Tel = reader.GetString(reader.GetOrdinal("tel")),
@@ -533,6 +543,7 @@ public class PostgresStaffDao : IStaffDao
                     PasswordHash = string.Empty,    // not needed in the context of Delete
                     Salt = string.Empty,            // not needed in the context of Delete 
                     Name = reader.GetString(reader.GetOrdinal("name")),
+                    Gender = reader.GetString(reader.GetOrdinal("gender")),
                     DateOfBirth = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date_of_birth"))),
                     Email = reader.GetString(reader.GetOrdinal("email")),
                     Tel = reader.GetString(reader.GetOrdinal("tel")),

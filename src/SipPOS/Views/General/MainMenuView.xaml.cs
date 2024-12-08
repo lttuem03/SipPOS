@@ -15,6 +15,8 @@ public sealed partial class MainMenuView : Page
     /// </summary>
     public MainMenuViewModel ViewModel { get; }
 
+    private readonly DispatcherTimer _timer;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="MainMenuView"/> class.
     /// </summary>
@@ -22,37 +24,46 @@ public sealed partial class MainMenuView : Page
     {
         this.InitializeComponent();
         ViewModel = new MainMenuViewModel();
+        clockTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
+
+        // Because the timer needs to be instantiated in the UI thread, it is done here.
+        _timer = new DispatcherTimer();
+        _timer.Interval = TimeSpan.FromSeconds(1);
+        _timer.Tick += (sender, e) =>
+        {
+            clockTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
+        };
+        _timer.Start();
     }
 
-    /// <summary>
-    /// Handles the click event of the button to navigate to the inventory view.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The event data.</param>
-    private void toProductManagementViewButton_Click(object sender, RoutedEventArgs e)
+    private void toCashierMenuViewButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleToProductManagementViewButtonClick();
+        ViewModel.HandleToCashierMenuViewButtonClick();
     }
 
-    private void toCategoryManagementViewButton_Click(object sender, RoutedEventArgs e)
+    private void toInventoryMenuView_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleToCategoryManagementViewButtonClick();
+        ViewModel.HandleToInventoryMenuViewClick();
     }
 
-    private void toCustomerPaymentViewButton_Click(object sender, RoutedEventArgs e)
+    private void toStaffManagementViewButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleToCustomerPaymentViewButtonClick();
+        ViewModel.HandleToStaffManagementViewButtonClick();
     }
 
-
-    /// <summary>
-    /// Handles the click event of the button to change the ID.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The event data.</param>
-    private void changeIdButton_Click(object sender, RoutedEventArgs e)
+    private void toProfileViewButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleChangeIdButtonClick();
+        ViewModel.HandleToProfileViewButtonClick();
+    }
+
+    private void toRevenueDashboardViewButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleToRevenueDashboardViewButtonClick();
+    }
+
+    private void toSpecialOffersManagementViewButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleToSpecialOffersManagementViewButtonClick();
     }
 
     private void toConfigurationMenuViewButton_Click(object sender, RoutedEventArgs e)
@@ -60,9 +71,19 @@ public sealed partial class MainMenuView : Page
         ViewModel.HandleToConfigurationMenuViewButtonClick();
     }
 
+    private void openSlashCloseShiftButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleOpenSlashCloseShiftButtonClick();
+    }
+
     private void returnToLoginViewButton_Click(object sender, RoutedEventArgs e)
     {
+        ViewModel.HandleReturnToLoginViewButtonClick();
+    }
 
+    private void changeIdButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleChangeIdButtonClick();
     }
 
     private void exitProgramButton_Click(object sender, RoutedEventArgs e)

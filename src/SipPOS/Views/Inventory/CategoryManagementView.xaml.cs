@@ -7,37 +7,36 @@ using Microsoft.UI.Xaml.Controls;
 
 using CommunityToolkit.WinUI.UI.Controls;
 
-using SipPOS.ViewModels.Management;
+using SipPOS.ViewModels.Inventory;
 using SipPOS.Resources.Controls;
 using SipPOS.DataTransfer.Entity;
 
-namespace SipPOS.Views.Management;
+namespace SipPOS.Views.Inventory;
 
 /// <summary>
-/// Represents the ProductManagementView.
+/// Represents the CategoryManagementView.
 /// </summary>
-public sealed partial class ProductManagementView : Page
+public sealed partial class CategoryManagementView : Page
 {
     /// <summary>
-    /// Gets the view model for the product management view.
+    /// Gets the view model for the CategoryManagementView.
     /// </summary>
-    public ProductManagementViewModel ViewModel { get; }
+    public CategoryManagementViewModel ViewModel { get; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ProductManagementView"/> class.
+    /// Initializes a new instance of the <see cref="CategoryManagementView"/> class.
     /// </summary>
-    public ProductManagementView()
+    public CategoryManagementView()
     {
-        ViewModel = App.GetService<ProductManagementViewModel>();
+        ViewModel = App.GetService<CategoryManagementViewModel>();
         ViewModel.Search();
-        ViewModel.GetAllCategory();
         InitializeComponent();
         SizeChanged += OnPageSizeChanged;
     }
 
     private void OnPageSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        ViewModel.TableHeight = (int)e.NewSize.Height;
+       ViewModel.TableHeight = (int)e.NewSize.Height - 400;
     }
 
     /// <summary>
@@ -57,9 +56,9 @@ public sealed partial class ProductManagementView : Page
     /// <param name="e">The event data.</param>
     public async void AddButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.SelectedProduct = new ProductDto();
+        ViewModel.SelectedCategory = new CategoryDto();
         ViewModel.ImageUrls.Clear();
-        Dialog.Title = "THÊM SẢN PHẨM";
+        Dialog.Title = "THÊM DANH MỤC";
         Dialog.IsPrimaryButtonEnabled = true;
         ViewModel.ActionType = "ADD";
         await Dialog.ShowAsync();
@@ -81,23 +80,23 @@ public sealed partial class ProductManagementView : Page
     /// <param name="e">The event data.</param>
     public async void ViewButton_Click(object sender, RoutedEventArgs e)
     {
-        IList<ProductDto> selectedProducts = ViewModel.Products.Where(x => x.IsSeteled).ToList();
-        if (selectedProducts.Count == 0)
+        IList<CategoryDto> selectedCategories = ViewModel.Categories.Where(x => x.IsSeteled).ToList();
+        if (selectedCategories.Count == 0)
         {
-            ShowNotification("Vui lòng chọn ít nhất một sản phẩm để xem.");
+            ShowNotification("Vui lòng chọn ít nhất một danh mục để xem.");
             return;
         }
-        if (selectedProducts.Count > 1)
+        if (selectedCategories.Count > 1)
         {
-            ShowNotification("Vui lòng chỉ chọn một sản phẩm để xem.");
+            ShowNotification("Vui lòng chỉ chọn một danh mục để xem.");
             return;
         }
-        ViewModel.SelectedProduct = selectedProducts[0];
-        Dialog.Title = "XEM SẢN PHẨM";
+        ViewModel.SelectedCategory = selectedCategories[0];
+        Dialog.Title = "XEM DANH MỤC";
         Dialog.IsPrimaryButtonEnabled = false;
         ViewModel.ActionType = "VIEW";
         ViewModel.ImageUrls.Clear();
-        foreach (var item in ViewModel.SelectedProduct.ImageUrls)
+        foreach (var item in ViewModel.SelectedCategory.ImageUrls)
         {
             ViewModel.ImageUrls.Add(item);
         }
@@ -111,23 +110,23 @@ public sealed partial class ProductManagementView : Page
     /// <param name="e">The event data.</param>
     public async void EditButton_Click(object sender, RoutedEventArgs e)
     {
-        IList<ProductDto> selectedProducts = ViewModel.Products.Where(x => x.IsSeteled).ToList();
-        if (selectedProducts.Count == 0)
+        IList<CategoryDto> selectedCategories = ViewModel.Categories.Where(x => x.IsSeteled).ToList();
+        if (selectedCategories.Count == 0)
         {
-            ShowNotification("Vui lòng chọn ít nhất một sản phẩm để chỉnh sửa.");
+            ShowNotification("Vui lòng chọn ít nhất một danh mục để chỉnh sửa.");
             return;
         }
-        if (selectedProducts.Count > 1)
+        if (selectedCategories.Count > 1)
         {
-            ShowNotification("Vui lòng chỉ chọn một sản phẩm để chỉnh sửa.");
+            ShowNotification("Vui lòng chỉ chọn một danh mục để chỉnh sửa.");
             return;
         }
-        ViewModel.SelectedProduct = selectedProducts[0];
-        Dialog.Title = "CHỈNH SỬA SẢN PHẨM";
+        ViewModel.SelectedCategory = selectedCategories[0];
+        Dialog.Title = "CHỈNH SỬA DANH MỤC";
         Dialog.IsPrimaryButtonEnabled = true;
         ViewModel.ActionType = "EDIT";
         ViewModel.ImageUrls.Clear();
-        foreach (var item in ViewModel.SelectedProduct.ImageUrls)
+        foreach (var item in ViewModel.SelectedCategory.ImageUrls)
         {
             ViewModel.ImageUrls.Add(item);
         }
@@ -141,10 +140,10 @@ public sealed partial class ProductManagementView : Page
     /// <param name="e">The event data.</param>
     public async void DeleteButton_Click(object sender, RoutedEventArgs e)
     {
-        IList<ProductDto> selectedProducts = ViewModel.Products.Where(x => x.IsSeteled).ToList();
-        if (selectedProducts.Count == 0)
+        IList<CategoryDto> selectedCategories = ViewModel.Categories.Where(x => x.IsSeteled).ToList();
+        if (selectedCategories.Count == 0)
         {
-            ShowNotification("Vui lòng chọn ít nhất một sản phẩm để xóa.");
+            ShowNotification("Vui lòng chọn ít nhất một danh mục để xóa.");
             return;
         }
         await DeleteConfirmationDialog.ShowAsync();
@@ -179,7 +178,7 @@ public sealed partial class ProductManagementView : Page
     {
         ViewModel.Search();
     }
-    
+
     /// <summary>
     /// Handles the sorting event of the data grid.
     /// </summary>
@@ -209,21 +208,23 @@ public sealed partial class ProductManagementView : Page
     }
 
     /// <summary>
-    /// Handles the click event of the "Yes" button in the dialog.
+    /// Handles the click event of the "Yes" button in the product dialog.
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="args">The event data.</param>
-    private void Dialog_YesClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+    private void ProductDialog_YesClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
     {
-        if (ViewModel.SelectedProduct == null)
+        if (ViewModel.SelectedCategory == null)
         {
+            args.Cancel = true;
+            ShowNotification("Vui lòng chọn danh mục cần thêm sản phẩm.");
             return;
         }
 
-        if (string.IsNullOrEmpty(ViewModel.SelectedProduct.Name))
+        if (string.IsNullOrEmpty(ViewModel.SelectedCategory.Name))
         {
             args.Cancel = true;
-            ShowNotification("Vui lòng nhập tên sản phẩm.");
+            ShowNotification("Vui lòng nhập tên danh mục.");
             return;
         }
         switch (ViewModel.ActionType)
@@ -256,8 +257,9 @@ public sealed partial class ProductManagementView : Page
     /// <param name="e">The event data.</param>
     private async void AddImageButton_Click(object sender, RoutedEventArgs e)
     {
-        if (ViewModel.SelectedProduct == null)
+        if (ViewModel.SelectedCategory == null)
         {
+            ShowNotification("Vui lòng chọn danh mục cần thêm ảnh.");
             return;
         }
 
@@ -280,7 +282,7 @@ public sealed partial class ProductManagementView : Page
         {
             foreach (StorageFile file in files)
             {
-                ViewModel.SelectedProduct.ImageUrls.Add(file.Path);
+                ViewModel.SelectedCategory.ImageUrls.Add(file.Path);
                 ViewModel.ImageUrls.Add(file.Path);
             }
         }
@@ -289,7 +291,6 @@ public sealed partial class ProductManagementView : Page
             // The user didn't pick any files
         }
     }
-
     /// <summary>
     /// Handles the drag over event of the image list view.
     /// </summary>
@@ -306,6 +307,7 @@ public sealed partial class ProductManagementView : Page
             e.AcceptedOperation = DataPackageOperation.None; // Indicate that drop is not allowed
         }
     }
+
 
     /// <summary>
     /// Handles the closed event of the dialog.
@@ -356,5 +358,4 @@ public sealed partial class ProductManagementView : Page
     {
 
     }
-
 }
