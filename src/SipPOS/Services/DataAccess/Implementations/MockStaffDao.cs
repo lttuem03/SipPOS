@@ -101,7 +101,7 @@ class MockStaffDao : IStaffDao
     // when developing only
 
     public Task<(long id, StaffDto? dto)> InsertAsync(long storeId, StaffDto staffDto) => throw new NotImplementedException();
-    public Task<(int rowsReturned, List<StaffDto>? staffDtos)> GetWithPagination(long storeId, int page, int rowsPerPage, string? keyword, string? sortBy, string? sortDirection) => throw new NotImplementedException();
+    public Task<(long totalRowsMatched, List<StaffDto>? staffDtos)> GetWithPagination(long storeId, long page, long rowsPerPage, string keyword, string? sortBy, string? sortDirection, List<string>? filterByPositionPrefixes = null) => throw new NotImplementedException();
     public Task<List<StaffDto>?> GetAllAsync(long storeId) => throw new NotImplementedException();
     public Task<StaffDto?> GetByIdAsync(long storeId, long id) => throw new NotImplementedException();
     public Task<StaffDto?> UpdateByIdAsync(long storeId, long id, StaffDto updatedStaffDto, Staff author) => throw new NotImplementedException();

@@ -32,4 +32,48 @@ public sealed partial class StaffManagementView : Page
     {
         ViewModel.HandleRegisterNewStaffButtonClick();
     }
+
+    
+
+    private void sortByComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (ViewModel is not StaffManagementViewModel)
+            return;
+
+        ViewModel.HandleSortByComboBoxSelectionChanged(sortByComboBox.SelectedIndex);
+    }
+
+    private void sortDirectionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (ViewModel is not StaffManagementViewModel)
+            return;
+
+        ViewModel.HandleSortDirectionComboBoxSelectionChanged(sortDirectionComboBox.SelectedIndex);
+    }
+
+    private void positionCheckBoxes_Changed(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel is not StaffManagementViewModel)
+            return;
+
+        ViewModel.HandlePositionCheckBoxesChanged(smPositionCheckBox.IsChecked,
+                                                  amPositionCheckBox.IsChecked,
+                                                  stPositionCheckBox.IsChecked);
+    }
+
+    private void previousPageButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel is not StaffManagementViewModel)
+            return;
+
+        ViewModel.HandlePreviousPageButtonClick();
+    }
+
+    private void nextPageButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel is not StaffManagementViewModel)
+            return;
+
+        ViewModel.HandleNextPageButtonClick();
+    }
 }

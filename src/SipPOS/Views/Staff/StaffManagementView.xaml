@@ -87,7 +87,9 @@
                         Width="150"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
-                        SelectedIndex="0">
+                        SelectedIndex="0"
+                        Name="sortByComboBox"
+                        SelectionChanged="sortByComboBox_SelectionChanged">
                         <x:String>Mã nhân viên</x:String>
                         <x:String>Họ và tên</x:String>
                     </ComboBox>
@@ -107,6 +109,8 @@
                         Width="150"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
+                        Name="sortDirectionComboBox"
+                        SelectionChanged="sortDirectionComboBox_SelectionChanged"
                         SelectedIndex="0">
                         <x:String>Tăng dần</x:String>
                         <x:String>Giảm dần</x:String>
@@ -144,7 +148,11 @@
                 <CheckBox
                     Grid.Row="0" Grid.Column="1"
                     HorizontalAlignment="Left"
-                    VerticalAlignment="Center">
+                    VerticalAlignment="Center"
+                    Name="smPositionCheckBox"
+                    IsChecked="True"
+                    Checked="positionCheckBoxes_Changed"
+                    Unchecked="positionCheckBoxes_Changed">
                     <TextBlock
                         Text="SM"
                         Margin="0,3,0,0"/>
@@ -154,7 +162,11 @@
                 <CheckBox
                     Grid.Row="0" Grid.Column="2"
                     HorizontalAlignment="Left"
-                    VerticalAlignment="Center">
+                    VerticalAlignment="Center"
+                    Name="amPositionCheckBox"
+                    IsChecked="True"
+                    Checked="positionCheckBoxes_Changed"
+                    Unchecked="positionCheckBoxes_Changed">
                     <TextBlock
                         Text="AM"
                         Margin="0,3,0,0"/>
@@ -164,7 +176,11 @@
                 <CheckBox
                     Grid.Row="0" Grid.Column="3"
                     HorizontalAlignment="Left"
-                    VerticalAlignment="Center">
+                    VerticalAlignment="Center"
+                    Name="stPositionCheckBox"
+                    IsChecked="True"
+                    Checked="positionCheckBoxes_Changed"
+                    Unchecked="positionCheckBoxes_Changed">
                     <TextBlock
                         Text="ST"
                         Margin="0,3,0,0"/>
@@ -196,7 +212,9 @@
                     Grid.Row="0" Grid.Column="1"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
-                    PlaceholderText="Nhập họ và tên nhân viên"/>
+                    PlaceholderText="Nhập họ và tên nhân viên"
+                    IsSpellCheckEnabled="False"
+                    Text="{x:Bind ViewModel.SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
 
             <!--Data grid-->
@@ -207,7 +225,7 @@
                 BorderThickness="1"
                 AutoGenerateColumns="False"
                 GridLinesVisibility="All"
-                ItemsSource="{x:Bind ViewModel.CurrentPageStaffList}">
+                ItemsSource="{x:Bind ViewModel.CurrentPageStaffList, Mode=TwoWay}">
                 <!--Columns-->
                 <controls:DataGrid.Columns>
                     <!--Composite username (Staff ID)-->
@@ -288,18 +306,19 @@
                 </StackPanel>
 
                 <!--Displaying staffs from/to out of-->
-                <TextBlock
+                <StackPanel
                     Grid.Row="1" Grid.Column="0"
+                    Orientation="Horizontal"
                     HorizontalAlignment="Center"
                     Margin="0,20,0,0">
-                    <Run Text="Đang hiển thị:" FontWeight="SemiBold"/> 
-                    <Run Text="1"></Run>
-                    <Run Text="-"></Run>
-                    <Run Text="5"></Run>
-                    <Run Text="trên"></Run>
-                    <Run Text="20"></Run>
-                    <Run Text="nhân viên"></Run>
-                </TextBlock>
+                    <TextBlock Text="Đang hiển thị:" FontWeight="SemiBold" Margin="0,0,5,0"/>
+                    <TextBlock Text="{x:Bind ViewModel.FromIndex, Mode=TwoWay}" Margin="0,0,3,0"/>
+                    <TextBlock Text="-" Margin="0,0,3,0"/>
+                    <TextBlock Text="{x:Bind ViewModel.ToIndex, Mode=TwoWay}" Margin="0,0,5,0"/>
+                    <TextBlock Text="trên" Margin="0,0,5,0"/>
+                    <TextBlock Text="{x:Bind ViewModel.TotalRowsCount, Mode=TwoWay}" Margin="0,0,5,0"/>
+                    <TextBlock Text="nhân viên" Margin="0,0,0,0"/>
+                </StackPanel>
 
                 <!--Page number and paging buttons-->
                 <Grid
@@ -319,21 +338,26 @@
 
                     <!--Previous page button-->
                     <Button
-                        Grid.Row="0" Grid.Column="0">
+                        Grid.Row="0" Grid.Column="0"
+                        Name="previousPageButton"
+                        Click="previousPageButton_Click">
                         Trang trước
                     </Button>
                     <!--Current page-->
-                    <TextBlock
+                    <StackPanel
                         Grid.Row="0" Grid.Column="1"
+                        Orientation="Horizontal"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
-                        <Run Text="0"/>
-                        <Run Text="/"/>
-                        <Run Text="0"/>
-                    </TextBlock>
+                        <TextBlock Text="{x:Bind ViewModel.CurrentPage, Mode=TwoWay}" Margin="0,0,5,0"/>
+                        <TextBlock Text="/" Margin="0,0,5,0"/>
+                        <TextBlock Text="{x:Bind ViewModel.TotalPages, Mode=TwoWay}"/>
+                    </StackPanel>
                     <!--Next page button-->
                     <Button
-                        Grid.Row="0" Grid.Column="2">
+                        Grid.Row="0" Grid.Column="2"
+                        Name="nextPageButton"
+                        Click="nextPageButton_Click">
                         Trang sau
                     </Button>
                 </Grid>
