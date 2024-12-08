@@ -19,4 +19,17 @@ public sealed partial class StaffManagementView : Page
     {
         ViewModel.HandleGoBackButtonClick();
     }
+
+    private void rowsPerPageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (ViewModel is not StaffManagementViewModel)
+            return;
+
+        ViewModel.HandleRowsPerPageComboBoxSelectionChanged(rowsPerPageComboBox.SelectedIndex);
+    }
+
+    private void registerNewStaffButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleRegisterNewStaffButtonClick();
+    }
 }

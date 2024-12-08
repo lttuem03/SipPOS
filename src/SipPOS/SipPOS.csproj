@@ -65,6 +65,7 @@
     <None Remove="Views\Setup\StoreSetupView.xaml" />
     <None Remove="Views\StaffLoginView.xaml" />
     <None Remove="Views\Staff\StaffManagementView.xaml" />
+    <None Remove="Views\Staff\StaffRegistrationView.xaml" />
     <None Remove="Views\StoreAccountCreationView.xaml" />
     <None Remove="Views\StoreConfigurationView.xaml" />
     <None Remove="Views\StoreLoginView.xaml" />
@@ -156,6 +157,9 @@
     <None Update="Assets\StoreLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\Staff\StaffRegistrationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Setup\Pages\StoreSetupSummaryPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

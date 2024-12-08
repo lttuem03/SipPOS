@@ -72,7 +72,7 @@ public class StaffDto : BaseEntityDto
             if (subs.Length == 0)
                 return "";
             
-            subs = subs.Skip(subs.Length - 1).ToArray();
+            subs = subs.SkipLast(1).ToArray();
 
             return string.Join(' ', subs);
         }

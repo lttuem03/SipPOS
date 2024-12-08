@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 
 using Npgsql;
 
@@ -6,6 +7,7 @@ using SipPOS.DataTransfer.Entity;
 using SipPOS.Models.Entity;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.General.Interfaces;
+using Windows.Devices.Sensors;
 
 namespace SipPOS.Services.DataAccess.Implementations;
 
@@ -200,6 +202,214 @@ public class PostgreStaffDao : IStaffDao
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Gets a list of staff records with pagination.
+    /// </summary>
+    /// <param name="storeId"></param>
+    /// <param name="page"></param>
+    /// <param name="rowsPerPage"></param>
+    /// <param name="keyword">The search keyword for the 'name' column.</param>
+    /// <param name="sortBy">The name of the column in the database schema (writen in snake_case).</param>
+    /// <param name="sortDirection">'ASC' or 'DESC'</param>
+    /// <returns></returns>
+    public async Task<(int rowsReturned, List<StaffDto>? staffDtos)> GetWithPagination
+    (
+        long storeId,
+        int page,
+        int rowsPerPage,
+        string? keyword = null,
+        string? sortBy = null,
+        string? sortDirection = null
+    )
+    {
+        var staffDtos = new List<StaffDto>();
+        int rowsReturned;
+
+        var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
+        using var connection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection;
+
+        var query = new StringBuilder();
+
+        // Because of the way Npgsql handles parameters (using proposional parameters)
+        // we have to split into 2 cases:
+        // - The one where searching is included
+        // - The one where searching is not included
+
+        // If including searching by keyword
+        if (!string.IsNullOrEmpty(keyword))
+        {
+            query.AppendLine("SELECT * FROM staff");
+            query.AppendLine("WHERE store_id = $1");
+            query.AppendLine("AND (name ILIKE $2)");
+
+            // If include sorting
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                if (sortDirection == null)
+                    sortDirection = "ASC";
+                else
+                    sortDirection = sortDirection.ToUpper() == "DESC" ? "DESC" : "ASC";
+
+                // sorting doesn't use parameter, so no need to increment parameterIndex
+                query.AppendLine($"ORDER BY {sortBy} {sortDirection}");
+            }
+
+            var take = rowsPerPage;
+            var skip = (page - 1) * rowsPerPage;
+
+            query.AppendLine($"LIMIT $3");
+            query.AppendLine($"OFFSET $4");
+
+            await using var command = new NpgsqlCommand(query.ToString(), connection)
+            {
+                Parameters =
+                {
+                    new() { Value = storeId },
+                    new() { Value = $"%{keyword}%" },
+                    new() { Value = take },
+                    new() { Value = skip }
+                }
+            };
+
+            await using var reader = await command.ExecuteReaderAsync();
+
+            if (reader.HasRows)
+            {
+                while (await reader.ReadAsync())
+                {
+                    StaffDto newStaffDto = new StaffDto()
+                    {
+                        // BaseModel fields
+                        Id = reader.GetInt64(reader.GetOrdinal("id")),
+                        CreatedBy = reader.GetString(reader.GetOrdinal("created_by")),   // ensured not null in creation
+                        CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")), // ensured not null in creation
+                                                                                         // Staff fields
+                        StoreId = reader.GetInt64(reader.GetOrdinal("store_id")),
+                        PositionPrefix = reader.GetString(reader.GetOrdinal("position_prefix")),
+                        PasswordHash = string.Empty,    // not needed in the context of Get
+                        Salt = string.Empty,            // not needed in the context of Get
+                        Name = reader.GetString(reader.GetOrdinal("name")),
+                        Gender = reader.GetString(reader.GetOrdinal("gender")),
+                        DateOfBirth = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date_of_birth"))),
+                        Email = reader.GetString(reader.GetOrdinal("email")),
+                        Tel = reader.GetString(reader.GetOrdinal("tel")),
+                        Address = reader.GetString(reader.GetOrdinal("address")),
+                        EmploymentStatus = reader.GetString(reader.GetOrdinal("employment_status")),
+                        EmploymentStartDate = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("employment_start_date")))
+                    };
+
+                    // Handle nullable columns
+                    newStaffDto.UpdatedBy = reader.IsDBNull(reader.GetOrdinal("updated_by")) == true ?
+                        null : reader.GetString(reader.GetOrdinal("updated_by"));
+
+                    newStaffDto.UpdatedAt = reader.IsDBNull(reader.GetOrdinal("updated_at")) == true ?
+                        null : reader.GetDateTime(reader.GetOrdinal("updated_at"));
+
+                    newStaffDto.DeletedBy = reader.IsDBNull(reader.GetOrdinal("deleted_by")) == true ?
+                        null : reader.GetString(reader.GetOrdinal("deleted_by"));
+
+                    newStaffDto.DeletedAt = reader.IsDBNull(reader.GetOrdinal("deleted_at")) == true ?
+                        null : reader.GetDateTime(reader.GetOrdinal("deleted_at"));
+
+                    newStaffDto.EmploymentEndDate = reader.IsDBNull(reader.GetOrdinal("employment_end_date")) == true ?
+                        null : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("employment_end_date")));
+
+                    staffDtos.Add(newStaffDto);
+                }
+
+                rowsReturned = staffDtos.Count;
+
+                return (rowsPerPage, staffDtos);
+            }
+        }
+        else // If NOT including searching by keyword
+        {
+            query.AppendLine("SELECT * FROM staff");
+            query.AppendLine("WHERE store_id = $1");
+
+            // If include sorting
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                if (sortDirection == null)
+                    sortDirection = "ASC";
+                else
+                    sortDirection = sortDirection.ToUpper() == "DESC" ? "DESC" : "ASC";
+
+                // sorting doesn't use parameter, so no need to increment parameterIndex
+                query.AppendLine($"ORDER BY {sortBy} {sortDirection}");
+            }
+
+            var take = rowsPerPage;
+            var skip = (page - 1) * rowsPerPage;
+
+            query.AppendLine($"LIMIT $2");
+            query.AppendLine($"OFFSET $3");
+
+            await using var command = new NpgsqlCommand(query.ToString(), connection)
+            {
+                Parameters =
+                {
+                    new() { Value = storeId },
+                    new() { Value = take },
+                    new() { Value = skip }
+                }
+            };
+
+            await using var reader = await command.ExecuteReaderAsync();
+
+            if (reader.HasRows)
+            {
+                while (await reader.ReadAsync())
+                {
+                    StaffDto newStaffDto = new StaffDto()
+                    {
+                        // BaseModel fields
+                        Id = reader.GetInt64(reader.GetOrdinal("id")),
+                        CreatedBy = reader.GetString(reader.GetOrdinal("created_by")),   // ensured not null in creation
+                        CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")), // ensured not null in creation
+                                                                                         // Staff fields
+                        StoreId = reader.GetInt64(reader.GetOrdinal("store_id")),
+                        PositionPrefix = reader.GetString(reader.GetOrdinal("position_prefix")),
+                        PasswordHash = string.Empty,    // not needed in the context of Get
+                        Salt = string.Empty,            // not needed in the context of Get
+                        Name = reader.GetString(reader.GetOrdinal("name")),
+                        Gender = reader.GetString(reader.GetOrdinal("gender")),
+                        DateOfBirth = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date_of_birth"))),
+                        Email = reader.GetString(reader.GetOrdinal("email")),
+                        Tel = reader.GetString(reader.GetOrdinal("tel")),
+                        Address = reader.GetString(reader.GetOrdinal("address")),
+                        EmploymentStatus = reader.GetString(reader.GetOrdinal("employment_status")),
+                        EmploymentStartDate = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("employment_start_date")))
+                    };
+
+                    // Handle nullable columns
+                    newStaffDto.UpdatedBy = reader.IsDBNull(reader.GetOrdinal("updated_by")) == true ?
+                        null : reader.GetString(reader.GetOrdinal("updated_by"));
+
+                    newStaffDto.UpdatedAt = reader.IsDBNull(reader.GetOrdinal("updated_at")) == true ?
+                        null : reader.GetDateTime(reader.GetOrdinal("updated_at"));
+
+                    newStaffDto.DeletedBy = reader.IsDBNull(reader.GetOrdinal("deleted_by")) == true ?
+                        null : reader.GetString(reader.GetOrdinal("deleted_by"));
+
+                    newStaffDto.DeletedAt = reader.IsDBNull(reader.GetOrdinal("deleted_at")) == true ?
+                        null : reader.GetDateTime(reader.GetOrdinal("deleted_at"));
+
+                    newStaffDto.EmploymentEndDate = reader.IsDBNull(reader.GetOrdinal("employment_end_date")) == true ?
+                        null : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("employment_end_date")));
+
+                    staffDtos.Add(newStaffDto);
+                }
+
+                rowsReturned = staffDtos.Count;
+
+                return (rowsPerPage, staffDtos);
+            }
+        }
+
+        return (0, null);
     }
 
     /// <summary>

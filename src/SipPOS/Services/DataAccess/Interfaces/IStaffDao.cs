@@ -30,6 +30,16 @@ public interface IStaffDao
     /// <returns>A task that represents the asynchronous operation. The task result contains a list of StaffDto objects, or null if the operation failed.</returns>
     Task<List<StaffDto>?> GetAllAsync(long storeId);
 
+    Task<(int rowsReturned, List<StaffDto>? staffDtos)> GetWithPagination
+    (
+        long storeId, 
+        int page, 
+        int rowsPerPage, 
+        string? keyword=null,
+        string? sortBy = null,
+        string? sortDirection = null
+    );
+
     /// <summary>
     /// Retrieves a staff member by their ID.
     /// </summary>
