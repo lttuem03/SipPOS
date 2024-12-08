@@ -68,8 +68,8 @@ public partial class App : Application
             services.AddSingleton<IStaffShiftContext, StaffShiftContext>();
 
             // Dao
-            services.AddSingleton<IProductDao, MockProductDao>();
-            services.AddSingleton<ICategoryDao, MockCategoryDao>();
+            services.AddSingleton<IProductDao, PostgresProductDao>();
+            services.AddSingleton<ICategoryDao, PostgresCategoryDao>();
             services.AddSingleton<IStoreDao, PostgreStoreDao>();
             services.AddSingleton<IStaffDao, PostgreStaffDao>();
 

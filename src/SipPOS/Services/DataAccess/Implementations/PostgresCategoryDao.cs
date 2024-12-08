@@ -340,9 +340,7 @@ public class PostgresCategoryDao : ICategoryDao
         parameters.Add(new() { Value = (page - 1) * perPage });
 
         using var command = new NpgsqlCommand(query.ToString(), connection);
-        //command.Parameters.AddRange(parameters.ToArray());
-
-        parameters.ForEach(p => command.Parameters.Ad(p));
+        command.Parameters.AddRange(parameters.ToArray());
 
         using var reader = command.ExecuteReader();
 
