@@ -66,7 +66,7 @@ public partial class ProductManagementViewModel : ObservableRecipient
     private ProductFilterDto productFilterDto = new();
 
     [ObservableProperty]
-    private int perPage = 10;
+    private int perPage = 5;
 
     /// <summary>
     /// Gets or sets the current page number.

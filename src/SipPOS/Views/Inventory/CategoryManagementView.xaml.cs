@@ -36,7 +36,7 @@ public sealed partial class CategoryManagementView : Page
 
     private void OnPageSizeChanged(object sender, SizeChangedEventArgs e)
     {
-       ViewModel.TableHeight = (int)e.NewSize.Height - 400;
+       ViewModel.TableHeight = (int)e.NewSize.Height - 260;
     }
 
     /// <summary>

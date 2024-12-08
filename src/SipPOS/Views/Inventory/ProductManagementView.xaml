@@ -92,7 +92,7 @@
             VerticalAlignment="Stretch"
             Width="Auto" Height="Auto"
             HorizontalScrollBarVisibility="Visible"
-            MaxHeight="400"
+            MaxHeight="{x:Bind ViewModel.TableHeight, Mode=OneWay}"
             Sorting="DataGrid_Sorting"
             ColumnWidth="*">
             <controls:DataGrid.Resources>

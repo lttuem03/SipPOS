@@ -37,7 +37,7 @@ public sealed partial class ProductManagementView : Page
 
     private void OnPageSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        ViewModel.TableHeight = (int)e.NewSize.Height;
+        ViewModel.TableHeight = (int)e.NewSize.Height - 260;
     }
 
     /// <summary>

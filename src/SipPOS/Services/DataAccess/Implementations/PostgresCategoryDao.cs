@@ -44,7 +44,7 @@ public class PostgresCategoryDao : ICategoryDao
             }
         };
 
-        await using var reader = await command.ExecuteReaderAsync();
+        await using var reader = command.ExecuteReader();
 
         if (reader.HasRows)
         {
@@ -84,7 +84,7 @@ public class PostgresCategoryDao : ICategoryDao
             }
         };
 
-        await using var reader = await command.ExecuteReaderAsync();
+        await using var reader = command.ExecuteReader();
 
         if (reader.HasRows)
         {
@@ -116,7 +116,7 @@ public class PostgresCategoryDao : ICategoryDao
             WHERE deleted_at IS NULL
         ", connection);
 
-        await using var reader = await command.ExecuteReaderAsync();
+        await using var reader = command.ExecuteReader();
 
         if (reader.HasRows)
         {
@@ -154,7 +154,7 @@ public class PostgresCategoryDao : ICategoryDao
             }
         };
 
-        await using var reader = await command.ExecuteReaderAsync();
+        await using var reader = command.ExecuteReader();
 
         if (reader.HasRows)
         {
@@ -195,7 +195,7 @@ public class PostgresCategoryDao : ICategoryDao
             }
         };
 
-        await using var reader = await command.ExecuteReaderAsync();
+        await using var reader = command.ExecuteReader();
         if (reader.HasRows)
         {
             await reader.ReadAsync();
@@ -240,7 +240,7 @@ public class PostgresCategoryDao : ICategoryDao
             }
         };
 
-        await using var reader = await command.ExecuteReaderAsync();
+        await using var reader = command.ExecuteReader();
 
         if (reader.HasRows)
         {

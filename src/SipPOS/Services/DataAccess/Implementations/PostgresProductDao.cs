@@ -44,7 +44,7 @@ public class PostgresProductDao : IProductDao
             }
         };
 
-        await using var reader = await command.ExecuteReaderAsync();
+        await using var reader = command.ExecuteReader();
 
         if (reader.HasRows)
         {
@@ -85,7 +85,7 @@ public class PostgresProductDao : IProductDao
             }
         };
 
-        await using var reader = await command.ExecuteReaderAsync();
+        await using var reader = command.ExecuteReader();
 
         if (reader.HasRows)
         {
@@ -118,7 +118,7 @@ public class PostgresProductDao : IProductDao
             WHERE deleted_at IS NULL
         ", connection);
 
-        await using var reader = await command.ExecuteReaderAsync();
+        await using var reader = command.ExecuteReader();
 
         if (reader.HasRows)
         {
@@ -155,7 +155,7 @@ public class PostgresProductDao : IProductDao
             Parameters = { new() { Value = id } }
         };
 
-        await using var reader = await command.ExecuteReaderAsync();
+        await using var reader = command.ExecuteReader();
 
         if (reader.HasRows)
         {
@@ -199,7 +199,7 @@ public class PostgresProductDao : IProductDao
             }
         };
 
-        await using var reader = await command.ExecuteReaderAsync();
+        await using var reader = command.ExecuteReader();
 
         if (reader.HasRows)
         {
@@ -251,7 +251,7 @@ public class PostgresProductDao : IProductDao
             }
         };
 
-        await using var reader = await command.ExecuteReaderAsync();
+        await using var reader = command.ExecuteReader();
 
         if (reader.HasRows)
         {
@@ -367,7 +367,7 @@ public class PostgresProductDao : IProductDao
         await using var command = new NpgsqlCommand(query.ToString(), connection);
         command.Parameters.AddRange(parameters.ToArray());
 
-        await using var reader = await command.ExecuteReaderAsync();
+        await using var reader = command.ExecuteReader();
 
         long totalRecord = await CountAsync(productFilterDto);
 

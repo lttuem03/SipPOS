@@ -56,7 +56,7 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     private CategoryFilterDto categoryFilterDto = new();
 
     [ObservableProperty]
-    private int perPage = 10;
+    private int perPage = 5;
 
     /// <summary>
     /// Gets or sets the current page number.
