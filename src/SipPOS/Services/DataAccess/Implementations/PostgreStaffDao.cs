@@ -1,6 +1,8 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 
 using Npgsql;
+using NpgsqlTypes;
 
 using SipPOS.DataTransfer.Entity;
 using SipPOS.Models.Entity;
@@ -24,7 +26,7 @@ public class PostgreStaffDao : IStaffDao
     /// <remarks>
     /// All field validations must be done before calling this method. In this codebase, validations are done via StaffAccountCreationService.ValidateFields().
     /// </remarks>
-    public async Task<(long id, StaffDto? dto)> InsertAsync(long storeId, StaffDto staffDto, Staff author)
+    public async Task<(long id, StaffDto? dto)> InsertAsync(long storeId, StaffDto staffDto)
     {
         if (staffDto.PasswordHash == null ||
             staffDto.Salt == null ||
@@ -91,8 +93,8 @@ public class PostgreStaffDao : IStaffDao
                 new() { Value = staffDto.Address },
                 new() { Value = staffDto.EmploymentStatus },
                 new() { Value = staffDto.EmploymentStartDate },
-                new() { Value = author.CompositeUsername },
-                new() { Value = DateTime.Now }
+                new() { Value = staffDto.CreatedBy },
+                new() { Value = staffDto.CreatedAt }
             }
         };
 
@@ -200,6 +202,433 @@ public class PostgreStaffDao : IStaffDao
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Gets a list of staff records with pagination.
+    /// </summary>
+    /// <param name="storeId">The ID of the store to retrieve staff records for.</param>
+    /// <param name="page">The current page of the pagination.</param>
+    /// <param name="rowsPerPage">The rows per page count of the pagination.</param>
+    /// <param name="keyword">The search keyword for the 'name' column.</param>
+    /// <param name="sortBy">The name of the column in the database schema (writen in snake_case).</param>
+    /// <param name="sortDirection">'ASC' or 'DESC'</param>
+    /// <param name="filterByPositionPrefixes">A nullable list containings the prefixes of filtered position.</param>
+    /// <returns>A tuple, containings a number of rows that matched the criterias (only the count), and the list of (paged) staffs retrieved.</returns>
+    public async Task<(long totalRowsMatched, List<StaffDto>? staffDtos)> GetWithPagination
+    (
+        long storeId,
+        long page,
+        long rowsPerPage,
+        string keyword = "",
+        string? sortBy = null,
+        string? sortDirection = null,
+        List<string>? filterByPositionPrefixes = null
+    )
+    {
+        var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
+        using var getCountConnection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection;
+        using var getDataConnection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection;
+
+        var countQuery = new StringBuilder();  // to count total rows matched the criterias
+        var pagedQuery = new StringBuilder();  // to get actual data
+        var take = rowsPerPage;
+        var skip = (page - 1) * rowsPerPage;
+
+        // Because of the way Npgsql handles parameters (using proposional parameters)
+        // we have to split into 2 cases (and possibly many mini-cases):
+        // - The one where searching is included
+        // - The one where searching is not included
+
+        // Include search by keywords
+        if (!string.IsNullOrEmpty(keyword))
+        {
+            // Sorting options if not provided
+            sortBy ??= "position_prefix";
+            sortDirection ??= "ASC";
+
+            // DOESN'T filter by position prefixes
+            if (filterByPositionPrefixes == null)
+            {
+                countQuery.Append(@"
+                    SELECT COUNT(*) FROM staff
+                    WHERE (store_id = $1)
+                    AND (name LIKE $2)
+                    AND (employment_status NOT LIKE '%OutOfEmployment%')
+                ");
+
+                pagedQuery.Append(@"
+                    SELECT * FROM staff
+                    WHERE (store_id = $1)
+                    AND (name LIKE $2)
+                    AND (employment_status NOT LIKE '%OutOfEmployment%')
+                ");
+
+                pagedQuery.AppendLine($"ORDER BY {sortBy} {sortDirection.ToUpper()}");
+                pagedQuery.AppendLine($"LIMIT $3");
+                pagedQuery.AppendLine($"OFFSET $4");
+
+                await using var getCountCommand = new NpgsqlCommand(countQuery.ToString(), getCountConnection)
+                {
+                    Parameters =
+                    {
+                        new() { Value = storeId },
+                        new() { Value = $"%{keyword}%" },
+                    }
+                };
+
+                await using var getDataCommand = new NpgsqlCommand(pagedQuery.ToString(), getDataConnection)
+                {
+                    Parameters =
+                    {
+                        new() { Value = storeId },
+                        new() { Value = $"%{keyword}%" },
+                        new() { Value = take },
+                        new() { Value = skip }
+                    }
+                };
+
+                var countScalar = await getCountCommand.ExecuteScalarAsync();
+                var count = countScalar == null ? 0 : (long)countScalar;
+
+                await using var reader = await getDataCommand.ExecuteReaderAsync();
+                var staffDtos = await processCommandReader(reader);
+
+                return (count, staffDtos);
+            }
+            else // Has filter by position prefixes
+            {
+                countQuery.Append(@"
+                    SELECT COUNT(*) FROM staff
+                    WHERE (store_id = $1)
+                    AND (name LIKE $2)
+                    AND (employment_status NOT LIKE '%OutOfEmployment%')
+                ");
+
+                pagedQuery.Append(@"
+                    SELECT * FROM staff
+                    WHERE (store_id = $1)
+                    AND (name LIKE $2)
+                    AND (employment_status NOT LIKE '%OutOfEmployment%')
+                ");
+
+                switch (filterByPositionPrefixes.Count)
+                {
+                    case 1:
+                    {
+                        countQuery.AppendLine($"AND (position_prefix = $3)");
+
+                        pagedQuery.AppendLine($"AND (position_prefix = $3)");
+                        pagedQuery.AppendLine($"ORDER BY {sortBy} {sortDirection.ToUpper()}");
+                        pagedQuery.AppendLine($"LIMIT $4");
+                        pagedQuery.AppendLine($"OFFSET $5");
+
+                        await using var getCountCommand = new NpgsqlCommand(countQuery.ToString(), getCountConnection)
+                        {
+                            Parameters =
+                            {
+                                new() { Value = storeId },
+                                new() { Value = $"%{keyword}%" },
+                                new() { Value = filterByPositionPrefixes[0]},
+                            }
+                        };
+
+                        await using var getDataCommand = new NpgsqlCommand(pagedQuery.ToString(), getDataConnection)
+                        {
+                            Parameters =
+                            {
+                                new() { Value = storeId },
+                                new() { Value = $"%{keyword}%" },
+                                new() { Value = filterByPositionPrefixes[0]},
+                                new() { Value = take },
+                                new() { Value = skip }
+                            }
+                        };
+
+                        var countScalar = await getCountCommand.ExecuteScalarAsync();
+                        var count = countScalar == null ? 0 : (long)countScalar;
+
+                        await using var reader = await getDataCommand.ExecuteReaderAsync();
+                        var staffDtos = await processCommandReader(reader);
+
+                        return (count, staffDtos);
+                    }
+                    case 2:
+                    {
+                        countQuery.AppendLine($"AND (position_prefix = $3 OR position_prefix = $4)");
+
+                        pagedQuery.AppendLine($"AND (position_prefix = $3 OR position_prefix = $4)");
+                        pagedQuery.AppendLine($"ORDER BY {sortBy} {sortDirection.ToUpper()}");
+                        pagedQuery.AppendLine($"LIMIT $5");
+                        pagedQuery.AppendLine($"OFFSET $6");
+
+                        await using var getCountCommand = new NpgsqlCommand(countQuery.ToString(), getCountConnection)
+                        {
+                            Parameters =
+                            {
+                                new() { Value = storeId },
+                                new() { Value = $"%{keyword}%" },
+                                new() { Value = filterByPositionPrefixes[0]},
+                                new() { Value = filterByPositionPrefixes[1]},
+                            }
+                        };
+
+                        await using var getDataCommand = new NpgsqlCommand(pagedQuery.ToString(), getDataConnection)
+                        {
+                            Parameters =
+                            {
+                                new() { Value = storeId },
+                                new() { Value = $"%{keyword}%" },
+                                new() { Value = filterByPositionPrefixes[0]},
+                                new() { Value = filterByPositionPrefixes[1]},
+                                new() { Value = take },
+                                new() { Value = skip }
+                            }
+                        };
+
+                        var countScalar = await getCountCommand.ExecuteScalarAsync();
+                        var count = countScalar == null ? 0 : (long)countScalar;
+
+                        await using var reader = await getDataCommand.ExecuteReaderAsync();
+                        var staffDtos = await processCommandReader(reader);
+
+                        return (count, staffDtos);
+                    }
+                    case 3:
+                    {
+                        countQuery.AppendLine($"AND (position_prefix = $3 OR position_prefix = $4 OR position_prefix = $5)");
+
+                        pagedQuery.AppendLine($"AND (position_prefix = $3 OR position_prefix = $4 OR position_prefix = $5)");
+                        pagedQuery.AppendLine($"ORDER BY {sortBy} {sortDirection.ToUpper()}");
+                        pagedQuery.AppendLine($"LIMIT $6");
+                        pagedQuery.AppendLine($"OFFSET $7");
+
+                        await using var getCountCommand = new NpgsqlCommand(countQuery.ToString(), getCountConnection)
+                        {
+                            Parameters =
+                            {
+                                new() { Value = storeId },
+                                new() { Value = $"%{keyword}%" },
+                                new() { Value = filterByPositionPrefixes[0]},
+                                new() { Value = filterByPositionPrefixes[1]},
+                                new() { Value = filterByPositionPrefixes[2]},
+                            }
+                        };
+
+                        await using var getDataCommand = new NpgsqlCommand(pagedQuery.ToString(), getDataConnection)
+                        {
+                            Parameters =
+                            {
+                                new() { Value = storeId },
+                                new() { Value = $"%{keyword}%" },
+                                new() { Value = filterByPositionPrefixes[0]},
+                                new() { Value = filterByPositionPrefixes[1]},
+                                new() { Value = filterByPositionPrefixes[2]},
+                                new() { Value = take },
+                                new() { Value = skip }
+                            }
+                        };
+
+                        var countScalar = await getCountCommand.ExecuteScalarAsync();
+                        var count = countScalar == null ? 0 : (long)countScalar;
+
+                        await using var reader = await getDataCommand.ExecuteReaderAsync();
+                        var staffDtos = await processCommandReader(reader);
+
+                        return (count, staffDtos);
+                    }    
+                }
+            }
+        }
+        else // DO NOT nnclude search by keywords
+        {
+            // Sorting options if not provided
+            sortBy ??= "position_prefix";
+            sortDirection ??= "ASC";
+
+            // DOESN'T filter by position prefixes
+            if (filterByPositionPrefixes == null)
+            {
+                countQuery.Append(@"
+                    SELECT COUNT(*) FROM staff 
+                    WHERE (store_id = $1)
+                    AND (employment_status NOT LIKE '%OutOfEmployment%')
+                ");
+
+                pagedQuery.Append(@"
+                    SELECT * FROM staff
+                    WHERE (store_id = $1)
+                    AND (employment_status NOT LIKE '%OutOfEmployment%')
+                ");
+
+                pagedQuery.AppendLine($"ORDER BY {sortBy} {sortDirection.ToUpper()}");
+                pagedQuery.AppendLine($"LIMIT $2");
+                pagedQuery.AppendLine($"OFFSET $3");
+
+                await using var getCountCommand = new NpgsqlCommand(countQuery.ToString(), getCountConnection)
+                {
+                    Parameters =
+                    {
+                        new() { Value = storeId }
+                    }
+                };
+
+                await using var getDataCommand = new NpgsqlCommand(pagedQuery.ToString(), getDataConnection)
+                {
+                    Parameters =
+                    {
+                        new() { Value = storeId },
+                        new() { Value = take },
+                        new() { Value = skip }
+                    }
+                };
+
+                var countScalar = await getCountCommand.ExecuteScalarAsync();
+                var count = countScalar == null ? 0 : (long)countScalar;
+
+                await using var reader = await getDataCommand.ExecuteReaderAsync();
+                var staffDtos = await processCommandReader(reader);
+
+                return (count, staffDtos);
+            }
+            else // Has filter by position prefixes
+            {
+                countQuery.Append(@"
+                    SELECT COUNT(*) FROM staff 
+                    WHERE (store_id = $1)
+                    AND (employment_status NOT LIKE '%OutOfEmployment%')
+                ");
+
+                pagedQuery.Append(@"
+                    SELECT * FROM staff
+                    WHERE (store_id = $1)
+                    AND (employment_status NOT LIKE '%OutOfEmployment%')
+                ");
+
+                switch (filterByPositionPrefixes.Count)
+                {
+                    case 1:
+                    {
+                        countQuery.AppendLine($"AND (position_prefix = $2)");
+
+                        pagedQuery.AppendLine($"AND (position_prefix = $2)");
+                        pagedQuery.AppendLine($"ORDER BY {sortBy} {sortDirection.ToUpper()}");
+                        pagedQuery.AppendLine($"LIMIT $3");
+                        pagedQuery.AppendLine($"OFFSET $4");
+
+                        await using var getCountCommand = new NpgsqlCommand(countQuery.ToString(), getCountConnection)
+                        {
+                            Parameters =
+                            {
+                                new() { Value = storeId },
+                                new() { Value = filterByPositionPrefixes[0]}
+                            }
+                        };
+
+                        await using var getDataCommand = new NpgsqlCommand(pagedQuery.ToString(), getDataConnection)
+                        {
+                            Parameters =
+                            {
+                                new() { Value = storeId },
+                                new() { Value = filterByPositionPrefixes[0]},
+                                new() { Value = take },
+                                new() { Value = skip }
+                            }
+                        };
+
+                        var countScalar = await getCountCommand.ExecuteScalarAsync();
+                        var count = countScalar == null ? 0 : (long)countScalar;
+
+                        await using var reader = await getDataCommand.ExecuteReaderAsync();
+                        var staffDtos = await processCommandReader(reader);
+
+                        return (count, staffDtos);
+                    }
+                    case 2:
+                    {
+                        countQuery.AppendLine($"AND (position_prefix = $2 OR position_prefix = $3)");
+
+                        pagedQuery.AppendLine($"AND (position_prefix = $2 OR position_prefix = $3)");
+                        pagedQuery.AppendLine($"ORDER BY {sortBy} {sortDirection.ToUpper()}");
+                        pagedQuery.AppendLine($"LIMIT $4");
+                        pagedQuery.AppendLine($"OFFSET $5");
+
+                        await using var getCountCommand = new NpgsqlCommand(countQuery.ToString(), getCountConnection)
+                        {
+                            Parameters =
+                            {
+                                new() { Value = storeId },
+                                new() { Value = filterByPositionPrefixes[0]},
+                                new() { Value = filterByPositionPrefixes[1]}
+                            }
+                        };
+
+                        await using var getDataCommand = new NpgsqlCommand(pagedQuery.ToString(), getDataConnection)
+                        {
+                            Parameters =
+                            {
+                                new() { Value = storeId },
+                                new() { Value = filterByPositionPrefixes[0]},
+                                new() { Value = filterByPositionPrefixes[1]},
+                                new() { Value = take },
+                                new() { Value = skip }
+                            }
+                        };
+
+                        var countScalar = await getCountCommand.ExecuteScalarAsync();
+                        var count = countScalar == null ? 0 : (long)countScalar;
+
+                        await using var reader = await getDataCommand.ExecuteReaderAsync();
+                        var staffDtos = await processCommandReader(reader);
+
+                        return (count, staffDtos);
+                    }
+                    case 3:
+                    {
+                        countQuery.AppendLine($"AND (position_prefix = $2 OR position_prefix = $3 OR position_prefix = $4)");
+
+                        pagedQuery.AppendLine($"AND (position_prefix = $2 OR position_prefix = $3 OR position_prefix = $4)");
+                        pagedQuery.AppendLine($"ORDER BY {sortBy} {sortDirection.ToUpper()}");
+                        pagedQuery.AppendLine($"LIMIT $5");
+                        pagedQuery.AppendLine($"OFFSET $6");
+
+                        await using var getCountCommand = new NpgsqlCommand(countQuery.ToString(), getCountConnection)
+                        {
+                            Parameters =
+                        {
+                            new() { Value = storeId },
+                            new() { Value = filterByPositionPrefixes[0]},
+                            new() { Value = filterByPositionPrefixes[1]},
+                            new() { Value = filterByPositionPrefixes[2]}
+                        }
+                        };
+
+                        await using var getDataCommand = new NpgsqlCommand(pagedQuery.ToString(), getDataConnection)
+                        {
+                            Parameters =
+                        {
+                            new() { Value = storeId },
+                            new() { Value = filterByPositionPrefixes[0]},
+                            new() { Value = filterByPositionPrefixes[1]},
+                            new() { Value = filterByPositionPrefixes[2]},
+                            new() { Value = take },
+                            new() { Value = skip }
+                        }
+                        };
+
+                        var countScalar = await getCountCommand.ExecuteScalarAsync();
+                        var count = countScalar == null ? 0 : (long)countScalar;
+
+                        await using var reader = await getDataCommand.ExecuteReaderAsync();
+                        var staffDtos = await processCommandReader(reader);
+
+                        return (count, staffDtos);
+                    }
+                }
+            }
+        }
+
+        return (0, null);
     }
 
     /// <summary>
@@ -396,14 +825,24 @@ public class PostgreStaffDao : IStaffDao
             return null;
         }
 
+        if (updatedStaffDto.PasswordHash == string.Empty)
+        {
+            updatedStaffDto.PasswordHash = "*".PadLeft(64); // to sastify constraint of the database schema
+        }
+
+        if (updatedStaffDto.Salt == string.Empty)
+        {
+            updatedStaffDto.Salt = "*".PadLeft(64); // to sastify constraint of the database schema
+        }
+
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
 
         using var connection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection;
 
         await using var command = new NpgsqlCommand(@"
             UPDATE staff
-            SET update_by = $1,
-                update_at = $2,
+            SET updated_by = $1,
+                updated_at = $2,
                 position_prefix = $3,
                 password_hash = $4,
                 salt = $5,
@@ -435,7 +874,7 @@ public class PostgreStaffDao : IStaffDao
                 new() { Value = updatedStaffDto.Address },
                 new() { Value = updatedStaffDto.EmploymentStatus },
                 new() { Value = updatedStaffDto.EmploymentStartDate },
-                new() { Value = updatedStaffDto.EmploymentEndDate },
+                new() { Value = updatedStaffDto.EmploymentEndDate ?? (object)DBNull.Value, NpgsqlDbType = NpgsqlDbType.Date },
                 new() { Value = storeId },
                 new() { Value = id }
             }
@@ -570,6 +1009,63 @@ public class PostgreStaffDao : IStaffDao
 
                 return staffDto;
             }
+        }
+
+        return null;
+    }
+
+    private async Task<List<StaffDto>?> processCommandReader(NpgsqlDataReader? reader)
+    {
+        if (reader == null)
+            return null;
+
+        if (reader.HasRows)
+        {
+            List<StaffDto> staffDtos = new();
+
+            while (await reader.ReadAsync())
+            {
+                StaffDto newStaffDto = new StaffDto()
+                {
+                    // BaseModel fields
+                    Id = reader.GetInt64(reader.GetOrdinal("id")),
+                    CreatedBy = reader.GetString(reader.GetOrdinal("created_by")),   // ensured not null in creation
+                    CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")), // ensured not null in creation
+                                                                                     // Staff fields
+                    StoreId = reader.GetInt64(reader.GetOrdinal("store_id")),
+                    PositionPrefix = reader.GetString(reader.GetOrdinal("position_prefix")),
+                    PasswordHash = string.Empty,    // not needed in the context of Get
+                    Salt = string.Empty,            // not needed in the context of Get
+                    Name = reader.GetString(reader.GetOrdinal("name")),
+                    Gender = reader.GetString(reader.GetOrdinal("gender")),
+                    DateOfBirth = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date_of_birth"))),
+                    Email = reader.GetString(reader.GetOrdinal("email")),
+                    Tel = reader.GetString(reader.GetOrdinal("tel")),
+                    Address = reader.GetString(reader.GetOrdinal("address")),
+                    EmploymentStatus = reader.GetString(reader.GetOrdinal("employment_status")),
+                    EmploymentStartDate = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("employment_start_date")))
+                };
+                
+                // Handle nullable columns
+                newStaffDto.UpdatedBy = reader.IsDBNull(reader.GetOrdinal("updated_by")) == true ?
+                    null : reader.GetString(reader.GetOrdinal("updated_by"));
+
+                newStaffDto.UpdatedAt = reader.IsDBNull(reader.GetOrdinal("updated_at")) == true ?
+                    null : reader.GetDateTime(reader.GetOrdinal("updated_at"));
+
+                newStaffDto.DeletedBy = reader.IsDBNull(reader.GetOrdinal("deleted_by")) == true ?
+                    null : reader.GetString(reader.GetOrdinal("deleted_by"));
+
+                newStaffDto.DeletedAt = reader.IsDBNull(reader.GetOrdinal("deleted_at")) == true ?
+                    null : reader.GetDateTime(reader.GetOrdinal("deleted_at"));
+
+                newStaffDto.EmploymentEndDate = reader.IsDBNull(reader.GetOrdinal("employment_end_date")) == true ?
+                    null : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("employment_end_date")));
+
+                staffDtos.Add(newStaffDto);
+            }
+
+            return staffDtos;
         }
 
         return null;

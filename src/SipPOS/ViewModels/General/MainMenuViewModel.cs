@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 
 using SipPOS.Views.Login;
-using SipPOS.Views.Cashier;
 using SipPOS.Views.Staff;
 using SipPOS.Views.Configuration;
 using SipPOS.Views.Inventory;
@@ -48,7 +47,7 @@ public class MainMenuViewModel : INotifyPropertyChanged
         {
             return;
         }
-        
+
         _pageTilte = $"Cửa hàng: {storeAuthenticationService.Context.CurrentStore.Name}";
 
         // Check staff authentication status
@@ -73,56 +72,92 @@ public class MainMenuViewModel : INotifyPropertyChanged
     /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    /// <summary>
+    /// Handles the button click to navigate to the Cashier Menu view.
+    /// </summary>
     public void HandleToCashierMenuViewButtonClick()
     {
-        
+
     }
 
+    /// <summary>
+    /// Handles the button click to navigate to the Inventory Menu view.
+    /// </summary>
     public void HandleToInventoryMenuViewClick()
     {
         App.NavigateTo(typeof(InventoryMenuView));
     }
 
+    /// <summary>
+    /// Handles the button click to navigate to the Staff Management view.
+    /// </summary>
     public void HandleToStaffManagementViewButtonClick()
     {
         App.NavigateTo(typeof(StaffManagementView));
     }
 
+    /// <summary>
+    /// Handles the button click to navigate to the Profile view.
+    /// </summary>
     public void HandleToProfileViewButtonClick()
     {
-        
+
     }
 
+    /// <summary>
+    /// Handles the button click to navigate to the Revenue Dashboard view.
+    /// </summary>
     public void HandleToRevenueDashboardViewButtonClick()
     {
-    
+
     }
 
+    /// <summary>
+    /// Handles the button click to navigate to the Special Offers Management view.
+    /// </summary>
     public void HandleToSpecialOffersManagementViewButtonClick()
     {
-    
+
     }
 
+    /// <summary>
+    /// Handles the button click to navigate to the Configuration Menu view.
+    /// </summary>
     public void HandleToConfigurationMenuViewButtonClick()
     {
         App.NavigateTo(typeof(ConfigurationMenuView));
     }
 
+    /// <summary>
+    /// Handles the button click to open or close the shift.
+    /// </summary>
     public void HandleOpenSlashCloseShiftButtonClick()
     {
-    
+
     }
 
+    /// <summary>
+    /// Handles the button click to return to the Login view.
+    /// </summary>
     public void HandleReturnToLoginViewButtonClick()
     {
         App.NavigateTo(typeof(LoginView));
     }
 
+    /// <summary>
+    /// Handles the button click to change the ID (logout of staff account).
+    /// </summary>
     public void HandleChangeIdButtonClick()
     {
+        if (App.GetService<IStaffAuthenticationService>() is not StaffAuthenticationService staffAuthenticationService)
+        {
+            return;
+        }
+
+        staffAuthenticationService.Logout();
+
         // Store is logged in, so return to LoginView
         // will change the login tab to StaffLogin
-
         App.NavigateTo(typeof(LoginView));
     }
 
@@ -135,6 +170,9 @@ public class MainMenuViewModel : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
+    /// <summary>
+    /// Gets or sets the page title.
+    /// </summary>
     public string PageTitle
     {
         get => _pageTilte;
@@ -144,7 +182,10 @@ public class MainMenuViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(PageTitle));
         }
     }
-    
+
+    /// <summary>
+    /// Gets or sets the current staff authentication status.
+    /// </summary>
     public string CurrentStaffAuthenticationStatus
     {
         get => _currentStaffAuthenticationStatus;

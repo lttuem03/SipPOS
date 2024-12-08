@@ -68,6 +68,11 @@ public sealed partial class StaffLoginView : Page
         ViewModel.HandleNumpadButtonClick(number);
     }
 
+    /// <summary>
+    /// Handles the Click event of the staff login button.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void staffLoginButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.HandleStaffLoginButtonClick(errorMessageTextBlock);

@@ -13,6 +13,8 @@ using SipPOS.Views.Inventory;
 using SipPOS.ViewModels.Cashier;
 using SipPOS.ViewModels.Inventory;
 
+using SipPOS.Services.Account.Interfaces;
+using SipPOS.Services.Account.Implementations;
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.Entity.Interfaces;
@@ -24,6 +26,7 @@ using SipPOS.Services.Authentication.Implementations;
 
 using SipPOS.Context.Shift.Interface;
 using SipPOS.Context.Shift.Implementation;
+using SipPOS.ViewModels.Setup;
 
 namespace SipPOS;
 
@@ -59,6 +62,11 @@ public partial class App : Application
         var postgres_password = DotNetEnv.Env.GetString("POSTGRES_PASSWORD");
         var postgres_database = DotNetEnv.Env.GetString("POSTGRES_DATABASE");
 
+        // Configure culture
+        System.Globalization.CultureInfo cultureInfo = new System.Globalization.CultureInfo("vi-VN");
+        System.Threading.Thread.CurrentThread.CurrentCulture = cultureInfo;
+        System.Threading.Thread.CurrentThread.CurrentUICulture = cultureInfo;
+
         Host = Microsoft.Extensions.Hosting.Host.
         CreateDefaultBuilder().
         UseContentRoot(AppContext.BaseDirectory).
@@ -87,6 +95,7 @@ public partial class App : Application
             services.AddSingleton<IStoreAccountCreationService>(new StoreAccountCreationService());
             services.AddSingleton<IStoreAuthenticationService>(new StoreAuthenticationService());
             services.AddSingleton<IStoreCredentialsService>(new StoreCredentialsService());
+            services.AddSingleton<IStaffAccountCreationService>(new StaffAccountCreationService());
             services.AddSingleton<IStaffAuthenticationService>(new StaffAuthenticationService());
 
             // Views and ViewModels
@@ -96,6 +105,8 @@ public partial class App : Application
             services.AddTransient<ProductManagementView>();
             services.AddTransient<CustomerPaymentViewModel>();
             services.AddTransient<CustomerPaymentView>();
+
+            services.AddSingleton<IStoreSetupViewModel, StoreSetupViewModel>();
 
             //Add AutoMapper
             services.AddAutoMapper(typeof(App).Assembly);
@@ -137,6 +148,7 @@ public partial class App : Application
 
         if (rootFrame != null)
         {
+            rootFrame.BackStack.Clear();
             rootFrame.Navigate(pageType, parameter);
         }
         else
@@ -185,6 +197,11 @@ public partial class App : Application
         _mainWindow.Activate();
     }
 
+    /// <summary>
+    /// Checks the application startup conditions and initializes the main window.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private async void AppStartupCheck(object sender, RoutedEventArgs e)
     {
         if (_mainWindow == null)
@@ -201,7 +218,7 @@ public partial class App : Application
         // Check if the database connection service is working (if the app is using a database)
         var storeDao = App.GetService<IStoreDao>();
         var staffDao = App.GetService<IStaffDao>();
-        
+
         if (storeDao is PostgreStoreDao || staffDao is PostgreStaffDao)
         {
             try
@@ -219,7 +236,7 @@ public partial class App : Application
                     CloseButtonText = "Thoát chương trình",
                     XamlRoot = _mainWindow.Content.XamlRoot
                 };
-        
+
                 await errorDialog.ShowAsync();
                 App.Current.Exit();
                 return;
@@ -231,7 +248,7 @@ public partial class App : Application
 
         Frame rootFrame = new Frame();
         rootFrame.NavigationFailed += _onNavigationFailed;
-        
+
         mainWindow.Content = rootFrame;
         mainWindow.Activate();
 
@@ -246,18 +263,18 @@ public partial class App : Application
 
         // Check if a Store's credentials is saved for authentication (clicked "Save credentials" on last authentication)
         var storeCredentialsService = App.GetService<IStoreCredentialsService>();
-        
+
         (var storeUsername, var storePassword) = storeCredentialsService.LoadCredentials();
-        
+
         if (storeUsername != null && storePassword != null)
         {
             var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
             var loginSuccessful = await storeAuthenticationService.LoginAsync(storeUsername, storePassword);
-        
+
             // Even if store authentication succeeded, we still navigate to the login page
             // and set the login tab to StaffLogin
         }
-        
+
         rootFrame.Navigate(typeof(LoginView));
 
         // Close the AppStartupCheckWindow and change the instance of _mainWindow

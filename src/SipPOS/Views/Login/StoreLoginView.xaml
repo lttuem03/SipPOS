@@ -53,21 +53,37 @@
                 Name="storeLoginButton"
                 Click="storeLoginButton_Click"
                 HorizontalAlignment="Center"
+                Width="250"
                 Margin="0,0,0,10"
                 Content="Đăng nhập"/>
             <!--Account creation Button-->
             <Button 
                 Name="createNewStoreAccountButton"
                 Click="createNewStoreAccountButton_Click"
-                Content="Tạo cửa hàng mới" 
-                HorizontalAlignment="Center"/>
+                HorizontalAlignment="Center"
+                Width="250"
+                Content="Tạo cửa hàng mới"/>
         </StackPanel>
-        <Button
-            Name="storeLogoutButton"
-            Click="storeLogoutButton_Click"
-            Visibility="{x:Bind ViewModel.StoreLogoutButtonVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+
+        <StackPanel
+            Orientation="Vertical"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Content="Đăng xuất tài khoản cửa hàng"/>
+            Visibility="{x:Bind ViewModel.StoreLogoutButtonVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <TextBlock
+                Text="{x:Bind ViewModel.StoreLastLoginStatus}"
+                Margin="0,0,0,50"/>
+            <Button
+                Name="storeLogoutButton"
+                Click="storeLogoutButton_Click"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <TextBlock 
+                    Text="Đăng xuất tài khoản cửa hàng" 
+                    HorizontalAlignment="Center" 
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    FontSize="16"/>
+            </Button>
+        </StackPanel>
     </Grid>
 </Page>

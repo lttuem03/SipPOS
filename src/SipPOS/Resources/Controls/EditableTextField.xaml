@@ -22,7 +22,8 @@
 
         <TextBox 
             x:Name="TextBoxField" 
-            Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+            Text="{x:Bind Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+            PlaceholderText="{x:Bind PlaceholderText, Mode=OneWay}"
             IsReadOnly="True" 
             TextWrapping="Wrap"
             Grid.Row="0" Grid.Column="0"/>

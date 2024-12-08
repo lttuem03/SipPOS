@@ -36,56 +36,111 @@ public sealed partial class MainMenuView : Page
         _timer.Start();
     }
 
+    /// <summary>
+    /// Handles the Click event of the toCashierMenuViewButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void toCashierMenuViewButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.HandleToCashierMenuViewButtonClick();
     }
 
+    /// <summary>
+    /// Handles the Click event of the toInventoryMenuView control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void toInventoryMenuView_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.HandleToInventoryMenuViewClick();
     }
 
+    /// <summary>
+    /// Handles the Click event of the toStaffManagementViewButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void toStaffManagementViewButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.HandleToStaffManagementViewButtonClick();
     }
 
+    /// <summary>
+    /// Handles the Click event of the toProfileViewButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void toProfileViewButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.HandleToProfileViewButtonClick();
     }
 
+    /// <summary>
+    /// Handles the Click event of the toRevenueDashboardViewButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void toRevenueDashboardViewButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.HandleToRevenueDashboardViewButtonClick();
     }
 
+    /// <summary>
+    /// Handles the Click event of the toSpecialOffersManagementViewButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void toSpecialOffersManagementViewButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.HandleToSpecialOffersManagementViewButtonClick();
     }
 
+    /// <summary>
+    /// Handles the Click event of the toConfigurationMenuViewButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void toConfigurationMenuViewButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.HandleToConfigurationMenuViewButtonClick();
     }
 
+    /// <summary>
+    /// Handles the Click event of the openSlashCloseShiftButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void openSlashCloseShiftButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.HandleOpenSlashCloseShiftButtonClick();
     }
 
+    /// <summary>
+    /// Handles the Click event of the returnToLoginViewButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void returnToLoginViewButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.HandleReturnToLoginViewButtonClick();
     }
 
+    /// <summary>
+    /// Handles the Click event of the changeIdButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void changeIdButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.HandleChangeIdButtonClick();
     }
 
+    /// <summary>
+    /// Handles the Click event of the exitProgramButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void exitProgramButton_Click(object sender, RoutedEventArgs e)
     {
         App.Current.Exit();

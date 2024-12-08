@@ -20,9 +20,8 @@ public interface IStaffDao
     /// </summary>
     /// <param name="storeId">The ID of the store.</param>
     /// <param name="staffDto">The data transfer object containing staff details.</param>
-    /// <param name="author">The author of the operation. Presumably is the current staff.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the inserted StaffDto object, or null if the operation failed.</returns>
-    Task<(long id, StaffDto? dto)> InsertAsync(long storeId, StaffDto staffDto, Staff author);
+    Task<(long id, StaffDto? dto)> InsertAsync(long storeId, StaffDto staffDto);
 
     /// <summary>
     /// Retrieves all staff members for a specific store.
@@ -30,6 +29,28 @@ public interface IStaffDao
     /// <param name="storeId">The ID of the store.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a list of StaffDto objects, or null if the operation failed.</returns>
     Task<List<StaffDto>?> GetAllAsync(long storeId);
+
+    /// <summary>
+    /// Gets a list of staff records with pagination.
+    /// </summary>
+    /// <param name="storeId">The ID of the store.</param>
+    /// <param name="page">The page number to retrieve.</param>
+    /// <param name="rowsPerPage">The number of rows per page.</param>
+    /// <param name="keyword">The search keyword for the 'name' column.</param>
+    /// <param name="sortBy">The name of the column in the database schema (written in snake_case).</param>
+    /// <param name="sortDirection">'ASC' or 'DESC'.</param>
+    /// <param name="filterByPositionPrefixes">A list of position prefixes to filter by.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the total number of rows matched and a list of StaffDto objects, or null if the operation failed.</returns>
+    Task<(long totalRowsMatched, List<StaffDto>? staffDtos)> GetWithPagination
+    (
+        long storeId,
+        long page,
+        long rowsPerPage,
+        string keyword = "",
+        string? sortBy = null,
+        string? sortDirection = null,
+        List<string>? filterByPositionPrefixes = null
+    );
 
     /// <summary>
     /// Retrieves a staff member by their ID.

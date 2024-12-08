@@ -1,9 +1,12 @@
-﻿using SipPOS.Models.Entity;
+﻿using System.Text.RegularExpressions;
+
+using SipPOS.Models.Entity;
 using SipPOS.DataTransfer.Entity;
 using SipPOS.Services.DataAccess.Interfaces;
+using SipPOS.Services.Account.Interfaces;
 using SipPOS.Services.General.Interfaces;
 
-namespace SipPOS.Services.General.Implementations;
+namespace SipPOS.Services.Account.Implementations;
 
 /// <summary>
 /// Service for creating store accounts.
@@ -115,7 +118,7 @@ public class StoreAccountCreationService : IStoreAccountCreationService
 
         var emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
 
-        if (System.Text.RegularExpressions.Regex.IsMatch(email, emailPattern))
+        if (Regex.IsMatch(email, emailPattern))
         {
             return "OK";
         }
