@@ -34,10 +34,11 @@
         </Grid.ColumnDefinitions>
         <Grid 
             Grid.Row="0" 
-            HorizontalAlignment="Left" 
+            HorizontalAlignment="Stretch" 
             VerticalAlignment="Center"
             ColumnSpacing="10">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -45,13 +46,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBox 
-                Text="{x:Bind ViewModel.ProductFilterDto.Name, Mode=TwoWay}"
-                Grid.Row="0" Grid.Column="0" 
-                Header="Tên sản phẩm"
-                PlaceholderText="Nhập tên sản phẩm" />
             <ComboBox
-                Grid.Row="0" Grid.Column="1"
+                Grid.Row="0" Grid.Column="0"
                 Header="Chọn danh mục"
                 PlaceholderText="Chọn danh mục"  
                 HorizontalAlignment="Stretch"
@@ -60,7 +56,7 @@
                 SelectedValue="{x:Bind ViewModel.ProductFilterDto.CategoryId, Mode=TwoWay}"
                 ItemsSource="{x:Bind ViewModel.CategoriesFilter}"/>
             <ComboBox 
-                Grid.Row="0" Grid.Column="3" 
+                Grid.Row="0" Grid.Column="1" 
                 Header="Chọn trạng thái"
                 PlaceholderText="Chọn trạng thái"  
                 HorizontalAlignment="Stretch"
@@ -68,6 +64,12 @@
                 SelectedValuePath="Value"
                 SelectedValue="{x:Bind ViewModel.ProductFilterDto.Status, Mode=TwoWay}"
                 ItemsSource="{x:Bind ViewModel.StatusItemsFilter}"/>
+            <TextBox 
+                Text="{x:Bind ViewModel.ProductFilterDto.Name, Mode=TwoWay}"
+                Grid.Row="1" Grid.Column="0" 
+                Grid.ColumnSpan="2"
+                Header="Tên sản phẩm"
+                PlaceholderText="Nhập tên sản phẩm" />
         </Grid>
 
         <StackPanel Grid.Row="1" Orientation="Vertical">

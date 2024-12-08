@@ -33,8 +33,9 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" ColumnSpacing="10">
+        <Grid Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" ColumnSpacing="10">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -42,13 +43,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBox 
-                Text="{x:Bind ViewModel.CategoryFilterDto.Name}"
-                Grid.Row="0" Grid.Column="0" 
-                Header="Tên danh mục"
-                PlaceholderText="Nhập tên danh mục" />
             <ComboBox 
-                Grid.Row="0" Grid.Column="3" 
+                Grid.Row="0" Grid.Column="0" 
                 Header="Chọn trạng thái"
                 PlaceholderText="Chọn trạng thái"  
                 HorizontalAlignment="Stretch"
@@ -56,6 +52,11 @@
                 SelectedValuePath="Value"
                 SelectedValue="{x:Bind ViewModel.CategoryFilterDto.Status, Mode=TwoWay}"
                 ItemsSource="{x:Bind ViewModel.StatusItemsFilter}"/>
+            <TextBox 
+                Text="{x:Bind ViewModel.CategoryFilterDto.Name}"
+                Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="2"
+                Header="Tên danh mục"
+                PlaceholderText="Nhập tên danh mục" />
         </Grid>
 
         <StackPanel Grid.Row="1" Orientation="Vertical">
