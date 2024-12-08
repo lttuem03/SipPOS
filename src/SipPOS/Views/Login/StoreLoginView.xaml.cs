@@ -76,6 +76,11 @@ public sealed partial class StoreLoginView : Page
         ViewModel.HandleSaveStoreCredentialsCheckBoxUnchecked();
     }
 
+    /// <summary>
+    /// Handles the Click event of the store logout button.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void storeLogoutButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.HandleStoreLogoutButtonClick(this.XamlRoot);

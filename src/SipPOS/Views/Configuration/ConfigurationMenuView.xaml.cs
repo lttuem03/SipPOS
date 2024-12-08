@@ -36,6 +36,11 @@ public sealed partial class ConfigurationMenuView : Page
         ViewModel.HandleConfigurationMenuNavigationViewSelectionChanged(configurationMenuNavigationFrame, args);
     }
 
+    /// <summary>
+    /// Handles the Click event of the goBackButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void goBackButton_Click(object sender, RoutedEventArgs e)
     {
         App.NavigateTo(typeof(MainMenuView));

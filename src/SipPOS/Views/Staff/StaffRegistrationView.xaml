@@ -173,6 +173,7 @@
                 <CalendarDatePicker
                     Name="staffEmploymentStartDateCalenderDatePicker"
                     Header="Ngày bắt đầu vào làm"
+                    Foreground="Red"
                     PlaceholderText="Chọn một ngày"
                     HorizontalAlignment="Stretch"
                     DateFormat="{}{day.integer}/{month.integer}/{year.full}"
@@ -238,6 +239,7 @@
                 Grid.Row="4" Grid.Column="0"
                 Grid.ColumnSpan="1"
                 Header="Tên đăng nhập nhân viên (được tạo tự động)"
+                Foreground="Red"
                 Text="{x:Bind ViewModel.StaffCompositeUsername, Mode=TwoWay}"
                 Background="LightYellow"
                 IsReadOnly="True"

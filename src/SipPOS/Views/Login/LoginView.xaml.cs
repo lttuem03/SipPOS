@@ -35,6 +35,11 @@ public sealed partial class LoginView : Page
         ViewModel.HandleLoginNavigationViewSelectionChanged(loginNavigationFrame, args);
     }
 
+    /// <summary>
+    /// Handles the Click event of the exitProgramButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void exitProgramButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         App.Current.Exit();

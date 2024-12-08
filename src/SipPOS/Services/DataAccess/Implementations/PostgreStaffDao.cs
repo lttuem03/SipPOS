@@ -2,12 +2,12 @@
 using System.Text.RegularExpressions;
 
 using Npgsql;
+using NpgsqlTypes;
 
 using SipPOS.DataTransfer.Entity;
 using SipPOS.Models.Entity;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.General.Interfaces;
-using Windows.Devices.Sensors;
 
 namespace SipPOS.Services.DataAccess.Implementations;
 
@@ -207,13 +207,14 @@ public class PostgreStaffDao : IStaffDao
     /// <summary>
     /// Gets a list of staff records with pagination.
     /// </summary>
-    /// <param name="storeId"></param>
-    /// <param name="page"></param>
-    /// <param name="rowsPerPage"></param>
+    /// <param name="storeId">The ID of the store to retrieve staff records for.</param>
+    /// <param name="page">The current page of the pagination.</param>
+    /// <param name="rowsPerPage">The rows per page count of the pagination.</param>
     /// <param name="keyword">The search keyword for the 'name' column.</param>
     /// <param name="sortBy">The name of the column in the database schema (writen in snake_case).</param>
     /// <param name="sortDirection">'ASC' or 'DESC'</param>
-    /// <returns></returns>
+    /// <param name="filterByPositionPrefixes">A nullable list containings the prefixes of filtered position.</param>
+    /// <returns>A tuple, containings a number of rows that matched the criterias (only the count), and the list of (paged) staffs retrieved.</returns>
     public async Task<(long totalRowsMatched, List<StaffDto>? staffDtos)> GetWithPagination
     (
         long storeId,
@@ -253,12 +254,14 @@ public class PostgreStaffDao : IStaffDao
                     SELECT COUNT(*) FROM staff
                     WHERE (store_id = $1)
                     AND (name LIKE $2)
+                    AND (employment_status NOT LIKE '%OutOfEmployment%')
                 ");
 
                 pagedQuery.Append(@"
                     SELECT * FROM staff
                     WHERE (store_id = $1)
                     AND (name LIKE $2)
+                    AND (employment_status NOT LIKE '%OutOfEmployment%')
                 ");
 
                 pagedQuery.AppendLine($"ORDER BY {sortBy} {sortDirection.ToUpper()}");
@@ -299,12 +302,14 @@ public class PostgreStaffDao : IStaffDao
                     SELECT COUNT(*) FROM staff
                     WHERE (store_id = $1)
                     AND (name LIKE $2)
+                    AND (employment_status NOT LIKE '%OutOfEmployment%')
                 ");
 
                 pagedQuery.Append(@"
                     SELECT * FROM staff
                     WHERE (store_id = $1)
                     AND (name LIKE $2)
+                    AND (employment_status NOT LIKE '%OutOfEmployment%')
                 ");
 
                 switch (filterByPositionPrefixes.Count)
@@ -447,11 +452,13 @@ public class PostgreStaffDao : IStaffDao
                 countQuery.Append(@"
                     SELECT COUNT(*) FROM staff 
                     WHERE (store_id = $1)
+                    AND (employment_status NOT LIKE '%OutOfEmployment%')
                 ");
 
                 pagedQuery.Append(@"
                     SELECT * FROM staff
                     WHERE (store_id = $1)
+                    AND (employment_status NOT LIKE '%OutOfEmployment%')
                 ");
 
                 pagedQuery.AppendLine($"ORDER BY {sortBy} {sortDirection.ToUpper()}");
@@ -489,11 +496,13 @@ public class PostgreStaffDao : IStaffDao
                 countQuery.Append(@"
                     SELECT COUNT(*) FROM staff 
                     WHERE (store_id = $1)
+                    AND (employment_status NOT LIKE '%OutOfEmployment%')
                 ");
 
                 pagedQuery.Append(@"
                     SELECT * FROM staff
                     WHERE (store_id = $1)
+                    AND (employment_status NOT LIKE '%OutOfEmployment%')
                 ");
 
                 switch (filterByPositionPrefixes.Count)
@@ -816,14 +825,24 @@ public class PostgreStaffDao : IStaffDao
             return null;
         }
 
+        if (updatedStaffDto.PasswordHash == string.Empty)
+        {
+            updatedStaffDto.PasswordHash = "*".PadLeft(64); // to sastify constraint of the database schema
+        }
+
+        if (updatedStaffDto.Salt == string.Empty)
+        {
+            updatedStaffDto.Salt = "*".PadLeft(64); // to sastify constraint of the database schema
+        }
+
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
 
         using var connection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection;
 
         await using var command = new NpgsqlCommand(@"
             UPDATE staff
-            SET update_by = $1,
-                update_at = $2,
+            SET updated_by = $1,
+                updated_at = $2,
                 position_prefix = $3,
                 password_hash = $4,
                 salt = $5,
@@ -855,7 +874,7 @@ public class PostgreStaffDao : IStaffDao
                 new() { Value = updatedStaffDto.Address },
                 new() { Value = updatedStaffDto.EmploymentStatus },
                 new() { Value = updatedStaffDto.EmploymentStartDate },
-                new() { Value = updatedStaffDto.EmploymentEndDate },
+                new() { Value = updatedStaffDto.EmploymentEndDate ?? (object)DBNull.Value, NpgsqlDbType = NpgsqlDbType.Date },
                 new() { Value = storeId },
                 new() { Value = id }
             }

@@ -8,10 +8,15 @@ using SipPOS.DataTransfer.Entity;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.General.Implementations;
-using WinRT.SipPOSVtableClasses;
+using SipPOS.Services.Authentication.Interfaces;
+using SipPOS.Services.Authentication.Implementations;
+using Microsoft.UI.Xaml.Controls;
 
 namespace SipPOS.ViewModels.Staff;
 
+/// <summary>
+/// ViewModel for managing staff-related operations.
+/// </summary>
 public class StaffManagementViewModel : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -32,7 +37,20 @@ public class StaffManagementViewModel : INotifyPropertyChanged
     private long _fromIndex;
     private long _toIndex;
     private string _searchKeyword;
-    
+
+    // Edit functions properties
+    public StaffDto? EditTargetStaff { get; set; }
+    private string _editStaffResult;
+
+    // Contract termination properties
+    public StaffDto? TerminationTargetStaff { get; set; }
+    private string _passwordForContractTermination;
+    private bool _passwordVerified;
+    private string _terminateStaffResult;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StaffManagementViewModel"/> class.
+    /// </summary>
     public StaffManagementViewModel()
     {
         _currentPage = 1;
@@ -42,7 +60,11 @@ public class StaffManagementViewModel : INotifyPropertyChanged
         _fromIndex = 0;
         _toIndex = 0;
         _searchKeyword = "";
-        
+
+        _editStaffResult = "";
+        _passwordForContractTermination = "";
+        _terminateStaffResult = "";
+
         _currentPageStaffList = new();
         PositionPrefixFilter = new();
         PositionPrefixFilter.Add("SM");
@@ -51,6 +73,9 @@ public class StaffManagementViewModel : INotifyPropertyChanged
         UpdateStaffList();
     }
 
+    /// <summary>
+    /// Updates the staff list based on the current filters and pagination settings.
+    /// </summary>
     private async void UpdateStaffList()
     {
         if (App.GetService<IStoreAuthenticationService>() is not StoreAuthenticationService storeAuthenticationService)
@@ -68,7 +93,7 @@ public class StaffManagementViewModel : INotifyPropertyChanged
         var (totalRowsMatched, staffDtos) = await staffDao.GetWithPagination
         (
             storeId: storeAuthenticationService.Context.CurrentStore.Id,
-            page: CurrentPage, 
+            page: CurrentPage,
             rowsPerPage: RowsPerPage,
             keyword: SearchKeyword,
             sortBy: SortBy,
@@ -93,16 +118,27 @@ public class StaffManagementViewModel : INotifyPropertyChanged
         ToIndex = Math.Min(CurrentPage * RowsPerPage, TotalRowsCount);
     }
 
+    /// <summary>
+    /// Raises the PropertyChanged event.
+    /// </summary>
+    /// <param name="propertyName">The name of the property that changed.</param>
     public void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
+    /// <summary>
+    /// Handles the Go Back button click event.
+    /// </summary>
     public void HandleGoBackButtonClick()
     {
         App.NavigateTo(typeof(MainMenuView));
     }
 
+    /// <summary>
+    /// Handles the Sort By ComboBox selection change event.
+    /// </summary>
+    /// <param name="comboBoxIndex">The selected index of the ComboBox.</param>
     public void HandleSortByComboBoxSelectionChanged(int comboBoxIndex)
     {
         switch (comboBoxIndex)
@@ -119,6 +155,10 @@ public class StaffManagementViewModel : INotifyPropertyChanged
         UpdateStaffList();
     }
 
+    /// <summary>
+    /// Handles the Sort Direction ComboBox selection change event.
+    /// </summary>
+    /// <param name="comboBoxIndex">The selected index of the ComboBox.</param>
     public void HandleSortDirectionComboBoxSelectionChanged(int comboBoxIndex)
     {
         switch (comboBoxIndex)
@@ -136,6 +176,12 @@ public class StaffManagementViewModel : INotifyPropertyChanged
         UpdateStaffList();
     }
 
+    /// <summary>
+    /// Handles the Position CheckBoxes change event.
+    /// </summary>
+    /// <param name="smChecked">Whether the SM checkbox is checked.</param>
+    /// <param name="amChecked">Whether the AM checkbox is checked.</param>
+    /// <param name="stChecked">Whether the ST checkbox is checked.</param>
     public void HandlePositionCheckBoxesChanged(bool? smChecked, bool? amChecked, bool? stChecked)
     {
         PositionPrefixFilter = new List<string>();
@@ -158,6 +204,10 @@ public class StaffManagementViewModel : INotifyPropertyChanged
         UpdateStaffList();
     }
 
+    /// <summary>
+    /// Handles the Rows Per Page ComboBox selection change event.
+    /// </summary>
+    /// <param name="comboBoxIndex">The selected index of the ComboBox.</param>
     public void HandleRowsPerPageComboBoxSelectionChanged(int comboBoxIndex)
     {
         switch (comboBoxIndex)
@@ -179,6 +229,9 @@ public class StaffManagementViewModel : INotifyPropertyChanged
         UpdateStaffList();
     }
 
+    /// <summary>
+    /// Handles the Previous Page button click event.
+    /// </summary>
     public void HandlePreviousPageButtonClick()
     {
         if (CurrentPage - 1 >= 1)
@@ -188,6 +241,9 @@ public class StaffManagementViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the Next Page button click event.
+    /// </summary>
     public void HandleNextPageButtonClick()
     {
         if (CurrentPage + 1 <= TotalPages)
@@ -197,11 +253,95 @@ public class StaffManagementViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the update of staff details.
+    /// </summary>
+    /// <param name="updatedStaffDto">The updated staff details.</param>
+    /// <param name="editStaffResultContentDialog">The content dialog to show the result.</param>
+    public async void HandleUpdateStaffDetails(StaffDto updatedStaffDto, ContentDialog editStaffResultContentDialog)
+    {
+        if (App.GetService<IStaffAuthenticationService>() is not StaffAuthenticationService staffAuthenticationService)
+            return;
+
+        if (staffAuthenticationService.Context.CurrentStaff == null)
+            return;
+
+        if (updatedStaffDto.Id == null)
+            return;
+
+        var staffDao = App.GetService<IStaffDao>();
+
+        var savedStaffDto = await staffDao.UpdateByIdAsync
+        (
+            storeId: updatedStaffDto.StoreId,
+            id: updatedStaffDto.Id.Value,
+            updatedStaffDto: updatedStaffDto,
+            author: staffAuthenticationService.Context.CurrentStaff
+        );
+
+        if (savedStaffDto != null)
+        {
+            EditStaffResult = "Lưu thông tin nhân viên thành công.";
+            UpdateStaffList();
+        }
+        else
+        {
+            EditStaffResult = "Lưu thông tin nhân viên thất bại. Đã có lỗi xảy ra.";
+        }
+
+        _ = await editStaffResultContentDialog.ShowAsync();
+    }
+
+    /// <summary>
+    /// Handles the termination of staff.
+    /// </summary>
+    /// <param name="deletedStaffDto">The staff details to be terminated.</param>
+    /// <param name="terminateStaffResultContentDialog">The content dialog to show the result.</param>
+    public async void HandleTerminateStaff(StaffDto deletedStaffDto, ContentDialog terminateStaffResultContentDialog)
+    {
+        if (App.GetService<IStaffAuthenticationService>() is not StaffAuthenticationService staffAuthenticationService)
+            return;
+
+        if (staffAuthenticationService.Context.CurrentStaff == null)
+            return;
+
+        if (deletedStaffDto.Id == null)
+            return;
+
+        var staffDao = App.GetService<IStaffDao>();
+
+        var savedStaffDto = await staffDao.UpdateByIdAsync
+        (
+            storeId: deletedStaffDto.StoreId,
+            id: deletedStaffDto.Id.Value,
+            updatedStaffDto: deletedStaffDto,
+            author: staffAuthenticationService.Context.CurrentStaff
+        );
+
+        if (savedStaffDto != null)
+        {
+            TerminateStaffResult = "Hủy hợp đồng với nhân viên thành công.";
+            UpdateStaffList();
+        }
+        else
+        {
+            TerminateStaffResult = "Hủy hợp đồng với nhân viên thất bại. Đã có lỗi xảy ra.";
+        }
+
+        _ = await terminateStaffResultContentDialog.ShowAsync();
+    }
+
+    /// <summary>
+    /// Handles the Register New Staff button click event.
+    /// </summary>
     public void HandleRegisterNewStaffButtonClick()
     {
         App.NavigateTo(typeof(StaffRegistrationView));
     }
 
+    /// <summary>
+    /// Gets or sets the current page staff list.
+    /// </summary>
     public ObservableCollection<StaffDto> CurrentPageStaffList
     {
         get => _currentPageStaffList;
@@ -212,6 +352,9 @@ public class StaffManagementViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the current page.
+    /// </summary>
     public long CurrentPage
     {
         get => _currentPage;
@@ -222,6 +365,9 @@ public class StaffManagementViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the total pages.
+    /// </summary>
     public long TotalPages
     {
         get => _totalPages;
@@ -232,6 +378,9 @@ public class StaffManagementViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the rows per page.
+    /// </summary>
     public long RowsPerPage
     {
         get => _rowsPerPage;
@@ -241,7 +390,10 @@ public class StaffManagementViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(RowsPerPage));
         }
     }
-    
+
+    /// <summary>
+    /// Gets or sets the total rows count.
+    /// </summary>
     public long TotalRowsCount
     {
         get => _totalRowsCount;
@@ -252,6 +404,9 @@ public class StaffManagementViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the from index.
+    /// </summary>
     public long FromIndex
     {
         get => _fromIndex;
@@ -262,6 +417,9 @@ public class StaffManagementViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the to index.
+    /// </summary>
     public long ToIndex
     {
         get => _toIndex;
@@ -272,6 +430,9 @@ public class StaffManagementViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the search keyword.
+    /// </summary>
     public string SearchKeyword
     {
         get => _searchKeyword;
@@ -280,6 +441,58 @@ public class StaffManagementViewModel : INotifyPropertyChanged
             _searchKeyword = value;
             OnPropertyChanged(nameof(SearchKeyword));
             UpdateStaffList();
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the edit staff result.
+    /// </summary>
+    public string EditStaffResult
+    {
+        get => _editStaffResult;
+        set
+        {
+            _editStaffResult = value;
+            OnPropertyChanged(nameof(EditStaffResult));
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the password for contract termination.
+    /// </summary>
+    public string PasswordForContractTermination
+    {
+        get => _passwordForContractTermination;
+        set
+        {
+            _passwordForContractTermination = value;
+            OnPropertyChanged(nameof(PasswordForContractTermination));
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the password is verified.
+    /// </summary>
+    public bool PasswordVerified
+    {
+        get => _passwordVerified;
+        set
+        {
+            _passwordVerified = value;
+            OnPropertyChanged(nameof(PasswordVerified));
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the terminate staff result.
+    /// </summary>
+    public string TerminateStaffResult
+    {
+        get => _terminateStaffResult;
+        set
+        {
+            _terminateStaffResult = value;
+            OnPropertyChanged(nameof(TerminateStaffResult));
         }
     }
 }

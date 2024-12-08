@@ -197,6 +197,11 @@ public partial class App : Application
         _mainWindow.Activate();
     }
 
+    /// <summary>
+    /// Checks the application startup conditions and initializes the main window.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private async void AppStartupCheck(object sender, RoutedEventArgs e)
     {
         if (_mainWindow == null)
@@ -213,7 +218,7 @@ public partial class App : Application
         // Check if the database connection service is working (if the app is using a database)
         var storeDao = App.GetService<IStoreDao>();
         var staffDao = App.GetService<IStaffDao>();
-        
+
         if (storeDao is PostgreStoreDao || staffDao is PostgreStaffDao)
         {
             try
@@ -231,7 +236,7 @@ public partial class App : Application
                     CloseButtonText = "Thoát chương trình",
                     XamlRoot = _mainWindow.Content.XamlRoot
                 };
-        
+
                 await errorDialog.ShowAsync();
                 App.Current.Exit();
                 return;
@@ -243,7 +248,7 @@ public partial class App : Application
 
         Frame rootFrame = new Frame();
         rootFrame.NavigationFailed += _onNavigationFailed;
-        
+
         mainWindow.Content = rootFrame;
         mainWindow.Activate();
 
@@ -258,18 +263,18 @@ public partial class App : Application
 
         // Check if a Store's credentials is saved for authentication (clicked "Save credentials" on last authentication)
         var storeCredentialsService = App.GetService<IStoreCredentialsService>();
-        
+
         (var storeUsername, var storePassword) = storeCredentialsService.LoadCredentials();
-        
+
         if (storeUsername != null && storePassword != null)
         {
             var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
             var loginSuccessful = await storeAuthenticationService.LoginAsync(storeUsername, storePassword);
-        
+
             // Even if store authentication succeeded, we still navigate to the login page
             // and set the login tab to StaffLogin
         }
-        
+
         rootFrame.Navigate(typeof(LoginView));
 
         // Close the AppStartupCheckWindow and change the instance of _mainWindow

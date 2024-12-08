@@ -11,6 +11,9 @@ using SipPOS.Services.Account.Interfaces;
 
 namespace SipPOS.ViewModels.Staff;
 
+/// <summary>
+/// ViewModel for staff registration.
+/// </summary>
 public class StaffRegistrationViewModel : INotifyPropertyChanged
 {
     // Data-bound properties
@@ -43,6 +46,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StaffRegistrationViewModel"/> class.
+    /// </summary>
     public StaffRegistrationViewModel()
     {
         _staffNameErrorMessageOpacity = 0.0F;
@@ -74,11 +80,19 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         _staffId = -1;
     }
 
+    /// <summary>
+    /// Raises the PropertyChanged event.
+    /// </summary>
+    /// <param name="propertyName">Name of the property that changed.</param>
     public void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
+    /// <summary>
+    /// Handles the selection change of the staff gender ComboBox.
+    /// </summary>
+    /// <param name="comboBoxIndex">Index of the selected item.</param>
     public void HandleStaffGenderComboBoxSelectionChanged(int comboBoxIndex)
     {
         switch (comboBoxIndex)
@@ -92,16 +106,26 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the date change of the staff date of birth CalendarDatePicker.
+    /// </summary>
     public void HandleStaffDateOfBirthCalenderDatePickerDateChanged()
     {
         StaffDateOfBirthString = StaffDateOfBirth.ToString("dd/MM/yyyy");
     }
 
+    /// <summary>
+    /// Handles the date change of the staff employment start date CalendarDatePicker.
+    /// </summary>
     public void HandleStaffEmploymentStartDateCalenderDatePickerDateChanged()
     {
         StaffEmploymentStartDateString = StaffEmploymentStartDate.ToString("dd/MM/yyyy");
     }
 
+    /// <summary>
+    /// Handles the selection change of the staff position ComboBox.
+    /// </summary>
+    /// <param name="comboBoxIndex">Index of the selected item.</param>
     public async void HandleStaffPositionComboBoxSelectionChanged(int comboBoxIndex)
     {
         // Still hasn't retrieve yet
@@ -109,18 +133,18 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         {
             if (App.GetService<IStoreAuthenticationService>() is not StoreAuthenticationService storeAuthenticationService)
                 return;
-            
+
             if (storeAuthenticationService.Context.CurrentStore == null)
                 return;
-            
+
             _staffRawInfo.StoreId = storeAuthenticationService.Context.CurrentStore.Id;
-            
+
             var staffDao = App.GetService<IStaffDao>();
             var allStaffRecords = await staffDao.GetAllAsync(storeAuthenticationService.Context.CurrentStore.Id);
-            
+
             if (allStaffRecords == null)
                 return;
-            
+
             _staffId = allStaffRecords.Count; // this is not used when saving to database, but it is used let the user know their username
         }
 
@@ -135,6 +159,11 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the click event of the register staff button.
+    /// </summary>
+    /// <param name="confirmStaffInformationContentDialog">Content dialog to confirm staff information.</param>
+    /// <param name="accountCreationResultContentDialog">Content dialog to show account creation result.</param>
     public async void HandleRegisterStaffButtonClick(ContentDialog confirmStaffInformationContentDialog,
                                                      ContentDialog accountCreationResultContentDialog)
     {
@@ -167,6 +196,10 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         App.NavigateTo(typeof(StaffManagementView));
     }
 
+    /// <summary>
+    /// Validates the staff information.
+    /// </summary>
+    /// <returns>True if all fields are valid, otherwise false.</returns>
     private bool validateStaffInformation()
     {
         var allFieldsValid = true;
@@ -225,6 +258,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         return allFieldsValid;
     }
 
+    /// <summary>
+    /// Gets or sets the staff name.
+    /// </summary>
     public string StaffName
     {
         get => _staffRawInfo.Name;
@@ -235,6 +271,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff gender.
+    /// </summary>
     public string StaffGender
     {
         get => _staffRawInfo.Gender;
@@ -245,6 +284,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff date of birth.
+    /// </summary>
     public DateTimeOffset StaffDateOfBirth
     {
         // the time returned by CalendarDatePicker is DateTimeOffset, so we have to do casting here
@@ -256,6 +298,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff date of birth string.
+    /// </summary>
     public string StaffDateOfBirthString
     {
         get => _staffDateOfBirthString;
@@ -266,6 +311,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff email.
+    /// </summary>
     public string StaffEmail
     {
         get => _staffRawInfo.Email;
@@ -276,6 +324,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff telephone number.
+    /// </summary>
     public string StaffTel
     {
         get => _staffRawInfo.Tel;
@@ -286,6 +337,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff employment start date.
+    /// </summary>
     public DateTimeOffset StaffEmploymentStartDate
     {
         // the time returned by CalendarDatePicker is DateTimeOffset, so we have to do casting here
@@ -297,6 +351,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff employment start date string.
+    /// </summary>
     public string StaffEmploymentStartDateString
     {
         get => _staffEmploymentStartDateString;
@@ -307,6 +364,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff address.
+    /// </summary>
     public string StaffAddress
     {
         get => _staffRawInfo.Address;
@@ -317,6 +377,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff position prefix.
+    /// </summary>
     public string StaffPositionPrefix
     {
         get => _staffRawInfo.PositionPrefix;
@@ -328,6 +391,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff composite username.
+    /// </summary>
     public string StaffCompositeUsername
     {
         get => _staffCompositeUsername;
@@ -338,6 +404,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opacity of the staff name error message.
+    /// </summary>
     public float StaffNameErrorMessageOpacity
     {
         get => _staffNameErrorMessageOpacity;
@@ -348,6 +417,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff name error message text.
+    /// </summary>
     public string StaffNameErrorMessageText
     {
         get => _staffNameErrorMessageText;
@@ -358,6 +430,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opacity of the staff gender error message.
+    /// </summary>
     public float StaffGenderErrorMessageOpacity
     {
         get => _staffGenderErrorMessageOpacity;
@@ -368,6 +443,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff gender error message text.
+    /// </summary>
     public string StaffGenderErrorMessageText
     {
         get => _staffGenderErrorMessageText;
@@ -378,6 +456,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opacity of the staff email error message.
+    /// </summary>
     public float StaffEmailErrorMessageOpacity
     {
         get => _staffEmailErrorMessageOpacity;
@@ -388,6 +469,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff email error message text.
+    /// </summary>
     public string StaffEmailErrorMessageText
     {
         get => _staffEmailErrorMessageText;
@@ -398,6 +482,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opacity of the staff telephone error message.
+    /// </summary>
     public float StaffTelErrorMessageOpacity
     {
         get => _staffTelErrorMessageOpacity;
@@ -408,6 +495,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff telephone error message text.
+    /// </summary>
     public string StaffTelErrorMessageText
     {
         get => _staffTelErrorMessageText;
@@ -418,6 +508,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opacity of the staff address error message.
+    /// </summary>
     public float StaffAddressErrorMessageOpacity
     {
         get => _staffAddressErrorMessageOpacity;
@@ -428,6 +521,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff address error message text.
+    /// </summary>
     public string StaffAddressErrorMessageText
     {
         get => _staffAddressErrorMessageText;
@@ -438,6 +534,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opacity of the staff position error message.
+    /// </summary>
     public float StaffPositionErrorMessageOpacity
     {
         get => _staffPositionErrorMessageOpacity;
@@ -448,6 +547,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff position error message text.
+    /// </summary>
     public string StaffPositionErrorMessageText
     {
         get => _staffPositionErrorMessageText;
@@ -458,6 +560,9 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the account creation result.
+    /// </summary>
     public string AccountCreationResult
     {
         get => _accountCreationResult;

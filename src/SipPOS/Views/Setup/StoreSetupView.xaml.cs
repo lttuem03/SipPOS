@@ -5,10 +5,19 @@ using SipPOS.ViewModels.Setup;
 
 namespace SipPOS.Views.Setup;
 
+/// <summary>
+/// Represents the StoreSetupView.
+/// </summary>
 public sealed partial class StoreSetupView : Page
 {
-    public StoreSetupViewModel? ViewModel { get; } // SINGLETON, USED ACCROSS ALL PAGES
+    /// <summary>
+    /// Gets the view model for the store setup.
+    /// </summary>
+    public StoreSetupViewModel? ViewModel { get; } // SINGLETON, USED ACROSS ALL PAGES
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StoreSetupView"/> class.
+    /// </summary>
     public StoreSetupView()
     {
         this.InitializeComponent();
@@ -21,6 +30,11 @@ public sealed partial class StoreSetupView : Page
         }
     }
 
+    /// <summary>
+    /// Handles the Click event of the toPreviousStepButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void toPreviousStepButton_Click(object sender, RoutedEventArgs e)
     {
         if (ViewModel == null)
@@ -29,6 +43,11 @@ public sealed partial class StoreSetupView : Page
         ViewModel.HandleToPreviousStepButtonClick();
     }
 
+    /// <summary>
+    /// Handles the Click event of the toNextStepButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void toNextStepButton_Click(object sender, RoutedEventArgs e)
     {
         if (ViewModel == null)

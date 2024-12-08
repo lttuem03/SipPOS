@@ -15,6 +15,9 @@ using SipPOS.Services.Authentication.Implementations;
 
 namespace SipPOS.ViewModels.Setup;
 
+/// <summary>
+/// ViewModel for managing the store setup process.
+/// </summary>
 public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
 {
     // IMPORTANT: This ViewModel is used by ALL the pages in the
@@ -63,6 +66,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
     private string _storeManagerDateOfBirthString = string.Empty;
     private string _storeManagerEmploymentStartDateString = string.Empty;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StoreSetupViewModel"/> class.
+    /// </summary>
     public StoreSetupViewModel()
     {
         _pages = new Dictionary<int, Type>
@@ -115,6 +121,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Navigates to the first page of the setup process.
+    /// </summary>
     public void ToFirstPage()
     {
         if (StoreSetupNavigationFrame == null)
@@ -123,6 +132,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         StoreSetupNavigationFrame.Navigate(_pages[0]);
     }
 
+    /// <summary>
+    /// Handles the click event to navigate to the previous step in the setup process.
+    /// </summary>
     public void HandleToPreviousStepButtonClick()
     {
         if (StoreSetupNavigationFrame == null)
@@ -138,6 +150,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Handles the click event to navigate to the next step in the setup process.
+    /// </summary>
     public void HandleToNextStepButtonClick()
     {
         if (StoreSetupNavigationFrame == null)
@@ -169,6 +184,10 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Handles the click event to complete the setup process.
+    /// </summary>
+    /// <param name="setupCompleteContentDialog">The content dialog to show upon setup completion.</param>
     public async void HandleCompleteSetupButtonClick(ContentDialog setupCompleteContentDialog)
     {
         ContentDialogResult result = await setupCompleteContentDialog.ShowAsync();
@@ -204,6 +223,10 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         App.NavigateTo(typeof(MainMenuView));
     }
 
+    /// <summary>
+    /// Handles the selection change event for the manager gender ComboBox.
+    /// </summary>
+    /// <param name="gendermanagerGenderComboBox">The ComboBox for selecting the manager's gender.</param>
     public void HandleManagerGenderComboBoxSelectionChanged(ComboBox gendermanagerGenderComboBox)
     {
         switch (gendermanagerGenderComboBox.SelectedIndex)
@@ -220,16 +243,26 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Handles the date changed event for the manager's date of birth CalendarDatePicker.
+    /// </summary>
     public void HandleManagerDateOfBirthCalenderDatePickerDateChanged()
     {
         StoreManagerDateOfBirthString = StoreManagerDateOfBirth.ToString("dd/MM/yyyy");
     }
-    
+
+    /// <summary>
+    /// Handles the date changed event for the manager's employment start date CalendarDatePicker.
+    /// </summary>    
     public void HandleManagerEmploymentStartDateCalenderDatePickerDateChanged()
     {
         StoreManagerEmploymentStartDateString = StoreManagerEmploymentStartDate.ToString("dd/MM/yyyy");
     }
 
+    /// <summary>
+    /// Validates the store manager's information.
+    /// </summary>
+    /// <returns>True if all fields are valid, otherwise false.</returns>
     private bool validateStoreManagerInformation()
     {
         var allFieldsValid = true;
@@ -289,11 +322,18 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         return allFieldsValid;
     }
 
+    /// <summary>
+    /// Raises the PropertyChanged event.
+    /// </summary>
+    /// <param name="propertyName">The name of the property that changed.</param>
     public void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
+    /// <summary>
+    /// Gets or sets the page number status.
+    /// </summary>
     public string PageNumberStatus
     {
         get => _pageNumberStatus;
@@ -304,6 +344,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text for the next button.
+    /// </summary>
     public string NextButtonText
     {
         get => _nextButtonText;
@@ -314,6 +357,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets the total number of pages.
+    /// </summary>
     public int TotalPageCount
     {
         get => _totalPageCount;
@@ -323,6 +369,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets the current page index.
+    /// </summary>
     public int CurrentPageIndex
     {
         get => _currentPageIndex;
@@ -332,6 +381,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the store manager's name.
+    /// </summary>
     public string StoreManagerName
     {
         get => _storeManagerRawInfo.Name;
@@ -342,6 +394,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the store manager's gender.
+    /// </summary>
     public string StoreManagerGender
     {
         get => _storeManagerRawInfo.Gender;
@@ -352,6 +407,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the store manager's date of birth.
+    /// </summary>
     public DateTimeOffset StoreManagerDateOfBirth
     {
         // the time returned by CalendarDatePicker is DateTimeOffset, so we have to do casting here
@@ -363,6 +421,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the store manager's email.
+    /// </summary>
     public string StoreManagerEmail
     {
         get => _storeManagerRawInfo.Email;
@@ -373,6 +434,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the store manager's telephone number.
+    /// </summary>
     public string StoreManagerTel
     {
         get => _storeManagerRawInfo.Tel;
@@ -383,6 +447,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the store manager's employment start date.
+    /// </summary>
     public DateTimeOffset StoreManagerEmploymentStartDate
     {
         // the time returned by CalendarDatePicker is DateTimeOffset, so we have to do casting here
@@ -394,6 +461,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the store manager's address.
+    /// </summary>
     public string StoreManagerAddress
     {
         get => _storeManagerRawInfo.Address;
@@ -404,6 +474,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets the store manager's composite username.
+    /// </summary>
     public string StoreManagerCompositeUsername
     {
         get => _storeManagerRawInfo.CompositeUsername;
@@ -413,6 +486,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the store manager's password.
+    /// </summary>
     public string StoreManagerPassword
     {
         get => _storeManagerRawInfo.PasswordHash; // in this page, password is un-hashed
@@ -423,6 +499,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the store manager's confirm password.
+    /// </summary>
     public string StoreManagerConfirmPassword
     {
         get => _storeManagerConfirmPassword;
@@ -433,6 +512,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the store manager's date of birth as a string.
+    /// </summary>
     public string StoreManagerDateOfBirthString
     {
         get => _storeManagerDateOfBirthString;
@@ -443,6 +525,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the store manager's employment start date as a string.
+    /// </summary>
     public string StoreManagerEmploymentStartDateString
     {
         get => _storeManagerEmploymentStartDateString;
@@ -453,6 +538,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opacity of the store manager's name error message.
+    /// </summary>
     public float StoreManagerNameErrorMessageOpacity
     {
         get => _storeManagerNameErrorMessageOpacity;
@@ -462,7 +550,10 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
             OnPropertyChanged(nameof(StoreManagerNameErrorMessageOpacity));
         }
     }
-    
+
+    /// <summary>
+    /// Gets or sets the text of the store manager's name error message.
+    /// </summary>
     public string StoreManagerNameErrorMessageText
     {
         get => _storeManagerNameErrorMessageText;
@@ -473,6 +564,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opacity of the store manager's gender error message.
+    /// </summary>
     public float StoreManagerGenderErrorMessageOpacity
     {
         get => _storeManagerGenderErrorMessageOpacity;
@@ -483,6 +577,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text of the store manager's gender error message.
+    /// </summary>
     public string StoreManagerGenderErrorMessageText
     {
         get => _storeManagerGenderErrorMessageText;
@@ -493,6 +590,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opacity of the store manager's email error message.
+    /// </summary>
     public float StoreManagerEmailErrorMessageOpacity
     {
         get => _storeManagerEmailErrorMessageOpacity;
@@ -503,6 +603,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text of the store manager's email error message.
+    /// </summary>
     public string StoreManagerEmailErrorMessageText
     {
         get => _storeManagerEmailErrorMessageText;
@@ -513,6 +616,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opacity of the store manager's telephone error message.
+    /// </summary>
     public float StoreManagerTelErrorMessageOpacity
     {
         get => _storeManagerTelErrorMessageOpacity;
@@ -523,6 +629,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text of the store manager's telephone error message.
+    /// </summary>
     public string StoreManagerTelErrorMessageText
     {
         get => _storeManagerTelErrorMessageText;
@@ -533,6 +642,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opacity of the store manager's address error message.
+    /// </summary>
     public float StoreManagerAddressErrorMessageOpacity
     {
         get => _storeManagerAddressErrorMessageOpacity;
@@ -543,6 +655,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text of the store manager's address error message.
+    /// </summary>
     public string StoreManagerAddressErrorMessageText
     {
         get => _storeManagerAddressErrorMessageText;
@@ -553,6 +668,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opacity of the store manager's password error message.
+    /// </summary>
     public float StoreManagerPasswordErrorMessageOpacity
     {
         get => _storeManagerPasswordErrorMessageOpacity;
@@ -563,6 +681,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text of the store manager's password error message.
+    /// </summary>
     public string StoreManagerPasswordErrorMessageText
     {
         get => _storeManagerPasswordErrorMessageText;
@@ -573,6 +694,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opacity of the store manager's confirm password error message.
+    /// </summary>
     public float StoreManagerConfirmPasswordErrorMessageOpacity
     {
         get => _storeManagerConfirmPasswordErrorMessageOpacity;
@@ -583,6 +707,9 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text of the store manager's confirm password error message.
+    /// </summary>
     public string StoreManagerConfirmPasswordErrorMessageText
     {
         get => _storeManagerConfirmPasswordErrorMessageText;

@@ -6,6 +6,7 @@
     xmlns:local="using:SipPOS.Views.Staff"
     xmlns:data="using:SipPOS.DataTransfer.Entity"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
+    xmlns:user_controls="using:SipPOS.Resources.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -254,9 +255,19 @@
                         <controls:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="Chi tiết"/>
-                                    <Button Content="Chỉnh sửa"/>
-                                    <Button Content="Kết thúc hợp đồng" Foreground="Red"/>
+                                    <Button 
+                                        Content="Chi tiết" 
+                                        Click="viewStaffDetailsButton_Click"
+                                        CommandParameter="{Binding}"/>
+                                    <Button 
+                                        Content="Chỉnh sửa" 
+                                        Click="editStaffButton_Click"
+                                        CommandParameter="{Binding}"/>
+                                    <Button 
+                                        Content="Kết thúc hợp đồng" 
+                                        Click="terminateContractButton_Click"
+                                        CommandParameter="{Binding}" 
+                                        Foreground="Red"/>
                                 </StackPanel>
                             </DataTemplate>
                         </controls:DataGridTemplateColumn.CellTemplate>
@@ -409,5 +420,317 @@
                 <TextBlock Text="Lịch sử nhân sự" Style="{StaticResource SubtitleTextBlockStyle}"/>
             </Button>
         </Grid>
+
+        <!--Staff details dialog-->
+        <ContentDialog
+            Name="staffDetailsContentDialog"
+            Title="Thông tin nhân viên"
+            CloseButtonText="Đóng"
+            Width="1500"
+            MaxHeight="1000">
+            <Grid
+                ColumnSpacing="20"
+                RowSpacing="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="300"/>
+                </Grid.ColumnDefinitions>
+
+                <!--Field names-->
+                <TextBlock
+                    Grid.Row="0" Grid.Column="0"
+                    Text="Chức vụ:"
+                    FontWeight="Bold"/>
+                <TextBlock
+                    Grid.Row="1" Grid.Column="0"
+                    Text="Họ và tên:"
+                    FontWeight="Bold"/>
+                <TextBlock
+                    Grid.Row="2" Grid.Column="0"
+                    Text="Giới tính:"
+                    FontWeight="Bold"/>
+                <TextBlock
+                    Grid.Row="3" Grid.Column="0"
+                    Text="Ngày sinh:"
+                    FontWeight="Bold"/>
+                <TextBlock
+                    Grid.Row="4" Grid.Column="0"
+                    Text="Email:"
+                    FontWeight="Bold"/>
+                <TextBlock
+                    Grid.Row="5" Grid.Column="0"
+                    Text="SĐT:"
+                    FontWeight="Bold"/>
+                <TextBlock
+                    Grid.Row="6" Grid.Column="0"
+                    Text="Địa chỉ:"
+                    FontWeight="Bold"/>
+                <TextBlock
+                    Grid.Row="7" Grid.Column="0"
+                    Text="Ngày bắt đầu:"
+                    FontWeight="Bold"/>
+                <TextBlock
+                    Grid.Row="8" Grid.Column="0"
+                    Text="Mã nhân viên:"
+                    FontWeight="Bold"
+                    Foreground="Red"/>
+
+                <!--Field values-->
+                <TextBlock
+                    Grid.Row="0" Grid.Column="1"
+                    x:Name="staffDetailPositionTextBlock"
+                    Text="placeholder"
+                    TextWrapping="WrapWholeWords"/>
+                <TextBlock
+                    Grid.Row="1" Grid.Column="1"
+                    x:Name="staffDetailNameTextBlock"
+                    Text="placeholder"
+                    TextWrapping="WrapWholeWords"/>
+                <TextBlock
+                    Grid.Row="2" Grid.Column="1"
+                    x:Name="staffDetailGenderTextBlock"
+                    Text="placeholder"
+                    TextWrapping="WrapWholeWords"/>
+                <TextBlock
+                    Grid.Row="3" Grid.Column="1"
+                    x:Name="staffDetailDateOfBirthTextBlock"
+                    Text="placeholder"
+                    TextWrapping="WrapWholeWords"/>
+                <TextBlock
+                    Grid.Row="4" Grid.Column="1"
+                    x:Name="staffDetailEmailTextBlock"
+                    Text="placeholder"
+                    TextWrapping="WrapWholeWords"/>
+                <TextBlock
+                    Grid.Row="5" Grid.Column="1"
+                    x:Name="staffDetailTelTextBlock"
+                    Text="placeholder"
+                    TextWrapping="WrapWholeWords"/>
+                <TextBlock
+                    Grid.Row="6" Grid.Column="1"
+                    x:Name="staffDetailAddressTextBlock"
+                    Text="placeholder"
+                    TextWrapping="WrapWholeWords"/>
+                <TextBlock
+                    Grid.Row="7" Grid.Column="1"
+                    x:Name="staffDetailEmploymentStartDateTextBlock"
+                    Text="placeholder"
+                    TextWrapping="WrapWholeWords"/>
+                <TextBlock
+                    Grid.Row="8" Grid.Column="1"
+                    x:Name="staffDetailCompositeUsernameTextBlock"
+                    Foreground="Red"
+                    Text="placeholder"
+                    TextWrapping="WrapWholeWords"/>
+            </Grid>
+        </ContentDialog>
+
+        <!--Edit staff details dialog-->
+        <ContentDialog
+            Name="editStaffDetailsContentDialog"
+            Title="Chỉnh sửa thông tin nhân viên"
+            PrimaryButtonText="Lưu thay đổi"
+            PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
+            IsPrimaryButtonEnabled="False"
+            CloseButtonText="Hủy"
+            MaxWidth="1500"
+            MaxHeight="1000">
+            <Grid
+                ColumnSpacing="20"
+                RowSpacing="5"
+                Width="900"
+                Margin="0,20,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="400"/>
+                </Grid.ColumnDefinitions>
+
+                <!--Field names-->
+                <TextBlock
+                    Grid.Row="0" Grid.Column="0"
+                    Text="Chức vụ:"
+                    FontWeight="Bold"
+                    VerticalAlignment="Center"/>
+                <TextBlock
+                    Grid.Row="1" Grid.Column="0"
+                    Text="Họ và tên:"
+                    FontWeight="Bold"
+                    VerticalAlignment="Center"/>
+                <TextBlock
+                    Grid.Row="2" Grid.Column="0"
+                    Text="Giới tính:"
+                    FontWeight="Bold"
+                    VerticalAlignment="Center"/>
+                <TextBlock
+                    Grid.Row="3" Grid.Column="0"
+                    Text="Ngày sinh:"
+                    FontWeight="Bold"
+                    VerticalAlignment="Center"/>
+                <TextBlock
+                    Grid.Row="4" Grid.Column="0"
+                    Text="Email:"
+                    FontWeight="Bold"
+                    VerticalAlignment="Center"/>
+                <TextBlock
+                    Grid.Row="5" Grid.Column="0"
+                    Text="SĐT:"
+                    FontWeight="Bold"
+                    VerticalAlignment="Center"/>
+                <TextBlock
+                    Grid.Row="6" Grid.Column="0"
+                    Text="Địa chỉ:"
+                    FontWeight="Bold"
+                    VerticalAlignment="Center"/>
+
+                <!--Editable fields-->
+                <!--Position-->
+                <ComboBox
+                    Grid.Row="0" Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    PlaceholderText="Chọn chức vụ"
+                    x:Name="editStaffPositionComboBox"
+                    SelectionChanged="editStaffPositionComboBox_SelectionChanged">
+                    <x:String>ST - Nhân viên cửa hàng</x:String>
+                    <x:String>AM - Trợ lý cửa hàng</x:String>
+                </ComboBox>
+                
+                <!--If trying to Edit store manager's details, show this instead of combo box-->
+                <TextBlock
+                    Grid.Row="0" Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    Margin="3,0,0,0"
+                    Text="SM - Cửa hàng trưởng"
+                    Foreground="Red"
+                    x:Name="absolutionStaffPositionTextBlock"
+                    Visibility="Collapsed"/>
+
+                <!--Name-->
+                <user_controls:EditableTextField
+                    Grid.Row="1" Grid.Column="1"
+                    Text="placeholder"
+                    x:Name="editStaffNameEditableTextField"
+                    PlaceholderText="Nhập họ và tên"
+                    TextModified="editStaffDetails_TextModified"/>
+                <!--Gender-->
+                <user_controls:EditableTextField
+                    Grid.Row="2" Grid.Column="1"
+                    Text="placeholder"
+                    x:Name="editStaffGenderEditableTextField"
+                    TextModified="editStaffDetails_TextModified"/>
+                <!--Date of birth-->
+                <CalendarDatePicker
+                    Grid.Row="3" Grid.Column="1"
+                    x:Name="editStaffDateOfBirthCalenderDatePicker"
+                    Language="vi-VN"
+                    HorizontalAlignment="Stretch"
+                    DateFormat="{}{day.integer}/{month.integer}/{year.full}"
+                    DateChanged="editStaffDateOfBirthCalenderDatePicker_DateChanged"/>
+                <!--Email-->
+                <user_controls:EditableTextField
+                    Grid.Row="4" Grid.Column="1"
+                    Text="placeholder"
+                    x:Name="editStaffEmailEditableTextField"
+                    TextModified="editStaffDetails_TextModified"/>
+                <!--Tel-->
+                <user_controls:EditableTextField
+                    Grid.Row="5" Grid.Column="1"
+                    Text="placeholder"
+                    x:Name="editStaffTelEditableTextField"
+                    TextModified="editStaffDetails_TextModified"/>
+                <!--Address-->
+                <user_controls:EditableTextField
+                    Grid.Row="6" Grid.Column="1"
+                    Text="placeholder"
+                    x:Name="editStaffAddressEditableTextField"
+                    TextModified="editStaffDetails_TextModified"/>
+            </Grid>
+        </ContentDialog>
+
+        <!--Edit staff result dialog-->
+        <ContentDialog
+            Name="editStaffResultContentDialog"
+            Title="Kết quả đăng ký"
+            PrimaryButtonText="Xác nhận"
+            PrimaryButtonStyle="{StaticResource AccentButtonStyle}">
+            <TextBlock
+                Text="{x:Bind ViewModel.EditStaffResult, Mode=TwoWay}"/>
+        </ContentDialog>
+
+        <!--Contract termination dialog-->
+        <ContentDialog
+            x:Name="terminateContractContentDialog"
+            Title="Xác nhận kết thúc hợp đồng"
+            PrimaryButtonText="Xác nhận"
+            PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
+            IsPrimaryButtonEnabled="{x:Bind ViewModel.PasswordVerified, Mode=TwoWay}"
+            CloseButtonText="Hủy">
+            <Grid
+                RowSpacing="30">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    Grid.Row="0"
+                    Text="Thông tin của nhân viên sau khi kết thúc hợp đồng vẫn có thể xem lại ở 'Lịch sử nhân sự'"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    TextWrapping="WrapWholeWords"/>
+
+                <TextBlock
+                    Grid.Row="1"
+                    Text="Để kết thúc hợp đồng với nhân viên, hãy yêu cầu họ nhập mật khẩu đóng mở ca của bản thân"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    TextWrapping="WrapWholeWords"/>
+
+                <PasswordBox
+                    Grid.Row="2"
+                    PlaceholderText="Nhập mật khẩu đóng mở ca"
+                    HorizontalAlignment="Stretch"
+                    Width="300"
+                    IsPasswordRevealButtonEnabled="False"
+                    x:Name="contractTerminationPasswordBox"
+                    PasswordChanged="contractTerminationPasswordBox_PasswordChanged"
+                    Password="{x:Bind ViewModel.PasswordForContractTermination, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+        </ContentDialog>
+
+        <!--Terminate staff result dialog-->
+        <ContentDialog
+            Name="terminateStaffResultContentDialog"
+            Title="Kết quả kết thúc hợp đồng"
+            PrimaryButtonText="Xác nhận"
+            PrimaryButtonStyle="{StaticResource AccentButtonStyle}">
+            <TextBlock
+                Text="{x:Bind ViewModel.TerminateStaffResult, Mode=TwoWay}"/>
+        </ContentDialog>
     </Canvas>
 </Page>

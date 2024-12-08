@@ -10,8 +10,16 @@ using SipPOS.Services.DataAccess.Interfaces;
 
 namespace SipPOS.Services.Account.Implementations;
 
+/// <summary>
+/// Service for creating staff accounts.
+/// </summary>
 class StaffAccountCreationService : IStaffAccountCreationService
 {
+    /// <summary>
+    /// Creates a staff account asynchronously.
+    /// </summary>
+    /// <param name="staffDtoWithUnhashPassword">The staff DTO with unhashed password.</param>
+    /// <returns>The created staff DTO, or null if creation failed.</returns>
     public async Task<StaffDto?> CreateAccountAsync(StaffDto staffDtoWithUnhashPassword)
     {
         if (staffDtoWithUnhashPassword.PasswordHash == null)
@@ -51,12 +59,12 @@ class StaffAccountCreationService : IStaffAccountCreationService
                 staffDtoWithUnhashPassword.CreatedBy = staffAuthenticationService.Context.CurrentStaff.CompositeUsername;
             }
         }
-        
+
         staffDtoWithUnhashPassword.CreatedBy ??= "system";
         staffDtoWithUnhashPassword.EmploymentStatus = "InEmployment";
 
         var staffDto = staffDtoWithUnhashPassword; // now-hased, ready
-        
+
         var staffDao = App.GetService<IStaffDao>();
         var insertResult = await staffDao.InsertAsync
         (
@@ -75,6 +83,11 @@ class StaffAccountCreationService : IStaffAccountCreationService
         return insertedStaffDto;
     }
 
+    /// <summary>
+    /// Validates the fields of a staff DTO.
+    /// </summary>
+    /// <param name="staffDto">The staff DTO to validate.</param>
+    /// <returns>A dictionary containing validation results for each field.</returns>
     public Dictionary<string, string> ValidateFields(StaffDto staffDto)
     {
         var validationResults = new Dictionary<string, string>();
@@ -91,6 +104,11 @@ class StaffAccountCreationService : IStaffAccountCreationService
         return validationResults;
     }
 
+    /// <summary>
+    /// Validates the name field.
+    /// </summary>
+    /// <param name="name">The name to validate.</param>
+    /// <returns>A validation result message.</returns>
     private string _validateName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -101,6 +119,11 @@ class StaffAccountCreationService : IStaffAccountCreationService
         return "OK";
     }
 
+    /// <summary>
+    /// Validates the gender field.
+    /// </summary>
+    /// <param name="gender">The gender to validate.</param>
+    /// <returns>A validation result message.</returns>
     private string _validateGender(string gender)
     {
         if (string.IsNullOrWhiteSpace(gender))
@@ -116,6 +139,11 @@ class StaffAccountCreationService : IStaffAccountCreationService
         return "OK";
     }
 
+    /// <summary>
+    /// Validates the email field.
+    /// </summary>
+    /// <param name="email">The email to validate.</param>
+    /// <returns>A validation result message.</returns>
     private string _validateEmail(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
@@ -133,6 +161,11 @@ class StaffAccountCreationService : IStaffAccountCreationService
         return "Email sai định dạng";
     }
 
+    /// <summary>
+    /// Validates the telephone field.
+    /// </summary>
+    /// <param name="tel">The telephone number to validate.</param>
+    /// <returns>A validation result message.</returns>
     private string _validateTel(string tel)
     {
         if (string.IsNullOrWhiteSpace(tel))
@@ -150,6 +183,11 @@ class StaffAccountCreationService : IStaffAccountCreationService
         return "Số điện thoại sai định dạng";
     }
 
+    /// <summary>
+    /// Validates the address field.
+    /// </summary>
+    /// <param name="address">The address to validate.</param>
+    /// <returns>A validation result message.</returns>
     private string _validateAddress(string address)
     {
         if (string.IsNullOrWhiteSpace(address))
@@ -160,6 +198,11 @@ class StaffAccountCreationService : IStaffAccountCreationService
         return "OK";
     }
 
+    /// <summary>
+    /// Validates the password field.
+    /// </summary>
+    /// <param name="password">The password to validate.</param>
+    /// <returns>A validation result message.</returns>
     private string _validatePassword(string? password)
     {
         if (string.IsNullOrWhiteSpace(password))

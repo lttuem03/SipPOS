@@ -6,49 +6,57 @@ using SipPOS.Services.DataAccess.Interfaces;
 
 namespace SipPOS.Services.DataAccess.Implementations;
 
+/// <summary>  
+/// Mock implementation of the IStaffDao interface for testing purposes.  
+/// </summary>  
 class MockStaffDao : IStaffDao
 {
     private readonly List<Staff> _staffs =
     [
         new Staff(
-            id: 0,
-            dto: new StaffDto()
-            {
-                StoreId = 0,
-                PositionPrefix = "SM",
-                Name = "Mai Thị Quỳnh",
-                Gender = "Nữ",
-                DateOfBirth = new DateOnly(1999, 5, 20),
-                Email = "quynhnguyen@gmail.com",
-                Tel = "0928512665",
-                Address = "123 Đường Nguyễn Thị Minh Khai, Phường 9, Quận Tân Bình, Thành phố Hồ Chí Minh",
-                EmploymentStatus = "InEmployment",
-                EmploymentStartDate = new DateOnly(2021, 3, 29)
-            }
-        ),
-        
-        new Staff(
-            id: 1,
-            dto: new StaffDto()
-            {
-                StoreId = 0,
-                PositionPrefix = "ST",
-                Name = "Nguyễn Văn Đức",
-                Gender = "Nam",
-                DateOfBirth = new DateOnly(2002, 1, 20),
-                Email = "vanduc@gmail.com",
-                Tel = "0903514265",
-                Address = "463 Đường Đồng Văn Cống, Phường 2, Quận Thủ Đức, Thành phố Hồ Chí Minh",
-                EmploymentStatus = "OutOfEmployment",
-                EmploymentStartDate = new DateOnly(2023, 12, 03),
-                EmploymentEndDate = new DateOnly(2024, 5, 15)
-            }
-        )
+           id: 0,
+           dto: new StaffDto()
+           {
+               StoreId = 0,
+               PositionPrefix = "SM",
+               Name = "Mai Thị Quỳnh",
+               Gender = "Nữ",
+               DateOfBirth = new DateOnly(1999, 5, 20),
+               Email = "quynhnguyen@gmail.com",
+               Tel = "0928512665",
+               Address = "123 Đường Nguyễn Thị Minh Khai, Phường 9, Quận Tân Bình, Thành phố Hồ Chí Minh",
+               EmploymentStatus = "InEmployment",
+               EmploymentStartDate = new DateOnly(2021, 3, 29)
+           }
+       ),
+
+       new Staff(
+           id: 1,
+           dto: new StaffDto()
+           {
+               StoreId = 0,
+               PositionPrefix = "ST",
+               Name = "Nguyễn Văn Đức",
+               Gender = "Nam",
+               DateOfBirth = new DateOnly(2002, 1, 20),
+               Email = "vanduc@gmail.com",
+               Tel = "0903514265",
+               Address = "463 Đường Đồng Văn Cống, Phường 2, Quận Thủ Đức, Thành phố Hồ Chí Minh",
+               EmploymentStatus = "OutOfEmployment",
+               EmploymentStartDate = new DateOnly(2023, 12, 03),
+               EmploymentEndDate = new DateOnly(2024, 5, 15)
+           }
+       )
     ];
 
+    /// <summary>  
+    /// Gets a staff member by their composite username.  
+    /// </summary>  
+    /// <param name="compositeUsername">The composite username of the staff member.</param>  
+    /// <returns>A task that represents the asynchronous operation. The task result contains the staff DTO if found, otherwise null.</returns>  
     public Task<StaffDto?> GetByCompositeUsername(string compositeUsername)
     {
-        // Splits composite username into (position prefix, store id, staff id)
+        // Splits composite username into (position prefix, store id, staff id)  
         Regex re = new Regex(Staff.CompositeUsernamePattern);
         Match match = re.Match(compositeUsername);
 
@@ -97,8 +105,8 @@ class MockStaffDao : IStaffDao
         });
     }
 
-    // MockStaffDao should not have the methods below implemented, because it is used for the quick-login
-    // when developing only
+    // MockStaffDao should not have the methods below implemented, because it is used for the quick-login  
+    // when developing only  
 
     public Task<(long id, StaffDto? dto)> InsertAsync(long storeId, StaffDto staffDto) => throw new NotImplementedException();
     public Task<(long totalRowsMatched, List<StaffDto>? staffDtos)> GetWithPagination(long storeId, long page, long rowsPerPage, string keyword, string? sortBy, string? sortDirection, List<string>? filterByPositionPrefixes = null) => throw new NotImplementedException();

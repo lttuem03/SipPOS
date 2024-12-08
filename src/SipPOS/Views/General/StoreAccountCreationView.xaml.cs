@@ -48,6 +48,11 @@ public sealed partial class StoreAccountCreationView : Page
         ViewModel.HandleConfirmStoreAccountCreationButtonClick(rawInfoStoreDto, repeatPasswordString, confirmStoreInformationContentDialog);
     }
 
+    /// <summary>
+    /// Handles the Opened event of the confirm store information content dialog.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="args">The event data.</param>
     private void confirmStoreInformationContentDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
     {
         // Load the information into the content dialog
@@ -62,6 +67,11 @@ public sealed partial class StoreAccountCreationView : Page
         confirmStoreUsernameTextBlock.Text = storeUsernameFieldTextBox.Text;
     }
 
+    /// <summary>
+    /// Handles the Click event of the go back button.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void goBackButton_Click(object sender, RoutedEventArgs e)
     {
         App.NavigateTo(typeof(LoginView));
