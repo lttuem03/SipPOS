@@ -43,7 +43,7 @@ public sealed partial class MainMenuView : Page
     /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void toCashierMenuViewButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleToCashierMenuViewButtonClick();
+        ViewModel.HandleToCashierMenuViewButtonClick(mainMenuNotificationInfoBar);
     }
 
     /// <summary>
@@ -53,7 +53,7 @@ public sealed partial class MainMenuView : Page
     /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void toInventoryMenuView_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleToInventoryMenuViewClick();
+        ViewModel.HandleToInventoryMenuViewClick(mainMenuNotificationInfoBar);
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public sealed partial class MainMenuView : Page
     /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void toStaffManagementViewButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleToStaffManagementViewButtonClick();
+        ViewModel.HandleToStaffManagementViewButtonClick(mainMenuNotificationInfoBar);
     }
 
     /// <summary>
@@ -73,7 +73,13 @@ public sealed partial class MainMenuView : Page
     /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void toProfileViewButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleToProfileViewButtonClick();
+        ViewModel.HandleToProfileViewButtonClick(mainMenuNotificationInfoBar);
+    }
+
+    
+    private void toOrderHistoryViewButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleToOrderHistoryViewButtonClick(mainMenuNotificationInfoBar);
     }
 
     /// <summary>
@@ -83,7 +89,7 @@ public sealed partial class MainMenuView : Page
     /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void toRevenueDashboardViewButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleToRevenueDashboardViewButtonClick();
+        ViewModel.HandleToRevenueDashboardViewButtonClick(mainMenuNotificationInfoBar);
     }
 
     /// <summary>
@@ -93,7 +99,7 @@ public sealed partial class MainMenuView : Page
     /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void toSpecialOffersManagementViewButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleToSpecialOffersManagementViewButtonClick();
+        ViewModel.HandleToSpecialOffersManagementViewButtonClick(mainMenuNotificationInfoBar);
     }
 
     /// <summary>
@@ -103,7 +109,7 @@ public sealed partial class MainMenuView : Page
     /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void toConfigurationMenuViewButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleToConfigurationMenuViewButtonClick();
+        ViewModel.HandleToConfigurationMenuViewButtonClick(mainMenuNotificationInfoBar);
     }
 
     /// <summary>
@@ -145,4 +151,5 @@ public sealed partial class MainMenuView : Page
     {
         App.Current.Exit();
     }
+
 }

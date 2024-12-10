@@ -16,8 +16,16 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <UserSecretsId>5c942361-fdf4-4fdd-ab3c-9b0616975bf2</UserSecretsId>
-    <ApplicationIcon>Assets\Iconography\icon.ico</ApplicationIcon>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <PackageCertificateKeyFile>SipPOS_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundle>Never</AppxBundle>
+    <AppInstallerUri>D:\programing\bySubject\WindowsProgramming\SipPOS installers</AppInstallerUri>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Views\Management\**" />
@@ -32,6 +40,7 @@
     <Content Remove="Assets\Iconography\dashboard.png" />
     <Content Remove="Assets\Iconography\id-card.png" />
     <Content Remove="Assets\Iconography\next-button.png" />
+    <Content Remove="Assets\Iconography\order-history.png" />
     <Content Remove="Assets\Iconography\people.png" />
     <Content Remove="Assets\Iconography\recipe-book.png" />
     <Content Remove="Assets\Iconography\settings.png" />
@@ -114,6 +123,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Iconography\next-button.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Iconography\order-history.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Iconography\people.png">
