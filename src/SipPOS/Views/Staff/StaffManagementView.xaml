@@ -547,7 +547,8 @@
             IsPrimaryButtonEnabled="False"
             CloseButtonText="Hủy"
             MaxWidth="1500"
-            MaxHeight="1000">
+            MaxHeight="1000"
+            Closed="editStaffDetailsContentDialog_Closed">
             <Grid
                 ColumnSpacing="20"
                 RowSpacing="5"
@@ -674,7 +675,7 @@
         <!--Edit staff result dialog-->
         <ContentDialog
             Name="editStaffResultContentDialog"
-            Title="Kết quả đăng ký"
+            Title="Kết quả chỉnh sửa"
             PrimaryButtonText="Xác nhận"
             PrimaryButtonStyle="{StaticResource AccentButtonStyle}">
             <TextBlock

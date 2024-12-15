@@ -345,4 +345,19 @@ public sealed partial class StaffManagementView : Page
             }
         }
     }
+
+    /// <summary>
+    /// Handles the Closed event of the editStaffDetailsContentDialog control.
+    /// Resets the state of all EditableTextField controls to ensure they are not in editing mode.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="args">The event data.</param>
+    private void editStaffDetailsContentDialog_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
+    {
+        editStaffNameEditableTextField.ResetState();
+        editStaffGenderEditableTextField.ResetState();
+        editStaffEmailEditableTextField.ResetState();
+        editStaffTelEditableTextField.ResetState();
+        editStaffAddressEditableTextField.ResetState();
+    }
 }

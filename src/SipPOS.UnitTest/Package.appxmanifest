@@ -8,14 +8,14 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="7efc5266-7b33-42dc-85ba-7f2d2361452c"
-    Publisher="CN=lttuem03"
+    Name="13508139-8c1e-45cc-844d-7d3363792f8c"
+    Publisher="CN=DELL"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="7efc5266-7b33-42dc-85ba-7f2d2361452c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="13508139-8c1e-45cc-844d-7d3363792f8c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>SipPOS</DisplayName>
+    <DisplayName>SipPOS.UnitTest</DisplayName>
     <PublisherDisplayName>DELL</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -34,15 +34,13 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="SipPOS"
-        Description="SipPOS"
+        DisplayName="SipPOS.UnitTest"
+        Description="SipPOS.UnitTest"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
-        <uap:InitialRotationPreference>
-          <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>
       </uap:VisualElements>
     </Application>
   </Applications>

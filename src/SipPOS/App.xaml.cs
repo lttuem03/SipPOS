@@ -23,6 +23,8 @@ using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.DataAccess.Implementations;
 using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Services.Authentication.Implementations;
+using SipPOS.Services.Accessibility.Interfaces;
+using SipPOS.Services.Accessibility.Implementations;
 
 using SipPOS.Context.Shift.Interface;
 using SipPOS.Context.Shift.Implementation;
@@ -97,6 +99,7 @@ public partial class App : Application
             services.AddSingleton<IStoreCredentialsService>(new StoreCredentialsService());
             services.AddSingleton<IStaffAccountCreationService>(new StaffAccountCreationService());
             services.AddSingleton<IStaffAuthenticationService>(new StaffAuthenticationService());
+            services.AddSingleton<IPolicyEnforcementPoint>(new PolicyEnforcementPoint());
 
             // Views and ViewModels
             services.AddTransient<CategoryManagementViewModel>();

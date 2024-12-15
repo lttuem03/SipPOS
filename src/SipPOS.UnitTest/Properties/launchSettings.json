@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SipPOS.UnitTest (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "SipPOS.UnitTest (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

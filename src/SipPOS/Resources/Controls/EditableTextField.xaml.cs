@@ -117,4 +117,16 @@ public sealed partial class EditableTextField : UserControl
     {
         TextModified?.Invoke(this, EventArgs.Empty);
     }
+
+    /// <summary>
+    /// Resets the state of the editable text field to its default state.
+    /// Disables editing and hides the Save and Cancel buttons.
+    /// </summary>
+    public void ResetState()
+    {
+        TextBoxField.IsReadOnly = true;
+        EditButton.Visibility = Visibility.Visible;
+        SaveButton.Visibility = Visibility.Collapsed;
+        CancelButton.Visibility = Visibility.Collapsed;
+    }
 }

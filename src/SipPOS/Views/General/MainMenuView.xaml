@@ -5,6 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SipPOS.Views.General"
     xmlns:data="using:SipPOS.DataTransfer.Entity"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:local_converters="using:SipPOS.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -34,6 +36,9 @@
 
             </StackPanel>
         </DataTemplate>
+
+        <!--Button accessibily to button opacity coverter-->
+        <local_converters:ButtonAccessibilityToButtonOpacityConverter x:Key="ButtonAccessibilyToButtonOpacityConverter"/>
     </Page.Resources>
 
     <Canvas
@@ -57,6 +62,15 @@
             Name="clockTextBlock"
             Text="00:00:00"
             Style="{StaticResource TitleLargeTextBlockStyle}"/>
+
+        <!--Notification info bar-->
+        <InfoBar
+            x:Name="mainMenuNotificationInfoBar"
+            IsOpen="False"
+            Severity="Error"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"
+            Margin="560,0,0,0"/>
 
         <!--Main buttons-->
         <StackPanel
@@ -85,7 +99,9 @@
                 <Button 
                     Grid.Row="0" Grid.Column="0"
                     x:Name="toCashierMenuViewButton"
-                    Click="toCashierMenuViewButton_Click">
+                    Click="toCashierMenuViewButton_Click"
+                    Opacity="{x:Bind ViewModel.CanAccessCashierMenu, 
+                                     Converter={StaticResource ButtonAccessibilyToButtonOpacityConverter}}">
                     <StackPanel 
                         Orientation="Vertical"
                         HorizontalAlignment="Center"
@@ -104,7 +120,9 @@
                 <Button
                     Grid.Row="0" Grid.Column="1"
                     x:Name="toInventoryMenuView"
-                    Click="toInventoryMenuView_Click">
+                    Click="toInventoryMenuView_Click"
+                    Opacity="{x:Bind ViewModel.CanAccessInventoryMenu,
+                                     Converter={StaticResource ButtonAccessibilyToButtonOpacityConverter}}">
                     <StackPanel
                         Orientation="Vertical"
                         HorizontalAlignment="Center"
@@ -124,7 +142,9 @@
                     Grid.Row="0" Grid.Column="2"
                     x:Name="toStaffManagementViewButton"
                     Click="toStaffManagementViewButton_Click"
-                    Width="132" Height="132">
+                    Width="132" Height="132"
+                    Opacity="{x:Bind ViewModel.CanAccessStaffManagementMenu,
+                                     Converter={StaticResource ButtonAccessibilyToButtonOpacityConverter}}">
                     <Grid
                         RowSpacing="10">
                         <Grid.RowDefinitions>
@@ -137,18 +157,18 @@
                         </Grid.ColumnDefinitions>
 
                         <Image 
-        Source="/Assets/Iconography/people.png"
-        MaxHeight="75"
-        Margin="0,10,0,0"
-        Grid.Row="0" Grid.Column="0"/>
+                            Source="/Assets/Iconography/people.png"
+                            MaxHeight="75"
+                            Margin="0,10,0,0"
+                            Grid.Row="0" Grid.Column="0"/>
                         <TextBlock 
-        Text="Nhân sự" 
-        HorizontalAlignment="Center" 
-        VerticalAlignment="Bottom"
-        Style="{StaticResource SubtitleTextBlockStyle}"
-        FontSize="16"
-        Margin="5,0,0,0"
-        Grid.Row="1" Grid.Column="0"/>
+                            Text="Nhân sự" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Bottom"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            FontSize="16"
+                            Margin="5,0,0,0"
+                            Grid.Row="1" Grid.Column="0"/>
                     </Grid>
 
                 </Button>
@@ -157,7 +177,9 @@
                 <Button
                     Grid.Row="0" Grid.Column="3"
                     x:Name="toProfileViewButton"
-                    Click="toProfileViewButton_Click">
+                    Click="toProfileViewButton_Click"
+                    Opacity="{x:Bind ViewModel.CanAccessProfileMenu,
+                                     Converter={StaticResource ButtonAccessibilyToButtonOpacityConverter}}">
                     <StackPanel
                         Orientation="Vertical"
                         HorizontalAlignment="Center"
@@ -183,17 +205,42 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!--To FinanceView Button-->
+                <!--To OrderHistoryView Button-->
                 <Button 
                     Grid.Row="0" Grid.Column="0"
+                    x:Name="toOrderHistoryViewButton"
+                    Click="toOrderHistoryViewButton_Click"
+                    Opacity="{x:Bind ViewModel.CanAccessOrderHistoryMenu,
+                                     Converter={StaticResource ButtonAccessibilyToButtonOpacityConverter}}">
+                    <StackPanel
+                        Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <Image Source="/Assets/Iconography/order-history.png" Width="100" Height="100"/>
+                        <TextBlock 
+                            Text="Đơn bán" 
+                            HorizontalAlignment="Center" 
+                            Margin="5,0,0,0"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            FontSize="16"/>
+                    </StackPanel>
+                </Button>
+
+
+                <!--To RevenueDashboardView Button-->
+                <Button 
+                    Grid.Row="0" Grid.Column="1"
                     x:Name="toRevenueDashboardViewButton"
-                    Click="toRevenueDashboardViewButton_Click">
+                    Click="toRevenueDashboardViewButton_Click"
+                    Opacity="{x:Bind ViewModel.CanAccessRevenueDashboardMenu,
+                                     Converter={StaticResource ButtonAccessibilyToButtonOpacityConverter}}">
                     <StackPanel
                         Orientation="Vertical"
                         HorizontalAlignment="Center"
@@ -210,9 +257,11 @@
 
                 <!--To SpecialOffersManagementView Button-->
                 <Button
-                    Grid.Row="0" Grid.Column="1"
+                    Grid.Row="0" Grid.Column="2"
                     x:Name="toSpecialOffersManagementViewButton"
-                    Click="toSpecialOffersManagementViewButton_Click">
+                    Click="toSpecialOffersManagementViewButton_Click"
+                    Opacity="{x:Bind ViewModel.CanAccessSpecialOffersManagementMenu,
+                                     Converter={StaticResource ButtonAccessibilyToButtonOpacityConverter}}">
                     <StackPanel
                         Orientation="Vertical"
                         HorizontalAlignment="Center"
@@ -229,9 +278,11 @@
 
                 <!--To ConfigurationMenuView Button-->
                 <Button 
-                    Grid.Row="0" Grid.Column="2"
+                    Grid.Row="0" Grid.Column="3"
                     x:Name="toConfigurationMenuViewButton"
-                    Click="toConfigurationMenuViewButton_Click">
+                    Click="toConfigurationMenuViewButton_Click"
+                    Opacity="{x:Bind ViewModel.CanAccessConfigurationMenu,
+                                     Converter={StaticResource ButtonAccessibilyToButtonOpacityConverter}}">
                     <StackPanel
                         Orientation="Vertical"
                         HorizontalAlignment="Center"
