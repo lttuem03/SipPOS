@@ -15,7 +15,7 @@ exports.up = async function (knex) {
             name VARCHAR(255),
             "desc" TEXT,
             price NUMERIC(10, 2),
-            category_id BIGINT REFERENCES product(id) ON DELETE SET NULL,
+            category_id BIGINT REFERENCES category(id) ON DELETE SET NULL,
             image_urls TEXT[],
             status VARCHAR(50)
         )

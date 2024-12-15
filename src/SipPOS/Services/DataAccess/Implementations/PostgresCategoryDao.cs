@@ -7,6 +7,7 @@ using SipPOS.DataTransfer.Entity;
 using SipPOS.Services.General.Interfaces;
 using System.Text.Json;
 using System.Text;
+using NpgsqlTypes;
 
 namespace SipPOS.Services.DataAccess.Implementations;
 
@@ -179,7 +180,7 @@ public class PostgresCategoryDao : ICategoryDao
         using var connection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection ?? throw new InvalidOperationException("Failed to open database connection.");
 
         using var command = new NpgsqlCommand(@"
-            INSERT INTO category (name, desc, status, image_urls, created_by, created_at)
+            INSERT INTO category (name, ""desc"", status, image_urls, created_by, created_at)
             VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING *
         ", connection)
@@ -189,7 +190,7 @@ public class PostgresCategoryDao : ICategoryDao
                 new() { Value = categoryDto.Name },
                 new() { Value = categoryDto.Desc },
                 new() { Value = categoryDto.Status },
-                new() { Value = JsonSerializer.Serialize(categoryDto.ImageUrls) },
+                new() { Value = categoryDto.ImageUrls, NpgsqlDbType = NpgsqlDbType.Array | NpgsqlDbType.Text },
                 new() { Value = categoryDto.CreatedBy },
                 new() { Value = categoryDto.CreatedAt }
             }
@@ -219,7 +220,7 @@ public class PostgresCategoryDao : ICategoryDao
         using var command = new NpgsqlCommand(@"
             UPDATE category
             SET name = $1,
-                desc = $2,
+                ""desc"" = $2,
                 status = $3,
                 image_urls = $4,
                 updated_by = $5,
@@ -233,7 +234,7 @@ public class PostgresCategoryDao : ICategoryDao
                 new() { Value = categoryDto.Name },
                 new() { Value = categoryDto.Desc },
                 new() { Value = categoryDto.Status },
-                new() { Value = JsonSerializer.Serialize(categoryDto.ImageUrls) },
+                new() { Value = categoryDto.ImageUrls },
                 new() { Value = categoryDto.UpdatedBy },
                 new() { Value = categoryDto.UpdatedAt },
                 new() { Value = categoryDto.Id }
@@ -337,7 +338,7 @@ public class PostgresCategoryDao : ICategoryDao
 
         query.Append($" ORDER BY {sortDto.SortBy} {sortDto.SortType} LIMIT $" + index + " OFFSET $" + (index + 1));
         parameters.Add(new() { Value = perPage });
-        parameters.Add(new() { Value = (page - 1) * perPage });
+        parameters.Add(new() { Value = (page - 1) * perPage < 0 ? 0 : (page - 1) * perPage });
 
         using var command = new NpgsqlCommand(query.ToString(), connection);
         command.Parameters.AddRange(parameters.ToArray());

@@ -6,6 +6,8 @@ using SipPOS.DataTransfer.Entity;
 using SipPOS.DataTransfer.General;
 using SipPOS.Services.Entity.Interfaces;
 using SipPOS.Services.DataAccess.Interfaces;
+using SipPOS.Services.Authentication.Implementations;
+using SipPOS.Services.Authentication.Interfaces;
 
 namespace SipPOS.Services.Entity.Implementations;
 
@@ -52,9 +54,13 @@ public class ProductService : IProductService
     /// </summary>
     /// <param name="product">The product DTO to insert.</param>
     /// <returns>The inserted product DTO.</returns>
-    public ProductDto? Insert(ProductDto product)
+    public ProductDto? Insert(ProductDto productDto)
     {
-        return mapper.Map<ProductDto>(productDao.InsertAsync(mapper.Map<Product>(product)).Result);
+        StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
+        productDto.UpdatedBy = staffAuthenticationService.Context.CurrentStaff?.CompositeUsername ?? "system";
+        productDto.CreatedBy ??= "system";
+        productDto.CreatedAt = DateTime.Now;
+        return mapper.Map<ProductDto>(productDao.InsertAsync(mapper.Map<Product>(productDto)).Result);
     }
 
     /// <summary>
@@ -62,9 +68,12 @@ public class ProductService : IProductService
     /// </summary>
     /// <param name="product">The product DTO to update.</param>
     /// <returns>The updated product DTO.</returns>
-    public ProductDto? UpdateById(ProductDto product)
+    public ProductDto? UpdateById(ProductDto productDto)
     {
-        return mapper.Map<ProductDto>(productDao.UpdateByIdAsync(mapper.Map<Product>(product)).Result);
+        StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
+        productDto.UpdatedBy = staffAuthenticationService.Context.CurrentStaff?.CompositeUsername ?? "system";
+        productDto.UpdatedAt = DateTime.Now;
+        return mapper.Map<ProductDto>(productDao.UpdateByIdAsync(mapper.Map<Product>(productDto)).Result);
     }
 
     /// <summary>
@@ -74,7 +83,8 @@ public class ProductService : IProductService
     /// <returns>The deleted product DTO.</returns>
     public ProductDto? DeleteById(long id)
     {
-        Staff author = new Staff(1, new StaffDto());
+        StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
+        Staff author = staffAuthenticationService.Context.CurrentStaff ?? new Staff(1, new StaffDto());
         return mapper.Map<ProductDto>(productDao.DeleteByIdAsync(id, author).Result);
     }
 
@@ -85,8 +95,8 @@ public class ProductService : IProductService
     /// <returns>A list of deleted product DTOs.</returns>
     public List<ProductDto> DeleteByIds(List<long> ids)
     {
-        // get the current user
-        Staff author = new Staff(1, new StaffDto());
+        StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
+        Staff author = staffAuthenticationService.Context.CurrentStaff ?? new Staff(1, new StaffDto());
         return mapper.Map<List<ProductDto>>(productDao.DeleteByIdsAsync(ids, author).Result);
     }
 

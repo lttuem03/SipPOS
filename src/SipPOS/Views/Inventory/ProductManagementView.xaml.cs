@@ -219,11 +219,9 @@ public sealed partial class ProductManagementView : Page
         {
             return;
         }
-
         if (string.IsNullOrEmpty(ViewModel.SelectedProduct.Name))
         {
             args.Cancel = true;
-            ShowNotification("Vui lòng nhập tên sản phẩm.");
             return;
         }
         switch (ViewModel.ActionType)

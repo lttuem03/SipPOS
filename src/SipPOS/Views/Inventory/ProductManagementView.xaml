@@ -22,7 +22,7 @@
         <local_conveters:DateToDisplayDateConverter x:Key="DateToDisplayDateConverter"/>
     </Page.Resources>
 
-    <Grid Margin="20">
+    <Grid Padding="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -85,15 +85,19 @@
         <controls:DataGrid
             x:Name="dg"
             Grid.Row="2"
-            AutoGenerateColumns="False"
-            GridLinesVisibility="Horizontal"
             ItemsSource="{x:Bind ViewModel.Products, Mode=OneWay}"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             Width="Auto" Height="Auto"
             HorizontalScrollBarVisibility="Visible"
             MaxHeight="{x:Bind ViewModel.TableHeight, Mode=OneWay}"
+            IsReadOnly="True"
             Sorting="DataGrid_Sorting"
+            Margin="15,10,0,0"
+            BorderBrush="Black"
+            BorderThickness="1"
+            AutoGenerateColumns="False"
+            GridLinesVisibility="All"
             ColumnWidth="*">
             <controls:DataGrid.Resources>
                 <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush" Color="Transparent"/>
@@ -104,14 +108,13 @@
                 <controls:DataGridTemplateColumn Header="Chọn" Width="80" CanUserSort="False">
                     <controls:DataGridTemplateColumn.CellTemplate >
                         <DataTemplate >
-                            <CheckBox IsChecked="{Binding IsSeteled, Mode=TwoWay}"/>
+                            <CheckBox IsChecked="{Binding IsSeteled, Mode=TwoWay}" Margin="30,0,0,0"/>
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>
                 <controls:DataGridTextColumn Binding="{Binding Id}" Header="Mã" Tag="id" />
                 <controls:DataGridTextColumn Binding="{Binding Name}" Header="Tên" Tag="name" />
-                <controls:DataGridTextColumn Binding="{Binding CategoryId, Converter={StaticResource CategoryIdToCategoryNameConverter}}" Header="Danh mục" Tag="category" />
-                <controls:DataGridTextColumn Binding="{Binding Desc}" Header="Mô tả" Tag="desc" />
+                <controls:DataGridTextColumn Binding="{Binding CategoryId, Converter={StaticResource CategoryIdToCategoryNameConverter}}" Header="Danh mục" Tag="category_id" />
                 <controls:DataGridTemplateColumn Header="Ảnh" CanUserSort="False">
                     <controls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -120,8 +123,6 @@
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>
                 <controls:DataGridTextColumn Binding="{Binding Status, Converter={StaticResource StatusValueToStatusLableConverter}}" Header="Trạng thái" Tag="status" />
-                <controls:DataGridTextColumn Binding="{Binding CreatedAt, Converter= {StaticResource DateToDisplayDateConverter}}" Header="Ngày tạo"  Tag="created_at" />
-                <controls:DataGridTextColumn Binding="{Binding CreatedBy}" Header="Người tạo" Tag="created_by" />
             </controls:DataGrid.Columns>
         </controls:DataGrid>
 

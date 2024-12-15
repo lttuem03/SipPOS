@@ -6,6 +6,8 @@ using SipPOS.DataTransfer.Entity;
 using SipPOS.DataTransfer.General;
 using SipPOS.Services.Entity.Interfaces;
 using SipPOS.Services.DataAccess.Interfaces;
+using SipPOS.Services.Authentication.Implementations;
+using SipPOS.Services.Authentication.Interfaces;
 
 namespace SipPOS.Services.Entity.Implementations;
 
@@ -54,6 +56,10 @@ public class CategoryService : ICategoryService
     /// <returns>The inserted category DTO.</returns>
     public CategoryDto? Insert(CategoryDto categoryDto)
     {
+        StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
+        categoryDto.UpdatedBy = staffAuthenticationService.Context.CurrentStaff?.CompositeUsername ?? "system";
+        categoryDto.CreatedBy ??= "system";
+        categoryDto.CreatedAt = DateTime.Now;
         return mapper.Map<CategoryDto>(categoryDao.InsertAsync(mapper.Map<Category>(categoryDto)).Result);
     }
 
@@ -64,7 +70,8 @@ public class CategoryService : ICategoryService
     /// <returns>The deleted category DTO.</returns>
     public CategoryDto? DeleteById(long id)
     {
-        Staff author = new Staff(1, new StaffDto());
+        StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
+        Staff author = staffAuthenticationService.Context.CurrentStaff ?? new Staff(1, new StaffDto());
         return mapper.Map<CategoryDto>(categoryDao.DeleteByIdAsync(id, author).Result);
     }
 
@@ -75,7 +82,8 @@ public class CategoryService : ICategoryService
     /// <returns>A list of deleted category DTOs.</returns>
     public List<CategoryDto> DeleteByIds(List<long> ids)
     {
-        Staff author = new Staff(1, new StaffDto());
+        StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
+        Staff author = staffAuthenticationService.Context.CurrentStaff ?? new Staff(1, new StaffDto());
         return mapper.Map<List<CategoryDto>>(categoryDao.DeleteByIdsAsync(ids, author).Result);
     }
 
@@ -99,6 +107,10 @@ public class CategoryService : ICategoryService
     /// <returns>The updated category DTO.</returns>
     public CategoryDto? UpdateById(CategoryDto categoryDto)
     {
+        StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
+        categoryDto.UpdatedBy = staffAuthenticationService.Context.CurrentStaff?.CompositeUsername ?? "system";
+        categoryDto.CreatedBy ??= "system";
+        categoryDto.UpdatedAt = DateTime.Now;
         return mapper.Map<CategoryDto>(categoryDao.UpdateByIdAsync(mapper.Map<Category>(categoryDto)).Result);
     }
 }

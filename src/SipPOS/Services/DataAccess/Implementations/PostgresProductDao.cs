@@ -8,6 +8,7 @@ using Npgsql;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Text;
+using NpgsqlTypes;
 
 namespace SipPOS.Services.DataAccess.Implementations;
 
@@ -31,7 +32,7 @@ public class PostgresProductDao : IProductDao
         await using var command = new NpgsqlCommand(@"
             UPDATE product
             SET deleted_by = $1,
-                deleted_at = $2,
+                deleted_at = $2
             WHERE id = $3
             RETURNING *
         ", connection)
@@ -72,7 +73,7 @@ public class PostgresProductDao : IProductDao
         await using var command = new NpgsqlCommand(@"
             UPDATE product
             SET deleted_by = $1,
-                deleted_at = $2,
+                deleted_at = $2
             WHERE id = ANY($3)
             RETURNING *
         ", connection)
@@ -181,7 +182,7 @@ public class PostgresProductDao : IProductDao
         using var connection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection;
 
         await using var command = new NpgsqlCommand(@"
-            INSERT INTO product (name, desc, price, category_id, status, image_urls, created_by, created_at)
+            INSERT INTO product (name, ""desc"", price, category_id, status, image_urls, created_by, created_at)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
             RETURNING *
         ", connection)
@@ -193,7 +194,7 @@ public class PostgresProductDao : IProductDao
                 new() { Value = productDto.Price },
                 new() { Value = productDto.CategoryId },
                 new() { Value = productDto.Status },
-                new() { Value = JsonSerializer.Serialize(productDto.ImageUrls) },
+                new() { Value = productDto.ImageUrls },
                 new() { Value = productDto.CreatedBy },
                 new() { Value = productDto.CreatedAt }
             }
@@ -226,7 +227,7 @@ public class PostgresProductDao : IProductDao
         await using var command = new NpgsqlCommand(@"
             UPDATE product
             SET name = $1,
-                desc = $2,
+                ""desc"" = $2,
                 price = $3,
                 category_id = $4,
                 status = $5,
@@ -244,7 +245,7 @@ public class PostgresProductDao : IProductDao
                 new() { Value = productDto.Price },
                 new() { Value = productDto.CategoryId },
                 new() { Value = productDto.Status },
-                new() { Value = JsonSerializer.Serialize(productDto.ImageUrls) },
+                new() { Value = productDto.ImageUrls },
                 new() { Value = productDto.UpdatedBy },
                 new() { Value = productDto.UpdatedAt },
                 new() { Value = productDto.Id }
@@ -362,7 +363,7 @@ public class PostgresProductDao : IProductDao
 
         query.Append($" ORDER BY {sortDto.SortBy} {sortDto.SortType} LIMIT $" + index + " OFFSET $" + (index + 1));
         parameters.Add(new() { Value = perPage });
-        parameters.Add(new() { Value = (page - 1) * perPage });
+        parameters.Add(new() { Value = (page - 1) * perPage < 0 ? 0 : (page - 1) * perPage });
 
         await using var command = new NpgsqlCommand(query.ToString(), connection);
         command.Parameters.AddRange(parameters.ToArray());
