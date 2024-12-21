@@ -58,7 +58,7 @@ public interface ICategoryDao
     /// </summary>
     /// <param name="category">The category to insert.</param>
     /// <returns>The inserted category if successful; otherwise, null.</returns>
-    Task<(long id, Category? dto)> InsertAsync(Category categoryDto);
+    Task<Category?> InsertAsync(Category categoryDto);
 
     /// <summary>
     /// Counts the total number of categories.

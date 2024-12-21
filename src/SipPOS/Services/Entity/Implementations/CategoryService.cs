@@ -57,8 +57,7 @@ public class CategoryService : ICategoryService
     public CategoryDto? Insert(CategoryDto categoryDto)
     {
         StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
-        categoryDto.UpdatedBy = staffAuthenticationService.Context.CurrentStaff?.CompositeUsername ?? "system";
-        categoryDto.CreatedBy ??= "system";
+        categoryDto.CreatedBy = staffAuthenticationService.Context.CurrentStaff?.CompositeUsername;
         categoryDto.CreatedAt = DateTime.Now;
         return mapper.Map<CategoryDto>(categoryDao.InsertAsync(mapper.Map<Category>(categoryDto)).Result);
     }
@@ -108,8 +107,7 @@ public class CategoryService : ICategoryService
     public CategoryDto? UpdateById(CategoryDto categoryDto)
     {
         StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
-        categoryDto.UpdatedBy = staffAuthenticationService.Context.CurrentStaff?.CompositeUsername ?? "system";
-        categoryDto.CreatedBy ??= "system";
+        categoryDto.UpdatedBy = staffAuthenticationService.Context.CurrentStaff?.CompositeUsername;
         categoryDto.UpdatedAt = DateTime.Now;
         return mapper.Map<CategoryDto>(categoryDao.UpdateByIdAsync(mapper.Map<Category>(categoryDto)).Result);
     }

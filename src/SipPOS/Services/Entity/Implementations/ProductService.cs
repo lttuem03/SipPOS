@@ -57,8 +57,7 @@ public class ProductService : IProductService
     public ProductDto? Insert(ProductDto productDto)
     {
         StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
-        productDto.UpdatedBy = staffAuthenticationService.Context.CurrentStaff?.CompositeUsername ?? "system";
-        productDto.CreatedBy ??= "system";
+        productDto.CreatedBy = staffAuthenticationService.Context.CurrentStaff?.CompositeUsername;
         productDto.CreatedAt = DateTime.Now;
         return mapper.Map<ProductDto>(productDao.InsertAsync(mapper.Map<Product>(productDto)).Result);
     }
@@ -71,7 +70,7 @@ public class ProductService : IProductService
     public ProductDto? UpdateById(ProductDto productDto)
     {
         StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
-        productDto.UpdatedBy = staffAuthenticationService.Context.CurrentStaff?.CompositeUsername ?? "system";
+        productDto.UpdatedBy = staffAuthenticationService.Context.CurrentStaff?.CompositeUsername;
         productDto.UpdatedAt = DateTime.Now;
         return mapper.Map<ProductDto>(productDao.UpdateByIdAsync(mapper.Map<Product>(productDto)).Result);
     }

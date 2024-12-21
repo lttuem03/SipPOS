@@ -52,8 +52,8 @@
                 SelectedValue="{x:Bind ViewModel.CategoryFilterDto.Status, Mode=TwoWay}"
                 ItemsSource="{x:Bind ViewModel.StatusItemsFilter}"/>
             <TextBox 
-                Text="{x:Bind ViewModel.CategoryFilterDto.Name}"
-                Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="2"
+                Text="{x:Bind ViewModel.CategoryFilterDto.Name, Mode=TwoWay}"
+                Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                 Header="Tên danh mục"
                 PlaceholderText="Nhập tên danh mục" />
         </Grid>
@@ -61,6 +61,7 @@
         <StackPanel Grid.Row="1" Orientation="Vertical">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,10,0,10">
                 <Button Content="Tìm kiếm" Click="RefreshButton_Click" />
+                <Button Content="Xóa tìm kiếm" Click="EmptyButton_Click" Margin="10,0,0,0" />
                 <Button Content="Thêm mới" Click="AddButton_Click" Margin="10,0,0,0" />
                 <Button Content="Xem" Click="ViewButton_Click" Margin="10,0,0,0" />
                 <Button Content="Chỉnh sửa" Click="EditButton_Click" Margin="10,0,0,0" />
@@ -143,11 +144,14 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox
-                                Text="{x:Bind ViewModel.SelectedCategory.Name, Mode=TwoWay}"
-                                Grid.Row="0" Grid.Column="0" 
-                                Header="Tên danh mục" 
-                                PlaceholderText="Nhập tên danh mục" />
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" >
+                                <TextBox
+                                    Text="{x:Bind ViewModel.SelectedCategory.Name, Mode=TwoWay}"
+                                    Header="Tên danh mục" 
+                                    TextChanged="CategoryName_TextChanged"
+                                    PlaceholderText="Nhập tên danh mục" />
+                                <TextBlock Text="{x:Bind ViewModel.CategoryNameReqireMessage, Mode=OneWay}" Foreground="Red"/>
+                            </StackPanel>
                             <ComboBox 
                                 Header="Trạng thái"
                                 Grid.Row="0" Grid.Column="1" 
@@ -157,12 +161,15 @@
                                 SelectedValuePath="Value"
                                 SelectedValue="{x:Bind ViewModel.SelectedCategory.Status, Mode=TwoWay}"
                                 ItemsSource="{x:Bind ViewModel.StatusItems}"/>
-                            <TextBox 
-                                AcceptsReturn="True"
-                                Text="{x:Bind ViewModel.SelectedCategory.Desc, Mode=TwoWay}"
-                                Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
-                                Header="Mô tả danh mục" Height="100"
-                                PlaceholderText="Nhập mô tả danh mục" />
+                            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" >
+                                <TextBox 
+                                    AcceptsReturn="True"
+                                    Text="{x:Bind ViewModel.SelectedCategory.Desc, Mode=TwoWay}"
+                                    Header="Mô tả danh mục" Height="100"
+                                    TextChanged="CategoryDesc_TextChanged"
+                                    PlaceholderText="Nhập mô tả danh mục" />
+                                <TextBlock Text="{x:Bind ViewModel.CategoryDescReqireMessage, Mode=OneWay}" Foreground="Red"/>
+                            </StackPanel>
                         </Grid>
                     </TabViewItem>
                     <TabViewItem Header="Hình ảnh danh mục" IsClosable="False">

@@ -10,6 +10,7 @@ using CommunityToolkit.WinUI.UI.Controls;
 using SipPOS.ViewModels.Inventory;
 using SipPOS.Resources.Controls;
 using SipPOS.DataTransfer.Entity;
+using SipPOS.DataTransfer.General;
 
 namespace SipPOS.Views.Inventory;
 
@@ -36,7 +37,7 @@ public sealed partial class CategoryManagementView : Page
 
     private void OnPageSizeChanged(object sender, SizeChangedEventArgs e)
     {
-       ViewModel.TableHeight = (int)e.NewSize.Height - 260;
+        ViewModel.TableHeight = (int)e.NewSize.Height - 260;
     }
 
     /// <summary>
@@ -46,6 +47,12 @@ public sealed partial class CategoryManagementView : Page
     /// <param name="e">The event data.</param>
     public void RefreshButton_Click(object sender, RoutedEventArgs e)
     {
+        ViewModel.Search();
+    }
+
+    public void EmptyButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.CategoryFilterDto = new CategoryFilterDto();
         ViewModel.Search();
     }
 
@@ -220,23 +227,21 @@ public sealed partial class CategoryManagementView : Page
             ShowNotification("Vui lòng chọn danh mục cần thêm sản phẩm.");
             return;
         }
-
-        if (string.IsNullOrEmpty(ViewModel.SelectedCategory.Name))
-        {
-            args.Cancel = true;
-            ShowNotification("Vui lòng nhập tên danh mục.");
-            return;
-        }
+        bool isOk = false;
         switch (ViewModel.ActionType)
         {
             case "ADD":
-                ViewModel.Insert();
+                isOk = null != ViewModel.Insert();
                 break;
             case "EDIT":
-                ViewModel.UpdateById();
+                isOk = null != ViewModel.UpdateById();
                 break;
             default:
                 break;
+        }
+        if (!isOk)
+        {
+            args.Cancel = true;
         }
     }
 
@@ -357,5 +362,15 @@ public sealed partial class CategoryManagementView : Page
     private void DialogOpen(ContentDialog sender, ContentDialogOpenedEventArgs args)
     {
 
+    }
+
+    private void CategoryName_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        ViewModel.CategoryNameReqireMessage = string.Empty;
+    }
+
+    private void CategoryDesc_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        ViewModel.CategoryDescReqireMessage = string.Empty;
     }
 }

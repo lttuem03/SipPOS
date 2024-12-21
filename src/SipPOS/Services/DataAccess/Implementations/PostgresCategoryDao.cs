@@ -32,7 +32,7 @@ public class PostgresCategoryDao : ICategoryDao
         await using var command = new NpgsqlCommand(@"
             UPDATE category
             SET deleted_by = $1,
-                deleted_at = $2,
+                deleted_at = $2
             WHERE id = $3
             RETURNING *
         ", connection)
@@ -72,8 +72,8 @@ public class PostgresCategoryDao : ICategoryDao
         await using var command = new NpgsqlCommand(@"
             UPDATE category
             SET deleted_by = $1,
-                deleted_at = $2,
-            WHERE store_id = $3 AND id = ANY($4)
+                deleted_at = $2
+            WHERE id = ANY($3)
             RETURNING *
         ", connection)
         {
@@ -173,7 +173,7 @@ public class PostgresCategoryDao : ICategoryDao
     /// </summary>
     /// <param name="categoryDto">The category to insert.</param>
     /// <returns>The inserted category.</returns>
-    public async Task<(long id, Category? dto)> InsertAsync(Category categoryDto)
+    public async Task<Category?> InsertAsync(Category categoryDto)
     {
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
 
@@ -190,7 +190,7 @@ public class PostgresCategoryDao : ICategoryDao
                 new() { Value = categoryDto.Name },
                 new() { Value = categoryDto.Desc },
                 new() { Value = categoryDto.Status },
-                new() { Value = categoryDto.ImageUrls, NpgsqlDbType = NpgsqlDbType.Array | NpgsqlDbType.Text },
+                new() { Value = categoryDto.ImageUrls },
                 new() { Value = categoryDto.CreatedBy },
                 new() { Value = categoryDto.CreatedAt }
             }
@@ -200,10 +200,10 @@ public class PostgresCategoryDao : ICategoryDao
         if (reader.HasRows)
         {
             await reader.ReadAsync();
-            return (reader.GetInt64(reader.GetOrdinal("id")), ReaderToCategory(reader));
+            return ReaderToCategory(reader);
         }
 
-        return (0, null);
+        return null;
     }
 
     /// <summary>
@@ -271,21 +271,21 @@ public class PostgresCategoryDao : ICategoryDao
         int index = 1;
         if (categoryFilterDto.Name != null)
         {
-            query.Append(" name ILIKE '%' || $" + index++ + " || '%'");
+            query.Append(" AND name ILIKE '%' || $" + index++ + " || '%'");
             parameters.Add(new() { Value = categoryFilterDto.Name });
             index++;
         }
 
         if (categoryFilterDto.Desc != null)
         {
-            query.Append(" desc ILIKE '%' || $" + index++ + " || '%'");
+            query.Append(" AND desc ILIKE '%' || $" + index++ + " || '%'");
             parameters.Add(new() { Value = categoryFilterDto.Desc });
             index++;
         }
 
         if (categoryFilterDto.Status != null)
         {
-            query.Append(" status = $" + index++);
+            query.Append(" AND status = $" + index++);
             parameters.Add(new() { Value = categoryFilterDto.Status });
             index++;
         }
@@ -345,8 +345,7 @@ public class PostgresCategoryDao : ICategoryDao
 
         using var reader = command.ExecuteReader();
 
-
-        long totalRecords = await CountAsync(categoryFilterDto);
+        long totalRecord = await CountAsync(categoryFilterDto);
 
         if (reader.HasRows)
         {
@@ -362,8 +361,8 @@ public class PostgresCategoryDao : ICategoryDao
                 Data = categoryList,
                 Page = page,
                 PerPage = perPage,
-                TotalRecord = totalRecords,
-                TotalPage = (int)Math.Ceiling((double)totalRecords / perPage)
+                TotalRecord = totalRecord,
+                TotalPage = (int)Math.Ceiling((double)totalRecord / perPage)
             };
         }
 

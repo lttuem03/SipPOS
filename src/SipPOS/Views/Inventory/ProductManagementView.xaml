@@ -75,6 +75,7 @@
         <StackPanel Grid.Row="1" Orientation="Vertical">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,10,0,10">
                 <Button Content="Tìm kiếm" Click="RefreshButton_Click" />
+                <Button Content="Xóa tìm kiếm" Click="EmptyButton_Click" Margin="10,0,0,0" />
                 <Button Content="Thêm mới" Click="AddButton_Click" Margin="10,0,0,0" />
                 <Button Content="Xem" Click="ViewButton_Click" Margin="10,0,0,0" />
                 <Button Content="Chỉnh sửa" Click="EditButton_Click" Margin="10,0,0,0" />
@@ -168,26 +169,35 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox
-                                Text="{x:Bind ViewModel.SelectedProduct.Name, Mode=TwoWay}"
-                                Grid.Row="0" Grid.Column="0" 
-                                Header="Tên sản phẩm" 
-                                PlaceholderText="Nhập tên sản phẩm" />
-                            <ComboBox 
-                                Header="Danh mục"
-                                Grid.Row="0" Grid.Column="1"
-                                x:Name="DialogProductCategoryComboBox" 
-                                PlaceholderText="Chọn danh mục"  
-                                HorizontalAlignment="Stretch"
-                                DisplayMemberPath="Name" 
-                                SelectedValuePath="Id"
-                                SelectedValue="{x:Bind ViewModel.SelectedProduct.CategoryId, Mode=TwoWay}"
-                                ItemsSource="{x:Bind ViewModel.Categories}"/>
-                            <NumberBox 
-                                Value="{x:Bind ViewModel.SelectedProduct.Price, Mode=TwoWay, Converter={StaticResource DoubleToNullableDoubleConverter}}"
-                                Grid.Row="1" Grid.Column="0" 
-                                Header="Giá sản phẩm" 
-                                PlaceholderText="Nhập giá sản phẩm" />
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" >
+                                <TextBox
+                                    Text="{x:Bind ViewModel.SelectedProduct.Name, Mode=TwoWay}"
+                                    Header="Tên sản phẩm" 
+                                    TextChanged="ProductName_TextChanged"
+                                    PlaceholderText="Nhập tên sản phẩm" />
+                                <TextBlock Text="{x:Bind ViewModel.ProductNameRequireMessage, Mode=OneWay}" Foreground="Red"/>
+                            </StackPanel>
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1" >
+                                <ComboBox 
+                                    Header="Danh mục"
+                                    x:Name="DialogProductCategoryComboBox" 
+                                    PlaceholderText="Chọn danh mục"  
+                                    HorizontalAlignment="Stretch"
+                                    DisplayMemberPath="Name" 
+                                    SelectedValuePath="Id"
+                                    SelectionChanged="ProductCategory_SelectionChanged"
+                                    SelectedValue="{x:Bind ViewModel.SelectedProduct.CategoryId, Mode=TwoWay}"
+                                    ItemsSource="{x:Bind ViewModel.Categories}"/>
+                                <TextBlock Text="{x:Bind ViewModel.ProductCategoryRequireMessage, Mode=OneWay}" Foreground="Red"/>
+                            </StackPanel>
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" >
+                                <NumberBox 
+                                    Value="{x:Bind ViewModel.SelectedProduct.Price, Mode=TwoWay, Converter={StaticResource DoubleToNullableDoubleConverter}}"
+                                    Header="Giá sản phẩm" 
+                                    ValueChanged="ProductPrice_ValueChanged"
+                                    PlaceholderText="Nhập giá sản phẩm" />
+                                <TextBlock Text="{x:Bind ViewModel.ProductPriceRequireMessage, Mode=OneWay}" Foreground="Red"/>
+                            </StackPanel>
                             <ComboBox 
                                 Header="Trạng thái"
                                 Grid.Row="1" Grid.Column="1" 
@@ -197,12 +207,15 @@
                                 SelectedValuePath="Value"
                                 SelectedValue="{x:Bind ViewModel.SelectedProduct.Status, Mode=TwoWay}"
                                 ItemsSource="{x:Bind ViewModel.StatusItems}"/>
-                            <TextBox 
-                                AcceptsReturn="True"
-                                Text="{x:Bind ViewModel.SelectedProduct.Desc, Mode=TwoWay}"
-                                Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
-                                Header="Mô tả sản phẩm" Height="100"
-                                PlaceholderText="Nhập mô tả sản phẩm" />
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" >
+                                <TextBox 
+                                    AcceptsReturn="True"
+                                    Text="{x:Bind ViewModel.SelectedProduct.Desc, Mode=TwoWay}"
+                                    Header="Mô tả sản phẩm" Height="100"
+                                    TextChanged="ProductDesc_TextChanged"
+                                    PlaceholderText="Nhập mô tả sản phẩm" />
+                                <TextBlock Text="{x:Bind ViewModel.ProductDescRequireMessage, Mode=OneWay}" Foreground="Red"/>
+                            </StackPanel>
                         </Grid>
                     </TabViewItem>
                     <TabViewItem Header="Hình ảnh sản phẩm" IsClosable="False">

@@ -33,7 +33,7 @@ public class ProductDto : BaseEntityDto
     /// <summary>
     /// Gets or sets the status of the product.
     /// </summary>
-    public string? Status { get; set; }
+    public string? Status { get; set; } = "Available";
 
     /// <summary>
     /// Gets or sets a value indicating whether the product is settled.
