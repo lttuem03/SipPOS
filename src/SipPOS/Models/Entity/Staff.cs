@@ -1,5 +1,5 @@
-﻿using SipPOS.Models.General;
-using SipPOS.DataTransfer.Entity;
+﻿using SipPOS.DataTransfer.Entity;
+using SipPOS.Models.General;
 
 namespace SipPOS.Models.Entity;
 
@@ -24,18 +24,24 @@ public class Staff : BaseEntity
     /// <summary>
     /// Gets the store identifier.
     /// </summary>
-    public long StoreId { get; }
+    public long StoreId
+    {
+        get;
+    }
 
     /// <summary>
     /// Get the position object assigned to this staff (based on the prefix)
     /// </summary>
-    public Position Position { get; private set; }
+    public Position Position
+    {
+        get; private set;
+    }
 
     /// <summary>
     /// Gets the position prefix.
     /// </summary>
     public string PositionPrefix
-    { 
+    {
         get => _positionPrefix;
         private set
         {
@@ -47,47 +53,74 @@ public class Staff : BaseEntity
     /// <summary>
     /// Gets the name of the staff.
     /// </summary>
-    public string Name { get; }
+    public string Name
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the gender of the staff.
     /// </summary>
-    public string Gender { get; }
+    public string Gender
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the date of birth of the staff.
     /// </summary>
-    public DateOnly DateOfBirth { get; }
+    public DateOnly DateOfBirth
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the email of the staff.
     /// </summary>
-    public string Email { get; }
+    public string Email
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the telephone number of the staff.
     /// </summary>
-    public string Tel { get; }
+    public string Tel
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the address of the staff.
     /// </summary>
-    public string Address { get; }
+    public string Address
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the employment status of the staff.
     /// </summary>
-    public string EmploymentStatus { get; }
+    public string EmploymentStatus
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the employment start date.
     /// </summary>
-    public DateOnly EmploymentStartDate { get; }
+    public DateOnly EmploymentStartDate
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the employment end date.
     /// </summary>
-    public DateOnly? EmploymentEndDate { get; }
+    public DateOnly? EmploymentEndDate
+    {
+        get;
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Staff"/> class.

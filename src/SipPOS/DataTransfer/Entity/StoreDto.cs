@@ -26,11 +26,6 @@ public class StoreDto : BaseEntityDto
     public string Tel { get; set; }
 
     /// <summary>
-    /// Gets or sets the tax code of the store DTO.
-    /// </summary>
-    public string TaxCode { get; set; }
-
-    /// <summary>
     /// Gets or sets the username of the store DTO.
     /// </summary>
     public string Username { get; set; }
@@ -67,7 +62,6 @@ public class StoreDto : BaseEntityDto
         Address = string.Empty;
         Email = string.Empty;
         Tel = string.Empty;
-        TaxCode = string.Empty;
         Username = string.Empty;
 
         PasswordHash = null;

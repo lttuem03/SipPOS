@@ -1,5 +1,5 @@
-﻿using SipPOS.Models.Entity;
-using SipPOS.DataTransfer.Entity;
+﻿using SipPOS.DataTransfer.Entity;
+using SipPOS.Models.Entity;
 using SipPOS.Services.DataAccess.Interfaces;
 
 namespace SipPOS.Services.DataAccess.Implementations;
@@ -11,20 +11,20 @@ public class MockStoreDao : IStoreDao
 {
     private readonly List<Store> _stores =
     [
-        new Store(
-                        id: 0,
-                        dto: new StoreDto()
-                        {
-                            Name = "Món Ông Cảnh Khéo Quán",
-                            Address = "123 Đường Mộc Oanh Cửa Khẩu, Phường 9, Quận Tân Bình, Thành phố Hồ Chí Minh",
-                            Email = "canhkheoquan@gmail.com",
-                            Tel = "09323654213",
-                            TaxCode = "7200000010001",
-                            Username = "mock",
-                            // Password for authentication: mock
-                            LastLogin = DateTime.Now
-                        }
-                    )
+        new Store
+        (
+            id: 0,
+            dto: new StoreDto()
+            {
+                Name = "Món Ông Cảnh Khéo Quán",
+                Address = "123 Đường Mộc Oanh Cửa Khẩu, Phường 9, Quận Tân Bình, Thành phố Hồ Chí Minh",
+                Email = "canhkheoquan@gmail.com",
+                Tel = "09323654213",
+                Username = "mock",
+                // Password for authentication: mock
+                LastLogin = DateTime.Now
+            }
+        )
     ];
 
     /// <summary>
@@ -48,7 +48,6 @@ public class MockStoreDao : IStoreDao
             Address = store.Address,
             Email = store.Email,
             Tel = store.Tel,
-            TaxCode = store.TaxCode,
             Username = store.Username,
             PasswordHash = "8B7E4258694259386AF545199FDBF898CA9127C0BCAA2E81449F706789AA62A3",
             Salt = "C7FC0185B7C8F6A48C7E00AEE44B1EBF61CB60E4B4C4D62EE97BD07F4DD826DD",
@@ -84,7 +83,6 @@ public class MockStoreDao : IStoreDao
             Address = updatedStoreDto.Address,
             Email = updatedStoreDto.Email,
             Tel = updatedStoreDto.Tel,
-            TaxCode = updatedStoreDto.TaxCode,
             Username = updatedStoreDto.Username,
             PasswordHash = "8B7E4258694259386AF545199FDBF898CA9127C0BCAA2E81449F706789AA62A3",
             Salt = "C7FC0185B7C8F6A48C7E00AEE44B1EBF61CB60E4B4C4D62EE97BD07F4DD826DD",

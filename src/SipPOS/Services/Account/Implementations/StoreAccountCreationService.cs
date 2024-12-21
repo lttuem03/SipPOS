@@ -1,10 +1,9 @@
 ﻿using System.Text.RegularExpressions;
-
-using SipPOS.Models.Entity;
 using SipPOS.DataTransfer.Entity;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.Account.Interfaces;
 using SipPOS.Services.General.Interfaces;
+using SipPOS.Models.Entity;
 
 namespace SipPOS.Services.Account.Implementations;
 
@@ -140,7 +139,7 @@ public class StoreAccountCreationService : IStoreAccountCreationService
 
         var telPattern = @"^(0|\+84)\d{9,12}$";
 
-        if (System.Text.RegularExpressions.Regex.IsMatch(tel, telPattern))
+        if (Regex.IsMatch(tel, telPattern))
         {
             return "OK";
         }

@@ -55,8 +55,14 @@
                         VerticalAlignment="Center"
                         Name="selectPrefixComboBox"
                         Header="Cấp nhân viên"
+                        FontSize="18"
                         GotFocus="selectPrefixComboBox_GotFocus"
                         SelectedValue="{x:Bind ViewModel.SelectedPrefix, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" FontSize="18" HorizontalAlignment="Right"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                         <x:String>ST</x:String>
                         <x:String>AM</x:String>
                         <x:String>SM</x:String>
@@ -68,10 +74,11 @@
                         GotFocus="staffIdTextBox_GotFocus"
                         MaxLength="6"
                         Height="95"
-                        Padding="25"
+                        Padding="17"
                         VerticalAlignment="Center"
                         TextAlignment="Left"
                         Header="Mã nhân viên"
+                        FontSize="18"
                         Text="{x:Bind ViewModel.StaffId, Mode=TwoWay}"/>
                 </Grid>
 
@@ -97,6 +104,7 @@
                         FontSize="16"/>
                 </Button>
             </StackPanel>
+
             <!--Numpad-->
             <Grid 
                 Grid.Column="1" 
@@ -110,6 +118,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -117,75 +126,94 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <!--1-->
+                <!--Backspace button-->
                 <Button 
                     Grid.Row="0" Grid.Column="0"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
+                    Grid.ColumnSpan="3" 
+                    Click="numpadBackspaceButton_Click">
+                    <FontIcon Glyph="&#xE94F;" />
+                </Button>
+                <!--1-->
+                <Button 
+                    Grid.Row="1" Grid.Column="0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
                     Content="1"
+                    FontSize="20"
                     Click="numpadButton_Click"/>
                 <!--2-->
                 <Button 
-                    Grid.Row="0" Grid.Column="1"
+                    Grid.Row="1" Grid.Column="1"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Content="2"
+                    FontSize="20"
                     Click="numpadButton_Click"/>
                 <!--3-->
-                <Button
-                    Grid.Row="0" Grid.Column="2" 
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Content="3" 
-                    Click="numpadButton_Click"/>
-                <!--4-->
-                <Button 
-                    Grid.Row="1" Grid.Column="0" 
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Content="4"
-                    Click="numpadButton_Click"/>
-                <!--5-->
-                <Button 
-                    Grid.Row="1" Grid.Column="1" 
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Content="5"
-                    Click="numpadButton_Click"/>
-                <!--6-->
                 <Button
                     Grid.Row="1" Grid.Column="2" 
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
-                    Content="6"
+                    Content="3" 
+                    FontSize="20"
                     Click="numpadButton_Click"/>
-                <!--7-->
+                <!--4-->
                 <Button 
                     Grid.Row="2" Grid.Column="0" 
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
-                    Content="7"
+                    Content="4"
+                    FontSize="20"
                     Click="numpadButton_Click"/>
-                <!--8-->
+                <!--5-->
                 <Button 
-                    Grid.Row="2" Grid.Column="1"
+                    Grid.Row="2" Grid.Column="1" 
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
-                    Content="8"
+                    Content="5"
+                    FontSize="20"
                     Click="numpadButton_Click"/>
-                <!--9-->
-                <Button 
+                <!--6-->
+                <Button
                     Grid.Row="2" Grid.Column="2" 
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
+                    Content="6"
+                    FontSize="20"
+                    Click="numpadButton_Click"/>
+                <!--7-->
+                <Button 
+                    Grid.Row="3" Grid.Column="0" 
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Content="7"
+                    FontSize="20"
+                    Click="numpadButton_Click"/>
+                <!--8-->
+                <Button 
+                    Grid.Row="3" Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Content="8"
+                    FontSize="20"
+                    Click="numpadButton_Click"/>
+                <!--9-->
+                <Button 
+                    Grid.Row="3" Grid.Column="2" 
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
                     Content="9"
+                    FontSize="20"
                     Click="numpadButton_Click"/>
                 <!--0-->
                 <Button 
-                    Grid.Row="3" Grid.Column="0"
+                    Grid.Row="4" Grid.Column="0"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Content="0"
+                    FontSize="20"
                     Grid.ColumnSpan="3" 
                     Click="numpadButton_Click"/>
             </Grid>

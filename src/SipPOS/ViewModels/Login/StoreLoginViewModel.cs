@@ -86,7 +86,7 @@ public class StoreLoginViewModel : INotifyPropertyChanged
 
         LoginViewModel.UpdateView();
         App.NavigateTo(typeof(LoginView));
-        // UNDO THIS WHEN DONE DEVELOPING THE STORE SETUP PAGES
+        // TODO: UNDO THIS WHEN DONE DEVELOPING THE STORE SETUP PAGES
         //App.NavigateTo(typeof(StoreSetupView));
     }
 

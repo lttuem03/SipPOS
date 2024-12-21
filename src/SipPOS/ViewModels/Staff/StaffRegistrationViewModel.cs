@@ -386,7 +386,7 @@ public class StaffRegistrationViewModel : INotifyPropertyChanged
         set
         {
             _staffRawInfo.PositionPrefix = value;
-            StaffCompositeUsername = SipPOS.Models.Entity.Staff.GetCompositeUsername(_staffRawInfo.PositionPrefix, _staffRawInfo.StoreId, _staffId);
+            StaffCompositeUsername = Models.Entity.Staff.GetCompositeUsername(_staffRawInfo.PositionPrefix, _staffRawInfo.StoreId, _staffId);
             OnPropertyChanged(nameof(StaffPositionPrefix));
         }
     }

@@ -1,6 +1,6 @@
-﻿using SipPOS.Models.Entity;
+﻿using SipPOS.DataTransfer.General;
+using SipPOS.Models.Entity;
 using SipPOS.Models.General;
-using SipPOS.DataTransfer.General;
 using SipPOS.Services.DataAccess.Interfaces;
 
 namespace SipPOS.Services.DataAccess.Implementations;

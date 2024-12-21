@@ -12,6 +12,7 @@ using SipPOS.Views.Inventory;
 
 using SipPOS.ViewModels.Cashier;
 using SipPOS.ViewModels.Inventory;
+using SipPOS.ViewModels.Setup;
 
 using SipPOS.Services.Account.Interfaces;
 using SipPOS.Services.Account.Implementations;
@@ -25,10 +26,14 @@ using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Services.Authentication.Implementations;
 using SipPOS.Services.Accessibility.Interfaces;
 using SipPOS.Services.Accessibility.Implementations;
+using SipPOS.Services.Configuration.Interfaces;
+using SipPOS.Services.Configuration.Implementations;
 
 using SipPOS.Context.Shift.Interface;
 using SipPOS.Context.Shift.Implementation;
-using SipPOS.ViewModels.Setup;
+
+using SipPOS.Context.Configuration.Interfaces;
+using SipPOS.Context.Configuration.Implementations;
 
 namespace SipPOS;
 
@@ -82,6 +87,7 @@ public partial class App : Application
             services.AddSingleton<ICategoryDao, MockCategoryDao>();
             services.AddSingleton<IStoreDao, PostgreStoreDao>();
             services.AddSingleton<IStaffDao, PostgreStaffDao>();
+            services.AddSingleton<IConfigurationDao, PostgreConfigurationDao>();
 
             // Services
             services.AddSingleton<IProductService, ProductService>();
@@ -100,6 +106,8 @@ public partial class App : Application
             services.AddSingleton<IStaffAccountCreationService>(new StaffAccountCreationService());
             services.AddSingleton<IStaffAuthenticationService>(new StaffAuthenticationService());
             services.AddSingleton<IPolicyEnforcementPoint>(new PolicyEnforcementPoint());
+            services.AddSingleton<IConfigurationService>(new ConfigurationService());
+            services.AddSingleton<IConfigurationContext>(new ConfigurationContext());
 
             // Views and ViewModels
             services.AddTransient<CategoryManagementViewModel>();

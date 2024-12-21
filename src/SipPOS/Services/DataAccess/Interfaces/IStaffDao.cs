@@ -1,5 +1,5 @@
-﻿using SipPOS.Models.Entity;
-using SipPOS.DataTransfer.Entity;
+﻿using SipPOS.DataTransfer.Entity;
+using SipPOS.Models.Entity;
 
 namespace SipPOS.Services.DataAccess.Interfaces;
 
@@ -65,7 +65,7 @@ public interface IStaffDao
     /// </summary>
     /// <param name="compositeUsername">The composite username of the staff member.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the Staff object, or null if the operation failed.</returns>
-    Task<StaffDto?> GetByCompositeUsername(string compositeUsername);
+    Task<StaffDto?> GetByCompositeUsernameAsync(string compositeUsername);
 
     /// <summary>
     /// Updates a staff member by their ID.

@@ -8,6 +8,7 @@ using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Services.Authentication.Implementations;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.General.Interfaces;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SipPOS.ViewModels.Login;
 
@@ -79,6 +80,19 @@ public class StaffLoginViewModel : INotifyPropertyChanged
             }
 
             StaffId += number;
+        }
+    }
+
+    public void HandleNumpadBackspaceButtonClick()
+    {
+        if (_staffIdTextBoxFocused)
+        {
+            if (StaffId.Length - 1 < 0)
+            {
+                return;
+            }
+
+            StaffId = StaffId.Substring(0, StaffId.Length - 1);
         }
     }
 

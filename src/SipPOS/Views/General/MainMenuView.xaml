@@ -37,7 +37,7 @@
             </StackPanel>
         </DataTemplate>
 
-        <!--Button accessibily to button opacity coverter-->
+        <!--Button accessibily to button opacity converter-->
         <local_converters:ButtonAccessibilityToButtonOpacityConverter x:Key="ButtonAccessibilyToButtonOpacityConverter"/>
     </Page.Resources>
 

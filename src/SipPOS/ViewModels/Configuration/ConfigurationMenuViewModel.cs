@@ -35,11 +35,11 @@ public class ConfigurationMenuViewModel
                 case "StoreConfiguration":
                     configurationMenuNavigationFrame.Navigate(typeof(StoreConfigurationView));
                     break;
-                case "PaymentConfiguration":
-                    configurationMenuNavigationFrame.Navigate(typeof(PaymentConfigurationView));
+                case "TaxConfiguration":
+                    configurationMenuNavigationFrame.Navigate(typeof(TaxConfigurationView));
                     break;
-                case "ReceiptConfiguration":
-                    configurationMenuNavigationFrame.Navigate(typeof(ReceiptConfigurationView));
+                case "SalaryConfiguration":
+                    configurationMenuNavigationFrame.Navigate(typeof(SalaryConfigurationView));
                     break;
             }
         }

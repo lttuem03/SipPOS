@@ -9,14 +9,13 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <StackPanel
-        Orientation="Vertical"
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center">
+    <Canvas
+        Background="AliceBlue">
 
-        <Button 
-            Click="goBackButton_Click"
-            Margin="-100,0,0,20">
+        <!--Go back button-->
+        <Button
+            Canvas.Left="50" Canvas.Top="50"
+            Click="goBackButton_Click">
             <StackPanel 
                 Orientation="Horizontal"
                 HorizontalAlignment="Center"
@@ -30,13 +29,20 @@
                     FontSize="16"/>
             </StackPanel>
         </Button>
-        <TextBlock Text="CÀI ĐẶT" Style="{StaticResource TitleLargeTextBlockStyle}"/>
+
+        <!--Page title-->
+        <TextBlock 
+            Canvas.Left="50" Canvas.Top="100"
+            Text="THIẾT LẬP" 
+            Style="{StaticResource TitleLargeTextBlockStyle}"/>
         
+        <!--Page content-->
         <Grid
+            Canvas.Left="450" Canvas.Top="150"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Width="700"
-            Height="500">
+            Height="640">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -52,8 +58,8 @@
                 Grid.Row="0">
                 <NavigationView.MenuItems>
                     <NavigationViewItem Content="Cửa hàng" Tag="StoreConfiguration"/>
-                    <NavigationViewItem Content="Thanh toán" Tag="PaymentConfiguration"/>
-                    <NavigationViewItem Content="Hóa đơn" Tag="ReceiptConfiguration"/>
+                    <NavigationViewItem Content="Thuế" Tag="TaxConfiguration"/>
+                    <NavigationViewItem Content="Lương" Tag="SalaryConfiguration"/>
                 </NavigationView.MenuItems>
             </NavigationView>
 
@@ -62,7 +68,7 @@
                 Grid.Row="1"
                 Margin="0,0,0,50"/>
         </Grid>
-    </StackPanel>
+    </Canvas>
 
     
 </Page>
