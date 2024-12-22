@@ -306,4 +306,13 @@ public class MockProductDao : IProductDao
         pagination.TotalPage = (int)Math.Ceiling((double)filteredProducts.Count() / perPage);
         return pagination;
     }
+
+    public Task<Pagination<Product>> SearchAsync(ProductFilterDto productFilterDto, SortDto sortDto, int page, int perPage) => throw new NotImplementedException();
+    public Task<List<Product>> GetAllAsync() => throw new NotImplementedException();
+    public Task<Product?> GetByIdAsync(long id) => throw new NotImplementedException();
+    public Task<Product?> DeleteByIdAsync(long id, Staff author) => throw new NotImplementedException();
+    public Task<List<Product>> DeleteByIdsAsync(List<long> ids, Staff author) => throw new NotImplementedException();
+    public Task<Product?> UpdateByIdAsync(Product productDto) => throw new NotImplementedException();
+    public Task<Product?> InsertAsync(Product productDto) => throw new NotImplementedException();
+    public Task<long> CountAsync(ProductFilterDto productFilterDto) => throw new NotImplementedException();
 }

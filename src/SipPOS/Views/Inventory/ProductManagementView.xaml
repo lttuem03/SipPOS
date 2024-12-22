@@ -69,7 +69,8 @@
                 Grid.Row="1" Grid.Column="0" 
                 Grid.ColumnSpan="2"
                 Header="Tên sản phẩm"
-                PlaceholderText="Nhập tên sản phẩm" />
+                PlaceholderText="Nhập tên sản phẩm" 
+                IsSpellCheckEnabled="False"/>
         </Grid>
 
         <StackPanel Grid.Row="1" Orientation="Vertical">
@@ -174,7 +175,8 @@
                                     Text="{x:Bind ViewModel.SelectedProduct.Name, Mode=TwoWay}"
                                     Header="Tên sản phẩm" 
                                     TextChanged="ProductName_TextChanged"
-                                    PlaceholderText="Nhập tên sản phẩm" />
+                                    PlaceholderText="Nhập tên sản phẩm" 
+                                    IsSpellCheckEnabled="False"/>
                                 <TextBlock Text="{x:Bind ViewModel.ProductNameRequireMessage, Mode=OneWay}" Foreground="Red"/>
                             </StackPanel>
                             <StackPanel HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1" >
@@ -213,7 +215,8 @@
                                     Text="{x:Bind ViewModel.SelectedProduct.Desc, Mode=TwoWay}"
                                     Header="Mô tả sản phẩm" Height="100"
                                     TextChanged="ProductDesc_TextChanged"
-                                    PlaceholderText="Nhập mô tả sản phẩm" />
+                                    PlaceholderText="Nhập mô tả sản phẩm" 
+                                    IsSpellCheckEnabled="False"/>
                                 <TextBlock Text="{x:Bind ViewModel.ProductDescRequireMessage, Mode=OneWay}" Foreground="Red"/>
                             </StackPanel>
                         </Grid>

@@ -301,4 +301,13 @@ public class MockCategoryDao : ICategoryDao
         pagination.TotalPage = (int)Math.Ceiling((double)filteredCategories.Count() / perPage);
         return pagination;
     }
+
+    public Task<Pagination<Category>> SearchAsync(CategoryFilterDto categoryFilterDto, SortDto sortDto, int page, int perPage) => throw new NotImplementedException();
+    public Task<List<Category>> GetAllAsync() => throw new NotImplementedException();
+    public Task<Category?> GetByIdAsync(long id) => throw new NotImplementedException();
+    public Task<Category?> DeleteByIdAsync(long id, Staff author) => throw new NotImplementedException();
+    public Task<List<Category>> DeleteByIdsAsync(List<long> ids, Staff author) => throw new NotImplementedException();
+    public Task<Category?> UpdateByIdAsync(Category categoryDto) => throw new NotImplementedException();
+    public Task<Category?> InsertAsync(Category categoryDto) => throw new NotImplementedException();
+    public Task<long> CountAsync(CategoryFilterDto categoryFilterDto) => throw new NotImplementedException();
 }

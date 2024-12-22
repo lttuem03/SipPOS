@@ -55,7 +55,8 @@
                 Text="{x:Bind ViewModel.CategoryFilterDto.Name, Mode=TwoWay}"
                 Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                 Header="Tên danh mục"
-                PlaceholderText="Nhập tên danh mục" />
+                PlaceholderText="Nhập tên danh mục" 
+                IsSpellCheckEnabled="False"/>
         </Grid>
 
         <StackPanel Grid.Row="1" Orientation="Vertical">
@@ -149,7 +150,8 @@
                                     Text="{x:Bind ViewModel.SelectedCategory.Name, Mode=TwoWay}"
                                     Header="Tên danh mục" 
                                     TextChanged="CategoryName_TextChanged"
-                                    PlaceholderText="Nhập tên danh mục" />
+                                    PlaceholderText="Nhập tên danh mục" 
+                                    IsSpellCheckEnabled="False"/>
                                 <TextBlock Text="{x:Bind ViewModel.CategoryNameReqireMessage, Mode=OneWay}" Foreground="Red"/>
                             </StackPanel>
                             <ComboBox 
@@ -167,7 +169,8 @@
                                     Text="{x:Bind ViewModel.SelectedCategory.Desc, Mode=TwoWay}"
                                     Header="Mô tả danh mục" Height="100"
                                     TextChanged="CategoryDesc_TextChanged"
-                                    PlaceholderText="Nhập mô tả danh mục" />
+                                    PlaceholderText="Nhập mô tả danh mục" 
+                                    IsSpellCheckEnabled="False"/>
                                 <TextBlock Text="{x:Bind ViewModel.CategoryDescReqireMessage, Mode=OneWay}" Foreground="Red"/>
                             </StackPanel>
                         </Grid>
