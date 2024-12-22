@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="SipPOS.Views.Setup.Pages.SalaryConfigurationInitialSetupPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SipPOS.Views.Setup.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Canvas
+        Background="AliceBlue">
+
+        <!--Page subtitle-->
+        <TextBlock
+            Canvas.Left="50" Canvas.Top="50"
+            Text="Thông tin lương"
+            FontSize="28"/>
+
+        <!--Intial salary configuration-->
+        <Grid
+            Canvas.Left="50" Canvas.Top="100"
+            BorderBrush="LightGray"
+            BorderThickness="2"
+            CornerRadius="5"
+            RowSpacing="20"
+            ColumnSpacing="20">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="400"/>
+            </Grid.ColumnDefinitions>
+
+            <!--(ST) Staff salary configuration-->
+            <TextBlock 
+                Grid.Row="0" Grid.Column="0"
+                Margin="15,20,0,0"
+                Text="Lương Nhân viên cửa hàng (ST - Staff): " 
+                FontWeight="Bold" 
+                VerticalAlignment="Center"/>
+            <Grid
+                Grid.Row="1" Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="50,0,0,0"
+                ColumnSpacing="75"
+                RowSpacing="5">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!--Base salary-->
+                <CheckBox
+                    Grid.Row="0" Grid.Column="0"
+                    Content="Lương cơ bản"
+                    x:Name="staffBaseSalaryCheckBox"
+                    Checked="staffBaseSalaryCheckBox_Changed"
+                    Unchecked="staffBaseSalaryCheckBox_Changed"/>
+                <StackPanel
+                    Grid.Row="1" Grid.Column="0"
+                    Orientation="Horizontal">
+                    <TextBox
+                        HorizontalAlignment="Stretch"
+                        Width="200"
+                        IsSpellCheckEnabled="False"
+                        x:Name="staffBaseSalaryTextBox"
+                        Text="{x:Bind ViewModel.StaffBaseSalaryString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        TextChanging="salaryTextBox_TextChanging"/>
+                    <TextBlock
+                        Text="VNĐ/tháng"
+                        VerticalAlignment="Center"
+                        Margin="10,0,0,0"/>
+                </StackPanel>
+
+                <!--Hourly salary-->
+                <CheckBox
+                    Grid.Row="0" Grid.Column="1"
+                    Content="Lương theo giờ"
+                    x:Name="staffHourlySalaryCheckBox"
+                    Checked="staffHourlySalaryCheckBox_Changed"
+                    Unchecked="staffHourlySalaryCheckBox_Changed"/>
+                <StackPanel
+                    Grid.Row="1" Grid.Column="1"
+                    Orientation="Horizontal">
+                    <TextBox
+                        HorizontalAlignment="Stretch"
+                        Width="200"
+                        IsSpellCheckEnabled="False"
+                        x:Name="staffHourlySalaryTextBox"
+                        Text="{x:Bind ViewModel.StaffHourlySalaryString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        TextChanging="salaryTextBox_TextChanging"/>
+                    <TextBlock
+                        Text="VNĐ/giờ"
+                        VerticalAlignment="Center"
+                        Margin="10,0,0,0"/>
+                </StackPanel>
+            </Grid>
+
+            <!--(AM) Assistant manager salary configuration-->
+            <TextBlock 
+                Grid.Row="2" Grid.Column="0"
+                Margin="15,0,0,0"
+                Text="Lương Trợ lý cửa hàng (AM - Assistant Manager): " 
+                FontWeight="Bold" 
+                VerticalAlignment="Center"/>
+            <Grid
+                Grid.Row="3" Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="50,0,0,0"
+                ColumnSpacing="75"
+                RowSpacing="5">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!--Base salary-->
+                <CheckBox
+                    Grid.Row="0" Grid.Column="0"
+                    Content="Lương cơ bản"
+                    x:Name="assistantManagerBaseSalaryCheckBox"
+                    Checked="assistantManagerBaseSalaryCheckBox_Changed"
+                    Unchecked="assistantManagerBaseSalaryCheckBox_Changed"/>
+                <StackPanel
+                    Grid.Row="1" Grid.Column="0"
+                    Orientation="Horizontal">
+                    <TextBox
+                        HorizontalAlignment="Stretch"
+                        Width="200"
+                        IsSpellCheckEnabled="False"
+                        x:Name="assistantManagerBaseSalaryTextBox"
+                        Text="{x:Bind ViewModel.AssistantManagerBaseSalaryString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        TextChanging="salaryTextBox_TextChanging"/>
+                    <TextBlock
+                        Text="VNĐ/tháng"
+                        VerticalAlignment="Center"
+                        Margin="10,0,0,0"/>
+                </StackPanel>
+
+                <!--Hourly salary-->
+                <CheckBox
+                    Grid.Row="0" Grid.Column="1"
+                    Content="Lương theo giờ"
+                    x:Name="assistantManagerHourlySalaryCheckBox"
+                    Checked="assistantManagerHourlySalaryCheckBox_Changed"
+                    Unchecked="assistantManagerHourlySalaryCheckBox_Changed"/>
+                <StackPanel
+                    Grid.Row="1" Grid.Column="1"
+                    Orientation="Horizontal">
+                    <TextBox
+                        HorizontalAlignment="Stretch"
+                        Width="200"
+                        IsSpellCheckEnabled="False"
+                        x:Name="assistantManagerHourlySalaryTextBox"
+                        Text="{x:Bind ViewModel.AssistantManagerHourlySalaryString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        TextChanging="salaryTextBox_TextChanging"/>
+                    <TextBlock
+                        Text="VNĐ/giờ"
+                        VerticalAlignment="Center"
+                        Margin="10,0,0,0"/>
+                </StackPanel>
+            </Grid>
+
+            <!--(SM) Store manager salary configuration-->
+            <TextBlock 
+                Grid.Row="4" Grid.Column="0"
+                Margin="15,0,0,0"
+                Text="Lương Trợ lý cửa hàng (AM - Assistant Manager): " 
+                FontWeight="Bold" 
+                VerticalAlignment="Center"/>
+            <Grid
+                Grid.Row="5" Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="50,0,0,30"
+                ColumnSpacing="75"
+                RowSpacing="5">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!--Base salary-->
+                <CheckBox
+                    Grid.Row="0" Grid.Column="0"
+                    Content="Lương cơ bản"
+                    x:Name="storeManagerBaseSalaryCheckBox"
+                    Checked="storeManagerBaseSalaryCheckBox_Changed"
+                    Unchecked="storeManagerBaseSalaryCheckBox_Changed"/>
+                <StackPanel
+                    Grid.Row="1" Grid.Column="0"
+                    Orientation="Horizontal">
+                    <TextBox
+                        HorizontalAlignment="Stretch"
+                        Width="200"
+                        IsSpellCheckEnabled="False"
+                        x:Name="storeManagerBaseSalaryTextBox"
+                        Text="{x:Bind ViewModel.StoreManagerBaseSalaryString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        TextChanging="salaryTextBox_TextChanging"/>
+                    <TextBlock
+                        Text="VNĐ/tháng"
+                        VerticalAlignment="Center"
+                        Margin="10,0,0,0"/>
+                </StackPanel>
+
+                <!--Hourly salary-->
+                <CheckBox
+                    Grid.Row="0" Grid.Column="1"
+                    Content="Lương theo giờ"
+                    x:Name="storeManagerHourlySalaryCheckBox"
+                    Checked="storeManagerHourlySalaryCheckBox_Changed"
+                    Unchecked="storeManagerHourlySalaryCheckBox_Changed"/>
+                <StackPanel
+                    Grid.Row="1" Grid.Column="1"
+                    Orientation="Horizontal">
+                    <TextBox
+                        HorizontalAlignment="Stretch"
+                        Width="200"
+                        IsSpellCheckEnabled="False"
+                        x:Name="storeManagerHourlySalaryTextBox"
+                        Text="{x:Bind ViewModel.StoreManagerHourlySalaryString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        TextChanging="salaryTextBox_TextChanging"/>
+                    <TextBlock
+                        Text="VNĐ/giờ"
+                        VerticalAlignment="Center"
+                        Margin="10,0,0,0"/>
+                </StackPanel>
+            </Grid>
+
+            <!--Validation error message-->
+            <TextBlock 
+                Grid.Row="6" Grid.Column="0"
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Margin="0,0,0,25"
+                Foreground="Red"
+                Opacity="{x:Bind ViewModel.SalaryErrorMessageOpacity, Mode=TwoWay}"
+                Text="{x:Bind ViewModel.SalaryErrorMessageText, Mode=TwoWay}"/>
+        </Grid>
+
+        <!--About salary values-->
+        <Grid
+            Canvas.Left="850" Canvas.Top="120">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="600"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                TextWrapping="WrapWholeWords">
+                Giá trị tiền nhập vào phải chia hết cho 500 VNĐ.<LineBreak/><LineBreak/>
+                Ngoài giá trị được quy định ở thiết lập, hằng tháng có thể thêm một khoảng lương thưởng (bonus)
+                khi duyệt lương.<LineBreak/><LineBreak/>
+                Công thức tính lương tháng cho mỗi nhân viên:<LineBreak/><LineBreak/>
+
+                Tổng lương nhận = Lương cơ bản + Lương theo giờ * Số giờ làm việc + Lương thưởng (nếu có)
+            </TextBlock>
+        </Grid>
+    </Canvas>
+</Page>

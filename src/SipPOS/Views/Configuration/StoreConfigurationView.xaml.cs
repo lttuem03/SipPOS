@@ -1,3 +1,4 @@
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 using SipPOS.ViewModels.Configuration;
@@ -21,5 +22,78 @@ public sealed partial class StoreConfigurationView : Page
     {
         this.InitializeComponent();
         ViewModel = new StoreConfigurationViewModel();
+    }
+
+    private void saveChangesOnStoreConfigurationButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleSaveChangesOnStoreConfigurationButtonClick
+        (
+            editStoreConfigurationResultContentDialog, 
+            saveChangesOnStoreConfigurationButton
+        );
+    }
+
+    private void cancelChangesOnStoreConfigurationButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleCancelChangesOnStoreConfigurationButtonClick(saveChangesOnStoreConfigurationButton);
+
+        storeNameEditableTextField.ResetState();
+        storeAddressEditableTextField.ResetState();
+        storeEmailEditableTextField.ResetState();
+        storeTelEditableTextField.ResetState();
+
+        editOpeningHourTimePicker.Time = ViewModel.EditOpeningTime;
+        editClosingHourTimePicker.Time = ViewModel.EditClosingTime;
+    }
+
+    private void editableTextField_TextModified(object sender, EventArgs e)
+    {
+        ViewModel.HandleEditableTextFieldTextModified(saveChangesOnStoreConfigurationButton);
+    }
+
+    private void storeNameEditableTextField_SaveClicked(object sender, EventArgs e)
+    {
+        ViewModel.HandleStoreNameEditableTextFieldSaveClicked
+        (
+            storeNameErrorMessageTeachingTip,
+            storeNameEditableTextField
+        );
+    }
+
+    private void storeAddressEditableTextField_SaveClicked(object sender, EventArgs e)
+    {
+        ViewModel.HandleStoreAddressEditableTextFieldSaveClicked
+        (
+            storeAddressErrorMessageTeachingTip,
+            storeAddressEditableTextField
+        );
+    }
+
+    private void storeEmailEditableTextField_SaveClicked(object sender, EventArgs e)
+    {
+        ViewModel.HandleStoreEmailEditableTextFieldSaveClicked
+        (
+            storeEmailErrorMessageTeachingTip,
+            storeEmailEditableTextField
+        );
+    }
+
+    private void storeTelEditableTextField_SaveClicked(object sender, EventArgs e)
+    {
+        ViewModel.HandleStoreTelEditableTextFieldSaveClicked
+        (
+            storeTelErrorMessageTeachingTip,
+            storeTelEditableTextField
+        );
+    }
+
+    private void editOpeningHourTimePicker_SelectedTimeChanged(TimePicker sender, TimePickerSelectedValueChangedEventArgs args)
+    {
+        ViewModel.HandleEditOpeningHourTimePickerSelectedTimeChanged(sender.Time, saveChangesOnStoreConfigurationButton);
+    }
+
+    private void editClosingHourTimePicker_SelectedTimeChanged(TimePicker sender, TimePickerSelectedValueChangedEventArgs args)
+    {
+        ViewModel.HandleEditClosingHourTimePickerSelectedTimeChanged(sender.Time, saveChangesOnStoreConfigurationButton);
     }
 }

@@ -16,145 +16,449 @@
             Canvas.Left="50" Canvas.Top="50"
             Text="Hoàn tất thiết lập"
             FontSize="28"/>
-        <!--Store manager account information summary-->
-        <StackPanel
+        
+        <!--Summary grid-->
+        <Grid
             Canvas.Left="50" Canvas.Top="100"
-            Orientation="Vertical"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top">
-            <TextBlock
+            RowSpacing="30"
+            ColumnSpacing="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Store account information summary-->
+            <StackPanel
                 Grid.Row="0" Grid.Column="0"
-                Text="Thông tin tài khoản cửa hàng trưởng"
-                Style="{StaticResource BodyStrongTextBlockStyle}"
+                Orientation="Vertical"
                 HorizontalAlignment="Left"
-                Margin="0,0,0,10"/>
-            <Grid
-                BorderBrush="LightGray"
-                BorderThickness="2"
-                CornerRadius="5"
-                RowSpacing="5"
-                ColumnSpacing="10">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="300"/>
-                </Grid.ColumnDefinitions>
-
-                <!--Name of the fields-->
+                VerticalAlignment="Top">
                 <TextBlock
                     Grid.Row="0" Grid.Column="0"
-                    Text="Họ và tên"
-                    FontWeight="Bold"
-                    Margin="10,10,0,0"/>
+                    Text="Thông tin cửa hàng"
+                    Style="{StaticResource BodyStrongTextBlockStyle}"
+                    HorizontalAlignment="Left"
+                    Margin="0,0,0,10"/>
+                <Grid
+                    BorderBrush="LightGray"
+                    BorderThickness="2"
+                    CornerRadius="5"
+                    RowSpacing="5"
+                    ColumnSpacing="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--Fields' name-->
+                    <TextBlock
+                        Grid.Row="0" Grid.Column="0"
+                        Text="Tên cửa hàng"
+                        FontWeight="Bold"
+                        Margin="10,10,0,0"/>
+                    <TextBlock
+                        Grid.Row="1" Grid.Column="0"
+                        Text="Địa chỉ"
+                        FontWeight="Bold"
+                        Margin="10,0,0,0"/>
+                    <TextBlock
+                        Grid.Row="2" Grid.Column="0"
+                        Text="Email"
+                        FontWeight="Bold"
+                        Margin="10,0,0,0"/>
+                    <TextBlock
+                        Grid.Row="3" Grid.Column="0"
+                        Text="SĐT"
+                        FontWeight="Bold"
+                        Margin="10,0,0,0"/>
+                    <TextBlock
+                        Grid.Row="4" Grid.Column="0"
+                        Text="Tên đăng nhập"
+                        Foreground="Red"
+                        FontWeight="Bold"
+                        Margin="10,0,0,5"/>
+
+                    <!--Field values-->
+                    <TextBlock
+                        Grid.Row="0" Grid.Column="1"
+                        x:Name="summaryStoreNameTextBlock"
+                        Text="Tên cửa hàng"
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0,10,10,0"/>
+                    <TextBlock
+                        Grid.Row="1" Grid.Column="1"
+                        x:Name="summaryStoreAddressTextBlock"
+                        Text="Địa chỉ"
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0,0,10,0"/>
+                    <TextBlock
+                        Grid.Row="2" Grid.Column="1"
+                        x:Name="summaryStoreEmailTextBlock"
+                        Text="Email"
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0,0,10,0"/>
+                    <TextBlock
+                        Grid.Row="3" Grid.Column="1"
+                        x:Name="summaryStoreTelTextBlock"
+                        Text="SĐT"
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0,0,10,0"/>
+                    <TextBlock
+                        Grid.Row="4" Grid.Column="1"
+                        Foreground="Red"
+                        x:Name="summaryStoreUsernameTextBlock"
+                        Text="Tên đăng nhập"
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0,0,10,10"/>
+                </Grid>
+            </StackPanel>
+
+            <!--Store manager account information summary-->
+            <StackPanel
+                Grid.Row="1" Grid.Column="0"
+                Orientation="Vertical"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top">
                 <TextBlock
-                    Grid.Row="1" Grid.Column="0"
-                    Text="Giới tính"
-                    FontWeight="Bold"
-                    Margin="10,0,0,0"/>
+                    Grid.Row="0" Grid.Column="0"
+                    Text="Thông tin tài khoản cửa hàng trưởng"
+                    Style="{StaticResource BodyStrongTextBlockStyle}"
+                    HorizontalAlignment="Left"
+                    Margin="0,0,0,10"/>
+                <Grid
+                    BorderBrush="LightGray"
+                    BorderThickness="2"
+                    CornerRadius="5"
+                    RowSpacing="5"
+                    ColumnSpacing="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--Fields' name-->
+                    <TextBlock
+                        Grid.Row="0" Grid.Column="0"
+                        Text="Họ và tên"
+                        FontWeight="Bold"
+                        Margin="10,10,0,0"/>
+                    <TextBlock
+                        Grid.Row="1" Grid.Column="0"
+                        Text="Giới tính"
+                        FontWeight="Bold"
+                        Margin="10,0,0,0"/>
+                    <TextBlock
+                        Grid.Row="2" Grid.Column="0"
+                        Text="Ngày sinh"
+                        FontWeight="Bold"
+                        Margin="10,0,0,0"/>
+                    <TextBlock
+                        Grid.Row="3" Grid.Column="0"
+                        Text="Email"
+                        FontWeight="Bold"
+                        Margin="10,0,0,0"/>
+                    <TextBlock
+                        Grid.Row="4" Grid.Column="0"
+                        Text="SĐT"
+                        FontWeight="Bold"
+                        Margin="10,0,0,0"/>
+                    <TextBlock
+                        Grid.Row="5" Grid.Column="0"
+                        Text="Địa chỉ"
+                        FontWeight="Bold"
+                        Margin="10,0,0,0"/>
+                    <TextBlock
+                        Grid.Row="6" Grid.Column="0"
+                        Text="Ngày bắt đầu"
+                        Foreground="Red"
+                        FontWeight="Bold"
+                        Margin="10,0,0,0"/>
+                    <TextBlock
+                        Grid.Row="7" Grid.Column="0"
+                        Text="Tên đăng nhập"
+                        Foreground="Red"
+                        FontWeight="Bold"
+                        Margin="10,0,0,5"/>
+
+                    <!--Field values-->
+                    <TextBlock
+                        Grid.Row="0" Grid.Column="1"
+                        x:Name="summaryStoreManagerNameTextBlock"
+                        Text="Họ và tên"
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0,10,10,0"/>
+                    <TextBlock
+                        Grid.Row="1" Grid.Column="1"
+                        x:Name="summaryStoreManagerGenderTextBlock"
+                        Text="Giới tính"
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0,0,10,0"/>
+                    <TextBlock
+                        Grid.Row="2" Grid.Column="1"
+                        x:Name="summaryStoreManagerDateOfBirthTextBlock"
+                        Text="Ngày sinh"
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0,0,10,0"/>
+                    <TextBlock
+                        Grid.Row="3" Grid.Column="1"
+                        x:Name="summaryStoreManagerEmailTextBlock"
+                        Text="Email"
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0,0,10,0"/>
+                    <TextBlock
+                        Grid.Row="4" Grid.Column="1"
+                        x:Name="summaryStoreManagerTelTextBlock"
+                        Text="SĐT"
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0,0,10,0"/>
+                    <TextBlock
+                        Grid.Row="5" Grid.Column="1"
+                        x:Name="summaryStoreManagerAddressTextBlock"
+                        Text="Địa chỉ"
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0,0,10,0"/>
+                    <TextBlock
+                        Grid.Row="6" Grid.Column="1"
+                        Foreground="Red"
+                        x:Name="summaryStoreManagerEmploymentStartDateTextBlock"
+                        Text="Ngày bắt đầu"
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0,0,10,0"/>
+                    <TextBlock
+                        Grid.Row="7" Grid.Column="1"
+                        Foreground="Red"
+                        x:Name="summaryStoreManagerCompositeUsernameTextBlock"
+                        Text="Tên đăng nhập"
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0,0,10,10"/>
+                </Grid>
+            </StackPanel>
+
+            <!--Initial configuration summary-->
+            <StackPanel
+                Grid.Row="0" Grid.Column="1"
+                Grid.RowSpan="2"
+                Orientation="Vertical"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top">
                 <TextBlock
-                    Grid.Row="2" Grid.Column="0"
-                    Text="Ngày sinh"
-                    FontWeight="Bold"
-                    Margin="10,0,0,0"/>
-                <TextBlock
-                    Grid.Row="3" Grid.Column="0"
-                    Text="Email"
-                    FontWeight="Bold"
-                    Margin="10,0,0,0"/>
-                <TextBlock
-                    Grid.Row="4" Grid.Column="0"
-                    Text="SĐT"
-                    FontWeight="Bold"
-                    Margin="10,0,0,0"/>
-                <TextBlock
-                    Grid.Row="5" Grid.Column="0"
-                    Text="Địa chỉ"
-                    FontWeight="Bold"
-                    Margin="10,0,0,0"/>
-                <TextBlock
-                    Grid.Row="6" Grid.Column="0"
-                    Text="Ngày bắt đầu"
-                    Foreground="Red"
-                    FontWeight="Bold"
-                    Margin="10,0,0,0"/>
-                <TextBlock
-                    Grid.Row="7" Grid.Column="0"
-                    Text="Tên đăng nhập"
-                    Foreground="Red"
-                    FontWeight="Bold"
-                    Margin="10,0,0,5"/>
-                <!--Field values-->
-                <TextBlock
-                    Grid.Row="0" Grid.Column="1"
-                    Text="{x:Bind ViewModel.StoreManagerName, Mode=OneWay}"
-                    TextWrapping="WrapWholeWords"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Margin="0,10,10,0"/>
-                <TextBlock
-                    Grid.Row="1" Grid.Column="1"
-                    Text="{x:Bind ViewModel.StoreManagerGender, Mode=OneWay}"
-                    TextWrapping="WrapWholeWords"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Margin="0,0,10,0"/>
-                <TextBlock
-                    Grid.Row="2" Grid.Column="1"
-                    Text="{x:Bind ViewModel.StoreManagerDateOfBirthString, Mode=OneWay}"
-                    TextWrapping="WrapWholeWords"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Margin="0,0,10,0"/>
-                <TextBlock
-                    Grid.Row="3" Grid.Column="1"
-                    Text="{x:Bind ViewModel.StoreManagerEmail, Mode=OneWay}"
-                    TextWrapping="WrapWholeWords"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Margin="0,0,10,0"/>
-                <TextBlock
-                    Grid.Row="4" Grid.Column="1"
-                    Text="{x:Bind ViewModel.StoreManagerTel, Mode=OneWay}"
-                    TextWrapping="WrapWholeWords"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Margin="0,0,10,0"/>
-                <TextBlock
-                    Grid.Row="5" Grid.Column="1"
-                    Text="{x:Bind ViewModel.StoreManagerAddress, Mode=OneWay}"
-                    TextWrapping="WrapWholeWords"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Margin="0,0,10,0"/>
-                <TextBlock
-                    Grid.Row="6" Grid.Column="1"
-                    Foreground="Red"
-                    Text="{x:Bind ViewModel.StoreManagerEmploymentStartDateString, Mode=OneWay}"
-                    TextWrapping="WrapWholeWords"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Margin="0,0,10,0"/>
-                <TextBlock
-                    Grid.Row="7" Grid.Column="1"
-                    Foreground="Red"
-                    Text="{x:Bind ViewModel.StoreManagerCompositeUsername, Mode=OneWay}"
-                    TextWrapping="WrapWholeWords"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Margin="0,0,10,10"/>
-            </Grid>
-        </StackPanel>
-        
+                    Grid.Row="0" Grid.Column="0"
+                    Text="Thiết lập ban đầu cửa hàng"
+                    Style="{StaticResource BodyStrongTextBlockStyle}"
+                    HorizontalAlignment="Left"
+                    Margin="0,0,0,10"/>
+                <Grid
+                    BorderBrush="LightGray"
+                    BorderThickness="2"
+                    CornerRadius="5"
+                    RowSpacing="20"
+                    ColumnSpacing="20"
+                    VerticalAlignment="Stretch">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="700"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--Fields' name-->
+                    <TextBlock
+                        Grid.Row="0" Grid.Column="0"
+                        Text="Giờ hoạt động"
+                        FontWeight="Bold"
+                        Margin="10,10,0,0"/>
+                    <TextBlock
+                        Grid.Row="1" Grid.Column="0"
+                        Text="Mã số thuế"
+                        FontWeight="Bold"
+                        Margin="10,0,0,0"/>
+                    <TextBlock
+                        Grid.Row="2" Grid.Column="0"
+                        Text="Thuế suất VAT"
+                        FontWeight="Bold"
+                        Margin="10,0,0,0"/>
+                    <TextBlock
+                        Grid.Row="3" Grid.Column="0"
+                        Text="Phương thức tính VAT"
+                        FontWeight="Bold"
+                        Margin="10,0,0,0"/>
+                    <TextBlock
+                        Grid.Row="4" Grid.Column="0"
+                        Text="Thiết lập lương"
+                        FontWeight="Bold"
+                        Margin="10,50,0,5"/>
+
+                    <!--Field values-->
+                    <TextBlock
+                        Grid.Row="0" Grid.Column="1"
+                        x:Name="summaryOperatingHoursTextBlock"
+                        Text="Giờ hoạt động"
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0,10,10,0"/>
+                    <TextBlock
+                        Grid.Row="1" Grid.Column="1"
+                        x:Name="summaryTaxCodeTextBlock"
+                        Text="Mã số thuế"
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0,0,10,0"/>
+                    <TextBlock
+                        Grid.Row="2" Grid.Column="1"
+                        x:Name="summaryVatRateTextBlock"
+                        Text="Thuế suất VAT"
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0,0,10,0"/>
+                    <TextBlock
+                        Grid.Row="3" Grid.Column="1"
+                        x:Name="summaryVatMethodTextBlock"
+                        Text="Phương thức tính VAT"
+                        TextWrapping="WrapWholeWords"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0,0,10,0"/>
+                    <Grid
+                        Grid.Row="4" Grid.Column="1"
+                        ColumnSpacing="100"
+                        RowSpacing="10"
+                        Margin="0,50,0,30">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!--Headers-->
+                        <TextBlock
+                            Grid.Row="0" Grid.Column="0"
+                            Text="Chức vụ"
+                            FontWeight="SemiBold"
+                            HorizontalAlignment="Center"/>
+                        <TextBlock
+                            Grid.Row="0" Grid.Column="1"
+                            Text="Lương cơ bản"
+                            FontWeight="SemiBold"
+                            HorizontalAlignment="Center"/>
+                        <TextBlock
+                            Grid.Row="0" Grid.Column="2"
+                            Text="Lương theo giờ"
+                            FontWeight="SemiBold"
+                            HorizontalAlignment="Center"/>
+
+                        <!--Positions-->
+                        <TextBlock
+                            Grid.Row="1" Grid.Column="0"
+                            Text="(ST) Nhân viên cửa hàng"/>
+                        <TextBlock
+                            Grid.Row="2" Grid.Column="0"
+                            Text="(AM) Trợ lý cửa hàng"/>
+                        <TextBlock
+                            Grid.Row="3" Grid.Column="0"
+                            Text="(SM) Quản lý cửa hàng"/>
+
+                        <!--Salary values-->
+                        <TextBlock
+                            Grid.Row="1" Grid.Column="1"
+                            x:Name="summaryStaffBaseSalaryTextBlock"
+                            Text="Lương cơ bản ST"
+                            HorizontalAlignment="Right"/>
+                        <TextBlock
+                            Grid.Row="1" Grid.Column="2"
+                            x:Name="summaryStaffHourlySalaryTextBlock"
+                            Text="Lương theo giờ ST"
+                            HorizontalAlignment="Right"/>
+                        <TextBlock
+                            Grid.Row="2" Grid.Column="1"
+                            x:Name="summaryAssistantManagerBaseSalaryTextBlock"
+                            Text="Lương cơ bản AM"
+                            HorizontalAlignment="Right"/>
+                        <TextBlock
+                            Grid.Row="2" Grid.Column="2"
+                            x:Name="summaryAssistantManagerHourlySalaryTextBlock"
+                            Text="Lương theo giờ AM"
+                            HorizontalAlignment="Right"/>
+                        <TextBlock
+                            Grid.Row="3" Grid.Column="1"
+                            x:Name="summaryStoreManagerBaseSalaryTextBlock"
+                            Text="Lương cơ bản SM"
+                            HorizontalAlignment="Right"/>
+                        <TextBlock
+                            Grid.Row="3" Grid.Column="2"
+                            x:Name="summaryStoreManagerHourlySalaryTextBlock"
+                            Text="Lương theo giờ SM"
+                            HorizontalAlignment="Right"/>
+                    </Grid>
+                </Grid>
+            </StackPanel>
+        </Grid>
     </Canvas>
 </Page>

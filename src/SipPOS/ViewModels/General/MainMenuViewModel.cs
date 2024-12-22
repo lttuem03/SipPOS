@@ -8,7 +8,6 @@ using SipPOS.Views.Staff;
 using SipPOS.Views.Configuration;
 using SipPOS.Views.Inventory;
 using SipPOS.DataTransfer.Entity;
-using SipPOS.Models.General;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.Authentication.Interfaces;
@@ -17,6 +16,8 @@ using SipPOS.Services.Authentication.Implementations;
 using SipPOS.Services.Accessibility.Interfaces;
 using Windows.ApplicationModel.PackageExtensions;
 using Microsoft.UI.Xaml.Controls;
+using SipPOS.Views.Cashier;
+using SipPOS.Models.General;
 
 namespace SipPOS.ViewModels.General;
 
@@ -92,8 +93,7 @@ public class MainMenuViewModel : INotifyPropertyChanged
         _canAccessSpecialOffersManagementMenu = pep.Enforce(currentStaff, Position.AssistantManager);
         _canAccessConfigurationMenu = pep.Enforce(currentStaff, Position.StoreManager);
 
-        // Check staff on-shift-state status
-        // TODO: 
+        // TODO: Check staff on-shift-state status
 
         // 
     }
@@ -113,6 +113,8 @@ public class MainMenuViewModel : INotifyPropertyChanged
             ShowAccessDeniedNotification(notificationInfoBar);
             return;
         }
+
+        App.NavigateTo(typeof(CashierMenuView));
     }
 
     /// <summary>

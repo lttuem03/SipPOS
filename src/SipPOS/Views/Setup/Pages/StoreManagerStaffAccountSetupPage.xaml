@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="SipPOS.Views.Setup.Pages.StoreManageStaffAccountSetupPage"
+    x:Class="SipPOS.Views.Setup.Pages.StoreManagerStaffAccountSetupPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SipPOS.Views.Setup.Pages"
@@ -213,6 +213,7 @@
                     Opacity="{x:Bind ViewModel.StoreManagerAddressErrorMessageOpacity, Mode=TwoWay}"
                     Text="{x:Bind ViewModel.StoreManagerAddressErrorMessageText, Mode=TwoWay}"/>
             </StackPanel>
+
             <!--Composite username-->
             <TextBox
                 Grid.Row="3" Grid.Column="0"
@@ -246,6 +247,7 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Center"
                 Margin="20,0,0,20"/>
+
             <!--Password validation error-->
             <TextBlock 
                 Grid.Row="4" Grid.Column="2"

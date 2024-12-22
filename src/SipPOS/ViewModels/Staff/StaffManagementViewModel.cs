@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 
 using SipPOS.Views.General;
 using SipPOS.Views.Staff;
@@ -11,6 +12,7 @@ using SipPOS.Services.General.Implementations;
 using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Services.Authentication.Implementations;
 using Microsoft.UI.Xaml.Controls;
+using SipPOS.Resources.Controls;
 
 namespace SipPOS.ViewModels.Staff;
 
@@ -250,6 +252,118 @@ public class StaffManagementViewModel : INotifyPropertyChanged
         {
             CurrentPage++;
             UpdateStaffList();
+        }
+    }
+
+    /// <summary>
+    /// Handles the save click event for the staff name editable text field.
+    /// </summary>
+    /// <param name="editStaffNameEditableTextField">The editable text field for the staff name.</param>
+    /// <param name="editStaffNameErrorMessageTeachingTip">The teaching tip to display error messages.</param>
+    public void HandleEditStaffNameEditableTextFieldSaveClicked
+    (
+        EditableTextField editStaffNameEditableTextField,
+        TeachingTip editStaffNameErrorMessageTeachingTip
+    )
+    {
+        if (EditTargetStaff == null)
+            return;
+
+        if (string.IsNullOrEmpty(editStaffNameEditableTextField.Text))
+        {
+            editStaffNameErrorMessageTeachingTip.Subtitle = "Tên nhân viên không được rỗng";
+            editStaffNameErrorMessageTeachingTip.IsOpen = true;
+            editStaffNameEditableTextField.ResetState();
+            editStaffNameEditableTextField.Text = EditTargetStaff.Name;
+        }
+    }
+
+    /// <summary>
+    /// Handles the save click event for the staff email editable text field.
+    /// </summary>
+    /// <param name="editStaffEmailEditableTextField">The editable text field for the staff email.</param>
+    /// <param name="editStaffEmailErrorMessageTeachingTip">The teaching tip to display error messages.</param>
+    public void HandleEditStaffEmailEditableTextFieldSaveClicked
+    (
+        EditableTextField editStaffEmailEditableTextField,
+        TeachingTip editStaffEmailErrorMessageTeachingTip
+    )
+    {
+        if (EditTargetStaff == null)
+            return;
+
+        if (string.IsNullOrEmpty(editStaffEmailEditableTextField.Text))
+        {
+            editStaffEmailErrorMessageTeachingTip.Subtitle = "Email không được rỗng";
+            editStaffEmailErrorMessageTeachingTip.IsOpen = true;
+            editStaffEmailEditableTextField.ResetState();
+            editStaffEmailEditableTextField.Text = EditTargetStaff.Email;
+        }
+
+        var emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+
+        if (!Regex.IsMatch(editStaffEmailEditableTextField.Text, emailPattern))
+        {
+            editStaffEmailErrorMessageTeachingTip.Subtitle = "Email sai định dạng";
+            editStaffEmailErrorMessageTeachingTip.IsOpen = true;
+            editStaffEmailEditableTextField.ResetState();
+            editStaffEmailEditableTextField.Text = EditTargetStaff.Email;
+        }
+    }
+
+    /// <summary>
+    /// Handles the save click event for the staff telephone editable text field.
+    /// </summary>
+    /// <param name="editStaffTelEditableTextField">The editable text field for the staff telephone.</param>
+    /// <param name="editStaffTelErrorMessageTeachingTip">The teaching tip to display error messages.</param>
+    public void HandleEditStaffTelEditableTextFieldSaveClicked
+    (
+        EditableTextField editStaffTelEditableTextField,
+        TeachingTip editStaffTelErrorMessageTeachingTip
+    )
+    {
+        if (EditTargetStaff == null)
+            return;
+
+        if (string.IsNullOrEmpty(editStaffTelEditableTextField.Text))
+        {
+            editStaffTelErrorMessageTeachingTip.Subtitle = "SĐT không được rỗng";
+            editStaffTelErrorMessageTeachingTip.IsOpen = true;
+            editStaffTelEditableTextField.ResetState();
+            editStaffTelEditableTextField.Text = EditTargetStaff.Tel;
+        }
+
+        var telPattern = @"^(0|\+84)\d{9,12}$";
+
+        if (!Regex.IsMatch(editStaffTelEditableTextField.Text, telPattern))
+        {
+            editStaffTelErrorMessageTeachingTip.Subtitle = "SĐT sai định dạng";
+            editStaffTelErrorMessageTeachingTip.IsOpen = true;
+            editStaffTelEditableTextField.ResetState();
+            editStaffTelEditableTextField.Text = EditTargetStaff.Tel;
+        }
+    }
+
+    /// <summary>
+    /// Handles the save click event for the staff address editable text field.
+    /// </summary>
+    /// <param name="editStaffAddressEditableTextField">The editable text field for the staff address.</param>
+    /// <param name="editStaffAddressErrorMessageTeachingTip">The teaching tip to display error messages.</param>
+    public void HandleEditStaffAddressEditableTextFieldSaveClicked
+    (
+        EditableTextField editStaffAddressEditableTextField,
+        TeachingTip editStaffAddressErrorMessageTeachingTip
+    )
+    {
+        if (EditTargetStaff == null)
+            return;
+
+        if (string.IsNullOrEmpty(editStaffAddressEditableTextField.Text))
+        {
+            editStaffAddressErrorMessageTeachingTip.Subtitle = "Địa chỉ không được rỗng";
+            editStaffAddressErrorMessageTeachingTip.IsOpen = true;
+            editStaffAddressEditableTextField.ResetState();
+            editStaffAddressEditableTextField.Text = EditTargetStaff.Address;
         }
     }
 

@@ -1,5 +1,5 @@
-﻿using SipPOS.Models.Entity;
-using SipPOS.Context.Authentication;
+﻿using SipPOS.Context.Authentication;
+using SipPOS.Models.Entity;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.General.Interfaces;
 
@@ -21,6 +21,14 @@ public class StoreAuthenticationService : IStoreAuthenticationService
     public StoreAuthenticationService()
     {
         Context = new StoreAuthenticationContext();
+    }
+
+    public long GetCurrentStoreId()
+    {
+        if (Context.CurrentStore == null)
+            return -1;
+
+        return Context.CurrentStore.Id;
     }
 
     /// <summary>

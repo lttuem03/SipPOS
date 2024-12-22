@@ -8,22 +8,34 @@ public class Product : BaseEntity
     /// <summary>
     /// Gets or sets the name of the product.
     /// </summary>
-    public string? Name { get; set; }
+    public string? Name
+    {
+        get; set;
+    }
 
     /// <summary>
     /// Gets or sets the description of the product.
     /// </summary>
-    public string? Desc { get; set; }
+    public string? Desc
+    {
+        get; set;
+    }
 
     /// <summary>
     /// Gets or sets the price of the product.
     /// </summary>
-    public double? Price { get; set; }
+    public double? Price
+    {
+        get; set;
+    }
 
     /// <summary>
     /// Gets or sets the category ID of the product.
     /// </summary>
-    public long? CategoryId { get; set; }
+    public long? CategoryId
+    {
+        get; set;
+    }
 
     /// <summary>
     /// Gets or sets the list of image URLs associated with the product.
@@ -33,5 +45,8 @@ public class Product : BaseEntity
     /// <summary>
     /// Gets or sets the status of the product.
     /// </summary>
-    public string? Status { get; set; }
+    public string? Status
+    {
+        get; set;
+    }
 }

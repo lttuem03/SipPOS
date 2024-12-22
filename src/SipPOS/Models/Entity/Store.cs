@@ -10,37 +10,50 @@ public class Store : BaseEntity
     /// <summary>
     /// Gets the name of the store.
     /// </summary>
-    public string Name { get; }
+    public string Name
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the address of the store.
     /// </summary>
-    public string Address { get; }
+    public string Address
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the email of the store.
     /// </summary>
-    public string Email { get; }
+    public string Email
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the telephone number of the store.
     /// </summary>
-    public string Tel { get; }
-
-    /// <summary>
-    /// Gets the tax code of the store.
-    /// </summary>
-    public string TaxCode { get; }
+    public string Tel
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the username associated with the store.
     /// </summary>
-    public string Username { get; }
+    public string Username
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the last login date and time of the store.
     /// </summary>
-    public DateTime LastLogin { get; }
+    public DateTime LastLogin
+    {
+        get;
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Store"/> class.
@@ -54,7 +67,6 @@ public class Store : BaseEntity
         Address = dto.Address;
         Email = dto.Email;
         Tel = dto.Tel;
-        TaxCode = dto.TaxCode;
         Username = dto.Username;
         LastLogin = dto.LastLogin;
     }

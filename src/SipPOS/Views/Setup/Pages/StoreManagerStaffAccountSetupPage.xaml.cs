@@ -7,7 +7,7 @@ namespace SipPOS.Views.Setup.Pages;
 /// <summary>
 /// Represents the StoreManageStaffAccountSetupPage.
 /// </summary>
-public sealed partial class StoreManageStaffAccountSetupPage : Page
+public sealed partial class StoreManagerStaffAccountSetupPage : Page
 {
     /// <summary>
     /// Gets the view model for the store setup.
@@ -15,9 +15,9 @@ public sealed partial class StoreManageStaffAccountSetupPage : Page
     public StoreSetupViewModel? ViewModel { get; } // SINGLETON, USED ACROSS ALL SETUP PAGES
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="StoreManageStaffAccountSetupPage"/> class.
+    /// Initializes a new instance of the <see cref="StoreManagerStaffAccountSetupPage"/> class.
     /// </summary>
-    public StoreManageStaffAccountSetupPage()
+    public StoreManagerStaffAccountSetupPage()
     {
         this.InitializeComponent();
 

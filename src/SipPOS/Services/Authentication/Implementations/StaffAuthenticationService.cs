@@ -33,7 +33,7 @@ public class StaffAuthenticationService : IStaffAuthenticationService
     public async Task<(bool succeded, string? errorMessage)> LoginAsync(string compositeUsername)
     {
         var staffDao = App.GetService<IStaffDao>();
-        var staffDto = await staffDao.GetByCompositeUsername(compositeUsername);
+        var staffDto = await staffDao.GetByCompositeUsernameAsync(compositeUsername);
 
         if (staffDto == null) // staff not exists in database
         {
@@ -94,7 +94,7 @@ public class StaffAuthenticationService : IStaffAuthenticationService
     public async Task<(bool succeded, string? errorMessage)> VerifyPasswordAsync(string compositeUsername, string password)
     {
         var staffDao = App.GetService<IStaffDao>();
-        var staffDto = await staffDao.GetByCompositeUsername(compositeUsername);
+        var staffDto = await staffDao.GetByCompositeUsernameAsync(compositeUsername);
 
         if (staffDto == null) // staff not exists in database
         {

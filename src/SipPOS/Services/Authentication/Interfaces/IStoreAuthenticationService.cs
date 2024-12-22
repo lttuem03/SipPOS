@@ -8,6 +8,12 @@ namespace SipPOS.Services.General.Interfaces;
 public interface IStoreAuthenticationService
 {
     /// <summary>
+    /// Gets the current store ID if the store is logged in.
+    /// </summary>
+    /// <returns>The ID of the current store if store has been authenticated. Otherwise -1.</returns>
+    long GetCurrentStoreId();
+
+    /// <summary>
     /// Logs in a store asynchronously using the provided username and password.
     /// </summary>
     /// <param name="username">The username of the store.</param>
