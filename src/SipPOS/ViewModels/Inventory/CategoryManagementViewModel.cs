@@ -83,7 +83,16 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     private SortDto sortDto = new();
 
     [ObservableProperty]
-    public string? actionType;
+    private string? actionType;
+
+    [ObservableProperty]
+    private int tableHeight;
+
+    [ObservableProperty]
+    private string? categoryNameReqireMessage;
+
+    [ObservableProperty]
+    private string? categoryDescReqireMessage;
 
     private readonly ICategoryService _categoryService;
 
@@ -116,29 +125,53 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     /// <summary>
     /// Inserts the selected category.
     /// </summary>
-    public void Insert()
+    public CategoryDto? Insert()
     {
         if (SelectedCategory == null)
         {
-            return;
+            return null;
         }
-
-        _categoryService.Insert(SelectedCategory);
+        bool isValidate = true;
+        if (string.IsNullOrEmpty(SelectedCategory.Name))
+        {
+            CategoryNameReqireMessage = "Vui lòng nhập tên danh mục";
+            isValidate = false;
+        }
+        if (string.IsNullOrEmpty(SelectedCategory.Desc))
+        {
+            CategoryDescReqireMessage = "Vui lòng nhập mô tả danh mục";
+            isValidate = false;
+        }
+        if (!isValidate)
+        {
+            return null;
+        }
+        CategoryDto? result = _categoryService.Insert(SelectedCategory);
         Search();
+        return result;
     }
 
     /// <summary>
     /// Updates the selected category by its identifier.
     /// </summary>
-    public void UpdateById()
+    public CategoryDto? UpdateById()
     {
         if (SelectedCategory == null)
         {
-            return;
+            return null;
+        }
+        if (SelectedCategory.Name == null)
+        {
+            CategoryDescReqireMessage = "Vui lòng nhập tên danh mục";
+        }
+        if (SelectedCategory.Desc == null)
+        {
+            CategoryDescReqireMessage = "Vui lòng nhập mô tả danh mục";
         }
 
-        _categoryService.UpdateById(SelectedCategory);
+        CategoryDto? result = _categoryService.UpdateById(SelectedCategory);
         Search();
+        return result;
     }
 
     /// <summary>

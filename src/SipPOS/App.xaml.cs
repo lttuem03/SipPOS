@@ -60,7 +60,7 @@ public partial class App : Application
     {
         this.InitializeComponent();
         this.RequestedTheme = ApplicationTheme.Light; // FIXED LIGHT THEME ONLY
-        
+
         // Database connection configuration
         DotNetEnv.Env.TraversePath().Load(AppContext.BaseDirectory);
         var postgres_host = DotNetEnv.Env.GetString("POSTGRES_HOST");
@@ -83,8 +83,8 @@ public partial class App : Application
             services.AddSingleton<IStaffShiftContext, StaffShiftContext>();
 
             // Dao
-            services.AddSingleton<IProductDao, MockProductDao>();
-            services.AddSingleton<ICategoryDao, MockCategoryDao>();
+            services.AddSingleton<IProductDao, PostgresProductDao>();
+            services.AddSingleton<ICategoryDao, PostgresCategoryDao>();
             services.AddSingleton<IStoreDao, PostgreStoreDao>();
             services.AddSingleton<IStaffDao, PostgreStaffDao>();
             services.AddSingleton<IConfigurationDao, PostgreConfigurationDao>();
@@ -181,7 +181,7 @@ public partial class App : Application
     /// <param name="args">Details about the launch request and process.</param>
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        // In the App startup check Window, we check for the 
+        // In the App startup check Window, we check for the
         // prequisite for the app to run, such as database connection
 
         // If everything is ready, we change the instance of _mainWindow
@@ -261,7 +261,7 @@ public partial class App : Application
         rootFrame.NavigationFailed += _onNavigationFailed;
 
         mainWindow.Content = rootFrame;
-        mainWindow.Activate();
+        
 
         // Always start app maximized and unresizable
         if (mainWindow.AppWindow.Presenter is OverlappedPresenter presenter)
@@ -298,9 +298,41 @@ public partial class App : Application
         rootFrame.Navigate(typeof(LoginView));
 
         // Close the AppStartupCheckWindow and change the instance of _mainWindow
-        _mainWindow.Close();
+
+        // Sometimes, the program will attempt to close the _mainWindow
+        // (now AppStartupCheckWindow) when it is not fully allocated
+        // and will lead to System.AccessViolationException, so doing this
+        // make sure that it is fully allocated before attempting to close it
+
+        // IGNORE THE 3 WARNINGS HERE
+        if (_mainWindow.AppWindow != null &&
+            _mainWindow.Bounds != null &&
+            _mainWindow.Compositor != null &&
+            _mainWindow.Content != null &&
+            _mainWindow.CoreWindow != null &&
+            _mainWindow.ExtendsContentIntoTitleBar != null &&
+            _mainWindow.Title != null &&
+            _mainWindow.Visible != null)
+        {
+            _mainWindow.Close();
+        }
+
+        _appStartupCheckWindow = _mainWindow; // to close the window if it failed to close before
+
+        // Add an event handler so when the main window is activated,
+        // we check if the AppStartupCheckWindow is still open and close it
+        mainWindow.Activated += (s, args) =>
+        {
+            if (_appStartupCheckWindow != null)
+            {
+                _appStartupCheckWindow.Close();
+                _appStartupCheckWindow = null;
+            }
+        };
+        
         _mainWindow = mainWindow;
         CurrentWindow = mainWindow;
+        mainWindow.Activate();
     }
 
     /// <summary>
@@ -327,4 +359,5 @@ public partial class App : Application
     }
 
     private Window? _mainWindow;
+    private Window? _appStartupCheckWindow;
 }

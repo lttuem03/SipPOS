@@ -8,7 +8,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
-        <ProgressRing IsIndeterminate="True"/>
-    </Grid>
+    <StackPanel
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center">
+        <TextBlock
+            Text="Đang tải dữ liệu"/>
+    </StackPanel>
 </Window>

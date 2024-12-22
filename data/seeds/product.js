@@ -9,8 +9,7 @@ exports.seed = async function (knex) {
   // Inserts seed entries
   await knex('product').insert([
     {
-      id: 1,
-      created_at: new Date(2022, 4, 15),
+      created_at: new Date(),
       created_by: "admin",
       name: "Coca Cola",
       image_urls: [
@@ -23,8 +22,7 @@ exports.seed = async function (knex) {
       status: "Available"
     },
     {
-      id: 2,
-      created_at: new Date(2021, 7, 22),
+      created_at: new Date(),
       created_by: "admin",
       name: "Pepsi",
       desc: "Nước ngọt có ga với hương vị truyền thống",
@@ -33,8 +31,7 @@ exports.seed = async function (knex) {
       status: "Available"
     },
     {
-      id: 3,
-      created_at: new Date(2020, 11, 5),
+      created_at: new Date(),
       created_by: "admin",
       name: "Sprite",
       image_urls: [
@@ -47,8 +44,7 @@ exports.seed = async function (knex) {
       status: "Unavailable"
     },
     {
-      id: 4,
-      created_at: new Date(2023, 2, 12),
+      created_at: new Date(),
       created_by: "admin",
       name: "Nước cam ép",
       desc: "Nước cam ép nguyên chất, giàu vitamin C",
@@ -57,8 +53,7 @@ exports.seed = async function (knex) {
       status: "Available"
     },
     {
-      id: 5,
-      created_at: new Date(2022, 6, 20),
+      created_at: new Date(),
       created_by: "admin",
       name: "Nước ép táo",
       desc: "Nước ép táo ngọt tự nhiên, giàu chất xơ",
@@ -67,8 +62,7 @@ exports.seed = async function (knex) {
       status: "Unavailable"
     },
     {
-      id: 6,
-      created_at: new Date(2021, 9, 15),
+      created_at: new Date(),
       created_by: "admin",
       name: "Nước ép dừa",
       desc: "Nước ép dừa tươi ngon, giàu chất khoáng",
@@ -77,8 +71,7 @@ exports.seed = async function (knex) {
       status: "Available"
     },
     {
-      id: 7,
-      created_at: new Date(2020, 10, 5),
+      created_at: new Date(),
       created_by: "admin",
       name: "Nước suối Lavie",
       desc: "Nước suối Lavie nguyên chất, không chất bảo quản",
@@ -87,8 +80,7 @@ exports.seed = async function (knex) {
       status: "Available"
     },
     {
-      id: 8,
-      created_at: new Date(2023, 2, 12),
+      created_at: new Date(),
       created_by: "admin",
       name: "Nước suối Aquafina",
       desc: "Nước suối Aquafina nguyên chất, không chất bảo quản",
@@ -97,8 +89,7 @@ exports.seed = async function (knex) {
       status: "Available"
     },
     {
-      id: 9,
-      created_at: new Date(2022, 6, 20),
+      created_at: new Date(),
       created_by: "admin",
       name: "Nước suối Dasani",
       desc: "Nước suối Dasani nguyên chất, không chất bảo quản",
@@ -107,8 +98,7 @@ exports.seed = async function (knex) {
       status: "Unavailable"
     },
     {
-      id: 10,
-      created_at: new Date(2021, 9, 15),
+      created_at: new Date(),
       created_by: "admin",
       name: "Red Bull",
       desc: "Nước tăng lực Red Bull, giúp tăng cường năng lượng",
@@ -117,8 +107,7 @@ exports.seed = async function (knex) {
       status: "Available"
     },
     {
-      id: 11,
-      created_at: new Date(2020, 10, 5),
+      created_at: new Date(),
       created_by: "admin",
       name: "Sting",
       desc: "Nước tăng lực Sting, giúp tăng cường năng lượng",

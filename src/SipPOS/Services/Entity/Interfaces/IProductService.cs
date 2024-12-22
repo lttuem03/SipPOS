@@ -23,7 +23,7 @@ public interface IProductService
     /// Gets all products.
     /// </summary>
     /// <returns>A list of all product DTOs.</returns>
-    IList<ProductDto> GetAll();
+    List<ProductDto> GetAll();
 
     /// <summary>
     /// Gets a product by its identifier.
@@ -58,5 +58,5 @@ public interface IProductService
     /// </summary>
     /// <param name="ids">The identifiers of the products to delete.</param>
     /// <returns>A list of deleted product DTOs.</returns>
-    IList<ProductDto> DeleteByIds(IList<long> ids);
+    List<ProductDto> DeleteByIds(List<long> ids);
 }

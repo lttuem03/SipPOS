@@ -15,7 +15,7 @@ public class InventoryMenuViewModel
     /// <param name="inventoryMenuNavigationFrame">The frame to navigate within the inventory menu.</param>
     public void SelectViewUponLoad(NavigationView inventoryMenuNavigationView, Frame inventoryMenuNavigationFrame)
     {
-        inventoryMenuNavigationFrame.Navigate(typeof(ProductManagementView));
+        inventoryMenuNavigationView.SelectedItem = inventoryMenuNavigationView.MenuItems[0];
     }
 
     /// <summary>

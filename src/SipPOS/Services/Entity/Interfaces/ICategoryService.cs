@@ -23,7 +23,7 @@ public interface ICategoryService
     /// Gets all categories.
     /// </summary>
     /// <returns>A list of all category DTOs.</returns>
-    IList<CategoryDto> GetAll();
+    List<CategoryDto> GetAll();
 
     /// <summary>
     /// Gets a category by its identifier.
@@ -44,7 +44,7 @@ public interface ICategoryService
     /// </summary>
     /// <param name="ids">The identifiers of the categories to delete.</param>
     /// <returns>A list of deleted category DTOs.</returns>
-    IList<CategoryDto> DeleteByIds(IList<long> ids);
+    List<CategoryDto> DeleteByIds(List<long> ids);
 
     /// <summary>
     /// Inserts a new category.

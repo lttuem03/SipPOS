@@ -10,6 +10,7 @@ using CommunityToolkit.WinUI.UI.Controls;
 using SipPOS.ViewModels.Inventory;
 using SipPOS.Resources.Controls;
 using SipPOS.DataTransfer.Entity;
+using SipPOS.DataTransfer.General;
 
 namespace SipPOS.Views.Inventory;
 
@@ -32,6 +33,12 @@ public sealed partial class ProductManagementView : Page
         ViewModel.Search();
         ViewModel.GetAllCategory();
         InitializeComponent();
+        SizeChanged += OnPageSizeChanged;
+    }
+
+    private void OnPageSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        ViewModel.TableHeight = (int)e.NewSize.Height - 260;
     }
 
     /// <summary>
@@ -41,6 +48,12 @@ public sealed partial class ProductManagementView : Page
     /// <param name="e">The event data.</param>
     public void RefreshButton_Click(object sender, RoutedEventArgs e)
     {
+        ViewModel.Search();
+    }
+
+    private void EmptyButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.ProductFilterDto = new ProductFilterDto();
         ViewModel.Search();
     }
 
@@ -213,23 +226,21 @@ public sealed partial class ProductManagementView : Page
         {
             return;
         }
-
-        if (string.IsNullOrEmpty(ViewModel.SelectedProduct.Name))
-        {
-            args.Cancel = true;
-            ShowNotification("Vui lòng nhập tên sản phẩm.");
-            return;
-        }
+        bool isOk = false;
         switch (ViewModel.ActionType)
         {
             case "ADD":
-                ViewModel.Insert();
+                isOk = null != ViewModel.Insert();
                 break;
             case "EDIT":
-                ViewModel.UpdateById();
+                isOk = null != ViewModel.UpdateById();
                 break;
             default:
                 break;
+        }
+        if (!isOk)
+        {
+            args.Cancel = true;
         }
     }
 
@@ -349,6 +360,26 @@ public sealed partial class ProductManagementView : Page
     private void DialogOpen(ContentDialog sender, ContentDialogOpenedEventArgs args)
     {
 
+    }
+
+    private void ProductName_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        ViewModel.ProductNameRequireMessage = string.Empty;
+    }
+
+    private void ProductDesc_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        ViewModel.ProductDescRequireMessage = string.Empty;
+    }
+
+    private void ProductPrice_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        ViewModel.ProductPriceRequireMessage = string.Empty;
+    }
+
+    private void ProductCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        ViewModel.ProductCategoryRequireMessage = string.Empty;
     }
 
 }
