@@ -502,60 +502,66 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
 
     public decimal StaffBaseSalary
     {
-        get => _initialConfigurationDto.StaffBaseSalary;
+        get => _initialConfigurationDto.CurrentStaffBaseSalary;
         set
         {
-            _initialConfigurationDto.StaffBaseSalary = value;
+            _initialConfigurationDto.CurrentStaffBaseSalary = value;
+            _initialConfigurationDto.NextStaffBaseSalary = value;
             OnPropertyChanged(nameof(StaffBaseSalary));
         }
     }
 
     public decimal StaffHourlySalary
     {
-        get => _initialConfigurationDto.StaffHourlySalary;
+        get => _initialConfigurationDto.CurrentStaffHourlySalary;
         set
         {
-            _initialConfigurationDto.StaffHourlySalary = value;
+            _initialConfigurationDto.CurrentStaffHourlySalary = value;
+            _initialConfigurationDto.NextStaffHourlySalary = value;
             OnPropertyChanged(nameof(StaffHourlySalary));
         }
     }
 
     public decimal AssistantManagerBaseSalary
     {
-        get => _initialConfigurationDto.AssistantManagerBaseSalary;
+        get => _initialConfigurationDto.CurrentAssistantManagerBaseSalary;
         set
         {
-            _initialConfigurationDto.AssistantManagerBaseSalary = value;
+            _initialConfigurationDto.CurrentAssistantManagerBaseSalary = value;
+            _initialConfigurationDto.NextAssistantManagerBaseSalary = value;
             OnPropertyChanged(nameof(AssistantManagerBaseSalary));
         }
     }
 
     public decimal AssistantManagerHourlySalary
     {
-        get => _initialConfigurationDto.AssistantManagerHourlySalary;
+        get => _initialConfigurationDto.CurrentAssistantManagerHourlySalary;
         set
         {
-            _initialConfigurationDto.AssistantManagerHourlySalary = value;
+            _initialConfigurationDto.CurrentAssistantManagerHourlySalary = value;
+            _initialConfigurationDto.NextAssistantManagerHourlySalary = value;
             OnPropertyChanged(nameof(AssistantManagerHourlySalary));
         }
     }
 
     public decimal StoreManagerBaseSalary
     {
-        get => _initialConfigurationDto.StoreManagerBaseSalary;
+        get => _initialConfigurationDto.CurrentStoreManagerBaseSalary;
         set
         {
-            _initialConfigurationDto.StoreManagerBaseSalary = value;
+            _initialConfigurationDto.CurrentStoreManagerBaseSalary = value;
+            _initialConfigurationDto.NextStoreManagerBaseSalary = value;
             OnPropertyChanged(nameof(StoreManagerBaseSalary));
         }
     }
 
     public decimal StoreManagerHourlySalary
     {
-        get => _initialConfigurationDto.StoreManagerHourlySalary;
+        get => _initialConfigurationDto.CurrentStoreManagerHourlySalary;
         set
         {
-            _initialConfigurationDto.StoreManagerHourlySalary = value;
+            _initialConfigurationDto.CurrentStoreManagerHourlySalary = value;
+            _initialConfigurationDto.NextStoreManagerHourlySalary = value;
             OnPropertyChanged(nameof(StoreManagerHourlySalary));
         }
     }

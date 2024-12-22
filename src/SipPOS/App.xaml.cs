@@ -282,6 +282,15 @@ public partial class App : Application
             var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
             var loginSuccessful = await storeAuthenticationService.LoginAsync(storeUsername, storePassword);
 
+            if (loginSuccessful)
+            {
+                // Load up the configuration for the store
+                var currentStoreId = storeAuthenticationService.GetCurrentStoreId();
+                var storeConfigurationService = App.GetService<IConfigurationService>();
+
+                await storeConfigurationService.LoadAsync(currentStoreId);
+            }
+
             // Even if store authentication succeeded, we still navigate to the login page
             // and set the login tab to StaffLogin
         }

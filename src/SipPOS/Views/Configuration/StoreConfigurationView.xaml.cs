@@ -26,7 +26,11 @@ public sealed partial class StoreConfigurationView : Page
 
     private void saveChangesOnStoreConfigurationButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleSaveChangesOnStoreConfigurationButtonClick();
+        ViewModel.HandleSaveChangesOnStoreConfigurationButtonClick
+        (
+            editStoreConfigurationResultContentDialog, 
+            saveChangesOnStoreConfigurationButton
+        );
     }
 
     private void cancelChangesOnStoreConfigurationButton_Click(object sender, RoutedEventArgs e)
@@ -37,6 +41,9 @@ public sealed partial class StoreConfigurationView : Page
         storeAddressEditableTextField.ResetState();
         storeEmailEditableTextField.ResetState();
         storeTelEditableTextField.ResetState();
+
+        editOpeningHourTimePicker.Time = ViewModel.EditOpeningTime;
+        editClosingHourTimePicker.Time = ViewModel.EditClosingTime;
     }
 
     private void editableTextField_TextModified(object sender, EventArgs e)
@@ -82,11 +89,11 @@ public sealed partial class StoreConfigurationView : Page
 
     private void editOpeningHourTimePicker_SelectedTimeChanged(TimePicker sender, TimePickerSelectedValueChangedEventArgs args)
     {
-        //ViewModel.HandleEditOpeningHourTimePickerSelectedTimeChanged()
+        ViewModel.HandleEditOpeningHourTimePickerSelectedTimeChanged(sender.Time, saveChangesOnStoreConfigurationButton);
     }
 
     private void editClosingHourTimePicker_SelectedTimeChanged(TimePicker sender, TimePickerSelectedValueChangedEventArgs args)
     {
-
+        ViewModel.HandleEditClosingHourTimePickerSelectedTimeChanged(sender.Time, saveChangesOnStoreConfigurationButton);
     }
 }

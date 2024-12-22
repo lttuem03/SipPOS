@@ -26,6 +26,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
@@ -95,7 +96,7 @@
                 SaveClicked="storeTelEditableTextField_SaveClicked"/>
             <TextBlock
                 Grid.Column="1" Grid.Row="4"
-                Text="{x:Bind ViewModel.OperatingHoursText}"/>
+                Text="{x:Bind ViewModel.OperatingHoursText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Grid
                 Grid.Column="0" Grid.Row="5"
                 Grid.ColumnSpan="2"
@@ -112,6 +113,7 @@
                     MinuteIncrement="15"
                     Name="editOpeningHourTimePicker"
                     Header="Giờ mở cửa"
+                    Time="{x:Bind ViewModel.EditOpeningTime}"
                     SelectedTimeChanged="editOpeningHourTimePicker_SelectedTimeChanged"/>
 
                 <TimePicker
@@ -120,6 +122,7 @@
                     MinuteIncrement="15"
                     Name="editClosingHourTimePicker"
                     Header="Giờ đóng cửa"
+                    Time="{x:Bind ViewModel.EditClosingTime}"
                     SelectedTimeChanged="editClosingHourTimePicker_SelectedTimeChanged"/>
             </Grid>
 
@@ -152,6 +155,16 @@
                 Subtitle="Lỗi chưa xác định"
                 IsOpen="False">
             </TeachingTip>
+            <!--Operating hours validation error messages-->
+            <TextBlock 
+                Grid.Row="6" Grid.Column="0"
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Margin="0,0,0,25"
+                Foreground="Red"
+                Opacity="{x:Bind ViewModel.EditOperatingHoursErrorMessageOpacity, Mode=TwoWay}"
+                Text="{x:Bind ViewModel.EditOperatingHoursErrorMessageText, Mode=TwoWay}"/>
         </Grid>
 
         <!--Save/cancel changes buttons-->
@@ -188,5 +201,13 @@
                     Style="{StaticResource BodyTextBlockStyle}"/>
             </Button>
         </Grid>
+
+        <!--Edit result dialog-->
+        <ContentDialog
+            Name="editStoreConfigurationResultContentDialog"
+            Title="Kết quả thay đổi"
+            PrimaryButtonText="Xác nhận"
+            PrimaryButtonStyle="{StaticResource AccentButtonStyle}">
+        </ContentDialog>
     </Canvas>
 </Page>

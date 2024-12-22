@@ -111,7 +111,63 @@ public class PostgreStoreDao : IStoreDao
     /// </summary>
     /// <param name="id">The ID of the store to retrieve.</param>
     /// <returns>The store data transfer object if found; otherwise, null.</returns>
-    public Task<StoreDto?> GetByIdAsync(long id) => throw new NotImplementedException();
+    public async Task<StoreDto?> GetByIdAsync(long id)
+    {
+        var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
+
+        using var connection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection;
+
+        await using var command = new NpgsqlCommand(
+            "SELECT * FROM store WHERE id = @id",
+            connection
+        );
+
+        command.Parameters.AddWithValue("@id", id);
+
+        await using var reader = await command.ExecuteReaderAsync();
+
+        // The database schema only allow unique username, so this command
+        // execution should only return 0 or 1 row
+        if (reader.HasRows)
+        {
+            if (await reader.ReadAsync())
+            {
+                StoreDto storeDto = new StoreDto()
+                {
+                    // BaseModel fields
+                    Id = reader.GetInt32(reader.GetOrdinal("id")),
+                    CreatedBy = reader.GetString(reader.GetOrdinal("created_by")),
+                    CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")),
+                    // Store Model fields
+                    Name = reader.GetString(reader.GetOrdinal("name")),
+                    Address = reader.GetString(reader.GetOrdinal("address")),
+                    Email = reader.GetString(reader.GetOrdinal("email")),
+                    Tel = reader.GetString(reader.GetOrdinal("tel")),
+                    Username = reader.GetString(reader.GetOrdinal("username")),
+                    PasswordHash = reader.GetString(reader.GetOrdinal("password_hash")),
+                    Salt = reader.GetString(reader.GetOrdinal("salt")),
+                    LastLogin = reader.GetDateTime(reader.GetOrdinal("last_login"))
+                };
+
+                // Handle nullable columns
+                storeDto.UpdatedBy = reader.IsDBNull(reader.GetOrdinal("updated_by")) ?
+                    null : reader.GetString(reader.GetOrdinal("updated_by"));
+
+                storeDto.UpdatedAt = reader.IsDBNull(reader.GetOrdinal("updated_at")) ?
+                    null : reader.GetDateTime(reader.GetOrdinal("updated_at"));
+
+                storeDto.DeletedBy = reader.IsDBNull(reader.GetOrdinal("deleted_by")) ?
+                    null : reader.GetString(reader.GetOrdinal("deleted_by"));
+
+                storeDto.DeletedAt = reader.IsDBNull(reader.GetOrdinal("deleted_at")) ?
+                    null : reader.GetDateTime(reader.GetOrdinal("deleted_at"));
+
+                return storeDto;
+            }
+        }
+
+        return null;
+    }
 
     /// <summary>
     /// Retrieves a store by its username asynchronously.
@@ -182,7 +238,81 @@ public class PostgreStoreDao : IStoreDao
     /// <param name="id">The ID of the store to update.</param>
     /// <param name="updatedStoreDto">The updated store data transfer object.</param>
     /// <returns>The updated Store DTO (get new info from the database) if successful; otherwise, null.</returns>
-    public Task<StoreDto?> UpdateByIdAsync(long id, StoreDto updatedStoreDto) => throw new NotImplementedException();
+    public async Task<StoreDto?> UpdateByIdAsync(long id, StoreDto updatedStoreDto)
+    {
+        if (updatedStoreDto.PasswordHash == null ||
+            updatedStoreDto.Salt == null ||
+            updatedStoreDto.UpdatedBy == null ||
+            updatedStoreDto.UpdatedAt == null)
+        {
+            return null;
+        }
+
+        var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
+
+        using var connection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection;
+
+        await using var command = new NpgsqlCommand(@"
+            UPDATE store
+            SET name = $1,
+                address = $2,
+                email = $3,
+                tel = $4,
+                password_hash = $5,
+                salt = $6,
+                last_login = $7,
+                updated_by = $8,
+                updated_at = $9
+            WHERE id = $10
+            RETURNING *
+        ", connection)
+        {
+            Parameters =
+            {
+                new() { Value = updatedStoreDto.Name },
+                new() { Value = updatedStoreDto.Address },
+                new() { Value = updatedStoreDto.Email },
+                new() { Value = updatedStoreDto.Tel },
+                new() { Value = updatedStoreDto.PasswordHash },
+                new() { Value = updatedStoreDto.Salt },
+                new() { Value = updatedStoreDto.LastLogin },
+                new() { Value = updatedStoreDto.UpdatedBy },
+                new() { Value = updatedStoreDto.UpdatedAt },
+                new() { Value = id }
+            }
+        };
+
+        await using var reader = await command.ExecuteReaderAsync();
+
+        // The database schema only allow unique username, so this command
+        // execution should only return 0 or 1 row
+        if (reader.HasRows)
+        {
+            if (await reader.ReadAsync())
+            {
+                return new StoreDto
+                {
+                    // BaseModel fields
+                    Id = reader.GetInt32(reader.GetOrdinal("id")),
+                    CreatedBy = reader.GetString(reader.GetOrdinal("created_by")),
+                    CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")),
+                    UpdatedBy = reader.GetString(reader.GetOrdinal("updated_by")),
+                    UpdatedAt = reader.GetDateTime(reader.GetOrdinal("updated_at")),
+                    // Store Model fields
+                    Name = reader.GetString(reader.GetOrdinal("name")),
+                    Address = reader.GetString(reader.GetOrdinal("address")),
+                    Email = reader.GetString(reader.GetOrdinal("email")),
+                    Tel = reader.GetString(reader.GetOrdinal("tel")),
+                    Username = reader.GetString(reader.GetOrdinal("username")),
+                    PasswordHash = reader.GetString(reader.GetOrdinal("password_hash")),
+                    Salt = reader.GetString(reader.GetOrdinal("salt")),
+                    LastLogin = reader.GetDateTime(reader.GetOrdinal("last_login"))
+                };
+            }
+        }
+
+        return null;
+    }
 
     /// <summary>
     /// Updates a store by its username asynchronously.
@@ -193,7 +323,6 @@ public class PostgreStoreDao : IStoreDao
     public async Task<StoreDto?> UpdateByUsernameAsync(string username, StoreDto updatedStoreDto)
     {
         // Please make sure the fields are properly validated before calling this method
-
         if (username != updatedStoreDto.Username)
         {
             return null;

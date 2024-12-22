@@ -26,7 +26,7 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="600"/>
+                <ColumnDefinition Width="300"/>
             </Grid.ColumnDefinitions>
             
             <!--Field names-->
@@ -49,12 +49,13 @@
             <!--Field values-->
             <controls:EditableTextField 
                 Grid.Column="1" Grid.Row="0"
-                Text="Mã số thuế"
-                x:Name="storeTaxCodeEditableTextField"/>
+                Text="{x:Bind ViewModel.EditTaxCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                x:Name="taxCodeEditableTextField"
+                TextModified="taxCodeEditableTextField_TextModified"
+                SaveClicked="taxCodeEditableTextField_SaveClicked"/>
             <ComboBox
                 Grid.Column="1" Grid.Row="1"
-                x:Name="generalVatRateComboBox"    
-                SelectedIndex="0"
+                x:Name="generalVatRateComboBox"
                 SelectionChanged="generalVatRateComboBox_SelectionChanged">
                 <x:String>0%</x:String>
                 <x:String>1%</x:String>
@@ -66,12 +67,19 @@
             <ComboBox
                 Grid.Column="1" Grid.Row="2"
                 x:Name="selectVatMethodComboBox"
-                SelectedIndex="0"
                 SelectionChanged="selectVatMethodComboBox_SelectionChanged">
                 <x:String>Giá bán đã bao gồm VAT</x:String>
                 <x:String>Theo tổng giá trị đơn hàng</x:String>
-                <x:String>Theo từng mặt hàng</x:String>
             </ComboBox>
+
+            <!--Validation error message-->
+            <TeachingTip
+                x:Name="taxCodeErrorMessageTeachingTip"
+                Target="{x:Bind taxCodeEditableTextField}"
+                Title="Lỗi"
+                Subtitle="Lỗi chưa xác định"
+                IsOpen="False">
+            </TeachingTip>
         </Grid>
 
         <!--Save/cancel changes buttons-->
@@ -108,5 +116,13 @@
                     Style="{StaticResource BodyTextBlockStyle}"/>
             </Button>
         </Grid>
+
+        <!--Edit result dialog-->
+        <ContentDialog
+            Name="editTaxConfigurationResultContentDialog"
+            Title="Kết quả thay đổi"
+            PrimaryButtonText="Xác nhận"
+            PrimaryButtonStyle="{StaticResource AccentButtonStyle}">
+        </ContentDialog>
     </Canvas>
 </Page>

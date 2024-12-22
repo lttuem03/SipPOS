@@ -12,12 +12,18 @@ exports.up = async function(knex) {
             vat_rate NUMERIC(7, 5) NOT NULL,
             vat_method VARCHAR(12) NOT NULL 
                 CHECK (vat_method IN ('VAT_INCLUDED', 'ORDER_BASED')),
-            staff_base_salary NUMERIC(12, 2) NOT NULL,
-            staff_hourly_salary NUMERIC(12, 2) NOT NULL,
-            assistant_manager_base_salary NUMERIC(12, 2) NOT NULL,
-            assistant_manager_hourly_salary NUMERIC(12, 2) NOT NULL,
-            store_manager_base_salary NUMERIC(12, 2) NOT NULL,
-            store_manager_hourly_salary NUMERIC(12, 2) NOT NULL,
+            current_staff_base_salary NUMERIC(12, 2) NOT NULL,
+            current_staff_hourly_salary NUMERIC(12, 2) NOT NULL,
+            current_assistant_manager_base_salary NUMERIC(12, 2) NOT NULL,
+            current_assistant_manager_hourly_salary NUMERIC(12, 2) NOT NULL,
+            current_store_manager_base_salary NUMERIC(12, 2) NOT NULL,
+            current_store_manager_hourly_salary NUMERIC(12, 2) NOT NULL,
+            next_staff_base_salary NUMERIC(12, 2) NOT NULL,
+            next_staff_hourly_salary NUMERIC(12, 2) NOT NULL,
+            next_assistant_manager_base_salary NUMERIC(12, 2) NOT NULL,
+            next_assistant_manager_hourly_salary NUMERIC(12, 2) NOT NULL,
+            next_store_manager_base_salary NUMERIC(12, 2) NOT NULL,
+            next_store_manager_hourly_salary NUMERIC(12, 2) NOT NULL,
 
             PRIMARY KEY (store_id)
         )

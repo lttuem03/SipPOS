@@ -26,28 +26,22 @@ public class PostgreConfigurationDao : IConfigurationDao
                 tax_code,
                 vat_rate,
                 vat_method,
-                staff_base_salary,
-                staff_hourly_salary,
-                assistant_manager_base_salary,
-                assistant_manager_hourly_salary,
-                store_manager_base_salary,
-                store_manager_hourly_salary
+                current_staff_base_salary,
+                current_staff_hourly_salary,
+                current_assistant_manager_base_salary,
+                current_assistant_manager_hourly_salary,
+                current_store_manager_base_salary,
+                current_store_manager_hourly_salary,
+                next_staff_base_salary,
+                next_staff_hourly_salary,
+                next_assistant_manager_base_salary,
+                next_assistant_manager_hourly_salary,
+                next_store_manager_base_salary,
+                next_store_manager_hourly_salary
             )
             VALUES
-                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-            RETURNING
-                store_id,
-                opening_time,
-                closing_time,
-                tax_code,
-                vat_rate,
-                vat_method,
-                staff_base_salary,
-                staff_hourly_salary,
-                assistant_manager_base_salary,
-                assistant_manager_hourly_salary,
-                store_manager_base_salary,
-                store_manager_hourly_salary
+                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+            RETURNING *
         ", connection)
         {
             Parameters = 
@@ -58,12 +52,18 @@ public class PostgreConfigurationDao : IConfigurationDao
                 new() { Value = configurationDto.TaxCode },
                 new() { Value = configurationDto.VatRate },
                 new() { Value = configurationDto.VatMethod },
-                new() { Value = configurationDto.StaffBaseSalary },
-                new() { Value = configurationDto.StaffHourlySalary },
-                new() { Value = configurationDto.AssistantManagerBaseSalary },
-                new() { Value = configurationDto.AssistantManagerHourlySalary },
-                new() { Value = configurationDto.StoreManagerBaseSalary },
-                new() { Value = configurationDto.StoreManagerHourlySalary }
+                new() { Value = configurationDto.CurrentStaffBaseSalary },
+                new() { Value = configurationDto.CurrentStaffHourlySalary },
+                new() { Value = configurationDto.CurrentAssistantManagerBaseSalary },
+                new() { Value = configurationDto.CurrentAssistantManagerHourlySalary },
+                new() { Value = configurationDto.CurrentStoreManagerBaseSalary },
+                new() { Value = configurationDto.CurrentStoreManagerHourlySalary },
+                new() { Value = configurationDto.NextStaffBaseSalary },
+                new() { Value = configurationDto.NextStaffHourlySalary },
+                new() { Value = configurationDto.NextAssistantManagerBaseSalary },
+                new() { Value = configurationDto.NextAssistantManagerHourlySalary },
+                new() { Value = configurationDto.NextStoreManagerBaseSalary },
+                new() { Value = configurationDto.NextStoreManagerHourlySalary },
             }
         };
 
@@ -82,12 +82,18 @@ public class PostgreConfigurationDao : IConfigurationDao
                 TaxCode = reader.GetString(reader.GetOrdinal("tax_code")),
                 VatRate = reader.GetDecimal(reader.GetOrdinal("vat_rate")),
                 VatMethod = reader.GetString(reader.GetOrdinal("vat_method")),
-                StaffBaseSalary = reader.GetDecimal(reader.GetOrdinal("staff_base_salary")),
-                StaffHourlySalary = reader.GetDecimal(reader.GetOrdinal("staff_hourly_salary")),
-                AssistantManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("assistant_manager_base_salary")),
-                AssistantManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("assistant_manager_hourly_salary")),
-                StoreManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("store_manager_base_salary")),
-                StoreManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("store_manager_hourly_salary"))
+                CurrentStaffBaseSalary = reader.GetDecimal(reader.GetOrdinal("current_staff_base_salary")),
+                CurrentStaffHourlySalary = reader.GetDecimal(reader.GetOrdinal("current_staff_hourly_salary")),
+                CurrentAssistantManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("current_assistant_manager_base_salary")),
+                CurrentAssistantManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("current_assistant_manager_hourly_salary")),
+                CurrentStoreManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("current_store_manager_base_salary")),
+                CurrentStoreManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("current_store_manager_hourly_salary")),
+                NextStaffBaseSalary = reader.GetDecimal(reader.GetOrdinal("next_staff_base_salary")),
+                NextStaffHourlySalary = reader.GetDecimal(reader.GetOrdinal("next_staff_hourly_salary")),
+                NextAssistantManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("next_assistant_manager_base_salary")),
+                NextAssistantManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("next_assistant_manager_hourly_salary")),
+                NextStoreManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("next_store_manager_base_salary")),
+                NextStoreManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("next_store_manager_hourly_salary"))
             };
         }
 
@@ -129,12 +135,18 @@ public class PostgreConfigurationDao : IConfigurationDao
                 TaxCode = reader.GetString(reader.GetOrdinal("tax_code")),
                 VatRate = reader.GetDecimal(reader.GetOrdinal("vat_rate")),
                 VatMethod = reader.GetString(reader.GetOrdinal("vat_method")),
-                StaffBaseSalary = reader.GetDecimal(reader.GetOrdinal("staff_base_salary")),
-                StaffHourlySalary = reader.GetDecimal(reader.GetOrdinal("staff_hourly_salary")),
-                AssistantManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("assistant_manager_base_salary")),
-                AssistantManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("assistant_manager_hourly_salary")),
-                StoreManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("store_manager_base_salary")),
-                StoreManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("store_manager_hourly_salary"))
+                CurrentStaffBaseSalary = reader.GetDecimal(reader.GetOrdinal("current_staff_base_salary")),
+                CurrentStaffHourlySalary = reader.GetDecimal(reader.GetOrdinal("current_staff_hourly_salary")),
+                CurrentAssistantManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("current_assistant_manager_base_salary")),
+                CurrentAssistantManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("current_assistant_manager_hourly_salary")),
+                CurrentStoreManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("current_store_manager_base_salary")),
+                CurrentStoreManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("current_store_manager_hourly_salary")),
+                NextStaffBaseSalary = reader.GetDecimal(reader.GetOrdinal("next_staff_base_salary")),
+                NextStaffHourlySalary = reader.GetDecimal(reader.GetOrdinal("next_staff_hourly_salary")),
+                NextAssistantManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("next_assistant_manager_base_salary")),
+                NextAssistantManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("next_assistant_manager_hourly_salary")),
+                NextStoreManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("next_store_manager_base_salary")),
+                NextStoreManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("next_store_manager_hourly_salary"))
             };
         }
 
@@ -158,13 +170,20 @@ public class PostgreConfigurationDao : IConfigurationDao
                 tax_code = $3,
                 vat_rate = $4,
                 vat_method = $5,
-                staff_base_salary = $6,
-                staff_hourly_salary = $7,
-                assistant_manager_base_salary = $8,
-                assistant_manager_hourly_salary = $9,
-                store_manager_base_salary = $10,
-                store_manager_hourly_salary = $11
-            WHERE store_id = $12
+                current_staff_base_salary = $6,
+                current_staff_hourly_salary = $7,
+                current_assistant_manager_base_salary = $8,
+                current_assistant_manager_hourly_salary = $9,
+                current_store_manager_base_salary = $10,
+                current_store_manager_hourly_salary = $11,
+                next_staff_base_salary = $12,
+                next_staff_hourly_salary = $13,
+                next_assistant_manager_base_salary = $14,
+                next_assistant_manager_hourly_salary = $15,
+                next_store_manager_base_salary = $16,
+                next_store_manager_hourly_salary = $17
+            WHERE store_id = $18
+            RETURNING *
         ", connection)
         {
             Parameters =
@@ -174,12 +193,18 @@ public class PostgreConfigurationDao : IConfigurationDao
                 new() { Value = updatedConfigurationDto.TaxCode },
                 new() { Value = updatedConfigurationDto.VatRate },
                 new() { Value = updatedConfigurationDto.VatMethod },
-                new() { Value = updatedConfigurationDto.StaffBaseSalary },
-                new() { Value = updatedConfigurationDto.StaffHourlySalary },
-                new() { Value = updatedConfigurationDto.AssistantManagerBaseSalary },
-                new() { Value = updatedConfigurationDto.AssistantManagerHourlySalary },
-                new() { Value = updatedConfigurationDto.StoreManagerBaseSalary },
-                new() { Value = updatedConfigurationDto.StoreManagerHourlySalary },
+                new() { Value = updatedConfigurationDto.CurrentStaffBaseSalary },
+                new() { Value = updatedConfigurationDto.CurrentStaffHourlySalary },
+                new() { Value = updatedConfigurationDto.CurrentAssistantManagerBaseSalary },
+                new() { Value = updatedConfigurationDto.CurrentAssistantManagerHourlySalary },
+                new() { Value = updatedConfigurationDto.CurrentStoreManagerBaseSalary },
+                new() { Value = updatedConfigurationDto.CurrentStoreManagerHourlySalary },
+                new() { Value = updatedConfigurationDto.NextStaffBaseSalary },
+                new() { Value = updatedConfigurationDto.NextStaffHourlySalary },
+                new() { Value = updatedConfigurationDto.NextAssistantManagerBaseSalary },
+                new() { Value = updatedConfigurationDto.NextAssistantManagerHourlySalary },
+                new() { Value = updatedConfigurationDto.NextStoreManagerBaseSalary },
+                new() { Value = updatedConfigurationDto.NextStoreManagerHourlySalary },
                 new() { Value = storeId }
             }
         };
@@ -199,12 +224,18 @@ public class PostgreConfigurationDao : IConfigurationDao
                 TaxCode = reader.GetString(reader.GetOrdinal("tax_code")),
                 VatRate = reader.GetDecimal(reader.GetOrdinal("vat_rate")),
                 VatMethod = reader.GetString(reader.GetOrdinal("vat_method")),
-                StaffBaseSalary = reader.GetDecimal(reader.GetOrdinal("staff_base_salary")),
-                StaffHourlySalary = reader.GetDecimal(reader.GetOrdinal("staff_hourly_salary")),
-                AssistantManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("assistant_manager_base_salary")),
-                AssistantManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("assistant_manager_hourly_salary")),
-                StoreManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("store_manager_base_salary")),
-                StoreManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("store_manager_hourly_salary"))
+                CurrentStaffBaseSalary = reader.GetDecimal(reader.GetOrdinal("current_staff_base_salary")),
+                CurrentStaffHourlySalary = reader.GetDecimal(reader.GetOrdinal("current_staff_hourly_salary")),
+                CurrentAssistantManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("current_assistant_manager_base_salary")),
+                CurrentAssistantManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("current_assistant_manager_hourly_salary")),
+                CurrentStoreManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("current_store_manager_base_salary")),
+                CurrentStoreManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("current_store_manager_hourly_salary")),
+                NextStaffBaseSalary = reader.GetDecimal(reader.GetOrdinal("next_staff_base_salary")),
+                NextStaffHourlySalary = reader.GetDecimal(reader.GetOrdinal("next_staff_hourly_salary")),
+                NextAssistantManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("next_assistant_manager_base_salary")),
+                NextAssistantManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("next_assistant_manager_hourly_salary")),
+                NextStoreManagerBaseSalary = reader.GetDecimal(reader.GetOrdinal("next_store_manager_base_salary")),
+                NextStoreManagerHourlySalary = reader.GetDecimal(reader.GetOrdinal("next_store_manager_hourly_salary"))
             };
         }
 

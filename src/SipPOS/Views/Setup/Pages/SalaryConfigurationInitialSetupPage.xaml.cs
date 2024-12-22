@@ -173,8 +173,8 @@ public sealed partial class SalaryConfigurationInitialSetupPage : Page
 
         var text = sender.Text;
 
-        // Temporarily removes thousand separator ','
-        text = text.Replace(",", "");
+        // Temporarily removes thousand separator '.'
+        text = text.Replace(".", "");
 
         // Ensuring every "last" character entered must be a digit
         var lastChar = text[^1];
@@ -192,18 +192,17 @@ public sealed partial class SalaryConfigurationInitialSetupPage : Page
             text = text.Remove(0, 1);
         }
 
-        // Padding Vietnamese thousand separator ','
+        // Padding Vietnamese thousand separator '.'
         var originalLength = text.Length;
         var placementCursor = originalLength - 3;
 
         while (placementCursor > 0)
         {
-            text = text.Insert(placementCursor, ",");
+            text = text.Insert(placementCursor, ".");
             placementCursor -= 3;
         }
 
         sender.Text = text;
         sender.SelectionStart = sender.Text.Length;
-        //sender.SelectionStart = cursorPosition + (text.Length - originalLength);
     }
 }

@@ -4,65 +4,41 @@ namespace SipPOS.Models.General;
 
 public class Configuration
 {
-    public long StoreId
-    {
-        get;
-    }
+    public long StoreId { get; }
 
-    public TimeOnly OpeningTime
-    {
-        get;
-    }
+    public TimeOnly OpeningTime { get; }
 
-    public TimeOnly ClosingTime
-    {
-        get;
-    }
+    public TimeOnly ClosingTime { get; }
 
-    public string TaxCode
-    {
-        get;
-    }
+    public string TaxCode { get; }
 
-    public decimal VatRate
-    {
-        get;
-    }
+    public decimal VatRate { get; }
 
-    public string VatMethod
-    {
-        get;
-    }
+    public string VatMethod { get; }
 
-    public decimal StaffBaseSalary
-    {
-        get;
-    }
+    public decimal CurrentStaffBaseSalary { get; }
 
-    public decimal StaffHourlySalary
-    {
-        get;
-    }
+    public decimal CurrentStaffHourlySalary { get; }
 
-    public decimal AssistantManagerBaseSalary
-    {
-        get;
-    }
+    public decimal CurrentAssistantManagerBaseSalary { get; }
 
-    public decimal AssistantManagerHourlySalary
-    {
-        get;
-    }
+    public decimal CurrentAssistantManagerHourlySalary { get; }
 
-    public decimal StoreManagerBaseSalary
-    {
-        get;
-    }
+    public decimal CurrentStoreManagerBaseSalary { get; }
 
-    public decimal StoreManagerHourlySalary
-    {
-        get;
-    }
+    public decimal CurrentStoreManagerHourlySalary { get; }
+
+    public decimal NextStaffBaseSalary { get; }
+                   
+    public decimal NextStaffHourlySalary { get; }
+                   
+    public decimal NextAssistantManagerBaseSalary { get; }
+                   
+    public decimal NextAssistantManagerHourlySalary { get; }
+                   
+    public decimal NextStoreManagerBaseSalary { get; }
+                  
+    public decimal NextStoreManagerHourlySalary { get; }
 
     public Configuration(long id, ConfigurationDto dto)
     {
@@ -74,11 +50,18 @@ public class Configuration
         VatRate = dto.VatRate;
         VatMethod = dto.VatMethod;
 
-        StaffBaseSalary = dto.StaffBaseSalary;
-        StaffHourlySalary = dto.StaffHourlySalary;
-        AssistantManagerBaseSalary = dto.AssistantManagerBaseSalary;
-        AssistantManagerHourlySalary = dto.AssistantManagerHourlySalary;
-        StoreManagerBaseSalary = dto.StoreManagerBaseSalary;
-        StoreManagerHourlySalary = dto.StoreManagerHourlySalary;
+        CurrentStaffBaseSalary = dto.CurrentStaffBaseSalary;
+        CurrentStaffHourlySalary = dto.CurrentStaffHourlySalary;
+        CurrentAssistantManagerBaseSalary = dto.CurrentAssistantManagerBaseSalary;
+        CurrentAssistantManagerHourlySalary = dto.CurrentAssistantManagerHourlySalary;
+        CurrentStoreManagerBaseSalary = dto.CurrentStoreManagerBaseSalary;
+        CurrentStoreManagerHourlySalary = dto.CurrentStoreManagerHourlySalary;
+
+        NextStaffBaseSalary = dto.NextStaffBaseSalary;
+        NextStaffHourlySalary = dto.NextStaffHourlySalary;
+        NextAssistantManagerBaseSalary = dto.NextAssistantManagerBaseSalary;
+        NextAssistantManagerHourlySalary = dto.NextAssistantManagerHourlySalary;
+        NextStoreManagerBaseSalary = dto.NextStoreManagerBaseSalary;
+        NextStoreManagerHourlySalary = dto.NextStoreManagerHourlySalary;
     }
 }

@@ -1,31 +1,103 @@
 ﻿namespace SipPOS.DataTransfer.General;
 
+/// <summary>
+/// Data transfer object for configuration settings.
+/// </summary>
 public class ConfigurationDto
 {
+    /// <summary>
+    /// Gets or sets the store ID.
+    /// </summary>
     public long? StoreId { get; set; }
 
+    /// <summary>
+    /// Gets or sets the opening time.
+    /// </summary>
     public TimeOnly OpeningTime { get; set; }
 
+    /// <summary>
+    /// Gets or sets the closing time.
+    /// </summary>
     public TimeOnly ClosingTime { get; set; }
 
+    /// <summary>
+    /// Gets or sets the tax code.
+    /// </summary>
     public string TaxCode { get; set; }
 
+    /// <summary>
+    /// Gets or sets the VAT rate.
+    /// </summary>
     public decimal VatRate { get; set; }
 
+    /// <summary>
+    /// Gets or sets the VAT method.
+    /// </summary>
     public string VatMethod { get; set; }
 
-    public decimal StaffBaseSalary { get; set; }
+    /// <summary>
+    /// Gets or sets the current staff base salary.
+    /// </summary>
+    public decimal CurrentStaffBaseSalary { get; set; }
 
-    public decimal StaffHourlySalary { get; set; }
+    /// <summary>
+    /// Gets or sets the current staff hourly salary.
+    /// </summary>
+    public decimal CurrentStaffHourlySalary { get; set; }
 
-    public decimal AssistantManagerBaseSalary { get; set; }
+    /// <summary>
+    /// Gets or sets the current assistant manager base salary.
+    /// </summary>
+    public decimal CurrentAssistantManagerBaseSalary { get; set; }
 
-    public decimal AssistantManagerHourlySalary { get; set; }
+    /// <summary>
+    /// Gets or sets the current assistant manager hourly salary.
+    /// </summary>
+    public decimal CurrentAssistantManagerHourlySalary { get; set; }
 
-    public decimal StoreManagerBaseSalary { get; set; }
+    /// <summary>
+    /// Gets or sets the current store manager base salary.
+    /// </summary>
+    public decimal CurrentStoreManagerBaseSalary { get; set; }
 
-    public decimal StoreManagerHourlySalary { get; set; }
+    /// <summary>
+    /// Gets or sets the current store manager hourly salary.
+    /// </summary>
+    public decimal CurrentStoreManagerHourlySalary { get; set; }
 
+    /// <summary>
+    /// Gets or sets the next staff base salary.
+    /// </summary>
+    public decimal NextStaffBaseSalary { get; set; }
+
+    /// <summary>
+    /// Gets or sets the next staff hourly salary.
+    /// </summary>
+    public decimal NextStaffHourlySalary { get; set; }
+
+    /// <summary>
+    /// Gets or sets the next assistant manager base salary.
+    /// </summary>
+    public decimal NextAssistantManagerBaseSalary { get; set; }
+
+    /// <summary>
+    /// Gets or sets the next assistant manager hourly salary.
+    /// </summary>
+    public decimal NextAssistantManagerHourlySalary { get; set; }
+
+    /// <summary>
+    /// Gets or sets the next store manager base salary.
+    /// </summary>
+    public decimal NextStoreManagerBaseSalary { get; set; }
+
+    /// <summary>
+    /// Gets or sets the next store manager hourly salary.
+    /// </summary>
+    public decimal NextStoreManagerHourlySalary { get; set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ConfigurationDto"/> class.
+    /// </summary>
     public ConfigurationDto()
     {
         StoreId = null;
@@ -36,11 +108,18 @@ public class ConfigurationDto
         VatRate = -1.0m;
         VatMethod = string.Empty;
 
-        StaffBaseSalary = -1m;
-        StaffHourlySalary = -1m;
-        AssistantManagerBaseSalary = -1m;
-        AssistantManagerHourlySalary = -1m;
-        StoreManagerBaseSalary = -1m;
-        StoreManagerHourlySalary = -1m;
+        CurrentStaffBaseSalary = -1m;
+        CurrentStaffHourlySalary = -1m;
+        CurrentAssistantManagerBaseSalary = -1m;
+        CurrentAssistantManagerHourlySalary = -1m;
+        CurrentStoreManagerBaseSalary = -1m;
+        CurrentStoreManagerHourlySalary = -1m;
+
+        NextStaffBaseSalary = -1m;
+        NextStaffHourlySalary = -1m;
+        NextAssistantManagerBaseSalary = -1m;
+        NextAssistantManagerHourlySalary = -1m;
+        NextStoreManagerBaseSalary = -1m;
+        NextStoreManagerHourlySalary = -1m;
     }
 }

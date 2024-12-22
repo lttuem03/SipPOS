@@ -11,6 +11,7 @@ using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Services.Authentication.Implementations;
+using SipPOS.Services.Configuration.Interfaces;
 
 namespace SipPOS.ViewModels.Login;
 
@@ -65,6 +66,12 @@ public class StoreLoginViewModel : INotifyPropertyChanged
             return;
         }
 
+        // Load up the configuration for the store
+        var currentStoreId = storeAuthenticationService.GetCurrentStoreId();
+        var storeConfigurationService = App.GetService<IConfigurationService>();
+
+        await storeConfigurationService.LoadAsync(currentStoreId);
+        
         // Save credentials if "Save credentials" was checked or clear credentials if it was unchecked
         var storeCredentialsService = App.GetService<IStoreCredentialsService>();
 

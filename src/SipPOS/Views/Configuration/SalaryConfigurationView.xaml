@@ -9,7 +9,366 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <Canvas
+        Background="AliceBlue">
 
-    </Grid>
+        <!--Salary configuration fields-->
+        <Grid
+            ColumnSpacing="10"
+            RowSpacing="25"
+            Margin="0,25,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Field names-->
+            <TextBlock 
+                Grid.Row="0" Grid.Column="0" 
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center">
+                <Run Text="Thiết lập cho chu kì lương hiện tại:" FontWeight="Bold"/>
+                <Run Text="{x:Bind ViewModel.CurrentCycleText, Mode=OneTime}"/>
+            </TextBlock>
+            <StackPanel
+                Grid.Row="2" Grid.Column="0"
+                Orientation="Horizontal">
+                <TextBlock 
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center">
+                    <Run Text="Thiết lập cho chu kì lương tiếp theo:" FontWeight="Bold"/>
+                    <Run Text="{x:Bind ViewModel.NextCycleText, Mode=OneTime}"/>
+                </TextBlock>
+
+                <!--Enable edit / save / cancel buttons-->
+                <Grid
+                    ColumnSpacing="10"  
+                    Margin="10,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button
+                        Grid.Column="1"
+                        Content="Chỉnh sửa"
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Stretch"
+                        Visibility="Visible"
+                        x:Name="enableEditButton"
+                        Click="enableEditButton_Click"/>
+                    <Button
+                        Grid.Column="0"
+                        Content="Lưu"
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Stretch"
+                        Visibility="Collapsed"
+                        x:Name="saveChangesButton"
+                        Click="saveChangesButton_Click"
+                        Style="{StaticResource AccentButtonStyle}"/>
+                    <Button
+                        Grid.Column="1"
+                        Content="Hủy"
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Stretch"
+                        Visibility="Collapsed"
+                        x:Name="cancelChangesButton"
+                        Click="cancelChangesButton_Click"
+                        Background="DarkRed"
+                        Foreground="White"/>
+                </Grid>
+            </StackPanel>
+            
+            <!--Current salary cycle configuration-->
+            <Grid
+                Grid.Row="1" Grid.Column="0"
+                ColumnSpacing="50"
+                RowSpacing="10"
+                Margin="0,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+
+                <!--Headers-->
+                <TextBlock
+                    Grid.Row="0" Grid.Column="0"
+                    Text="Chức vụ"
+                    FontWeight="SemiBold"
+                    HorizontalAlignment="Center"/>
+                <TextBlock
+                    Grid.Row="0" Grid.Column="1"
+                    Text="Lương cơ bản"
+                    FontWeight="SemiBold"
+                    HorizontalAlignment="Center"/>
+                <TextBlock
+                    Grid.Row="0" Grid.Column="2"
+                    Text="Lương theo giờ"
+                    FontWeight="SemiBold"
+                    HorizontalAlignment="Center"/>
+
+                <!--Positions-->
+                <TextBlock
+                    Grid.Row="1" Grid.Column="0"
+                    Text="(ST) Nhân viên cửa hàng"/>
+                <TextBlock
+                    Grid.Row="2" Grid.Column="0"
+                    Text="(AM) Trợ lý cửa hàng"/>
+                <TextBlock
+                    Grid.Row="3" Grid.Column="0"
+                    Text="(SM) Quản lý cửa hàng"/>
+
+                <!--Salary values-->
+                <TextBlock
+                    Grid.Row="1" Grid.Column="1"
+                    x:Name="currentStaffBaseSalaryTextBlock"
+                    Text="Lương cơ bản ST"
+                    HorizontalAlignment="Right"/>
+                <TextBlock
+                    Grid.Row="1" Grid.Column="2"
+                    x:Name="currentStaffHourlySalaryTextBlock"
+                    Text="Lương theo giờ ST"
+                    HorizontalAlignment="Right"/>
+                <TextBlock
+                    Grid.Row="2" Grid.Column="1"
+                    x:Name="currentAssistantManagerBaseSalaryTextBlock"
+                    Text="Lương cơ bản AM"
+                    HorizontalAlignment="Right"/>
+                <TextBlock
+                    Grid.Row="2" Grid.Column="2"
+                    x:Name="currentAssistantManagerHourlySalaryTextBlock"
+                    Text="Lương theo giờ AM"
+                    HorizontalAlignment="Right"/>
+                <TextBlock
+                    Grid.Row="3" Grid.Column="1"
+                    x:Name="currentStoreManagerBaseSalaryTextBlock"
+                    Text="Lương cơ bản SM"
+                    HorizontalAlignment="Right"/>
+                <TextBlock
+                    Grid.Row="3" Grid.Column="2"
+                    x:Name="currentStoreManagerHourlySalaryTextBlock"
+                    Text="Lương theo giờ SM"
+                    HorizontalAlignment="Right"/>
+            </Grid>
+            
+            <!--Next salary cycle configuration-->
+            <Grid
+                Grid.Row="3" Grid.Column="0"
+                ColumnSpacing="50"
+                RowSpacing="10"
+                Margin="0,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+
+                <!--Headers-->
+                <TextBlock
+                    Grid.Row="0" Grid.Column="0"
+                    Text="Chức vụ"
+                    FontWeight="SemiBold"
+                    HorizontalAlignment="Center"/>
+                <TextBlock
+                    Grid.Row="0" Grid.Column="1"
+                    Text="Lương cơ bản"
+                    FontWeight="SemiBold"
+                    HorizontalAlignment="Center"/>
+                <TextBlock
+                    Grid.Row="0" Grid.Column="2"
+                    Text="Lương theo giờ"
+                    FontWeight="SemiBold"
+                    HorizontalAlignment="Center"/>
+
+                <!--Positions-->
+                <TextBlock
+                    Grid.Row="1" Grid.Column="0"
+                    Text="(ST) Nhân viên cửa hàng"/>
+                <TextBlock
+                    Grid.Row="2" Grid.Column="0"
+                    Text="(AM) Trợ lý cửa hàng"/>
+                <TextBlock
+                    Grid.Row="3" Grid.Column="0"
+                    Text="(SM) Quản lý cửa hàng"/>
+
+                <!--Salary values-->
+                <StackPanel
+                    Grid.Row="1" Grid.Column="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+                    <TextBox
+                        x:Name="nextStaffBaseSalaryTextBox"
+                        HorizontalAlignment="Stretch"
+                        TextAlignment="Right"
+                        Width="180"
+                        IsEnabled="False"
+                        TextChanging="salaryTextBox_TextChanging"
+                        GotFocus="salaryTextBox_GotFocus"/>
+                    <TextBlock
+                        Text="₫"
+                        Margin="5,0,0,8"
+                        VerticalAlignment="Bottom"/>
+                </StackPanel>
+                <StackPanel
+                    Grid.Row="1" Grid.Column="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+                    <TextBox
+                        x:Name="nextStaffHourlySalaryTextBox"
+                        HorizontalAlignment="Stretch"
+                        TextAlignment="Right"
+                        Width="180"
+                        IsEnabled="False"
+                        TextChanging="salaryTextBox_TextChanging"
+                        GotFocus="salaryTextBox_GotFocus"/>
+                    <TextBlock
+                        Text="₫"
+                        Margin="5,0,0,8"
+                        VerticalAlignment="Bottom"/>
+                </StackPanel>
+                <StackPanel
+                    Grid.Row="2" Grid.Column="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+                    <TextBox
+                        x:Name="nextAssistantManagerBaseSalaryTextBox"
+                        HorizontalAlignment="Stretch"
+                        TextAlignment="Right"
+                        Width="180"
+                        IsEnabled="False"
+                        TextChanging="salaryTextBox_TextChanging"
+                        GotFocus="salaryTextBox_GotFocus"/>
+                    <TextBlock
+                        Text="₫"
+                        Margin="5,0,0,8"
+                        VerticalAlignment="Bottom"/>
+                </StackPanel>
+                <StackPanel
+                    Grid.Row="2" Grid.Column="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+                    <TextBox
+                        x:Name="nextAssistantManagerHourlySalaryTextBox"
+                        HorizontalAlignment="Stretch"
+                        TextAlignment="Right"
+                        Width="180"
+                        IsEnabled="False"
+                        TextChanging="salaryTextBox_TextChanging"
+                        GotFocus="salaryTextBox_GotFocus"/>
+                    <TextBlock
+                        Text="₫"
+                        Margin="5,0,0,8"
+                        VerticalAlignment="Bottom"/>
+                </StackPanel>
+                <StackPanel
+                    Grid.Row="3" Grid.Column="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+                    <TextBox
+                        x:Name="nextStoreManagerBaseSalaryTextBox"
+                        HorizontalAlignment="Stretch"
+                        TextAlignment="Right"
+                        Width="180"
+                        IsEnabled="False"
+                        TextChanging="salaryTextBox_TextChanging"
+                        GotFocus="salaryTextBox_GotFocus"/>
+                    <TextBlock
+                        Text="₫"
+                        Margin="5,0,0,8"
+                        VerticalAlignment="Bottom"/>
+                </StackPanel>
+                <StackPanel
+                    Grid.Row="3" Grid.Column="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+                    <TextBox
+                        x:Name="nextStoreManagerHourlySalaryTextBox"
+                        HorizontalAlignment="Stretch"
+                        TextAlignment="Right"
+                        Width="180"
+                        IsEnabled="False"
+                        TextChanging="salaryTextBox_TextChanging"
+                        GotFocus="salaryTextBox_GotFocus"/>
+                    <TextBlock
+                        Text="₫"
+                        Margin="5,0,0,8"
+                        VerticalAlignment="Bottom"/>
+                </StackPanel>
+            </Grid>
+
+            <!--Warning messages-->
+            <TextBlock
+                Grid.Row="4" Grid.Column="0"
+                x:Name="unsavedChangesWarningTextBlock"
+                Text="Lưu ý: Có thay đổi chưa được lưu"
+                Foreground="OrangeRed"
+                HorizontalAlignment="Center"
+                Visibility="Collapsed"/>
+        </Grid>
+
+        <!--Save/cancel changes buttons-->
+        <Grid
+            Margin="150,450,0,0"
+            ColumnSpacing="100">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Save changes button-->
+            <Button
+                Grid.Column="0"
+                Width="150" Height="50"
+                IsEnabled="False"
+                Style="{StaticResource AccentButtonStyle}"
+                Name="saveChangesOnSalaryConfigurationButton"
+                Click="saveChangesOnSalaryConfigurationButton_Click">
+                <TextBlock
+                    Text="Lưu thay đổi"
+                    Style="{StaticResource BodyTextBlockStyle}"/>
+            </Button>
+
+            <!--Cancel changes button-->
+            <Button
+                Grid.Column="1"
+                Width="150" Height="50"
+                IsEnabled="True"
+                Name="cancelChangesOnSalaryConfigurationButton"
+                Click="cancelChangesOnSalaryConfigurationButton_Click">
+                <TextBlock
+                    Text="Hủy"
+                    Style="{StaticResource BodyTextBlockStyle}"/>
+            </Button>
+        </Grid>
+
+        <!--Edit result dialog-->
+        <ContentDialog
+            Name="editSalaryConfigurationResultContentDialog"
+            Title="Kết quả thay đổi"
+            PrimaryButtonText="Xác nhận"
+            PrimaryButtonStyle="{StaticResource AccentButtonStyle}">
+        </ContentDialog>
+    </Canvas>
 </Page>
