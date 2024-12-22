@@ -3,6 +3,8 @@ using SipPOS.DataTransfer.Entity;
 using SipPOS.DataTransfer.General;
 using SipPOS.Services.Entity.Interfaces;
 using SipPOS.Services.DataAccess.Interfaces;
+using SipPOS.Services.Authentication.Implementations;
+using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Models.Entity;
 using SipPOS.Models.General;
 
@@ -31,9 +33,9 @@ public class ProductService : IProductService
     /// Gets all products.
     /// </summary>
     /// <returns>A list of product DTOs.</returns>
-    public IList<ProductDto> GetAll()
+    public List<ProductDto> GetAll()
     {
-        return mapper.Map<IList<ProductDto>>(productDao.GetAll());
+        return mapper.Map<List<ProductDto>>(productDao.GetAllAsync().Result);
     }
 
     /// <summary>
@@ -43,7 +45,7 @@ public class ProductService : IProductService
     /// <returns>The product DTO if found; otherwise, null.</returns>
     public ProductDto? GetById(long id)
     {
-        return mapper.Map<ProductDto>(productDao.GetById(id));
+        return mapper.Map<ProductDto>(productDao.GetByIdAsync(id).Result);
     }
 
     /// <summary>
@@ -51,9 +53,12 @@ public class ProductService : IProductService
     /// </summary>
     /// <param name="product">The product DTO to insert.</param>
     /// <returns>The inserted product DTO.</returns>
-    public ProductDto? Insert(ProductDto product)
+    public ProductDto? Insert(ProductDto productDto)
     {
-        return mapper.Map<ProductDto>(productDao.Insert(mapper.Map<Product>(product)));
+        StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
+        productDto.CreatedBy = staffAuthenticationService.Context.CurrentStaff?.CompositeUsername;
+        productDto.CreatedAt = DateTime.Now;
+        return mapper.Map<ProductDto>(productDao.InsertAsync(mapper.Map<Product>(productDto)).Result);
     }
 
     /// <summary>
@@ -61,9 +66,12 @@ public class ProductService : IProductService
     /// </summary>
     /// <param name="product">The product DTO to update.</param>
     /// <returns>The updated product DTO.</returns>
-    public ProductDto? UpdateById(ProductDto product)
+    public ProductDto? UpdateById(ProductDto productDto)
     {
-        return mapper.Map<ProductDto>(productDao.UpdateById(mapper.Map<Product>(product)));
+        StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
+        productDto.UpdatedBy = staffAuthenticationService.Context.CurrentStaff?.CompositeUsername;
+        productDto.UpdatedAt = DateTime.Now;
+        return mapper.Map<ProductDto>(productDao.UpdateByIdAsync(mapper.Map<Product>(productDto)).Result);
     }
 
     /// <summary>
@@ -73,7 +81,9 @@ public class ProductService : IProductService
     /// <returns>The deleted product DTO.</returns>
     public ProductDto? DeleteById(long id)
     {
-        return mapper.Map<ProductDto>(productDao.DeleteById(id));
+        StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
+        Staff author = staffAuthenticationService.Context.CurrentStaff ?? new Staff(1, new StaffDto());
+        return mapper.Map<ProductDto>(productDao.DeleteByIdAsync(id, author).Result);
     }
 
     /// <summary>
@@ -81,9 +91,11 @@ public class ProductService : IProductService
     /// </summary>
     /// <param name="ids">The identifiers of the products to delete.</param>
     /// <returns>A list of deleted product DTOs.</returns>
-    public IList<ProductDto> DeleteByIds(IList<long> ids)
+    public List<ProductDto> DeleteByIds(List<long> ids)
     {
-        return mapper.Map<IList<ProductDto>>(productDao.DeleteByIds(ids));
+        StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
+        Staff author = staffAuthenticationService.Context.CurrentStaff ?? new Staff(1, new StaffDto());
+        return mapper.Map<List<ProductDto>>(productDao.DeleteByIdsAsync(ids, author).Result);
     }
 
     /// <summary>
@@ -96,6 +108,6 @@ public class ProductService : IProductService
     /// <returns>A paginated list of product DTOs.</returns>
     public Pagination<ProductDto> Search(ProductFilterDto productFilterDto, SortDto sortDto, int perPage, int page)
     {
-        return mapper.Map<Pagination<ProductDto>>(productDao.Search(productFilterDto, sortDto, perPage, page));
+        return mapper.Map<Pagination<ProductDto>>(productDao.SearchAsync(productFilterDto, sortDto, perPage, page).Result);
     }
 }

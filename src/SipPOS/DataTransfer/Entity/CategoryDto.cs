@@ -18,7 +18,7 @@ public class CategoryDto : BaseEntityDto
     /// <summary>
     /// Gets or sets the status of the category.
     /// </summary>
-    public string? Status { get; set; }
+    public string? Status { get; set; } = "Available";
 
     /// <summary>
     /// Gets or sets the list of image URLs associated with the category.

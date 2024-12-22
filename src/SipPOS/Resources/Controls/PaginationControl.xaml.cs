@@ -196,7 +196,7 @@ public sealed partial class PaginationControl : UserControl
     {
         if (!_isInitialized) return;
         SetValue(CurrentPageProperty, (int)args.NewValue);
-        PageChanged?.Invoke(this, new PaginationControlValueChangedEventArgs(PerPage, (int)args.NewValue));
+        PageChanged?.Invoke(this, new PaginationControlValueChangedEventArgs((int)args.NewValue, PerPage));
         UpdateButtons();
     }
 
@@ -225,7 +225,7 @@ public sealed partial class PaginationControl : UserControl
         if (PerPageComboBox.SelectedItem is int selectedPerPage)
         {
             SetValue(PerPageProperty, selectedPerPage);
-            PageChanged?.Invoke(this, new PaginationControlValueChangedEventArgs(PerPage, CurrentPage));
+            PageChanged?.Invoke(this, new PaginationControlValueChangedEventArgs(CurrentPage, PerPage));
             UpdateButtons();
         }
     }

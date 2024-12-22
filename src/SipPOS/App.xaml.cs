@@ -60,7 +60,7 @@ public partial class App : Application
     {
         this.InitializeComponent();
         this.RequestedTheme = ApplicationTheme.Light; // FIXED LIGHT THEME ONLY
-        
+
         // Database connection configuration
         DotNetEnv.Env.TraversePath().Load(AppContext.BaseDirectory);
         var postgres_host = DotNetEnv.Env.GetString("POSTGRES_HOST");
@@ -83,8 +83,8 @@ public partial class App : Application
             services.AddSingleton<IStaffShiftContext, StaffShiftContext>();
 
             // Dao
-            services.AddSingleton<IProductDao, MockProductDao>();
-            services.AddSingleton<ICategoryDao, MockCategoryDao>();
+            services.AddSingleton<IProductDao, PostgresProductDao>();
+            services.AddSingleton<ICategoryDao, PostgresCategoryDao>();
             services.AddSingleton<IStoreDao, PostgreStoreDao>();
             services.AddSingleton<IStaffDao, PostgreStaffDao>();
             services.AddSingleton<IConfigurationDao, PostgreConfigurationDao>();
@@ -181,7 +181,7 @@ public partial class App : Application
     /// <param name="args">Details about the launch request and process.</param>
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        // In the App startup check Window, we check for the 
+        // In the App startup check Window, we check for the
         // prequisite for the app to run, such as database connection
 
         // If everything is ready, we change the instance of _mainWindow
