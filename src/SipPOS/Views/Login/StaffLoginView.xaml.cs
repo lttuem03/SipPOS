@@ -68,6 +68,18 @@ public sealed partial class StaffLoginView : Page
         ViewModel.HandleNumpadButtonClick(number);
     }
 
+    private void numpadBackspaceButton_Click(object sender, RoutedEventArgs e)
+    {
+        var button = sender as Button;
+
+        if (button == null)
+        {
+            return;
+        }
+
+        ViewModel.HandleNumpadBackspaceButtonClick();
+    }
+
     /// <summary>
     /// Handles the Click event of the staff login button.
     /// </summary>

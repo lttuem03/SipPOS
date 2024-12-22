@@ -10,22 +10,14 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <StackPanel
-        Orientation="Vertical"
-        HorizontalAlignment="Left"
-        VerticalAlignment="Top">
-
+    <Canvas
+        Background="AliceBlue">
+        
+        <!--Store configuration fields-->
         <Grid
-            Width="1500"
-            Height="800"
             ColumnSpacing="10"
-            RowSpacing="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="4*"/>
-            </Grid.ColumnDefinitions>
+            RowSpacing="25"
+            Margin="0,25,0,0">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -33,44 +25,189 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Column="0" Grid.Row="0" Text="Tên cửa hàng: " FontWeight="Bold" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="0" Grid.Row="1" Text="Địa chỉ: "      FontWeight="Bold" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="0" Grid.Row="2" Text="Email: "        FontWeight="Bold" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="0" Grid.Row="3" Text="SĐT: "          FontWeight="Bold" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="0" Grid.Row="4" Text="Mã số thuế: "   FontWeight="Bold" VerticalAlignment="Center"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="600"/>
+            </Grid.ColumnDefinitions>
+            
+            <!--Field names-->
+            <TextBlock 
+                Grid.Column="0" Grid.Row="0"
+                Text="Tên cửa hàng: " 
+                FontWeight="Bold" 
+                VerticalAlignment="Center"/>
+            <TextBlock 
+                Grid.Column="0" Grid.Row="1" 
+                Text="Địa chỉ: "
+                FontWeight="Bold" 
+                VerticalAlignment="Center"/>
+            <TextBlock 
+                Grid.Column="0" Grid.Row="2" 
+                Text="Email: "
+                FontWeight="Bold" 
+                VerticalAlignment="Center"/>
+            <TextBlock 
+                Grid.Column="0" Grid.Row="3"
+                Text="SĐT: " 
+                FontWeight="Bold" 
+                VerticalAlignment="Center"/>
+            <TextBlock 
+                Grid.Column="0" Grid.Row="4"
+                Text="Giờ hoạt động: " 
+                FontWeight="Bold" 
+                VerticalAlignment="Center"/>
 
+            <!--Field values-->
             <controls:EditableTextField 
+                Grid.Column="1" Grid.Row="0"
                 Text="{x:Bind ViewModel.EditStoreNameText, 
                               Mode=TwoWay, 
                               UpdateSourceTrigger=PropertyChanged}"
-                Grid.Column="1" Grid.Row="0"/>
-
+                x:Name="storeNameEditableTextField"
+                TextModified="editableTextField_TextModified"
+                SaveClicked="storeNameEditableTextField_SaveClicked"/>
             <controls:EditableTextField 
+                Grid.Column="1" Grid.Row="1"
                 Text="{x:Bind ViewModel.EditStoreAddressText, 
                               Mode=TwoWay, 
                               UpdateSourceTrigger=PropertyChanged}"
-                Grid.Column="1" Grid.Row="1"/>
-
+                x:Name="storeAddressEditableTextField"
+                TextModified="editableTextField_TextModified"
+                SaveClicked="storeAddressEditableTextField_SaveClicked"/>
             <controls:EditableTextField 
+                Grid.Column="1" Grid.Row="2"
                 Text="{x:Bind ViewModel.EditStoreEmailText, 
                               Mode=TwoWay, 
                               UpdateSourceTrigger=PropertyChanged}"
-                Grid.Column="1" Grid.Row="2"/>
-
+                x:Name="storeEmailEditableTextField"
+                TextModified="editableTextField_TextModified"
+                SaveClicked="storeEmailEditableTextField_SaveClicked"/>
             <controls:EditableTextField 
+                Grid.Column="1" Grid.Row="3"
                 Text="{x:Bind ViewModel.EditStoreTelText, 
                               Mode=TwoWay, 
                               UpdateSourceTrigger=PropertyChanged}"
-                Grid.Column="1" Grid.Row="3"/>
+                x:Name="storeTelEditableTextField"
+                TextModified="editableTextField_TextModified"
+                SaveClicked="storeTelEditableTextField_SaveClicked"/>
+            <TextBlock
+                Grid.Column="1" Grid.Row="4"
+                Text="{x:Bind ViewModel.OperatingHoursText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Grid
+                Grid.Column="0" Grid.Row="5"
+                Grid.ColumnSpan="2"
+                ColumnSpacing="50"
+                HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-            <controls:EditableTextField 
-                Text="{x:Bind ViewModel.EditStoreTaxCodeText, 
-                              Mode=TwoWay, 
-                              UpdateSourceTrigger=PropertyChanged}"
-                Grid.Column="1" Grid.Row="4"/>
+                <TimePicker
+                    Grid.Row="0" Grid.Column="0"
+                    ClockIdentifier="24HourClock"
+                    MinuteIncrement="15"
+                    Name="editOpeningHourTimePicker"
+                    Header="Giờ mở cửa"
+                    Time="{x:Bind ViewModel.EditOpeningTime}"
+                    SelectedTimeChanged="editOpeningHourTimePicker_SelectedTimeChanged"/>
+
+                <TimePicker
+                    Grid.Row="0" Grid.Column="1"
+                    ClockIdentifier="24HourClock"
+                    MinuteIncrement="15"
+                    Name="editClosingHourTimePicker"
+                    Header="Giờ đóng cửa"
+                    Time="{x:Bind ViewModel.EditClosingTime}"
+                    SelectedTimeChanged="editClosingHourTimePicker_SelectedTimeChanged"/>
+            </Grid>
+
+            <!--Validation error messages-->
+            <TeachingTip
+                x:Name="storeNameErrorMessageTeachingTip"
+                Target="{x:Bind storeNameEditableTextField}"
+                Title="Lỗi"
+                Subtitle="Lỗi chưa xác định"
+                IsOpen="False">
+            </TeachingTip>
+            <TeachingTip
+                x:Name="storeAddressErrorMessageTeachingTip"
+                Target="{x:Bind storeAddressEditableTextField}"
+                Title="Lỗi"
+                Subtitle="Lỗi chưa xác định"
+                IsOpen="False">
+            </TeachingTip>
+            <TeachingTip
+                x:Name="storeEmailErrorMessageTeachingTip"
+                Target="{x:Bind storeEmailEditableTextField}"
+                Title="Lỗi"
+                Subtitle="Lỗi chưa xác định"
+                IsOpen="False">
+            </TeachingTip>
+            <TeachingTip
+                x:Name="storeTelErrorMessageTeachingTip"
+                Target="{x:Bind storeTelEditableTextField}"
+                Title="Lỗi"
+                Subtitle="Lỗi chưa xác định"
+                IsOpen="False">
+            </TeachingTip>
+            <!--Operating hours validation error messages-->
+            <TextBlock 
+                Grid.Row="6" Grid.Column="0"
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Margin="0,0,0,25"
+                Foreground="Red"
+                Opacity="{x:Bind ViewModel.EditOperatingHoursErrorMessageOpacity, Mode=TwoWay}"
+                Text="{x:Bind ViewModel.EditOperatingHoursErrorMessageText, Mode=TwoWay}"/>
         </Grid>
 
-    </StackPanel>
+        <!--Save/cancel changes buttons-->
+        <Grid
+            Margin="150,450,0,0"
+            ColumnSpacing="100">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Save changes button-->
+            <Button
+                Grid.Column="0"
+                Width="150" Height="50"
+                IsEnabled="False"
+                Style="{StaticResource AccentButtonStyle}"
+                Name="saveChangesOnStoreConfigurationButton"
+                Click="saveChangesOnStoreConfigurationButton_Click">
+                <TextBlock
+                    Text="Lưu thay đổi"
+                    Style="{StaticResource BodyTextBlockStyle}"/>
+            </Button>            
+
+            <!--Cancel changes button-->
+            <Button
+                Grid.Column="1"
+                Width="150" Height="50"
+                IsEnabled="True"
+                Name="cancelChangesOnStoreConfigurationButton"
+                Click="cancelChangesOnStoreConfigurationButton_Click">
+                <TextBlock
+                    Text="Hủy"
+                    Style="{StaticResource BodyTextBlockStyle}"/>
+            </Button>
+        </Grid>
+
+        <!--Edit result dialog-->
+        <ContentDialog
+            Name="editStoreConfigurationResultContentDialog"
+            Title="Kết quả thay đổi"
+            PrimaryButtonText="Xác nhận"
+            PrimaryButtonStyle="{StaticResource AccentButtonStyle}">
+        </ContentDialog>
+    </Canvas>
 </Page>

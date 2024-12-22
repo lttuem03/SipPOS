@@ -39,7 +39,7 @@ public sealed partial class EditableTextField : UserControl
     {
         this.InitializeComponent();
         this.DataContext = this;
-        _originalText = "";
+        _originalText = Text;
     }
 
     /// <summary>
@@ -59,6 +59,11 @@ public sealed partial class EditableTextField : UserControl
         get => (string)GetValue(PlaceholderTextProperty);
         set => SetValue(PlaceholderTextProperty, value);
     }
+
+    /// <summary>
+    /// Occurs when the save button is clicked.
+    /// </summary>
+    public event EventHandler? SaveClicked;
 
     /// <summary>
     /// Occurs when the text is modified.
@@ -92,7 +97,11 @@ public sealed partial class EditableTextField : UserControl
         EditButton.Visibility = Visibility.Visible;
         SaveButton.Visibility = Visibility.Collapsed;
         CancelButton.Visibility = Visibility.Collapsed;
-        OnTextModified();
+
+        OnSaveClicked();
+
+        if (Text != _originalText)
+            OnTextModified();
     }
 
     /// <summary>
@@ -108,6 +117,14 @@ public sealed partial class EditableTextField : UserControl
         EditButton.Visibility = Visibility.Visible;
         SaveButton.Visibility = Visibility.Collapsed;
         CancelButton.Visibility = Visibility.Collapsed;
+    }
+
+    /// <summary>
+    /// Raises the <see cref="SaveClicked"/> event.
+    /// </summary>
+    private void OnSaveClicked()
+    {
+        SaveClicked?.Invoke(this, EventArgs.Empty);
     }
 
     /// <summary>

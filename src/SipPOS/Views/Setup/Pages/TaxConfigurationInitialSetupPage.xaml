@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="SipPOS.Views.Setup.Pages.TaxConfigurationInitialSetupPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SipPOS.Views.Setup.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:SipPOS.Resources.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Canvas
+        Background="AliceBlue">
+        <!--Page subtitle-->
+        <TextBlock
+            Canvas.Left="50" Canvas.Top="50"
+            Text="Thông tin thuế"
+            FontSize="28"/>
+
+        <!--Initial tax configuration-->
+        <Grid
+            Canvas.Left="50" Canvas.Top="100"
+            BorderBrush="LightGray"
+            BorderThickness="2"
+            CornerRadius="5"
+            RowSpacing="20"
+            ColumnSpacing="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="450"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Field names-->
+            <TextBlock 
+                Grid.Column="0" Grid.Row="0"
+                Margin="15,15,0,0"
+                Text="Mã số thuế: " 
+                FontWeight="Bold" 
+                VerticalAlignment="Center"/>
+            <TextBlock 
+                Grid.Column="0" Grid.Row="1"
+                Margin="15,0,0,0"
+                Text="Thuế suất VAT: " 
+                FontWeight="Bold" 
+                VerticalAlignment="Center"/>
+            <TextBlock 
+                Grid.Column="0" Grid.Row="2"
+                Margin="15,0,0,15"
+                Text="Phương thức tính VAT: " 
+                FontWeight="Bold" 
+                VerticalAlignment="Center"/>
+
+            <!--Field values-->
+            <TextBox
+                Grid.Row="0" Grid.Column="1"
+                Margin="0,15,15,0"
+                PlaceholderText="Nhập mã số thuế"
+                Text="{x:Bind ViewModel.TaxCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                x:Name="storeTaxCodeTextBox"/>
+            <ComboBox
+                Grid.Row="1" Grid.Column="1"
+                x:Name="generalVatRateComboBox"    
+                SelectedIndex="0"
+                SelectionChanged="generalVatRateComboBox_SelectionChanged">
+                <x:String>0%</x:String>
+                <x:String>1%</x:String>
+                <x:String>3%</x:String>
+                <x:String>5%</x:String>
+                <x:String>8%</x:String>
+                <x:String>10%</x:String>
+            </ComboBox>
+            <ComboBox
+                Grid.Row="2" Grid.Column="1"
+                Margin="0,0,0,15"
+                VerticalAlignment="Center"
+                x:Name="selectVatMethodComboBox"
+                SelectedIndex="0"
+                SelectionChanged="selectVatMethodComboBox_SelectionChanged">
+                <x:String>Giá bán đã bao gồm VAT</x:String>
+                <x:String>Theo tổng giá trị đơn hàng</x:String>
+            </ComboBox>
+
+            <!--Tax configuration error message-->
+            <TextBlock 
+                Grid.Row="3" Grid.Column="0"
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Height="70"
+                Margin="0,0,0,15"
+                Foreground="Red"
+                Opacity="{x:Bind ViewModel.TaxConfigurationErrorMessageOpacity, Mode=TwoWay}"
+                Text="{x:Bind ViewModel.TaxConfigurationErrorMessageText, Mode=TwoWay}"/>
+        </Grid>
+
+        <!--About VAT methods-->
+        <Grid
+            Canvas.Left="900" Canvas.Top="100">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="400"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                TextWrapping="WrapWholeWords">
+                Về các phương thức tính thuế VAT: <LineBreak/> <LineBreak/>
+
+                Có 2 phương thức tính VAT như sau: <LineBreak/>
+                - Phương thức 1: Giá bán đã bao gồm VAT (Mặc định) <LineBreak/>
+                - Phương thức 2: Theo tổng giá trị đơn hàng <LineBreak/> <LineBreak/>
+                
+                Đối với phương thức 1, giá bán của từng item sản phẩm đã bao gồm thuế VAT trong đó. <LineBreak/> <LineBreak/>
+                Đối với phương thức 2, mức thuế VAT sẽ được tính dựa trên tổng giá trị giá bán của một đơn hàng. <LineBreak/>
+            </TextBlock>
+        </Grid>
+    </Canvas>
+</Page>

@@ -710,7 +710,7 @@ public class PostgreStaffDao : IStaffDao
     /// </summary>
     /// <param name="compositeUsername">The composite username of the staff to retrieve.</param>
     /// <returns>A StaffDto object representing the staff record, or null if no record is found or the composite username is invalid.</returns>
-    public async Task<StaffDto?> GetByCompositeUsername(string compositeUsername)
+    public async Task<StaffDto?> GetByCompositeUsernameAsync(string compositeUsername)
     {
         // Splits composite username into (position prefix, store id, staff id)
         Regex re = new Regex(Staff.CompositeUsernamePattern);

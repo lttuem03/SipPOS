@@ -10,12 +10,12 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Canvas
-    Background="AliceBlue">
+        Background="AliceBlue">
         <!--Page title-->
         <TextBlock
-        Canvas.Left="50" Canvas.Top="50"
-        Text="{x:Bind ViewModel.PageNumberStatus, Mode=TwoWay}"
-        Style="{StaticResource TitleLargeTextBlockStyle}"/>
+            Canvas.Left="50" Canvas.Top="50"
+            Text="{x:Bind ViewModel.PageNumberStatus, Mode=TwoWay}"
+            Style="{StaticResource TitleLargeTextBlockStyle}"/>
 
         <!--Step-by-step pages navigation frame-->
         <Frame 

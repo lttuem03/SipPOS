@@ -10,27 +10,42 @@ class Shift
     /// <summary>
     /// Gets the unique identifier for the shift.
     /// </summary>
-    public long Id { get; }
+    public long Id
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the unique identifier for the store.
     /// </summary>
-    public long StoreId { get; }
+    public long StoreId
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the unique identifier for the staff.
     /// </summary>
-    public long StaffId { get; }
+    public long StaffId
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the start time of the shift.
     /// </summary>
-    public DateTime Start { get; }
+    public DateTime Start
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the end time of the shift.
     /// </summary>
-    public DateTime End { get; }
+    public DateTime End
+    {
+        get;
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Shift"/> class.

@@ -191,8 +191,17 @@ public sealed partial class StaffManagementView : Page
                 break;
         }
 
+        switch (staffDto.Gender)
+        {
+            case "Nam":
+                editStaffGenderComboBox.SelectedIndex = 0;
+                break;
+            case "Nữ":
+                editStaffGenderComboBox.SelectedIndex = 1;
+                break;
+        }
+
         editStaffNameEditableTextField.Text = staffDto.Name;
-        editStaffGenderEditableTextField.Text = staffDto.Gender;
         editStaffDateOfBirthCalenderDatePicker.Date = (DateTimeOffset)staffDto.DateOfBirth.ToDateTime(TimeOnly.MinValue);
         editStaffEmailEditableTextField.Text = staffDto.Email;
         editStaffTelEditableTextField.Text = staffDto.Tel;
@@ -209,9 +218,29 @@ public sealed partial class StaffManagementView : Page
             return;
         }
 
-        // Update staff details
+        // Update new staff details
+
+        switch (editStaffPositionComboBox.SelectedIndex)
+        {
+            case 0:
+                staffDto.PositionPrefix = "ST";
+                break;
+            case 1:
+                staffDto.PositionPrefix = "AM";
+                break;
+        }
+        
+        switch (editStaffGenderComboBox.SelectedIndex)
+        {
+            case 0:
+                staffDto.Gender = "Nam";
+                break;
+            case 1:
+                staffDto.Gender = "Nữ";
+                break;
+        }
+
         staffDto.Name = editStaffNameEditableTextField.Text;
-        staffDto.Gender = editStaffGenderEditableTextField.Text;
         staffDto.DateOfBirth = DateOnly.FromDateTime(editStaffDateOfBirthCalenderDatePicker.Date.Value.DateTime);
         staffDto.Email = editStaffEmailEditableTextField.Text;
         staffDto.Tel = editStaffTelEditableTextField.Text;
@@ -288,23 +317,103 @@ public sealed partial class StaffManagementView : Page
     /// <param name="e">The event data.</param>
     private void editStaffPositionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        // This event handler only functions to enable the primary button of the content dialog
+        // if the new selection is different from the current in the ViewModel.EditStaffTarget.PositionPrefix
+
+        // It does not update the ViewModel.EditStaffTarget.PositionPrefix, this is done directly in the 
+        // editStaffButton_Click() method
+
         if (ViewModel is not StaffManagementViewModel)
             return;
 
         if (ViewModel.EditTargetStaff == null)
             return;
 
+        var newPositionSelection = "";
+
         switch (editStaffPositionComboBox.SelectedIndex)
         {
             case 0:
-                ViewModel.EditTargetStaff.PositionPrefix = "ST";
+                newPositionSelection = "ST";
                 break;
             case 1:
-                ViewModel.EditTargetStaff.PositionPrefix = "AM";
+                newPositionSelection = "AM";
                 break;
         }
 
-        editStaffDetailsContentDialog.IsPrimaryButtonEnabled = true;
+        if (newPositionSelection != ViewModel.EditTargetStaff.PositionPrefix)
+            editStaffDetailsContentDialog.IsPrimaryButtonEnabled = true;
+    }
+
+    /// <summary>
+    /// Handles the SelectionChanged event of the editStaffGenderComboBox control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
+    private void editStaffGenderComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        // This event handler only functions to enable the primary button of the content dialog
+        // if the new selection is different from the current in the ViewModel.EditStaffTarget.Gender
+
+        // It does not update the ViewModel.EditStaffTarget.Gender, this is done directly in the 
+        // editStaffButton_Click() method
+
+        if (ViewModel is not StaffManagementViewModel)
+            return;
+
+        if (ViewModel.EditTargetStaff == null)
+            return;
+
+        var newGenderSelection = "";
+
+        switch (editStaffGenderComboBox.SelectedIndex)
+        {
+            case 0:
+                newGenderSelection = "Nam";
+                break;
+            case 1:
+                newGenderSelection = "Nữ";
+                break;
+        }
+
+        if (newGenderSelection != ViewModel.EditTargetStaff.Gender)
+            editStaffDetailsContentDialog.IsPrimaryButtonEnabled = true;
+    }
+
+    private void editStaffNameEditableTextField_SaveClicked(object sender, EventArgs e)
+    {
+        ViewModel.HandleEditStaffNameEditableTextFieldSaveClicked
+        (
+            editStaffNameEditableTextField,
+            editStaffNameErrorMessageTeachingTip
+        );
+    }
+
+    private void editStaffEmailEditableTextField_SaveClicked(object sender, EventArgs e)
+    {
+        ViewModel.HandleEditStaffEmailEditableTextFieldSaveClicked
+        (
+            editStaffEmailEditableTextField,
+            editStaffEmailErrorMessageTeachingTip
+        );
+    }
+
+    private void editStaffTelEditableTextField_SaveClicked(object sender, EventArgs e)
+    {
+        ViewModel.HandleEditStaffTelEditableTextFieldSaveClicked
+        (
+            editStaffTelEditableTextField,
+            editStaffTelErrorMessageTeachingTip
+        );
+    }
+
+    private void editStaffAddressEditableTextField_SaveClicked(object sender, EventArgs e)
+    {
+        ViewModel.HandleEditStaffAddressEditableTextFieldSaveClicked
+        (
+            editStaffAddressEditableTextField,
+            editStaffAddressErrorMessageTeachingTip
+        );
     }
 
     /// <summary>
@@ -315,6 +424,20 @@ public sealed partial class StaffManagementView : Page
     private void editStaffDetails_TextModified(object sender, EventArgs e)
     {
         editStaffDetailsContentDialog.IsPrimaryButtonEnabled = true;
+    }
+
+    /// <summary>
+    /// Handles the Closed event of the editStaffDetailsContentDialog control.
+    /// Resets the state of all EditableTextField controls to ensure they are not in editing mode.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="args">The event data.</param>
+    private void editStaffDetailsContentDialog_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
+    {
+        editStaffNameEditableTextField.ResetState();
+        editStaffEmailEditableTextField.ResetState();
+        editStaffTelEditableTextField.ResetState();
+        editStaffAddressEditableTextField.ResetState();
     }
 
     /// <summary>
@@ -346,18 +469,4 @@ public sealed partial class StaffManagementView : Page
         }
     }
 
-    /// <summary>
-    /// Handles the Closed event of the editStaffDetailsContentDialog control.
-    /// Resets the state of all EditableTextField controls to ensure they are not in editing mode.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="args">The event data.</param>
-    private void editStaffDetailsContentDialog_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
-    {
-        editStaffNameEditableTextField.ResetState();
-        editStaffGenderEditableTextField.ResetState();
-        editStaffEmailEditableTextField.ResetState();
-        editStaffTelEditableTextField.ResetState();
-        editStaffAddressEditableTextField.ResetState();
-    }
 }

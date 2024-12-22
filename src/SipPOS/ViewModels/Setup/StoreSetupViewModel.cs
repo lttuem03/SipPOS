@@ -1,66 +1,86 @@
 ﻿using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 using Microsoft.UI.Xaml.Controls;
 
-using SipPOS.Services.General.Implementations;
-using SipPOS.Services.General.Interfaces;
-using SipPOS.Views.Setup.Pages;
 using SipPOS.Views.General;
-
-using SipPOS.Models.Entity;
+using SipPOS.Views.Setup.Pages;
+using SipPOS.DataTransfer.General;
 using SipPOS.DataTransfer.Entity;
+using SipPOS.Services.General.Interfaces;
+using SipPOS.Services.General.Implementations;
 using SipPOS.Services.Account.Interfaces;
 using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Services.Authentication.Implementations;
+using SipPOS.Services.Configuration.Interfaces;
+using Microsoft.Extensions.Logging.Console;
 
 namespace SipPOS.ViewModels.Setup;
 
 /// <summary>
 /// ViewModel for managing the store setup process.
 /// </summary>
-public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
+public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
 {
     // IMPORTANT: This ViewModel is used by ALL the pages in the
-    // setup view. So it will be registered as a Singleton
+    // setup view. So it will be registered as a Singleton.
+    // I'm sorry for whoever has to review this.
 
     private readonly Dictionary<int, Type> _pages;
     private int _currentPageIndex;
     private readonly int _totalPageCount;
 
     public Frame? StoreSetupNavigationFrame { get; set; }
-
     public event PropertyChangedEventHandler? PropertyChanged;
-
-    // Data-bound properties:
 
     // General
     private string _pageNumberStatus;
     private string _nextButtonText;
 
     // Page - Store Manager Account Setup
-    private readonly StaffDto _storeManagerRawInfo; // all the fields use the same backup property
+    private readonly StaffDto _storeManagerRawInfo = new(); // all the fields use the same backup property
     private string _storeManagerConfirmPassword = string.Empty;
+    private float _storeManagerNameErrorMessageOpacity = 0.0F;
+    private string _storeManagerNameErrorMessageText = string.Empty;
+    private float _storeManagerGenderErrorMessageOpacity = 0.0F;
+    private string _storeManagerGenderErrorMessageText = string.Empty;
+    private float _storeManagerEmailErrorMessageOpacity = 0.0F;
+    private string _storeManagerEmailErrorMessageText = string.Empty;
+    private float _storeManagerTelErrorMessageOpacity = 0.0F;
+    private string _storeManagerTelErrorMessageText = string.Empty;
+    private float _storeManagerAddressErrorMessageOpacity = 0.0F;
+    private string _storeManagerAddressErrorMessageText = string.Empty;
+    private float _storeManagerPasswordErrorMessageOpacity = 0.0F;
+    private string _storeManagerPasswordErrorMessageText = string.Empty;
+    private float _storeManagerConfirmPasswordErrorMessageOpacity = 0.0F;
+    private string _storeManagerConfirmPasswordErrorMessageText = string.Empty;
 
-    private float _storeManagerNameErrorMessageOpacity;
-    private string _storeManagerNameErrorMessageText;
+    // Pages - Initial configurations
+    private readonly ConfigurationDto _initialConfigurationDto = new();
 
-    private float _storeManagerGenderErrorMessageOpacity;
-    private string _storeManagerGenderErrorMessageText;
+    private string _operatingHoursString = string.Empty;
+    private float _operatingHoursErrorMessageOpacity = 0.0F;
+    private string _operatingHoursErrorMessageText = string.Empty;
 
-    private float _storeManagerEmailErrorMessageOpacity;
-    private string _storeManagerEmailErrorMessageText;
+    private float _taxConfigurationErrorMessageOpacity = 0.0F;
+    private string _taxConfigurationErrorMessageText = string.Empty;
 
-    private float _storeManagerTelErrorMessageOpacity;
-    private string _storeManagerTelErrorMessageText;
+    private bool _staffBaseSalaryCheckBoxChecked = false;
+    private bool _staffHourlySalaryCheckBoxChecked = false;
+    private bool _assistantManagerBaseSalaryCheckBoxChecked = false;
+    private bool _assistantManagerHourlySalaryCheckBoxChecked = false;
+    private bool _storeManagerBaseSalaryCheckBoxChecked = false;
+    private bool _storeManagerHourlySalaryCheckBoxChecked = false;
 
-    private float _storeManagerAddressErrorMessageOpacity;
-    private string _storeManagerAddressErrorMessageText;
+    private string _staffBaseSalaryString = string.Empty;
+    private string _staffHourlySalaryString = string.Empty;
+    private string _assistantManagerBaseSalaryString = string.Empty;
+    private string _assistantManagerHourlySalaryString = string.Empty;
+    private string _storeManagerBaseSalaryString = string.Empty;
+    private string _storeManagerHourlySalaryString = string.Empty;
 
-    private float _storeManagerPasswordErrorMessageOpacity;
-    private string _storeManagerPasswordErrorMessageText;
-
-    private float _storeManagerConfirmPasswordErrorMessageOpacity;
-    private string _storeManagerConfirmPasswordErrorMessageText;
+    private float _salaryErrorMessageOpacity = 0.0F;
+    private string _salaryErrorMessageText = string.Empty;
 
     // Page - Summary
     private string _storeManagerDateOfBirthString = string.Empty;
@@ -73,10 +93,11 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
     {
         _pages = new Dictionary<int, Type>
         {
-            { 0, typeof(StoreManageStaffAccountSetupPage) },
-            { 1, typeof(AddInitialStaffsPage) },
-            { 2, typeof(PaymentConfigurationInitalSetupPage) },
-            { 3, typeof(StoreSetupSummaryPage) }
+            { 0, typeof(StoreManagerStaffAccountSetupPage) },
+            { 1, typeof(StoreConfigurationInitialSetupPage) },
+            { 2, typeof(TaxConfigurationInitialSetupPage) },
+            { 3, typeof(SalaryConfigurationInitialSetupPage) },
+            { 4, typeof(StoreSetupSummaryPage) }
         };
 
         _currentPageIndex = 0;
@@ -85,29 +106,8 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         _pageNumberStatus = $"THIẾT LẬP CỬA HÀNG ({_currentPageIndex + 1}/{_pages.Count})";
 
         StoreManagerCompositeUsername = "";
-        _storeManagerRawInfo = new();
-
-        _storeManagerNameErrorMessageOpacity = 0.0F;
-        _storeManagerNameErrorMessageText = string.Empty;
-
-        _storeManagerGenderErrorMessageOpacity = 0.0F;
-        _storeManagerGenderErrorMessageText = string.Empty;
-
-        _storeManagerEmailErrorMessageOpacity = 0.0F;
-        _storeManagerEmailErrorMessageText = string.Empty;
-
-        _storeManagerTelErrorMessageOpacity = 0.0F;
-        _storeManagerTelErrorMessageText = string.Empty;
-
-        _storeManagerAddressErrorMessageOpacity = 0.0F;
-        _storeManagerAddressErrorMessageText = string.Empty;
-
-        _storeManagerPasswordErrorMessageOpacity = 0.0F;
-        _storeManagerPasswordErrorMessageText = string.Empty;
-
-        _storeManagerConfirmPasswordErrorMessageOpacity = 0.0F;
-        _storeManagerConfirmPasswordErrorMessageText = string.Empty;
-
+        VatRate = 0.0m;
+        VatMethod = "VAT_INCLUDED";
         StoreSetupNavigationFrame = null; // please assign this externally before calling any navigation
 
         if (App.GetService<IStoreAuthenticationService>() is StoreAuthenticationService storeAuthenticationService)
@@ -159,9 +159,30 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
             return;
 
         // Do the validations if the current page is the StoreManagerAccountSetupPage
-        if (_currentPageIndex == 0)
+        if (StoreSetupNavigationFrame.CurrentSourcePageType == typeof(StoreManagerStaffAccountSetupPage))
         {
             if (validateStoreManagerInformation() == false)
+                return;
+        }
+
+        // Do the validations if the current page is the StoreConfigurationInitialSetupPage
+        if (StoreSetupNavigationFrame.CurrentSourcePageType == typeof(StoreConfigurationInitialSetupPage))
+        {
+            if (validateStoreConfigurationInformation() == false)
+                return;
+        }
+
+        // Do the validations if the current page is the TaxConfigurationInitialSetupPage
+        if (StoreSetupNavigationFrame.CurrentSourcePageType == typeof(TaxConfigurationInitialSetupPage))
+        {
+            if (validateTaxConfigurationInformation() == false)
+                return;
+        }
+
+        // Do the validation if the current page is the SalaryConfigurationInitialSetupPage
+        if (StoreSetupNavigationFrame.CurrentSourcePageType == typeof(SalaryConfigurationInitialSetupPage))
+        {
+            if (validateSalaryConfigurationInformation() == false)
                 return;
         }
 
@@ -201,10 +222,23 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
 
         if (storeManagerStaffDto == null)
         {
-            // TODO: Handle this
-            // Hopefully this doesn't happen
+            // Just pray that this will not happen
             return;
         }
+
+        // Create the configuration model for the store
+        var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
+        var configurationService = App.GetService<IConfigurationService>();
+        var createResult = await configurationService.CreateAsync(storeAuthenticationService.GetCurrentStoreId(), _initialConfigurationDto);
+
+        if (!createResult)
+        {
+            // Just pray that this will not happen
+            return;
+        }
+    
+        // Load the configuration
+        await configurationService.LoadAsync(storeAuthenticationService.GetCurrentStoreId());
 
         // Logs the store manager in
         if (App.GetService<IStaffAuthenticationService>() is not StaffAuthenticationService staffAuthenticationService)
@@ -257,6 +291,67 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
     public void HandleManagerEmploymentStartDateCalenderDatePickerDateChanged()
     {
         StoreManagerEmploymentStartDateString = StoreManagerEmploymentStartDate.ToString("dd/MM/yyyy");
+    }
+
+    public void HandleSelectOpeningHourTimePickerSelectedTimeChanged(TimePicker selectOpeningHourTimePicker)
+    {
+        OpeningTime = TimeOnly.FromTimeSpan(selectOpeningHourTimePicker.Time);
+
+        OperatingHoursString = $"{OpeningTime.ToString("HH:mm")} đến {ClosingTime.ToString("HH:mm")}";
+    }
+
+    public void HandleSelectClosingHourTimePickerSelectedTimeChanged(TimePicker selectClosingHourTimePicker)
+    {
+        ClosingTime = TimeOnly.FromTimeSpan(selectClosingHourTimePicker.Time);
+
+        OperatingHoursString = $"{OpeningTime.ToString("HH:mm")} đến {ClosingTime.ToString("HH:mm")}";
+    }
+
+    public void HandleGeneralVatRateComboBoxSelectionChanged(int selectedIndex)
+    {
+        switch (selectedIndex)
+        {
+            case 0:
+                VatRate = 0.00m;
+                break;
+            case 1:
+                VatRate = 0.01m;
+                break;
+            case 2:
+                VatRate = 0.03m;
+                break;
+            case 3:
+                VatRate = 0.05m;
+                break;
+            case 4:
+                VatRate = 0.08m;
+                break;
+            case 5:
+                VatRate = 0.10m;
+                break;
+        }
+    }
+
+    public void HandleSelectVatMethodComboBoxSelectionChanged(int selectedIndex)
+    {
+        switch (selectedIndex)
+        {
+            case 0:
+                VatMethod = "VAT_INCLUDED";
+                break;
+            case 1:
+                VatMethod = "ORDER_BASED";
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Raises the PropertyChanged event.
+    /// </summary>
+    /// <param name="propertyName">The name of the property that changed.</param>
+    public void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     /// <summary>
@@ -322,401 +417,153 @@ public class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupViewModel
         return allFieldsValid;
     }
 
-    /// <summary>
-    /// Raises the PropertyChanged event.
-    /// </summary>
-    /// <param name="propertyName">The name of the property that changed.</param>
-    public void OnPropertyChanged(string propertyName)
+    private bool validateStoreConfigurationInformation()
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        var allFieldsValid = true;
+
+        if (OpeningTime == TimeOnly.MinValue && ClosingTime == TimeOnly.MinValue)
+        {
+            OperatingHoursErrorMessageText = "Vui lòng chọn giờ mở cửa và giờ đóng cửa";
+            OperatingHoursErrorMessageOpacity = 1.0F;
+
+            allFieldsValid = false;
+
+            return allFieldsValid;
+        }
+
+        if (OpeningTime != TimeOnly.MinValue && ClosingTime == TimeOnly.MinValue)
+        {
+            OperatingHoursErrorMessageText = "Vui lòng chọn giờ đóng cửa";
+            OperatingHoursErrorMessageOpacity = 1.0F;
+
+            allFieldsValid = false;
+
+            return allFieldsValid;
+        }
+
+        if (OpeningTime == TimeOnly.MinValue && ClosingTime != TimeOnly.MinValue)
+        {
+            OperatingHoursErrorMessageText = "Vui lòng chọn giờ mở cửa";
+            OperatingHoursErrorMessageOpacity = 1.0F;
+
+            allFieldsValid = false;
+
+            return allFieldsValid;
+        }
+
+        if (OpeningTime.CompareTo(ClosingTime) >= 0)
+        {
+            OperatingHoursErrorMessageText = "Giờ mở cửa phải trước giờ đóng cửa";
+            OperatingHoursErrorMessageOpacity = 1.0F;
+
+            allFieldsValid = false;
+
+            return allFieldsValid;
+        }
+
+        if (allFieldsValid)
+            OperatingHoursErrorMessageOpacity = 0.0F;
+
+        return allFieldsValid;
     }
 
-    /// <summary>
-    /// Gets or sets the page number status.
-    /// </summary>
-    public string PageNumberStatus
+    private bool validateTaxConfigurationInformation()
     {
-        get => _pageNumberStatus;
-        set
+        var allFieldsValid = true;
+
+        if (string.IsNullOrWhiteSpace(TaxCode))
         {
-            _pageNumberStatus = value;
-            OnPropertyChanged(nameof(PageNumberStatus));
+            TaxConfigurationErrorMessageText = "Vui lòng nhập mã số thuế";
+            TaxConfigurationErrorMessageOpacity = 1.0F;
+
+            allFieldsValid = false;
+
+            return allFieldsValid;
         }
+
+        var taxCodePattern = @"^\d{8}[1-9]\d(-\d\d[1-9])?$";
+
+        if (!Regex.IsMatch(TaxCode, taxCodePattern))
+        {
+            TaxConfigurationErrorMessageText = @"
+                                  Mã số thuế sai định dạng.
+            Đối với định dạng MST 13 chữ số phải có dấu gạch ngang '-' ở sau chữ số thứ 10.
+            ";
+            TaxConfigurationErrorMessageOpacity = 1.0F;
+
+            allFieldsValid = false;
+
+            return allFieldsValid;
+        }
+
+        if (allFieldsValid)
+            TaxConfigurationErrorMessageOpacity = 0.0F;
+
+        return allFieldsValid;
     }
 
-    /// <summary>
-    /// Gets or sets the text for the next button.
-    /// </summary>
-    public string NextButtonText
+    private bool validateSalaryConfigurationInformation()
     {
-        get => _nextButtonText;
-        set
-        {
-            _nextButtonText = value;
-            OnPropertyChanged(nameof(NextButtonText));
-        }
-    }
+        var allFieldsValid = true;
 
-    /// <summary>
-    /// Gets the total number of pages.
-    /// </summary>
-    public int TotalPageCount
-    {
-        get => _totalPageCount;
-        private set
+        if (!StaffBaseSalaryCheckBoxChecked && !StaffHourlySalaryCheckBoxChecked)
         {
-            // Nothing here because you can't set it
-        }
-    }
+            SalaryErrorMessageText = "Vui lòng chọn ít nhất một loại lương mỗi bậc nhân viên";
+            SalaryErrorMessageOpacity = 1.0F;
 
-    /// <summary>
-    /// Gets the current page index.
-    /// </summary>
-    public int CurrentPageIndex
-    {
-        get => _currentPageIndex;
-        private set
-        {
-            // Nothing here because you can't set it
+            return false;
         }
-    }
 
-    /// <summary>
-    /// Gets or sets the store manager's name.
-    /// </summary>
-    public string StoreManagerName
-    {
-        get => _storeManagerRawInfo.Name;
-        set
+        if (!AssistantManagerBaseSalaryCheckBoxChecked && !AssistantManagerHourlySalaryCheckBoxChecked)
         {
-            _storeManagerRawInfo.Name = value;
-            OnPropertyChanged(nameof(StoreManagerName));
-        }
-    }
+            SalaryErrorMessageText = "Vui lòng chọn ít nhất một loại lương mỗi bậc nhân viên";
+            SalaryErrorMessageOpacity = 1.0F;
 
-    /// <summary>
-    /// Gets or sets the store manager's gender.
-    /// </summary>
-    public string StoreManagerGender
-    {
-        get => _storeManagerRawInfo.Gender;
-        set
-        {
-            _storeManagerRawInfo.Gender = value;
-            OnPropertyChanged(nameof(StoreManagerGender));
+            return false;
         }
-    }
 
-    /// <summary>
-    /// Gets or sets the store manager's date of birth.
-    /// </summary>
-    public DateTimeOffset StoreManagerDateOfBirth
-    {
-        // the time returned by CalendarDatePicker is DateTimeOffset, so we have to do casting here
-        get => (DateTimeOffset)_storeManagerRawInfo.DateOfBirth.ToDateTime(TimeOnly.MinValue);
-        set
+        if (!StoreManagerBaseSalaryCheckBoxChecked && !StoreManagerHourlySalaryCheckBoxChecked)
         {
-            _storeManagerRawInfo.DateOfBirth = DateOnly.FromDateTime(value.DateTime);
-            OnPropertyChanged(nameof(StoreManagerDateOfBirth));
-        }
-    }
+            SalaryErrorMessageText = "Vui lòng chọn ít nhất một loại lương mỗi bậc nhân viên";
+            SalaryErrorMessageOpacity = 1.0F;
 
-    /// <summary>
-    /// Gets or sets the store manager's email.
-    /// </summary>
-    public string StoreManagerEmail
-    {
-        get => _storeManagerRawInfo.Email;
-        set
-        {
-            _storeManagerRawInfo.Email = value;
-            OnPropertyChanged(nameof(StoreManagerEmail));
+            return false;
         }
-    }
 
-    /// <summary>
-    /// Gets or sets the store manager's telephone number.
-    /// </summary>
-    public string StoreManagerTel
-    {
-        get => _storeManagerRawInfo.Tel;
-        set
-        {
-            _storeManagerRawInfo.Tel = value;
-            OnPropertyChanged(nameof(StoreManagerTel));
-        }
-    }
+        // Convert the strings to decimal values
+        // We made sure that the values entered in the salary TextBoxes are numeric only
+        // in the TextChanging event handler for all the salary TextBoxes
 
-    /// <summary>
-    /// Gets or sets the store manager's employment start date.
-    /// </summary>
-    public DateTimeOffset StoreManagerEmploymentStartDate
-    {
-        // the time returned by CalendarDatePicker is DateTimeOffset, so we have to do casting here
-        get => (DateTimeOffset)_storeManagerRawInfo.EmploymentStartDate.ToDateTime(TimeOnly.MinValue);
-        set
-        {
-            _storeManagerRawInfo.EmploymentStartDate = DateOnly.FromDateTime(value.DateTime);
-            OnPropertyChanged(nameof(StoreManagerEmploymentStartDate));
-        }
-    }
+        var staffBaseSalaryString = StaffBaseSalaryString.Replace(",", "");
+        var staffHourlySalaryString = StaffHourlySalaryString.Replace(",", "");
+        var assistantManagerBaseSalaryString = AssistantManagerBaseSalaryString.Replace(",", "");
+        var assistantManagerHourlySalaryString = AssistantManagerHourlySalaryString.Replace(",", "");
+        var storeManagerBaseSalaryString = StoreManagerBaseSalaryString.Replace(",", "");
+        var storeManagerHourlySalaryString = StoreManagerHourlySalaryString.Replace(",", "");
 
-    /// <summary>
-    /// Gets or sets the store manager's address.
-    /// </summary>
-    public string StoreManagerAddress
-    {
-        get => _storeManagerRawInfo.Address;
-        set
-        {
-            _storeManagerRawInfo.Address = value;
-            OnPropertyChanged(nameof(StoreManagerAddress));
-        }
-    }
+        StaffBaseSalary = Decimal.TryParse(staffBaseSalaryString, out var staffBaseSalary) ? staffBaseSalary : 0m;
+        StaffHourlySalary = Decimal.TryParse(staffHourlySalaryString, out var staffHourlySalary) ? staffHourlySalary : 0m;
+        AssistantManagerBaseSalary = Decimal.TryParse(assistantManagerBaseSalaryString, out var assistantManagerBaseSalary) ? assistantManagerBaseSalary : 0m;
+        AssistantManagerHourlySalary = Decimal.TryParse(assistantManagerHourlySalaryString, out var assistantManagerHourlySalary) ? assistantManagerHourlySalary : 0m;
+        StoreManagerBaseSalary = Decimal.TryParse(storeManagerBaseSalaryString, out var storeManagerBaseSalary) ? storeManagerBaseSalary : 0m;
+        StoreManagerHourlySalary = Decimal.TryParse(storeManagerHourlySalaryString, out var storeManagerHourlySalary) ? storeManagerHourlySalary : 0m;
 
-    /// <summary>
-    /// Gets the store manager's composite username.
-    /// </summary>
-    public string StoreManagerCompositeUsername
-    {
-        get => _storeManagerRawInfo.CompositeUsername;
-        private set
+        if (StaffBaseSalary % 500 != 0 ||
+            StaffHourlySalary % 500 != 0 ||
+            AssistantManagerBaseSalary % 500 != 0 ||
+            AssistantManagerHourlySalary % 500 != 0 ||
+            StoreManagerBaseSalary % 500 != 0 ||
+            StoreManagerHourlySalary % 500 != 0)
         {
-            // Nothing here because you can't set it here
-        }
-    }
+            SalaryErrorMessageText = "Giá trị lương phải chia hết cho 500 VNĐ.";
+            SalaryErrorMessageOpacity = 1.0F;
 
-    /// <summary>
-    /// Gets or sets the store manager's password.
-    /// </summary>
-    public string StoreManagerPassword
-    {
-        get => _storeManagerRawInfo.PasswordHash; // in this page, password is un-hashed
-        set
-        {
-            _storeManagerRawInfo.PasswordHash = value;
-            OnPropertyChanged(nameof(StoreManagerPassword));
+            return false;
         }
-    }
 
-    /// <summary>
-    /// Gets or sets the store manager's confirm password.
-    /// </summary>
-    public string StoreManagerConfirmPassword
-    {
-        get => _storeManagerConfirmPassword;
-        set
-        {
-            _storeManagerConfirmPassword = value;
-            OnPropertyChanged(nameof(StoreManagerConfirmPassword));
-        }
-    }
+        if (allFieldsValid)
+            SalaryErrorMessageOpacity = 0.0F;
 
-    /// <summary>
-    /// Gets or sets the store manager's date of birth as a string.
-    /// </summary>
-    public string StoreManagerDateOfBirthString
-    {
-        get => _storeManagerDateOfBirthString;
-        set
-        {
-            _storeManagerDateOfBirthString = value;
-            OnPropertyChanged(nameof(StoreManagerDateOfBirthString));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the store manager's employment start date as a string.
-    /// </summary>
-    public string StoreManagerEmploymentStartDateString
-    {
-        get => _storeManagerEmploymentStartDateString;
-        set
-        {
-            _storeManagerEmploymentStartDateString = value;
-            OnPropertyChanged(nameof(StoreManagerEmploymentStartDateString));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the opacity of the store manager's name error message.
-    /// </summary>
-    public float StoreManagerNameErrorMessageOpacity
-    {
-        get => _storeManagerNameErrorMessageOpacity;
-        set
-        {
-            _storeManagerNameErrorMessageOpacity = value;
-            OnPropertyChanged(nameof(StoreManagerNameErrorMessageOpacity));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the text of the store manager's name error message.
-    /// </summary>
-    public string StoreManagerNameErrorMessageText
-    {
-        get => _storeManagerNameErrorMessageText;
-        set
-        {
-            _storeManagerNameErrorMessageText = value;
-            OnPropertyChanged(nameof(StoreManagerNameErrorMessageText));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the opacity of the store manager's gender error message.
-    /// </summary>
-    public float StoreManagerGenderErrorMessageOpacity
-    {
-        get => _storeManagerGenderErrorMessageOpacity;
-        set
-        {
-            _storeManagerGenderErrorMessageOpacity = value;
-            OnPropertyChanged(nameof(StoreManagerGenderErrorMessageOpacity));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the text of the store manager's gender error message.
-    /// </summary>
-    public string StoreManagerGenderErrorMessageText
-    {
-        get => _storeManagerGenderErrorMessageText;
-        set
-        {
-            _storeManagerGenderErrorMessageText = value;
-            OnPropertyChanged(nameof(StoreManagerGenderErrorMessageText));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the opacity of the store manager's email error message.
-    /// </summary>
-    public float StoreManagerEmailErrorMessageOpacity
-    {
-        get => _storeManagerEmailErrorMessageOpacity;
-        set
-        {
-            _storeManagerEmailErrorMessageOpacity = value;
-            OnPropertyChanged(nameof(StoreManagerEmailErrorMessageOpacity));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the text of the store manager's email error message.
-    /// </summary>
-    public string StoreManagerEmailErrorMessageText
-    {
-        get => _storeManagerEmailErrorMessageText;
-        set
-        {
-            _storeManagerEmailErrorMessageText = value;
-            OnPropertyChanged(nameof(StoreManagerEmailErrorMessageText));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the opacity of the store manager's telephone error message.
-    /// </summary>
-    public float StoreManagerTelErrorMessageOpacity
-    {
-        get => _storeManagerTelErrorMessageOpacity;
-        set
-        {
-            _storeManagerTelErrorMessageOpacity = value;
-            OnPropertyChanged(nameof(StoreManagerTelErrorMessageOpacity));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the text of the store manager's telephone error message.
-    /// </summary>
-    public string StoreManagerTelErrorMessageText
-    {
-        get => _storeManagerTelErrorMessageText;
-        set
-        {
-            _storeManagerTelErrorMessageText = value;
-            OnPropertyChanged(nameof(StoreManagerTelErrorMessageText));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the opacity of the store manager's address error message.
-    /// </summary>
-    public float StoreManagerAddressErrorMessageOpacity
-    {
-        get => _storeManagerAddressErrorMessageOpacity;
-        set
-        {
-            _storeManagerAddressErrorMessageOpacity = value;
-            OnPropertyChanged(nameof(StoreManagerAddressErrorMessageOpacity));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the text of the store manager's address error message.
-    /// </summary>
-    public string StoreManagerAddressErrorMessageText
-    {
-        get => _storeManagerAddressErrorMessageText;
-        set
-        {
-            _storeManagerAddressErrorMessageText = value;
-            OnPropertyChanged(nameof(StoreManagerAddressErrorMessageText));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the opacity of the store manager's password error message.
-    /// </summary>
-    public float StoreManagerPasswordErrorMessageOpacity
-    {
-        get => _storeManagerPasswordErrorMessageOpacity;
-        set
-        {
-            _storeManagerPasswordErrorMessageOpacity = value;
-            OnPropertyChanged(nameof(StoreManagerPasswordErrorMessageOpacity));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the text of the store manager's password error message.
-    /// </summary>
-    public string StoreManagerPasswordErrorMessageText
-    {
-        get => _storeManagerPasswordErrorMessageText;
-        set
-        {
-            _storeManagerPasswordErrorMessageText = value;
-            OnPropertyChanged(nameof(StoreManagerPasswordErrorMessageText));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the opacity of the store manager's confirm password error message.
-    /// </summary>
-    public float StoreManagerConfirmPasswordErrorMessageOpacity
-    {
-        get => _storeManagerConfirmPasswordErrorMessageOpacity;
-        set
-        {
-            _storeManagerConfirmPasswordErrorMessageOpacity = value;
-            OnPropertyChanged(nameof(StoreManagerConfirmPasswordErrorMessageOpacity));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the text of the store manager's confirm password error message.
-    /// </summary>
-    public string StoreManagerConfirmPasswordErrorMessageText
-    {
-        get => _storeManagerConfirmPasswordErrorMessageText;
-        set
-        {
-            _storeManagerConfirmPasswordErrorMessageText = value;
-            OnPropertyChanged(nameof(StoreManagerConfirmPasswordErrorMessageText));
-        }
+        return allFieldsValid;
     }
 }

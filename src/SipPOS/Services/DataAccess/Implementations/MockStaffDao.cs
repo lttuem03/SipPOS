@@ -1,7 +1,6 @@
 ﻿using System.Text.RegularExpressions;
-
-using SipPOS.Models.Entity;
 using SipPOS.DataTransfer.Entity;
+using SipPOS.Models.Entity;
 using SipPOS.Services.DataAccess.Interfaces;
 
 namespace SipPOS.Services.DataAccess.Implementations;
@@ -54,7 +53,7 @@ class MockStaffDao : IStaffDao
     /// </summary>  
     /// <param name="compositeUsername">The composite username of the staff member.</param>  
     /// <returns>A task that represents the asynchronous operation. The task result contains the staff DTO if found, otherwise null.</returns>  
-    public Task<StaffDto?> GetByCompositeUsername(string compositeUsername)
+    public Task<StaffDto?> GetByCompositeUsernameAsync(string compositeUsername)
     {
         // Splits composite username into (position prefix, store id, staff id)  
         Regex re = new Regex(Staff.CompositeUsernamePattern);
