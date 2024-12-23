@@ -42,7 +42,6 @@ namespace SipPOS.UnitTest.Services.Entity.Implementations
         [TestMethod]
         public void GetCategorys_WhenCalled_ShouldReturnCategoryList()
         {
-
             var categorys = categoryService.GetAll();
 
             Assert.IsNotNull(categorys);
@@ -53,11 +52,17 @@ namespace SipPOS.UnitTest.Services.Entity.Implementations
         [TestMethod]
         public void DeleteCategory_WhenCategoryExists_ShouldDeleteCategory()
         {
-            var categoryId = 1;
+            var categoryDto = new CategoryDto
+            {
+                Name = "Test Category",
+                Desc = "Test Description"
+            };
 
-            var category = categoryService.DeleteById(categoryId);
+            categoryDto = categoryService.Insert(categoryDto);
 
-            Assert.IsNotNull(category.DeletedAt);
+            categoryDto = categoryService.DeleteById((long)categoryDto.Id);
+
+            Assert.IsNotNull(categoryDto.DeletedAt);
         }
 
         [TestMethod]

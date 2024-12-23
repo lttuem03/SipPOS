@@ -42,7 +42,6 @@ namespace SipPOS.UnitTest.Services.Entity.Implementations
         [TestMethod]
         public void GetProducts_WhenCalled_ShouldReturnProductList()
         {
-
             var products = productService.GetAll();
 
             Assert.IsNotNull(products);
@@ -53,11 +52,19 @@ namespace SipPOS.UnitTest.Services.Entity.Implementations
         [TestMethod]
         public void DeleteProduct_WhenProductExists_ShouldDeleteProduct()
         {
-            var productId = 1;
+            var productDto = new ProductDto
+            {
+                Name = "Test Product",
+                Desc = "Test Description",
+                Price = 10.0,
+                CategoryId = 1
+            };
 
-            var product = productService.DeleteById(productId);
+            productDto = productService.Insert(productDto);
 
-            Assert.IsNotNull(product.DeletedAt);
+            productDto = productService.DeleteById((long)productDto.Id);
+
+            Assert.IsNotNull(productDto.DeletedAt);
         }
 
         [TestMethod]
