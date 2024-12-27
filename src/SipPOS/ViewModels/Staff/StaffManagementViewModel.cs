@@ -92,7 +92,7 @@ public class StaffManagementViewModel : INotifyPropertyChanged
 
         var staffDao = App.GetService<IStaffDao>();
 
-        var (totalRowsMatched, staffDtos) = await staffDao.GetWithPagination
+        var (totalRowsMatched, staffDtos) = await staffDao.GetWithPaginationAsync
         (
             storeId: storeAuthenticationService.Context.CurrentStore.Id,
             page: CurrentPage,

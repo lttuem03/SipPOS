@@ -13,141 +13,53 @@ public class MockCategoryDao : ICategoryDao
 {
     private readonly List<Category> _allCategory =
     [
+        // 0. Cà phê PHIN
+        new()
+        {
+            Id = 0,
+            StoreId = 0,
+            CreatedBy = "admin",
+            CreatedAt = DateTime.Now,
+            Name = "Cà phê PHIN",
+            Description = "Sự kết hợp hoàn hảo giữa hạt cà phê Robusta & Arabica thượng hạng được trồng trên những vùng cao nguyên Việt Nam.",
+        },
+        // 1. PhinDi
         new()
         {
             Id = 1,
-            Name = "Nước giải khát",
-            Desc = "Đây là danh mục nước giải khát",
-            Status = "Available",
-            ImageUrls = new List<string> {
-                "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-                "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-            },
-            CreatedAt = new DateTime(2022, 5, 15),
+            StoreId = 0,
             CreatedBy = "admin",
+            CreatedAt = DateTime.Now,
+            Name = "PhinDi",
+            //Description = "",
         },
+        // 2. Trà
         new()
         {
             Id = 2,
-            Name = "Nước trái cây",
-            Desc = "Danh mục các loại nước ép trái cây",
-            Status = "Available",
-            ImageUrls = new List<string> {
-                "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-                "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-            },
-            CreatedAt = new DateTime(2022, 5, 15),
             CreatedBy = "admin",
+            CreatedAt = DateTime.Now,
+            Name = "Trà",
+            Description = "Hương vị tự nhiên, thơm ngon của Trà Việt với phong cách hiện đại sẽ giúp bạn gợi mở vị giác của bản thân và tận hưởng một cảm giác thật khoan khoái, tươi mới.",
         },
+        // 3. Freeze
         new()
         {
             Id = 3,
-            Name = "Nước suối",
-            Desc = "Danh mục các loại nước suối",
-            Status = "Available",
-            ImageUrls = new List<string> {
-                "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-                "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-            },
-            CreatedAt = new DateTime(2022, 5, 15),
             CreatedBy = "admin",
+            CreatedAt = DateTime.Now,
+            Name = "Freeze",
+            Description = "Thức uống đá xay mát lạnh được pha chế từ những nguyên liệu thuần túy của Việt Nam.",
         },
+        // 4. Bánh
         new()
         {
-            Id = 4,
-            Name = "Nước ngọt",
-            Desc = "Danh mục các loại nước ngọt",
-            Status = "Available",
-            ImageUrls = new List<string> {
-                "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-                "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-            },
-            CreatedAt = new DateTime(2022, 5, 15),
+            Id = 3,
             CreatedBy = "admin",
-        },
-        new()
-        {
-            Id = 5,
-            Name = "Nước tăng lực",
-            Desc = "Danh mục các loại nước tăng lực",
-            Status = "Available",
-            ImageUrls = new List<string> {
-                "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-                "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-            },
-            CreatedAt = new DateTime(2022, 5, 15),
-            CreatedBy = "admin",
-        },
-        new()
-        {
-            Id = 6,
-            Name = "Nước ép",
-            Desc = "Danh mục các loại nước ép",
-            Status = "Available",
-            ImageUrls = new List<string> {
-                "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-                "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-            },
-            CreatedAt = new DateTime(2022, 5, 15),
-            CreatedBy = "admin",
-        },
-        new()
-        {
-            Id = 7,
-            Name = "Nước lọc",
-            Desc = "Danh mục các loại nước lọc",
-            Status = "Available",
-            ImageUrls = new List<string> {
-                "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-                "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-            },
-            CreatedAt = new DateTime(2022, 5, 15),
-            CreatedBy = "admin",
-        },
-        new()
-        {
-            Id = 8,
-            Name = "Nước đóng chai",
-            Desc = "Danh mục các loại nước đóng chai",
-            Status = "Available",
-            ImageUrls = new List<string> {
-                "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-                "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-            },
-            CreatedAt = new DateTime(2022, 5, 15),
-            CreatedBy = "admin",
-        },
-        new()
-        {
-            Id = 9,
-            Name = "Nước đóng lon",
-            Desc = "Danh mục các loại nước đóng lon",
-            Status = "Available",
-            CreatedAt = new DateTime(2022, 5, 15),
-            CreatedBy = "admin",
-        },
-        new()
-        {
-            Id = 10,
-            Name = "Nước đóng gói",
-            Desc = "Danh mục các loại nước đóng gói",
-            Status = "Available",
-            CreatedAt = new DateTime(2022, 5, 15),
-            CreatedBy = "admin",
-        },
-        new()
-        {
-            Id = 11,
-            Name = "Nước đóng hộp",
-            Desc = "Danh mục các loại nước đóng hộp",
-            Status = "Available",
-            ImageUrls = new List<string> {
-                "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-                "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-            },
-            CreatedAt = new DateTime(2022, 5, 15),
-            CreatedBy = "admin",
-        },
+            CreatedAt = DateTime.Now,
+            Name = "Bánh",
+            Description = "Sẽ càng ngon miệng hơn khi bạn kết hợp đồ uống với những chiếc bánh ngọt thơm ngon được làm thủ công hàng ngày ngay tại bếp bánh của chúng tôi.",
+        }
     ];
 
     /// <summary>
@@ -233,7 +145,7 @@ public class MockCategoryDao : ICategoryDao
         if (oldCategory != null)
         {
             oldCategory.Name = category.Name;
-            oldCategory.Desc = category.Desc;
+            oldCategory.Description = category.Description;
             oldCategory.UpdatedAt = DateTime.Now;
             oldCategory.UpdatedBy = "admin";
         }
@@ -272,20 +184,20 @@ public class MockCategoryDao : ICategoryDao
 
         if (!string.IsNullOrEmpty(categoryFilterDto.Desc))
         {
-            filteredCategories = filteredCategories.Where(x => x.Desc != null && x.Desc.Contains(categoryFilterDto.Desc));
+            filteredCategories = filteredCategories.Where(x => x.Description != null && x.Description.Contains(categoryFilterDto.Desc));
         }
 
-        if (!string.IsNullOrEmpty(categoryFilterDto.Status))
-        {
-            filteredCategories = filteredCategories.Where(x => x.Status != null && x.Status == categoryFilterDto.Status);
-        }
+        //if (!string.IsNullOrEmpty(categoryFilterDto.Status))
+        //{
+        //    filteredCategories = filteredCategories.Where(x => x.Status != null && x.Status == categoryFilterDto.Status);
+        //}
 
         Func<Category, object> keySelector = x => sortDto.SortBy switch
         {
             "Id" => x.Id,
             "Name" => x.Name ?? string.Empty,
-            "Desc" => x.Desc ?? string.Empty,
-            "Status" => x.Status ?? string.Empty,
+            "Desc" => x.Description ?? string.Empty,
+            //"Status" => x.Status ?? string.Empty,
             "CreatedBy" => x.CreatedBy ?? string.Empty,
             _ => x.CreatedAt ?? new DateTime()
         };
@@ -302,12 +214,12 @@ public class MockCategoryDao : ICategoryDao
         return pagination;
     }
 
-    public Task<Pagination<Category>> SearchAsync(CategoryFilterDto categoryFilterDto, SortDto sortDto, int page, int perPage) => throw new NotImplementedException();
-    public Task<List<Category>> GetAllAsync() => throw new NotImplementedException();
-    public Task<Category?> GetByIdAsync(long id) => throw new NotImplementedException();
-    public Task<Category?> DeleteByIdAsync(long id, Staff author) => throw new NotImplementedException();
-    public Task<List<Category>> DeleteByIdsAsync(List<long> ids, Staff author) => throw new NotImplementedException();
-    public Task<Category?> UpdateByIdAsync(Category categoryDto) => throw new NotImplementedException();
-    public Task<Category?> InsertAsync(Category categoryDto) => throw new NotImplementedException();
-    public Task<long> CountAsync(CategoryFilterDto categoryFilterDto) => throw new NotImplementedException();
+    public Task<Category?> InsertAsync(long storeId, Category category) => throw new NotImplementedException();
+    public Task<List<Category>> GetAllAsync(long storeId) => throw new NotImplementedException();
+    public Task<Category?> GetByIdAsync(long storeId, long id) => throw new NotImplementedException();
+    public Task<Pagination<Category>> GetWithPaginationAsync(long storeId, CategoryFilterDto categoryFilterDto, SortDto sortDto, int page, int perPage) => throw new NotImplementedException();
+    public Task<Category?> UpdateByIdAsync(long storeId, Category category) => throw new NotImplementedException();
+    public Task<Category?> DeleteByIdAsync(long storeId, long id, Staff author) => throw new NotImplementedException();
+    public Task<List<Category>> DeleteByIdsAsync(long storeId, List<long> ids, Staff author) => throw new NotImplementedException();
+    public Task<long> CountAsync(long storeId, CategoryFilterDto categoryFilterDto) => throw new NotImplementedException();
 }

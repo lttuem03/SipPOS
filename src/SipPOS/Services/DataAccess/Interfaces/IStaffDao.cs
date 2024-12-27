@@ -41,7 +41,7 @@ public interface IStaffDao
     /// <param name="sortDirection">'ASC' or 'DESC'.</param>
     /// <param name="filterByPositionPrefixes">A list of position prefixes to filter by.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the total number of rows matched and a list of StaffDto objects, or null if the operation failed.</returns>
-    Task<(long totalRowsMatched, List<StaffDto>? staffDtos)> GetWithPagination
+    Task<(long totalRowsMatched, List<StaffDto>? staffDtos)> GetWithPaginationAsync
     (
         long storeId,
         long page,

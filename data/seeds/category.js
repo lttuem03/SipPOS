@@ -3,123 +3,49 @@
  * @returns { Promise<void> } 
  */
 exports.seed = async function (knex) {
-  // Deletes ALL existing entries in the 'categories' table
-  await knex('category').del();
+    // Deletes ALL existing entries in the 'category' table
+    await knex('category').del();
 
-  // Inserts seed entries
-  await knex('category').insert([
-    {
-      name: "Nước giải khát",
-      desc: "Đây là danh mục nước giải khát",
-      status: "Available",
-      image_urls: [
-        "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-        "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-      ],
-      created_at: new Date(), // Months are zero-indexed in JavaScript
-      created_by: "admin"
-    },
-    {
-      name: "Nước trái cây",
-      desc: "Danh mục các loại nước ép trái cây",
-      status: "Available",
-      image_urls: [
-        "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-        "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-      ],
-      created_at: new Date(),
-      created_by: "admin"
-    },
-    {
-      name: "Nước suối",
-      desc: "Danh mục các loại nước suối",
-      status: "Available",
-      image_urls: [
-        "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-        "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-      ],
-      created_at: new Date(),
-      created_by: "admin"
-    },
-    {
-      name: "Nước ngọt",
-      desc: "Danh mục các loại nước ngọt",
-      status: "Available",
-      image_urls: [
-        "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-        "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-      ],
-      created_at: new Date(),
-      created_by: "admin"
-    },
-    {
-      name: "Nước tăng lực",
-      desc: "Danh mục các loại nước tăng lực",
-      status: "Available",
-      image_urls: [
-        "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-        "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-      ],
-      created_at: new Date(),
-      created_by: "admin"
-    },
-    {
-      name: "Nước ép",
-      desc: "Danh mục các loại nước ép",
-      status: "Available",
-      image_urls: [
-        "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-        "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-      ],
-      created_at: new Date(),
-      created_by: "admin"
-    },
-    {
-      name: "Nước lọc",
-      desc: "Danh mục các loại nước lọc",
-      status: "Available",
-      image_urls: [
-        "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-        "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-      ],
-      created_at: new Date(),
-      created_by: "admin"
-    },
-    {
-      name: "Nước đóng chai",
-      desc: "Danh mục các loại nước đóng chai",
-      status: "Available",
-      image_urls: [
-        "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-        "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-      ],
-      created_at: new Date(),
-      created_by: "admin"
-    },
-    {
-      name: "Nước đóng lon",
-      desc: "Danh mục các loại nước đóng lon",
-      status: "Available",
-      created_at: new Date(),
-      created_by: "admin"
-    },
-    {
-      name: "Nước đóng gói",
-      desc: "Danh mục các loại nước đóng gói",
-      status: "Available",
-      created_at: new Date(),
-      created_by: "admin"
-    },
-    {
-      name: "Nước đóng hộp",
-      desc: "Danh mục các loại nước đóng hộp",
-      status: "Available",
-      image_urls: [
-        "https://www.austriajuice.com/hs-fs/hubfs/Beverage_compounds_drinks.jpg?width=730&name=Beverage_compounds_drinks.jpg",
-        "https://s7d1.scene7.com/is/image/KeminIndustries/shutterstock_519547867?$responsive$"
-      ],
-      created_at: new Date(),
-      created_by: "admin"
-    }
-  ]);
+    // Inserts seed entries
+    await knex('category').insert([
+        // 0. Cà phê PHIN
+        {
+            store_id: 0,
+            created_by: "admin",
+            created_at: new Date(),
+            name: "Cà phê PHIN",
+            description: "Sự kết hợp hoàn hảo giữa hạt cà phê Robusta & Arabica thượng hạng được trồng trên những vùng cao nguyên Việt Nam."
+        },
+        // 1. PhinDi
+        {
+            store_id: 0,
+            created_by: "admin",
+            created_at: new Date(),
+            name: "PhinDi"
+        },
+        // 2. Trà
+        {
+            store_id: 0,
+            created_by: "admin",
+            created_at: new Date(),
+            name: "Trà",
+            description: "Hương vị tự nhiên, thơm ngon của Trà Việt với phong cách hiện đại sẽ giúp bạn gợi mở vị giác của bản thân và tận hưởng một cảm giác thật khoan khoái, tươi mới."
+        },
+        // 3. Freeze
+        {
+            store_id: 0,
+            created_by: "admin",
+            created_at: new Date(),
+            name: "Freeze",
+            description: "Thức uống đá xay mát lạnh được pha chế từ những nguyên liệu thuần túy của Việt Nam."
+        },
+        // 4. Bánh
+        {
+            store_id: 0,
+            created_by: "admin",
+            created_at: new Date(),
+            name: "Bánh",
+            description: "Sẽ càng ngon miệng hơn khi bạn kết hợp đồ uống với những chiếc bánh ngọt thơm ngon được làm thủ công hàng ngày ngay tại bếp bánh của chúng tôi."
+        }
+    ]);
 };

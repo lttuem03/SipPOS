@@ -30,7 +30,7 @@ public sealed partial class ProductManagementView : Page
     public ProductManagementView()
     {
         ViewModel = App.GetService<ProductManagementViewModel>();
-        ViewModel.Search();
+        ViewModel.UpdateProductList();
         ViewModel.GetAllCategory();
         InitializeComponent();
         SizeChanged += OnPageSizeChanged;
@@ -48,13 +48,13 @@ public sealed partial class ProductManagementView : Page
     /// <param name="e">The event data.</param>
     public void RefreshButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.Search();
+        ViewModel.UpdateProductList();
     }
 
     private void EmptyButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.ProductFilterDto = new ProductFilterDto();
-        ViewModel.Search();
+        ViewModel.UpdateProductList();
     }
 
     /// <summary>
@@ -88,7 +88,7 @@ public sealed partial class ProductManagementView : Page
     /// <param name="e">The event data.</param>
     public async void ViewButton_Click(object sender, RoutedEventArgs e)
     {
-        IList<ProductDto> selectedProducts = ViewModel.Products.Where(x => x.IsSeteled).ToList();
+        IList<ProductDto> selectedProducts = ViewModel.Products.Where(x => x.IsSelected).ToList();
         if (selectedProducts.Count == 0)
         {
             ShowNotification("Vui lòng chọn ít nhất một sản phẩm để xem.");
@@ -104,7 +104,7 @@ public sealed partial class ProductManagementView : Page
         Dialog.IsPrimaryButtonEnabled = false;
         ViewModel.ActionType = "VIEW";
         ViewModel.ImageUrls.Clear();
-        foreach (var item in ViewModel.SelectedProduct.ImageUrls)
+        foreach (var item in ViewModel.SelectedProduct.ImageUris)
         {
             ViewModel.ImageUrls.Add(item);
         }
@@ -118,7 +118,7 @@ public sealed partial class ProductManagementView : Page
     /// <param name="e">The event data.</param>
     public async void EditButton_Click(object sender, RoutedEventArgs e)
     {
-        IList<ProductDto> selectedProducts = ViewModel.Products.Where(x => x.IsSeteled).ToList();
+        IList<ProductDto> selectedProducts = ViewModel.Products.Where(x => x.IsSelected).ToList();
         if (selectedProducts.Count == 0)
         {
             ShowNotification("Vui lòng chọn ít nhất một sản phẩm để chỉnh sửa.");
@@ -134,7 +134,7 @@ public sealed partial class ProductManagementView : Page
         Dialog.IsPrimaryButtonEnabled = true;
         ViewModel.ActionType = "EDIT";
         ViewModel.ImageUrls.Clear();
-        foreach (var item in ViewModel.SelectedProduct.ImageUrls)
+        foreach (var item in ViewModel.SelectedProduct.ImageUris)
         {
             ViewModel.ImageUrls.Add(item);
         }
@@ -148,7 +148,7 @@ public sealed partial class ProductManagementView : Page
     /// <param name="e">The event data.</param>
     public async void DeleteButton_Click(object sender, RoutedEventArgs e)
     {
-        IList<ProductDto> selectedProducts = ViewModel.Products.Where(x => x.IsSeteled).ToList();
+        IList<ProductDto> selectedProducts = ViewModel.Products.Where(x => x.IsSelected).ToList();
         if (selectedProducts.Count == 0)
         {
             ShowNotification("Vui lòng chọn ít nhất một sản phẩm để xóa.");
@@ -184,7 +184,7 @@ public sealed partial class ProductManagementView : Page
     /// <param name="e">The event data.</param>
     public void PaginationControl_PageChanged(object sender, PaginationControlValueChangedEventArgs e)
     {
-        ViewModel.Search();
+        ViewModel.UpdateProductList();
     }
     
     /// <summary>
@@ -205,7 +205,7 @@ public sealed partial class ProductManagementView : Page
             ViewModel.SortDto.SortType = "DESC";
             e.Column.SortDirection = DataGridSortDirection.Descending;
         }
-        ViewModel.Search();
+        ViewModel.UpdateProductList();
         foreach (var dgColumn in dg.Columns)
         {
             if (null != dgColumn.Tag && dgColumn.Tag.ToString() != e.Column.Tag.ToString())
@@ -226,7 +226,7 @@ public sealed partial class ProductManagementView : Page
         {
             return;
         }
-        bool isOk = false;
+        var isOk = false;
         switch (ViewModel.ActionType)
         {
             case "ADD":
@@ -285,7 +285,7 @@ public sealed partial class ProductManagementView : Page
         {
             foreach (StorageFile file in files)
             {
-                ViewModel.SelectedProduct.ImageUrls.Add(file.Path);
+                ViewModel.SelectedProduct.ImageUris.Add(file.Path);
                 ViewModel.ImageUrls.Add(file.Path);
             }
         }
@@ -381,5 +381,4 @@ public sealed partial class ProductManagementView : Page
     {
         ViewModel.ProductCategoryRequireMessage = string.Empty;
     }
-
 }

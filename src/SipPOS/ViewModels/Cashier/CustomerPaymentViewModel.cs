@@ -60,13 +60,13 @@ public partial class CustomerPaymentViewModel : ObservableRecipient
     public async void CalculateTotalPrice()
     {
         TotalPrice = 0;
-        foreach (var product in Products)
-        {
-            if (product.Price.HasValue && product.Quantity.HasValue)
-            {
-                TotalPrice += (int)(product.Price * product.Quantity);
-            }
-        }
+        //foreach (var product in Products)
+        //{
+        //    if (product.Price.HasValue && product.Quantity.HasValue)
+        //    {
+        //        TotalPrice += (int)(product.Price * product.Quantity);
+        //    }
+        //}
         await GenerateQRCode();
         CountDown();
         CheckWasPayed();
@@ -123,13 +123,13 @@ public partial class CustomerPaymentViewModel : ObservableRecipient
     private List<ItemData> GetItemDatas()
     {
         List<ItemData> itemDatas = new List<ItemData>();
-        foreach (var product in Products)
-        {
-            if (product.Price.HasValue && product.Quantity.HasValue && product.Name != null)
-            {
-                itemDatas.Add(new ItemData(product.Name, (int)product.Quantity, (int)product.Price));
-            }
-        }
+        //foreach (var product in Products)
+        //{
+        //    if (product.Price.HasValue && product.Quantity.HasValue && product.Name != null)
+        //    {
+        //        itemDatas.Add(new ItemData(product.Name, (int)product.Quantity, (int)product.Price));
+        //    }
+        //}
         return itemDatas;
     }
 

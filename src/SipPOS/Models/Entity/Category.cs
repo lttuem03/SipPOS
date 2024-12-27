@@ -6,31 +6,17 @@
 public class Category : BaseEntity
 {
     /// <summary>
+    /// Gets or sets the store id of the category.
+    /// </summary>
+    public long StoreId { get; set; }
+
+    /// <summary>
     /// Gets or sets the name of the category.
     /// </summary>
-    public string? Name
-    {
-        get; set;
-    }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the description of the category.
     /// </summary>
-    public string? Desc
-    {
-        get; set;
-    }
-
-    /// <summary>
-    /// Gets or sets the status of the category.
-    /// </summary>
-    public string? Status
-    {
-        get; set;
-    }
-
-    /// <summary>
-    /// Gets or sets the list of image URLs associated with the category.
-    /// </summary>
-    public IList<string> ImageUrls { get; set; } = new List<string>();
+    public string? Description { get; set; }
 }
