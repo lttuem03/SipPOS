@@ -30,7 +30,7 @@ public sealed partial class CategoryManagementView : Page
     public CategoryManagementView()
     {
         ViewModel = App.GetService<CategoryManagementViewModel>();
-        ViewModel.Search();
+        ViewModel.UpdateCategoryList();
         InitializeComponent();
         SizeChanged += OnPageSizeChanged;
     }
@@ -47,13 +47,13 @@ public sealed partial class CategoryManagementView : Page
     /// <param name="e">The event data.</param>
     public void RefreshButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.Search();
+        ViewModel.UpdateCategoryList();
     }
 
     public void EmptyButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.CategoryFilterDto = new CategoryFilterDto();
-        ViewModel.Search();
+        ViewModel.UpdateCategoryList();
     }
 
     /// <summary>
@@ -87,7 +87,7 @@ public sealed partial class CategoryManagementView : Page
     /// <param name="e">The event data.</param>
     public async void ViewButton_Click(object sender, RoutedEventArgs e)
     {
-        IList<CategoryDto> selectedCategories = ViewModel.Categories.Where(x => x.IsSeteled).ToList();
+        IList<CategoryDto> selectedCategories = ViewModel.Categories.Where(x => x.IsSelected).ToList();
         if (selectedCategories.Count == 0)
         {
             ShowNotification("Vui lòng chọn ít nhất một danh mục để xem.");
@@ -103,10 +103,10 @@ public sealed partial class CategoryManagementView : Page
         Dialog.IsPrimaryButtonEnabled = false;
         ViewModel.ActionType = "VIEW";
         ViewModel.ImageUrls.Clear();
-        foreach (var item in ViewModel.SelectedCategory.ImageUrls)
-        {
-            ViewModel.ImageUrls.Add(item);
-        }
+        //foreach (var item in ViewModel.SelectedCategory.ImageUrls)
+        //{
+        //    ViewModel.ImageUrls.Add(item);
+        //}
         await Dialog.ShowAsync();
     }
 
@@ -117,7 +117,7 @@ public sealed partial class CategoryManagementView : Page
     /// <param name="e">The event data.</param>
     public async void EditButton_Click(object sender, RoutedEventArgs e)
     {
-        IList<CategoryDto> selectedCategories = ViewModel.Categories.Where(x => x.IsSeteled).ToList();
+        IList<CategoryDto> selectedCategories = ViewModel.Categories.Where(x => x.IsSelected).ToList();
         if (selectedCategories.Count == 0)
         {
             ShowNotification("Vui lòng chọn ít nhất một danh mục để chỉnh sửa.");
@@ -133,10 +133,10 @@ public sealed partial class CategoryManagementView : Page
         Dialog.IsPrimaryButtonEnabled = true;
         ViewModel.ActionType = "EDIT";
         ViewModel.ImageUrls.Clear();
-        foreach (var item in ViewModel.SelectedCategory.ImageUrls)
-        {
-            ViewModel.ImageUrls.Add(item);
-        }
+        //foreach (var item in ViewModel.SelectedCategory.ImageUrls)
+        //{
+        //    ViewModel.ImageUrls.Add(item);
+        //}
         await Dialog.ShowAsync();
     }
 
@@ -147,7 +147,7 @@ public sealed partial class CategoryManagementView : Page
     /// <param name="e">The event data.</param>
     public async void DeleteButton_Click(object sender, RoutedEventArgs e)
     {
-        IList<CategoryDto> selectedCategories = ViewModel.Categories.Where(x => x.IsSeteled).ToList();
+        IList<CategoryDto> selectedCategories = ViewModel.Categories.Where(x => x.IsSelected).ToList();
         if (selectedCategories.Count == 0)
         {
             ShowNotification("Vui lòng chọn ít nhất một danh mục để xóa.");
@@ -183,7 +183,7 @@ public sealed partial class CategoryManagementView : Page
     /// <param name="e">The event data.</param>
     public void PaginationControl_PageChanged(object sender, PaginationControlValueChangedEventArgs e)
     {
-        ViewModel.Search();
+        ViewModel.UpdateCategoryList();
     }
 
     /// <summary>
@@ -204,7 +204,7 @@ public sealed partial class CategoryManagementView : Page
             ViewModel.SortDto.SortType = "DESC";
             e.Column.SortDirection = DataGridSortDirection.Descending;
         }
-        ViewModel.Search();
+        ViewModel.UpdateCategoryList();
         foreach (var dgColumn in dg.Columns)
         {
             if (null != dgColumn.Tag && dgColumn.Tag.ToString() != e.Column.Tag.ToString())
@@ -227,7 +227,7 @@ public sealed partial class CategoryManagementView : Page
             ShowNotification("Vui lòng chọn danh mục cần thêm sản phẩm.");
             return;
         }
-        bool isOk = false;
+        var isOk = false;
         switch (ViewModel.ActionType)
         {
             case "ADD":
@@ -287,7 +287,7 @@ public sealed partial class CategoryManagementView : Page
         {
             foreach (StorageFile file in files)
             {
-                ViewModel.SelectedCategory.ImageUrls.Add(file.Path);
+                //ViewModel.SelectedCategory.ImageUrls.Add(file.Path);
                 ViewModel.ImageUrls.Add(file.Path);
             }
         }

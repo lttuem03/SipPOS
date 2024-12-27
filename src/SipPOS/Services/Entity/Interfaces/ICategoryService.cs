@@ -17,46 +17,46 @@ public interface ICategoryService
     /// <param name="perPage">The number of items per page.</param>
     /// <param name="page">The page number.</param>
     /// <returns>A pagination object containing the search results.</returns>
-    Pagination<CategoryDto> Search(CategoryFilterDto categoryFilterDto, SortDto sortDto, int perPage, int page);
+    Task<Pagination<CategoryDto>> GetWithPagination(CategoryFilterDto categoryFilterDto, SortDto sortDto, int perPage, int page);
 
     /// <summary>
     /// Gets all categories.
     /// </summary>
     /// <returns>A list of all category DTOs.</returns>
-    List<CategoryDto> GetAll();
+    Task<List<CategoryDto>> GetAll();
 
     /// <summary>
     /// Gets a category by its identifier.
     /// </summary>
     /// <param name="id">The identifier of the category.</param>
     /// <returns>The category DTO if found; otherwise, null.</returns>
-    CategoryDto? GetById(long id);
+    Task<CategoryDto?> GetById(long id);
 
     /// <summary>
     /// Deletes a category by its identifier.
     /// </summary>
     /// <param name="id">The identifier of the category to delete.</param>
     /// <returns>The deleted category DTO if successful; otherwise, null.</returns>
-    CategoryDto? DeleteById(long id);
+    Task<CategoryDto?> DeleteById(long id);
 
     /// <summary>
     /// Deletes multiple categories by their identifiers.
     /// </summary>
     /// <param name="ids">The identifiers of the categories to delete.</param>
     /// <returns>A list of deleted category DTOs.</returns>
-    List<CategoryDto> DeleteByIds(List<long> ids);
+    Task<List<CategoryDto>> DeleteByIds(List<long> ids);
 
     /// <summary>
     /// Inserts a new category.
     /// </summary>
     /// <param name="categoryDto">The category DTO to insert.</param>
     /// <returns>The inserted category DTO if successful; otherwise, null.</returns>
-    CategoryDto? Insert(CategoryDto categoryDto);
+    Task<CategoryDto?> Insert(CategoryDto categoryDto);
 
     /// <summary>
     /// Updates a category by its identifier.
     /// </summary>
     /// <param name="categoryDto">The category DTO to update.</param>
     /// <returns>The updated category DTO if successful; otherwise, null.</returns>
-    CategoryDto? UpdateById(CategoryDto categoryDto);
+    Task<CategoryDto?> UpdateById(CategoryDto categoryDto);
 }

@@ -154,19 +154,11 @@
                                     IsSpellCheckEnabled="False"/>
                                 <TextBlock Text="{x:Bind ViewModel.CategoryNameReqireMessage, Mode=OneWay}" Foreground="Red"/>
                             </StackPanel>
-                            <ComboBox 
-                                Header="Trạng thái"
-                                Grid.Row="0" Grid.Column="1" 
-                                PlaceholderText="Chọn trạng thái"  
-                                HorizontalAlignment="Stretch"
-                                DisplayMemberPath="Label" 
-                                SelectedValuePath="Value"
-                                SelectedValue="{x:Bind ViewModel.SelectedCategory.Status, Mode=TwoWay}"
-                                ItemsSource="{x:Bind ViewModel.StatusItems}"/>
+
                             <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" >
                                 <TextBox 
                                     AcceptsReturn="True"
-                                    Text="{x:Bind ViewModel.SelectedCategory.Desc, Mode=TwoWay}"
+                                    Text="{x:Bind ViewModel.SelectedCategory.Description, Mode=TwoWay}"
                                     Header="Mô tả danh mục" Height="100"
                                     TextChanged="CategoryDesc_TextChanged"
                                     PlaceholderText="Nhập mô tả danh mục" 

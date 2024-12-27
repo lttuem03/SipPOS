@@ -6,27 +6,22 @@
 public class CategoryDto : BaseEntityDto
 {
     /// <summary>
+    /// Gets or sets the store id of the category.
+    /// </summary>
+    public long StoreId { get; set; }
+
+    /// <summary>
     /// Gets or sets the name of the category.
     /// </summary>
-    public string? Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the description of the category.
     /// </summary>
-    public string? Desc { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
-    /// Gets or sets the status of the category.
+    /// Gets or sets a value indicating whether the category is selected.
     /// </summary>
-    public string? Status { get; set; } = "Available";
-
-    /// <summary>
-    /// Gets or sets the list of image URLs associated with the category.
-    /// </summary>
-    public IList<string> ImageUrls { get; set; } = new List<string>();
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the category is settled.
-    /// </summary>
-    public bool IsSeteled { get; set; } = false;
+    public bool IsSelected { get; set; } = false;
 }

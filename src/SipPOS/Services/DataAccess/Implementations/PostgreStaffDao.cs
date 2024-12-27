@@ -215,7 +215,7 @@ public class PostgreStaffDao : IStaffDao
     /// <param name="sortDirection">'ASC' or 'DESC'</param>
     /// <param name="filterByPositionPrefixes">A nullable list containings the prefixes of filtered position.</param>
     /// <returns>A tuple, containings a number of rows that matched the criterias (only the count), and the list of (paged) staffs retrieved.</returns>
-    public async Task<(long totalRowsMatched, List<StaffDto>? staffDtos)> GetWithPagination
+    public async Task<(long totalRowsMatched, List<StaffDto>? staffDtos)> GetWithPaginationAsync
     (
         long storeId,
         long page,

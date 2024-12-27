@@ -11,6 +11,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
     <!-- Add your ToastNotificationControl -->
     <Page.Resources>
         <DataTemplate x:Key='ImageTemplate'>
@@ -32,11 +33,13 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+
         <Grid 
             Grid.Row="0" 
             HorizontalAlignment="Stretch" 
             VerticalAlignment="Center"
             ColumnSpacing="10">
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -46,6 +49,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+
             <ComboBox
                 Grid.Row="0" Grid.Column="0"
                 Header="Chọn danh mục"
@@ -193,11 +197,7 @@
                                 <TextBlock Text="{x:Bind ViewModel.ProductCategoryRequireMessage, Mode=OneWay}" Foreground="Red"/>
                             </StackPanel>
                             <StackPanel HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" >
-                                <NumberBox 
-                                    Value="{x:Bind ViewModel.SelectedProduct.Price, Mode=TwoWay, Converter={StaticResource DoubleToNullableDoubleConverter}}"
-                                    Header="Giá sản phẩm" 
-                                    ValueChanged="ProductPrice_ValueChanged"
-                                    PlaceholderText="Nhập giá sản phẩm" />
+                                
                                 <TextBlock Text="{x:Bind ViewModel.ProductPriceRequireMessage, Mode=OneWay}" Foreground="Red"/>
                             </StackPanel>
                             <ComboBox 
@@ -212,7 +212,7 @@
                             <StackPanel HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" >
                                 <TextBox 
                                     AcceptsReturn="True"
-                                    Text="{x:Bind ViewModel.SelectedProduct.Desc, Mode=TwoWay}"
+                                    Text="{x:Bind ViewModel.SelectedProduct.Description, Mode=TwoWay}"
                                     Header="Mô tả sản phẩm" Height="100"
                                     TextChanged="ProductDesc_TextChanged"
                                     PlaceholderText="Nhập mô tả sản phẩm" 
@@ -251,6 +251,7 @@
                 </TabView.TabItems>
             </TabView>
         </ContentDialog>
+
         <ContentDialog
             x:Name="DeleteConfirmationDialog"
             Title="THÔNG BÁO"

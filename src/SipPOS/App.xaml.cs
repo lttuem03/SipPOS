@@ -83,11 +83,12 @@ public partial class App : Application
             services.AddSingleton<IStaffShiftContext, StaffShiftContext>();
 
             // Dao
-            services.AddSingleton<IProductDao, PostgresProductDao>();
-            services.AddSingleton<ICategoryDao, PostgresCategoryDao>();
+            services.AddSingleton<IProductDao, PostgreProductDao>();
+            services.AddSingleton<ICategoryDao, PostgreCategoryDao>();
             services.AddSingleton<IStoreDao, PostgreStoreDao>();
             services.AddSingleton<IStaffDao, PostgreStaffDao>();
             services.AddSingleton<IConfigurationDao, PostgreConfigurationDao>();
+            services.AddSingleton<IInvoiceDao, PostgreInvoiceDao>();
 
             // Services
             services.AddSingleton<IProductService, ProductService>();
@@ -229,8 +230,15 @@ public partial class App : Application
         // Check if the database connection service is working (if the app is using a database)
         var storeDao = App.GetService<IStoreDao>();
         var staffDao = App.GetService<IStaffDao>();
+        var categoryDao = App.GetService<ICategoryDao>();
+        var productDao = App.GetService<IProductDao>();
+        var configurationDao = App.GetService<IConfigurationDao>();
 
-        if (storeDao is PostgreStoreDao || staffDao is PostgreStaffDao)
+        if (storeDao is PostgreStoreDao || 
+            staffDao is PostgreStaffDao ||
+            categoryDao is PostgreCategoryDao |
+            productDao is PostgreProductDao ||
+            configurationDao is PostgreProductDao)
         {
             try
             {

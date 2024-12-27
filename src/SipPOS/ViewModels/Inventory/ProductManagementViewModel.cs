@@ -128,10 +128,10 @@ public partial class ProductManagementViewModel : ObservableRecipient
     /// <summary>
     /// Searches for products based on the current filters and sorts.
     /// </summary>
-    public void Search()
+    public async void UpdateProductList()
     {
         Products.Clear();
-        Pagination<ProductDto> pagination = _productService.Search(ProductFilterDto, SortDto, Page, PerPage);
+        Pagination<ProductDto> pagination = await _productService.GetWithPagination(ProductFilterDto, SortDto, Page, PerPage);
         Page = pagination.Page;
         PerPage = pagination.PerPage;
         TotalPage = pagination.TotalPage;
@@ -145,29 +145,29 @@ public partial class ProductManagementViewModel : ObservableRecipient
     /// <summary>
     /// Inserts the selected product.
     /// </summary>
-    public ProductDto? Insert()
+    public async Task<ProductDto?> Insert()
     {
         if (SelectedProduct == null)
         {
             return null;
         }
 
-        bool isValidate = true;
+        var isValidate = true;
         if (string.IsNullOrEmpty(SelectedProduct.Name))
         {
             ProductNameRequireMessage = "Tên sản phẩm không được để trống";
             isValidate = false;
         }
-        if (string.IsNullOrEmpty(SelectedProduct.Desc))
+        if (string.IsNullOrEmpty(SelectedProduct.Description))
         {
             ProductDescRequireMessage = "Mô tả sản phẩm không được để trống";
             isValidate = false;
         }
-        if (SelectedProduct.Price == null || double.IsNaN((double)SelectedProduct.Price) || SelectedProduct.Price <= 0)
-        {
-            ProductPriceRequireMessage = "Giá sản phẩm không được để trống và phải lơn hơn bằng 0";
-            isValidate = false;
-        }
+        //if (SelectedProduct.Price == null || double.IsNaN((double)SelectedProduct.Price) || SelectedProduct.Price <= 0)
+        //{
+        //    ProductPriceRequireMessage = "Giá sản phẩm không được để trống và phải lơn hơn bằng 0";
+        //    isValidate = false;
+        //}
         if (SelectedProduct.CategoryId == null)
         {
             ProductCategoryRequireMessage = "Danh mục sản phẩm không được để trống";
@@ -177,36 +177,36 @@ public partial class ProductManagementViewModel : ObservableRecipient
         {
             return null;
         }
-        ProductDto? result = _productService.Insert(SelectedProduct);
-        Search();
+        ProductDto? result = await _productService.Insert(SelectedProduct);
+        UpdateProductList();
         return result;
     }
 
     /// <summary>
     /// Updates the selected product by its identifier.
     /// </summary>
-    public ProductDto? UpdateById()
+    public async Task<ProductDto?> UpdateById()
     {
         if (SelectedProduct == null)
         {
             return null;
         }
-        bool isValidate = true;
+        var isValidate = true;
         if (string.IsNullOrEmpty(SelectedProduct.Name))
         {
             ProductNameRequireMessage = "Tên sản phẩm không được để trống";
             isValidate = false;
         }
-        if (string.IsNullOrEmpty(SelectedProduct.Desc))
+        if (string.IsNullOrEmpty(SelectedProduct.Description))
         {
             ProductDescRequireMessage = "Mô tả sản phẩm không được để trống";
             isValidate = false;
         }
-        if (SelectedProduct.Price == null || double.IsNaN((double)SelectedProduct.Price) || SelectedProduct.Price < 0)
-        {
-            ProductPriceRequireMessage = "Giá sản phẩm không được để trống và phải lớn hơn hoặc bằng 0";
-            isValidate = false;
-        }
+        //if (SelectedProduct.Price == null || double.IsNaN((double)SelectedProduct.Price) || SelectedProduct.Price < 0)
+        //{
+        //    ProductPriceRequireMessage = "Giá sản phẩm không được để trống và phải lớn hơn hoặc bằng 0";
+        //    isValidate = false;
+        //}
         if (SelectedProduct.CategoryId == null)
         {
             ProductCategoryRequireMessage = "Danh mục sản phẩm không được để trống";
@@ -217,21 +217,22 @@ public partial class ProductManagementViewModel : ObservableRecipient
             return null;
         }
 
-        ProductDto? result = _productService.UpdateById(SelectedProduct);
-        Search();
+        ProductDto? result = await _productService.UpdateById(SelectedProduct);
+        UpdateProductList();
         return result;
     }
 
     /// <summary>
     /// Gets all categories.
     /// </summary>
-    public void GetAllCategory()
+    public async void GetAllCategory()
     {
         Categories.Clear();
         CategoriesFilter.Clear();
         CategoriesFilter.Add(new CategoryDto { Id = null, Name = "Tất cả" });
 
-        var data = _categoryService.GetAll();
+        var data = await _categoryService.GetAll();
+
         foreach (var item in data)
         {
             Categories.Add(item);
@@ -242,13 +243,13 @@ public partial class ProductManagementViewModel : ObservableRecipient
     /// <summary>
     /// Deletes the selected products by their identifiers.
     /// </summary>
-    public void DeleteByIds()
+    public async void DeleteByIds()
     {
-        List<long> ids = Products.Where(x => x.IsSeteled && x.Id.HasValue).
+        List<long> ids = Products.Where(x => x.IsSelected && x.Id.HasValue).
                                   Select(x => x.Id.HasValue ? x.Id.Value : -1).
                                   ToList();
 
-        _productService.DeleteByIds(ids);
-        Search();
+        await _productService.DeleteByIds(ids);
+        UpdateProductList();
     }
 }

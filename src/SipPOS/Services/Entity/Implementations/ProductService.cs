@@ -7,6 +7,7 @@ using SipPOS.Services.Authentication.Implementations;
 using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Models.Entity;
 using SipPOS.Models.General;
+using SipPOS.Services.General.Interfaces;
 
 namespace SipPOS.Services.Entity.Implementations;
 
@@ -33,9 +34,12 @@ public class ProductService : IProductService
     /// Gets all products.
     /// </summary>
     /// <returns>A list of product DTOs.</returns>
-    public List<ProductDto> GetAll()
+    public async Task<List<ProductDto>> GetAll()
     {
-        return mapper.Map<List<ProductDto>>(productDao.GetAllAsync().Result);
+        var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
+        var storeId = storeAuthenticationService.GetCurrentStoreId();
+
+        return mapper.Map<List<ProductDto>>(await productDao.GetAllAsync(storeId));
     }
 
     /// <summary>
@@ -43,9 +47,12 @@ public class ProductService : IProductService
     /// </summary>
     /// <param name="id">The identifier of the product.</param>
     /// <returns>The product DTO if found; otherwise, null.</returns>
-    public ProductDto? GetById(long id)
+    public async Task<ProductDto?> GetById(long id)
     {
-        return mapper.Map<ProductDto>(productDao.GetByIdAsync(id).Result);
+        var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
+        var storeId = storeAuthenticationService.GetCurrentStoreId();
+
+        return mapper.Map<ProductDto>(await productDao.GetByIdAsync(storeId, id));
     }
 
     /// <summary>
@@ -53,12 +60,17 @@ public class ProductService : IProductService
     /// </summary>
     /// <param name="product">The product DTO to insert.</param>
     /// <returns>The inserted product DTO.</returns>
-    public ProductDto? Insert(ProductDto productDto)
+    public async Task<ProductDto?> Insert(ProductDto productDto)
     {
+        var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
+        var storeId = storeAuthenticationService.GetCurrentStoreId();
+
         StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
+
         productDto.CreatedBy = staffAuthenticationService.Context.CurrentStaff?.CompositeUsername;
         productDto.CreatedAt = DateTime.Now;
-        return mapper.Map<ProductDto>(productDao.InsertAsync(mapper.Map<Product>(productDto)).Result);
+
+        return mapper.Map<ProductDto>(await productDao.InsertAsync(storeId, mapper.Map<Product>(productDto)));
     }
 
     /// <summary>
@@ -66,12 +78,17 @@ public class ProductService : IProductService
     /// </summary>
     /// <param name="product">The product DTO to update.</param>
     /// <returns>The updated product DTO.</returns>
-    public ProductDto? UpdateById(ProductDto productDto)
+    public async Task<ProductDto?> UpdateById(ProductDto productDto)
     {
+        var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
+        var storeId = storeAuthenticationService.GetCurrentStoreId();
+
         StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
+
         productDto.UpdatedBy = staffAuthenticationService.Context.CurrentStaff?.CompositeUsername;
         productDto.UpdatedAt = DateTime.Now;
-        return mapper.Map<ProductDto>(productDao.UpdateByIdAsync(mapper.Map<Product>(productDto)).Result);
+
+        return mapper.Map<ProductDto>(await productDao.UpdateByIdAsync(storeId, mapper.Map<Product>(productDto)));
     }
 
     /// <summary>
@@ -79,11 +96,15 @@ public class ProductService : IProductService
     /// </summary>
     /// <param name="id">The identifier of the product to delete.</param>
     /// <returns>The deleted product DTO.</returns>
-    public ProductDto? DeleteById(long id)
+    public async Task<ProductDto?> DeleteById(long id)
     {
+        var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
+        var storeId = storeAuthenticationService.GetCurrentStoreId();
+
         StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
         Staff author = staffAuthenticationService.Context.CurrentStaff ?? new Staff(1, new StaffDto());
-        return mapper.Map<ProductDto>(productDao.DeleteByIdAsync(id, author).Result);
+
+        return mapper.Map<ProductDto>(await productDao.DeleteByIdAsync(storeId, id, author));
     }
 
     /// <summary>
@@ -91,11 +112,15 @@ public class ProductService : IProductService
     /// </summary>
     /// <param name="ids">The identifiers of the products to delete.</param>
     /// <returns>A list of deleted product DTOs.</returns>
-    public List<ProductDto> DeleteByIds(List<long> ids)
+    public async Task<List<ProductDto>> DeleteByIds(List<long> ids)
     {
+        var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
+        var storeId = storeAuthenticationService.GetCurrentStoreId();
+
         StaffAuthenticationService staffAuthenticationService = (StaffAuthenticationService)App.GetService<IStaffAuthenticationService>();
         Staff author = staffAuthenticationService.Context.CurrentStaff ?? new Staff(1, new StaffDto());
-        return mapper.Map<List<ProductDto>>(productDao.DeleteByIdsAsync(ids, author).Result);
+        
+        return mapper.Map<List<ProductDto>>(await productDao.DeleteByIdsAsync(storeId, ids, author));
     }
 
     /// <summary>
@@ -106,8 +131,11 @@ public class ProductService : IProductService
     /// <param name="perPage">The number of items per page.</param>
     /// <param name="page">The page number.</param>
     /// <returns>A paginated list of product DTOs.</returns>
-    public Pagination<ProductDto> Search(ProductFilterDto productFilterDto, SortDto sortDto, int perPage, int page)
+    public async Task<Pagination<ProductDto>> GetWithPagination(ProductFilterDto productFilterDto, SortDto sortDto, int perPage, int page)
     {
-        return mapper.Map<Pagination<ProductDto>>(productDao.SearchAsync(productFilterDto, sortDto, perPage, page).Result);
+        var storeAuthenticationService = App.GetService<IStoreAuthenticationService>();
+        var storeId = storeAuthenticationService.GetCurrentStoreId();
+
+        return mapper.Map<Pagination<ProductDto>>(await productDao.GetWithPaginationAsync(storeId, productFilterDto, sortDto, perPage, page));
     }
 }

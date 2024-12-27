@@ -34,6 +34,7 @@
     <Page Remove="Views\Management\**" />
   </ItemGroup>
   <ItemGroup>
+    <Content Remove="Assets\default_product_image.png" />
     <Content Remove="Assets\Iconography\back-button.png" />
     <Content Remove="Assets\Iconography\cancel.png" />
     <Content Remove="Assets\Iconography\coffee-pot.png" />
@@ -111,6 +112,9 @@
     <Page Update="AppStartupCheckWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <None Update="Assets\default_product_image.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Iconography\back-button.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

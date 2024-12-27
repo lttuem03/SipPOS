@@ -22,7 +22,8 @@ exports.up = async function(knex) {
             email VARCHAR(64) NOT NULL,
             tel VARCHAR(16) NOT NULL,
             address VARCHAR(255) NOT NULL,
-            employment_status VARCHAR(24) NOT NULL CHECK (employment_status IN ('InEmployment', 'OutOfEmployment')),
+            employment_status VARCHAR(24) NOT NULL 
+                CHECK (employment_status IN ('InEmployment', 'OutOfEmployment')),
             employment_start_date DATE NOT NULL,
             employment_end_date DATE,
             
@@ -54,6 +55,8 @@ exports.up = async function(knex) {
  */
 exports.down = async function(knex) {
     await knex.raw(`
+        DROP TRIGGER IF EXISTS reset_staff_id_trigger ON staff;
+        DROP FUNCTION IF EXISTS reset_staff_id;
         DROP TABLE IF EXISTS staff
     `);
 };

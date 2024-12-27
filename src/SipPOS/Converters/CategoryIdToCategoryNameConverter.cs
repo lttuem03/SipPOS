@@ -32,8 +32,8 @@ public class CategoryIdToCategoryNameConverter : IValueConverter
     {
         if (value is long id)
         {
-            CategoryDto? categoryDto = _categoryService.GetById(id);
-            return categoryDto?.Name;
+            //CategoryDto? categoryDto = await _categoryService.GetById(id);
+            //return categoryDto?.Name;
         }
         return value;
     }

@@ -108,10 +108,10 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     /// <summary>
     /// Searches for categories based on the current filters and sorts.
     /// </summary>
-    public void Search()
+    public async void UpdateCategoryList()
     {
         Categories.Clear();
-        Pagination<CategoryDto> pagination = _categoryService.Search(CategoryFilterDto, SortDto, Page, PerPage);
+        Pagination<CategoryDto> pagination = await _categoryService.GetWithPagination(CategoryFilterDto, SortDto, Page, PerPage);
         Page = pagination.Page;
         PerPage = pagination.PerPage;
         TotalPage = pagination.TotalPage;
@@ -125,19 +125,19 @@ public partial class CategoryManagementViewModel : ObservableRecipient
     /// <summary>
     /// Inserts the selected category.
     /// </summary>
-    public CategoryDto? Insert()
+    public async Task<CategoryDto?> Insert()
     {
         if (SelectedCategory == null)
         {
             return null;
         }
-        bool isValidate = true;
+        var isValidate = true;
         if (string.IsNullOrEmpty(SelectedCategory.Name))
         {
             CategoryNameReqireMessage = "Vui lòng nhập tên danh mục";
             isValidate = false;
         }
-        if (string.IsNullOrEmpty(SelectedCategory.Desc))
+        if (string.IsNullOrEmpty(SelectedCategory.Description))
         {
             CategoryDescReqireMessage = "Vui lòng nhập mô tả danh mục";
             isValidate = false;
@@ -146,15 +146,15 @@ public partial class CategoryManagementViewModel : ObservableRecipient
         {
             return null;
         }
-        CategoryDto? result = _categoryService.Insert(SelectedCategory);
-        Search();
+        CategoryDto? result = await _categoryService.Insert(SelectedCategory);
+        UpdateCategoryList();
         return result;
     }
 
     /// <summary>
     /// Updates the selected category by its identifier.
     /// </summary>
-    public CategoryDto? UpdateById()
+    public async Task<CategoryDto?> UpdateById()
     {
         if (SelectedCategory == null)
         {
@@ -164,26 +164,26 @@ public partial class CategoryManagementViewModel : ObservableRecipient
         {
             CategoryDescReqireMessage = "Vui lòng nhập tên danh mục";
         }
-        if (SelectedCategory.Desc == null)
+        if (SelectedCategory.Description == null)
         {
             CategoryDescReqireMessage = "Vui lòng nhập mô tả danh mục";
         }
 
-        CategoryDto? result = _categoryService.UpdateById(SelectedCategory);
-        Search();
+        CategoryDto? result = await _categoryService.UpdateById(SelectedCategory);
+        UpdateCategoryList();
         return result;
     }
 
     /// <summary>
     /// Deletes the selected categories by their identifiers.
     /// </summary>
-    public void DeleteByIds()
+    public async void DeleteByIds()
     {
-        List<long> ids = Categories.Where(x => x.IsSeteled && x.Id.HasValue).
+        List<long> ids = Categories.Where(x => x.IsSelected && x.Id.HasValue).
                                     Select(x => x.Id.HasValue ? x.Id.Value : -1).
                                     ToList();
 
-        _categoryService.DeleteByIds(ids);
-        Search();
+        await _categoryService.DeleteByIds(ids);
+        UpdateCategoryList();
     }
 }

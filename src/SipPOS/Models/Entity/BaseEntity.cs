@@ -8,10 +8,7 @@ public abstract class BaseEntity
     /// <summary>
     /// Gets or sets the unique identifier.
     /// </summary>
-    public long Id
-    {
-        get; set;
-    }
+    public long Id { get; set; }
 
     /// <summary>
     /// Gets or sets the user who created the entity.
