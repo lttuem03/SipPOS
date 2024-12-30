@@ -70,6 +70,8 @@
     <None Remove="Views\MainMenuView.xaml" />
     <None Remove="Views\PaymentConfigurationView.xaml" />
     <None Remove="Views\ProductManagementView.xaml" />
+    <None Remove="Views\Promotion\PromotionMenuView.xaml" />
+    <None Remove="Views\Promotion\SpecialOfferManagementView.xaml" />
     <None Remove="Views\ReceiptConfigurationView.xaml" />
     <None Remove="Views\Setup\Pages\SalaryConfigurationInitialSetupPage.xaml" />
     <None Remove="Views\Setup\Pages\StoreConfigurationInitialSetupPage.xaml" />
@@ -177,6 +179,12 @@
     <None Update="Assets\StoreLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\Promotion\SpecialOfferManagementView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Promotion\PromotionMenuView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Setup\Pages\SalaryConfigurationInitialSetupPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

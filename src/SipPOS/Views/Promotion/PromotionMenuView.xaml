@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="SipPOS.Views.Promotion.PromotionMenuView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SipPOS.Views.Promotion"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Canvas
+        Background="AliceBlue">
+        <!--Go back button-->
+        <Button 
+            Canvas.Left="50" Canvas.Top="50"
+            Click="goBackButton_Click">
+            <StackPanel 
+                Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <Image Source="/Assets/Iconography/back-button.png" Width="25" Height="25"/>
+                <TextBlock 
+                    Text="Quay lại" 
+                    VerticalAlignment="Center"
+                    Margin="10,0,0,0"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    FontSize="16"/>
+            </StackPanel>
+        </Button>
+
+        <!--Page title-->
+        <TextBlock 
+            Canvas.Left="50" Canvas.Top="100"
+            Text="QUẢN LÝ KHUYẾN MÃI" 
+            Style="{StaticResource TitleLargeTextBlockStyle}"/>
+
+        <!--Inventory navigation view-->
+        <Grid
+            Canvas.Left="50" Canvas.Top="150"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Width="1440"
+            Height="700">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <NavigationView
+                Name="promotionMenuNavigationView"
+                PaneDisplayMode="Top"
+                IsBackButtonVisible="Collapsed"
+                IsSettingsVisible="False"
+                SelectionChanged="promotionMenuNavigationView_SelectionChanged"
+                Grid.Row="0">
+                <NavigationView.MenuItems>
+                    <NavigationViewItem Content="Khuyến mãi" Tag="PromotionManagement"/>
+                </NavigationView.MenuItems>
+            </NavigationView>
+
+            <Frame 
+                x:Name="promotionMenuNavigationFrame" 
+                Grid.Row="1"
+                Margin="0,0,0,50"/>
+        </Grid>
+    </Canvas>
+</Page>

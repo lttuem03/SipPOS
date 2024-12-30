@@ -11,6 +11,7 @@ using SipPOS.ViewModels.Inventory;
 using SipPOS.Resources.Controls;
 using SipPOS.DataTransfer.Entity;
 using SipPOS.DataTransfer.General;
+using System.Diagnostics;
 
 namespace SipPOS.Views.Inventory;
 
@@ -64,7 +65,14 @@ public sealed partial class ProductManagementView : Page
     /// <param name="e">The event data.</param>
     public async void AddButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.SelectedProduct = new ProductDto();
+        ProductDto newProductDto = new ProductDto();
+        newProductDto.Status = "Available";
+        ViewModel.SelectedProduct = newProductDto;
+        ViewModel.ProductOptions.Clear();
+        ViewModel.ProductOptions.Add(new()
+        {
+            Id = Convert.ToBase64String(Guid.NewGuid().ToByteArray()),
+        });
         ViewModel.ImageUrls.Clear();
         Dialog.Title = "THÊM SẢN PHẨM";
         Dialog.IsPrimaryButtonEnabled = true;
@@ -100,6 +108,16 @@ public sealed partial class ProductManagementView : Page
             return;
         }
         ViewModel.SelectedProduct = selectedProducts[0];
+        ViewModel.ProductOptions.Clear();
+        for (int i = 0; i < ViewModel.SelectedProduct.ProductOptions.Count; i++)
+        {
+            ViewModel.ProductOptions.Add(new ProductOptionDto()
+            {
+                Id = Convert.ToBase64String(Guid.NewGuid().ToByteArray()),
+                Option = ViewModel.SelectedProduct.ProductOptions[i].option,
+                Price = ViewModel.SelectedProduct.ProductOptions[i].price
+            });
+        }
         Dialog.Title = "XEM SẢN PHẨM";
         Dialog.IsPrimaryButtonEnabled = false;
         ViewModel.ActionType = "VIEW";
@@ -130,6 +148,16 @@ public sealed partial class ProductManagementView : Page
             return;
         }
         ViewModel.SelectedProduct = selectedProducts[0];
+        ViewModel.ProductOptions.Clear();
+        for (int i = 0; i < ViewModel.SelectedProduct.ProductOptions.Count; i++)
+        {
+            ViewModel.ProductOptions.Add(new ProductOptionDto()
+            {
+                Id = Convert.ToBase64String(Guid.NewGuid().ToByteArray()),
+                Option = ViewModel.SelectedProduct.ProductOptions[i].option,
+                Price = ViewModel.SelectedProduct.ProductOptions[i].price
+            });
+        }
         Dialog.Title = "CHỈNH SỬA SẢN PHẨM";
         Dialog.IsPrimaryButtonEnabled = true;
         ViewModel.ActionType = "EDIT";
@@ -186,7 +214,7 @@ public sealed partial class ProductManagementView : Page
     {
         ViewModel.UpdateProductList();
     }
-    
+
     /// <summary>
     /// Handles the sorting event of the data grid.
     /// </summary>
@@ -220,7 +248,7 @@ public sealed partial class ProductManagementView : Page
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="args">The event data.</param>
-    private void Dialog_YesClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+    private async void Dialog_YesClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
     {
         if (ViewModel.SelectedProduct == null)
         {
@@ -230,10 +258,10 @@ public sealed partial class ProductManagementView : Page
         switch (ViewModel.ActionType)
         {
             case "ADD":
-                isOk = null != ViewModel.Insert();
+                isOk = null != await ViewModel.Insert();
                 break;
             case "EDIT":
-                isOk = null != ViewModel.UpdateById();
+                isOk = null != await ViewModel.UpdateById();
                 break;
             default:
                 break;
@@ -372,7 +400,7 @@ public sealed partial class ProductManagementView : Page
         ViewModel.ProductDescRequireMessage = string.Empty;
     }
 
-    private void ProductPrice_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    private void ProductPrice_ValueChanged(object sender, object args)
     {
         ViewModel.ProductPriceRequireMessage = string.Empty;
     }
@@ -381,4 +409,65 @@ public sealed partial class ProductManagementView : Page
     {
         ViewModel.ProductCategoryRequireMessage = string.Empty;
     }
+
+    private void DeletePriceOption_Click(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel.SelectedProduct == null)
+        {
+            return;
+        }
+        if (ViewModel.ProductOptions.Count() == 1)
+        {
+            ViewModel.ProductPriceRequireMessage = "Phải có ít nhất một giá cho sản phẩm";
+            return;
+        }
+        string? id = (sender as Button)?.Tag.ToString();
+        if (id != null)
+        {
+            int index = -1;
+
+            foreach (var item in ViewModel.ProductOptions)
+            {
+                if (item.Id.ToString() == id)
+                {
+                    index = ViewModel.ProductOptions.IndexOf(item);
+                    break;
+                }
+            }
+            if (index != -1)
+            {
+                ViewModel.ProductOptions.RemoveAt(index);
+            }
+        }
+    }
+
+    private void AddPriceOption_Click(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel.SelectedProduct == null)
+        {
+            return;
+        }
+        string? id = (sender as Button)?.Tag.ToString();
+        if (id != null)
+        {
+            int index = -1;
+
+            foreach (var item in ViewModel.ProductOptions)
+            {
+                if (item.Id.ToString() == id)
+                {
+                    index = ViewModel.ProductOptions.IndexOf(item);
+                    break;
+                }
+            }
+            if (index != -1)
+            {
+                ViewModel.ProductOptions.Insert(index + 1, new()
+                {
+                    Id = Convert.ToBase64String(Guid.NewGuid().ToByteArray())
+                });
+            }
+        }
+    }
+
 }

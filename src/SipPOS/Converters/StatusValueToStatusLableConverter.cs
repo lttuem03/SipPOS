@@ -24,6 +24,21 @@ class StatusValueToStatusLableConverter : IValueConverter
         else if ("Unavailable".Equals(value))
         {
             return "Không có sẵn";
+        } else if ("Inactive".Equals(value))
+        {
+            return "Chưa áp dụng";
+        }
+        else if ("Active".Equals(value))
+        {
+            return "Đang hoạt động";
+        }
+        else if ("Expired".Equals(value))
+        {
+            return "Đã hết hạn";
+        }
+        else if ("Cancelled".Equals(value))
+        {
+            return "Đã hủy";
         }
         return "Không xác định";
     }

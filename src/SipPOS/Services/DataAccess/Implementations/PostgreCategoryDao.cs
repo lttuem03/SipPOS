@@ -23,7 +23,7 @@ public class PostgreCategoryDao : ICategoryDao
     /// <param name="storeId">The id of the store to insert category into.</param>
     /// <param name="category">The category to insert.</param>
     /// <returns>The inserted category if successful; otherwise, null.</returns>
-    public async Task<Category?> InsertAsync(long storeId, Category categoryDto)
+    public async Task<Category?> InsertAsync(long storeId, Category categoryModel)
     {
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
 
@@ -46,10 +46,10 @@ public class PostgreCategoryDao : ICategoryDao
             Parameters =
             {
                 new() { Value = storeId },
-                new() { Value = categoryDto.CreatedBy },
-                new() { Value = categoryDto.CreatedAt },
-                new() { Value = categoryDto.Name },
-                new() { Value = categoryDto.Description }
+                new() { Value = categoryModel.CreatedBy },
+                new() { Value = categoryModel.CreatedAt },
+                new() { Value = categoryModel.Name },
+                new() { Value = categoryModel.Description }
             }
         };
 
@@ -226,9 +226,9 @@ public class PostgreCategoryDao : ICategoryDao
     /// Updates an existing category by its ID.
     /// </summary>
     /// <param name="storeId">The id of the store to update category from.</param>
-    /// <param name="categoryDto">The category with updated information.</param>
+    /// <param name="categoryModel">The category with updated information.</param>
     /// <returns>The updated category if found; otherwise, null.</returns>
-    public async Task<Category?> UpdateByIdAsync(long storeId, Category categoryDto)
+    public async Task<Category?> UpdateByIdAsync(long storeId, Category categoryModel)
     {
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
 
@@ -247,12 +247,12 @@ public class PostgreCategoryDao : ICategoryDao
         {
             Parameters =
             {
-                new() { Value = categoryDto.Name },
-                new() { Value = categoryDto.Description },
-                new() { Value = categoryDto.UpdatedBy },
-                new() { Value = categoryDto.UpdatedAt },
+                new() { Value = categoryModel.Name },
+                new() { Value = categoryModel.Description },
+                new() { Value = categoryModel.UpdatedBy },
+                new() { Value = categoryModel.UpdatedAt },
                 new() { Value = storeId },
-                new() { Value = categoryDto.Id }
+                new() { Value = categoryModel.Id }
             }
         };
 

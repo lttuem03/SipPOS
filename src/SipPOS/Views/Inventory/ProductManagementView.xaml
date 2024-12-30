@@ -9,6 +9,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
+    xmlns:inventory="using:SipPOS.ViewModels.Inventory"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -18,6 +19,7 @@
             <Image Stretch = 'UniformToFill' Source = '{Binding}' Width = '200' Height = '150' AutomationProperties.AccessibilityView = 'Raw'/>
         </DataTemplate>
         <local_conveters:DoubleToNullableDoubleConverter x:Key="DoubleToNullableDoubleConverter"/>
+        <local_conveters:DecimalToDoubleConverter x:Key="DecimalToDoubleConverter"/>
         <local_conveters:StatusValueToStatusLableConverter x:Key="StatusValueToStatusLableConverter"/>
         <local_conveters:CategoryIdToCategoryNameConverter x:Key="CategoryIdToCategoryNameConverter"/>
         <local_conveters:DateToDisplayDateConverter x:Key="DateToDisplayDateConverter"/>
@@ -114,7 +116,7 @@
                 <controls:DataGridTemplateColumn Header="Chọn" Width="80" CanUserSort="False">
                     <controls:DataGridTemplateColumn.CellTemplate >
                         <DataTemplate >
-                            <CheckBox IsChecked="{Binding IsSeteled, Mode=TwoWay}" Margin="30,0,0,0"/>
+                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" Margin="30,0,0,0"/>
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>
@@ -162,9 +164,8 @@
                         <TabViewItem.IconSource>
                             <SymbolIconSource Symbol="Bookmarks" />
                         </TabViewItem.IconSource>
-                        <Grid ColumnSpacing="10" RowSpacing="10" Padding="10,20,10,10">
+                        <Grid ColumnSpacing="10" RowSpacing="4" Padding="10,20,10,10">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -181,7 +182,7 @@
                                     TextChanged="ProductName_TextChanged"
                                     PlaceholderText="Nhập tên sản phẩm" 
                                     IsSpellCheckEnabled="False"/>
-                                <TextBlock Text="{x:Bind ViewModel.ProductNameRequireMessage, Mode=OneWay}" Foreground="Red"/>
+                                <TextBlock Text="{x:Bind ViewModel.ProductNameRequireMessage, Mode=OneWay}" Foreground="Red" FontSize="12"/>
                             </StackPanel>
                             <StackPanel HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1" >
                                 <ComboBox 
@@ -194,22 +195,71 @@
                                     SelectionChanged="ProductCategory_SelectionChanged"
                                     SelectedValue="{x:Bind ViewModel.SelectedProduct.CategoryId, Mode=TwoWay}"
                                     ItemsSource="{x:Bind ViewModel.Categories}"/>
-                                <TextBlock Text="{x:Bind ViewModel.ProductCategoryRequireMessage, Mode=OneWay}" Foreground="Red"/>
-                            </StackPanel>
-                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" >
-                                
-                                <TextBlock Text="{x:Bind ViewModel.ProductPriceRequireMessage, Mode=OneWay}" Foreground="Red"/>
+                                <TextBlock Text="{x:Bind ViewModel.ProductCategoryRequireMessage, Mode=OneWay}" Foreground="Red" FontSize="12"/>
                             </StackPanel>
                             <ComboBox 
                                 Header="Trạng thái"
-                                Grid.Row="1" Grid.Column="1" 
+                                Grid.Row="1" Grid.Column="0" 
                                 PlaceholderText="Chọn trạng thái"  
                                 HorizontalAlignment="Stretch"
                                 DisplayMemberPath="Label" 
                                 SelectedValuePath="Value"
                                 SelectedValue="{x:Bind ViewModel.SelectedProduct.Status, Mode=TwoWay}"
                                 ItemsSource="{x:Bind ViewModel.StatusItems}"/>
-                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" >
+                            <ListView 
+                                Header="Giá sản phẩm" x:Name="productOptionsListView" DataContext="{x:Bind ViewModel, Mode=OneWay}"
+                                Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{x:Bind ViewModel.ProductOptions, Mode=TwoWay}" 
+                                Margin="0" Padding="5,5,5,10" BorderBrush="Black" BorderThickness="1" CornerRadius="2">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate>
+                                                    <ContentPresenter/>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ColumnSpacing="4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox
+                                                Grid.Column="0" Text="{Binding Option, Mode=TwoWay}" Margin="0,5,0,0"
+                                                TextChanged="ProductPrice_ValueChanged" PlaceholderText="Nhập loại" IsSpellCheckEnabled="False"/>
+                                            <NumberBox 
+                                                Grid.Column="1" Margin="0,5,0,0" Value="{Binding Price, Mode=TwoWay, Converter={StaticResource DecimalToDoubleConverter}}"
+                                                ValueChanged="ProductPrice_ValueChanged" PlaceholderText="Nhập giá sản phẩm"/>
+                                            <Button 
+                                                Grid.Column="2" VerticalAlignment="Bottom" Width="40" Height="40" Background="Transparent" 
+                                                Padding="2,0,0,0" Margin="0,5,0,0" BorderThickness="1" CornerRadius="40"
+                                                Click="DeletePriceOption_Click" Tag="{Binding Id, Mode=TwoWay}">
+                                                <FontIcon Glyph="&#xE108;" FontSize="20" Foreground="Black" VerticalAlignment="Center" />
+                                            </Button>
+                                            <Button 
+                                                Grid.Column="3" VerticalAlignment="Bottom" Width="40" Height="40" Background="Transparent" 
+                                                Padding="2,0,0,0" Margin="0,5,0,0" BorderThickness="1" CornerRadius="40"
+                                                Click="AddPriceOption_Click" Tag="{Binding Id, Mode=TwoWay}">
+                                                <FontIcon Glyph="&#xE710;" FontSize="20" Foreground="Black" VerticalAlignment="Center" />
+                                            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                                <ListView.FooterTemplate>
+                                    <DataTemplate x:DataType="inventory:ProductManagementViewModel">
+                                        <Border>
+                                            <TextBlock Text="{x:Bind Path=ProductPriceRequireMessage, Mode=TwoWay}" HorizontalAlignment="Left" Foreground="Red" FontSize="12"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListView.FooterTemplate>
+                            </ListView>
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" >
                                 <TextBox 
                                     AcceptsReturn="True"
                                     Text="{x:Bind ViewModel.SelectedProduct.Description, Mode=TwoWay}"
@@ -217,7 +267,7 @@
                                     TextChanged="ProductDesc_TextChanged"
                                     PlaceholderText="Nhập mô tả sản phẩm" 
                                     IsSpellCheckEnabled="False"/>
-                                <TextBlock Text="{x:Bind ViewModel.ProductDescRequireMessage, Mode=OneWay}" Foreground="Red"/>
+                                <TextBlock Text="{x:Bind ViewModel.ProductDescRequireMessage, Mode=OneWay}" Foreground="Red" FontSize="12"/>
                             </StackPanel>
                         </Grid>
                     </TabViewItem>

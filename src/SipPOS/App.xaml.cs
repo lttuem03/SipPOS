@@ -83,6 +83,7 @@ public partial class App : Application
             services.AddSingleton<IStaffShiftContext, StaffShiftContext>();
 
             // Dao
+            services.AddSingleton<ISpecialOfferDao, PostgreSpecialOfferDao>();
             services.AddSingleton<IProductDao, PostgreProductDao>();
             services.AddSingleton<ICategoryDao, PostgreCategoryDao>();
             services.AddSingleton<IStoreDao, PostgreStoreDao>();
@@ -91,6 +92,7 @@ public partial class App : Application
             services.AddSingleton<IInvoiceDao, PostgreInvoiceDao>();
 
             // Services
+            services.AddSingleton<ISpecialOfferService, SpecialOfferService>();
             services.AddSingleton<IProductService, ProductService>();
             services.AddSingleton<ICategoryService, CategoryService>();
             services.AddSingleton<IDatabaseConnectionService>(new PostgreSqlConnectionService(
@@ -111,6 +113,7 @@ public partial class App : Application
             services.AddSingleton<IConfigurationContext>(new ConfigurationContext());
 
             // Views and ViewModels
+            services.AddTransient<SpecialOfferManagementViewModel>();
             services.AddTransient<CategoryManagementViewModel>();
             services.AddTransient<CategoryManagementView>();
             services.AddTransient<ProductManagementViewModel>();
