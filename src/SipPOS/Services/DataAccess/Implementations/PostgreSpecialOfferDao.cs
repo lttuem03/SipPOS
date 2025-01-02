@@ -20,7 +20,7 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
 
         using var specialOfferInsertConnection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection;
-        
+
         await using var specialOfferInsertCommand = new NpgsqlCommand(@"
             INSERT INTO special_offer 
             (
@@ -30,10 +30,20 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
                 name, 
                 description, 
                 category_id, 
-                status
+                status,
+                type,
+                sold_items,
+                max_items,
+                product_id,
+                start_date,
+                end_date,
+                discount_price,
+                discount_percentage,
+                code,
+                price_type
             )
             VALUES 
-                ($1, $2, $3, $4, $5, $6, $7)
+                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
             RETURNING *
         ", specialOfferInsertConnection)
         {
@@ -44,13 +54,23 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
                 new() { Value = specialOffersModel.CreatedAt },
                 new() { Value = specialOffersModel.Name },
                 new() { Value = specialOffersModel.Description },
-                new() { Value = specialOffersModel.CategoryId },
-                new() { Value = specialOffersModel.Status }
+                new() { Value = specialOffersModel.CategoryId == null ? DBNull.Value : specialOffersModel.CategoryId},
+                new() { Value = specialOffersModel.Status },
+                new() { Value = specialOffersModel.Type },
+                new() { Value = specialOffersModel.SoldItems },
+                new() { Value = specialOffersModel.MaxItems },
+                new() { Value = specialOffersModel.ProductId == null ? DBNull.Value : specialOffersModel.ProductId},
+                new() { Value = specialOffersModel.StartDate },
+                new() { Value = specialOffersModel.EndDate },
+                new() { Value = specialOffersModel.DiscountPrice },
+                new() { Value = specialOffersModel.DiscountPercentage },
+                new() { Value = specialOffersModel.Code },
+                new() { Value = specialOffersModel.PriceType }
             }
         };
-        
+
         await using var specialOfferReader = specialOfferInsertCommand.ExecuteReader();
-        
+
         if (!specialOfferReader.HasRows)
             return null;
 
@@ -76,7 +96,7 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
                 store_id = $1
         ", specialOfferSelectConnection)
         {
-            Parameters = 
+            Parameters =
             {
                 new() { Value = storeId }
             }
@@ -112,7 +132,7 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
             WHERE store_id = $1 AND id = $2
         ", specialOfferSelectConnection)
         {
-            Parameters = 
+            Parameters =
             {
                 new() { Value = storeId },
                 new() { Value = id }
@@ -136,15 +156,15 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
     public async Task<Pagination<SpecialOffer>> GetWithPaginationAsync
     (
         long storeId,
-        SpecialOfferFilterDto specialOffersFilterDto, 
-        SortDto sortDto, 
-        int page, 
+        SpecialOfferFilterDto specialOffersFilterDto,
+        SortDto sortDto,
+        int page,
         int perPage
     )
     {
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
 
-        using var specialOfferSelectConnection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection ?? 
+        using var specialOfferSelectConnection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection ??
             throw new InvalidOperationException("Failed to open database connection.");
 
         var query = new StringBuilder(@"
@@ -160,6 +180,13 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
         parameters.Add(new() { Value = storeId });
 
         var index = 2;
+        if (!string.IsNullOrEmpty(specialOffersFilterDto.Code))
+        {
+            query.Append(" AND code ILIKE '%' || $" + index + " || '%'");
+            parameters.Add(new() { Value = specialOffersFilterDto.Code });
+            index++;
+        }
+
         if (!string.IsNullOrEmpty(specialOffersFilterDto.Name))
         {
             query.Append(" AND name ILIKE '%' || $" + index + " || '%'");
@@ -178,6 +205,13 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
         {
             query.Append(" AND category_id = $" + index);
             parameters.Add(new() { Value = specialOffersFilterDto.CategoryId });
+            index++;
+        }
+
+        if (specialOffersFilterDto.ProductId.HasValue)
+        {
+            query.Append(" AND product_id = $" + index);
+            parameters.Add(new() { Value = specialOffersFilterDto.ProductId });
             index++;
         }
 
@@ -233,7 +267,7 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
     {
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
 
-        using var specialOfferUpdateConnection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection ?? 
+        using var specialOfferUpdateConnection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection ??
             throw new InvalidOperationException("Failed to open database connection.");
 
         await using var specialOfferUpdateCommand = new NpgsqlCommand(@"
@@ -243,13 +277,21 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
                 updated_at = $2,
                 name = $3,
                 description = $4,
-                items_sold = $5, 
+                sold_items = $5, 
                 category_id = $6,
-                status = $7
+                status = $7,
+                type = $8,
+                product_id = $9,
+                start_date = $10,
+                end_date = $11,
+                discount_price = $12,
+                discount_percentage = $13,
+                code = $14,
+                price_type = $15
             WHERE 
-                store_id = $8
+                store_id = $16
             AND
-                id = $9
+                id = $17
             RETURNING *
         ", specialOfferUpdateConnection)
         {
@@ -259,9 +301,17 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
                 new() { Value = specialOffersModel.UpdatedAt },
                 new() { Value = specialOffersModel.Name },
                 new() { Value = specialOffersModel.Description },
-                new() { Value = specialOffersModel.ItemsSold },
-                new() { Value = specialOffersModel.CategoryId },
+                new() { Value = specialOffersModel.SoldItems },
+                new() { Value = specialOffersModel.CategoryId == null ? DBNull.Value : specialOffersModel.CategoryId},
                 new() { Value = specialOffersModel.Status },
+                new() { Value = specialOffersModel.Type },
+                new() { Value = specialOffersModel.ProductId == null ? DBNull.Value : specialOffersModel.ProductId},
+                new() { Value = specialOffersModel.StartDate },
+                new() { Value = specialOffersModel.EndDate },
+                new() { Value = specialOffersModel.DiscountPrice },
+                new() { Value = specialOffersModel.DiscountPercentage },
+                new() { Value = specialOffersModel.Code },
+                new() { Value = specialOffersModel.PriceType },
                 new() { Value = storeId },
                 new() { Value = specialOffersModel.Id }
             }
@@ -283,7 +333,7 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
     {
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
 
-        using var connection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection ?? 
+        using var connection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection ??
             throw new InvalidOperationException("Failed to open database connection.");
 
         await using var command = new NpgsqlCommand(@"
@@ -378,6 +428,13 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
         parameters.Add(new() { Value = storeId });
 
         var index = 2;
+        if (!string.IsNullOrEmpty(specialOffersFilterDto.Code))
+        {
+            query.Append(" AND code ILIKE '%' || $" + index + " || '%'");
+            parameters.Add(new() { Value = specialOffersFilterDto.Code });
+            index++;
+        }
+
         if (!string.IsNullOrEmpty(specialOffersFilterDto.Name))
         {
             query.Append(" AND name ILIKE '%' || $" + index + " || '%'");
@@ -396,6 +453,13 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
         {
             query.Append(" AND category_id = $" + index);
             parameters.Add(new() { Value = specialOffersFilterDto.CategoryId });
+            index++;
+        }
+
+        if (specialOffersFilterDto.ProductId.HasValue)
+        {
+            query.Append(" AND product_id = $" + index);
+            parameters.Add(new() { Value = specialOffersFilterDto.ProductId });
             index++;
         }
 
@@ -418,13 +482,17 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
         {
             // BaseModel fields
             Id = reader.GetInt64(reader.GetOrdinal("id")),
+            Code = reader.GetString(reader.GetOrdinal("code")),
             CreatedBy = reader.GetString(reader.GetOrdinal("created_by")),   // ensured not null in creation
             CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")), // ensured not null in creation
             // Category fields
             StoreId = reader.GetInt64(reader.GetOrdinal("store_id")),
             Name = reader.GetString(reader.GetOrdinal("name")),
             Description = reader.GetString(reader.GetOrdinal("description")),
-            ItemsSold = reader.GetInt64(reader.GetOrdinal("items_sold")),
+            Type = reader.GetString(reader.GetOrdinal("type")),
+            PriceType = reader.GetString(reader.GetOrdinal("price_type")),
+            SoldItems = reader.GetDouble(reader.GetOrdinal("sold_items")),
+            MaxItems = reader.GetDouble(reader.GetOrdinal("max_items")),
             Status = reader.GetString(reader.GetOrdinal("status")),
         };
 
@@ -437,9 +505,18 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
             null : reader.GetString(reader.GetOrdinal("deleted_by"));
         specialOffer.DeletedAt = reader.IsDBNull(reader.GetOrdinal("deleted_at")) ?
             null : reader.GetDateTime(reader.GetOrdinal("deleted_at"));
-        specialOffer.CategoryId = reader.IsDBNull(reader.GetOrdinal("category_id")) ? 
+        specialOffer.CategoryId = reader.IsDBNull(reader.GetOrdinal("category_id")) ?
             null : reader.GetInt64(reader.GetOrdinal("category_id"));
-        
+        specialOffer.ProductId = reader.IsDBNull(reader.GetOrdinal("product_id")) ?
+            null : reader.GetInt64(reader.GetOrdinal("product_id"));
+        specialOffer.StartDate = reader.IsDBNull(reader.GetOrdinal("start_date")) ?
+            null : reader.GetDateTime(reader.GetOrdinal("start_date"));
+        specialOffer.EndDate = reader.IsDBNull(reader.GetOrdinal("end_date")) ?
+            null : reader.GetDateTime(reader.GetOrdinal("end_date"));
+        specialOffer.DiscountPrice = reader.IsDBNull(reader.GetOrdinal("discount_price")) ?
+            null : reader.GetDouble(reader.GetOrdinal("discount_price"));
+        specialOffer.DiscountPercentage = reader.IsDBNull(reader.GetOrdinal("discount_percentage")) ?
+            null : reader.GetDouble(reader.GetOrdinal("discount_percentage"));
         return specialOffer;
     }
 

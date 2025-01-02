@@ -30,7 +30,7 @@ class StatusValueToStatusLableConverter : IValueConverter
         }
         else if ("Active".Equals(value))
         {
-            return "Đang hoạt động";
+            return "Áp dụng";
         }
         else if ("Expired".Equals(value))
         {

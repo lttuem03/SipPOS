@@ -6,6 +6,7 @@ exports.up = async function(knex) {
     await knex.raw(`
         CREATE TABLE special_offer (
             id INT NOT NULL,
+            code VARCHAR(50) NOT NULL,
             store_id INT REFERENCES store(id) ON DELETE CASCADE NOT NULL,
             created_by VARCHAR(64),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -15,13 +16,20 @@ exports.up = async function(knex) {
             deleted_at TIMESTAMP,
             name VARCHAR(64) NOT NULL,
             description TEXT DEFAULT '' NOT NULL,
-            items_sold INT DEFAULT 0 NOT NULL,
+            sold_items NUMERIC(12, 2) DEFAULT 0 NOT NULL,
+            max_items NUMERIC(12, 2) DEFAULT 0 NOT NULL,
             category_store_id INT,
             category_id INT,
+            product_id INT,
+            type VARCHAR(50),
+            price_type VARCHAR(50),
+            start_date TIMESTAMP,
+            end_date TIMESTAMP,
+            discount_price NUMERIC(12, 2),
+            discount_percentage NUMERIC(12, 2),
             status VARCHAR(50) DEFAULT 'Inactive' NOT NULL,
 
-            PRIMARY KEY (store_id, id),
-            FOREIGN KEY (category_store_id, category_id) REFERENCES category(store_id, id)
+            PRIMARY KEY (store_id, id)
         );
 
         CREATE OR REPLACE FUNCTION reset_special_offer_id() RETURNS TRIGGER AS $$

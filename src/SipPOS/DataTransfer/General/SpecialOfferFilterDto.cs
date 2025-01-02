@@ -10,6 +10,8 @@ public class SpecialOfferFilterDto
     /// </summary>
     public string? Name { get; set; }
 
+    public string? Code { get; set; }
+
     /// <summary>
     /// Gets or sets the description of the product.
     /// </summary>
@@ -19,6 +21,8 @@ public class SpecialOfferFilterDto
     /// Gets or sets the category ID of the product.
     /// </summary>
     public long? CategoryId { get; set; }
+
+    public long? ProductId { get; set; }
 
     /// <summary>
     /// Gets or sets the status of the product.

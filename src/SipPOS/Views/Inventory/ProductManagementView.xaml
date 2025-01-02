@@ -187,7 +187,6 @@
                             <StackPanel HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1" >
                                 <ComboBox 
                                     Header="Danh mục"
-                                    x:Name="DialogProductCategoryComboBox" 
                                     PlaceholderText="Chọn danh mục"  
                                     HorizontalAlignment="Stretch"
                                     DisplayMemberPath="Name" 

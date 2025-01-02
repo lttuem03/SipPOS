@@ -6,6 +6,7 @@ using SipPOS.Services.Entity.Interfaces;
 using SipPOS.DataTransfer.Entity;
 using SipPOS.DataTransfer.General;
 using SipPOS.Models.General;
+using Microsoft.UI.Xaml;
 
 namespace SipPOS.ViewModels.Inventory;
 
@@ -15,13 +16,15 @@ public partial class SpecialOfferManagementViewModel : ObservableRecipient
     public ObservableCollection<SpecialOfferDto> SpecialOffers { get; } = new ObservableCollection<SpecialOfferDto>();
 
     public ObservableCollection<CategoryDto> Categories { get; } = new ObservableCollection<CategoryDto>();
+    public ObservableCollection<ProductDto> Products { get; } = new ObservableCollection<ProductDto>();
+    public ObservableCollection<ProductDto> ProductsFilter { get; } = new ObservableCollection<ProductDto>();
 
     public ObservableCollection<CategoryDto> CategoriesFilter { get; } = new ObservableCollection<CategoryDto>();
 
     public ObservableCollection<StatusItem> StatusItems { get; } = new ObservableCollection<StatusItem>()
     {
         new() { Label = "Chưa áp dụng", Value = "Inactive" },
-        new() { Label = "Đang hoạt động", Value = "Active" },
+        new() { Label = "Áp dụng", Value = "Active" },
         new() { Label = "Đã hết hạn", Value = "Expired" },
         new() { Label = "Đã hủy", Value = "Cancelled" }
     };
@@ -30,9 +33,22 @@ public partial class SpecialOfferManagementViewModel : ObservableRecipient
     {
         new() { Label = "Tất cả", Value = null },
         new() { Label = "Chưa áp dụng", Value = "Inactive" },
-        new() { Label = "Đang hoạt động", Value = "Active" },
+        new() { Label = "Áp dụng", Value = "Active" },
         new() { Label = "Đã hết hạn", Value = "Expired" },
         new() { Label = "Đã hủy", Value = "Cancelled" }
+    };
+
+    public ObservableCollection<SpecialOfferType> SpecialOfferTypes { get; } = new ObservableCollection<SpecialOfferType>()
+    {
+        new() { Label = "Khuyến mãi trên sản phẩm", Value = "ProductPromotion" },
+        new() { Label = "Khuyến mãi trên danh mục sản phẩm", Value = "CategoryPromotion" },
+        new() { Label = "Khuyến mãi trên hóa đơn", Value = "InvoicePromotion" },
+    };
+
+    public ObservableCollection<SpecialOfferType> PriceTypes { get; } = new ObservableCollection<SpecialOfferType>()
+    {
+        new() { Label = "Giảm theo giá", Value = "Original" },
+        new() { Label = "Giảm theo phần trăm", Value = "Percentage" },
     };
 
     [ObservableProperty]
@@ -63,25 +79,48 @@ public partial class SpecialOfferManagementViewModel : ObservableRecipient
     private int tableHeight;
 
     [ObservableProperty]
+    private string? specialOfferCodeRequireMessage;
+
+    [ObservableProperty]
     private string? specialOfferNameRequireMessage;
 
     [ObservableProperty]
     private string? specialOfferDescRequireMessage;
 
     [ObservableProperty]
+    private string? specialOfferStartDateRequireMessage;
+
+    [ObservableProperty]
     private string? specialOfferPriceRequireMessage;
 
     [ObservableProperty]
-    private string? specialOfferCategoryRequireMessage;
+    private string? specialOfferTypeRequireMessage;
+
+    [ObservableProperty]
+    private string? specialOfferMaxItemsRequireMessage;
+
+    [ObservableProperty]
+    private Visibility discountPriceVisibility = Visibility.Collapsed;
+
+    [ObservableProperty]
+    private Visibility discountPecentageVisibility = Visibility.Collapsed;
+
+    [ObservableProperty]
+    private Visibility productPromotionVisibility = Visibility.Collapsed;
+
+    [ObservableProperty]
+    private Visibility categoryPromotionVisibility = Visibility.Collapsed;
 
 
     private readonly ISpecialOfferService _specialOffersService;
     private readonly ICategoryService _categoryService;
+    private readonly IProductService _productService;
 
-    public SpecialOfferManagementViewModel(ISpecialOfferService specialOffersService, ICategoryService categoryService)
+    public SpecialOfferManagementViewModel(ISpecialOfferService specialOffersService, ICategoryService categoryService, IProductService productService)
     {
         _specialOffersService = specialOffersService;
         _categoryService = categoryService;
+        _productService = productService;
     }
 
     public async void UpdateSpecialOfferList()
@@ -106,19 +145,49 @@ public partial class SpecialOfferManagementViewModel : ObservableRecipient
         }
 
         var isValidate = true;
+        if (string.IsNullOrEmpty(SelectedSpecialOffer.Code))
+        {
+            SpecialOfferCodeRequireMessage = "Mã khuyến mãi không được để trống";
+            isValidate = false;
+        }
         if (string.IsNullOrEmpty(SelectedSpecialOffer.Name))
         {
-            SpecialOfferNameRequireMessage = "Tên sản phẩm không được để trống";
+            SpecialOfferNameRequireMessage = "Tên khuyến mãi không được để trống";
             isValidate = false;
         }
         if (string.IsNullOrEmpty(SelectedSpecialOffer.Description))
         {
-            SpecialOfferDescRequireMessage = "Mô tả sản phẩm không được để trống";
+            SpecialOfferDescRequireMessage = "Mô tả khuyến mãi không được để trống";
             isValidate = false;
         }
-        if (SelectedSpecialOffer.CategoryId == null)
+        if (SelectedSpecialOffer.CategoryId == null && SelectedSpecialOffer.Type == "CategoryPromotion")
         {
-            SpecialOfferCategoryRequireMessage = "Danh mục sản phẩm không được để trống";
+            SpecialOfferTypeRequireMessage = "Danh mục khuyến mãi không được để trống";
+            isValidate = false;
+        }
+        if (SelectedSpecialOffer.ProductId == null && SelectedSpecialOffer.Type == "ProductPromotion")
+        {
+            SpecialOfferTypeRequireMessage = "Sản phẩm khuyến mãi không được để trống";
+            isValidate = false;
+        }
+        if (SelectedSpecialOffer.PriceType == "Original" && SelectedSpecialOffer.DiscountPrice <= 0)
+        {
+            SpecialOfferPriceRequireMessage = "Giá khuyến mãi không được nhỏ hơn hoặc bằng 0";
+            isValidate = false;
+        }
+        if (SelectedSpecialOffer.PriceType == "Percentage" && SelectedSpecialOffer.DiscountPercentage <= 0)
+        {
+            SpecialOfferTypeRequireMessage = "Phần trăm khuyến mãi không được nhỏ hơn hoặc bằng 0";
+            isValidate = false;
+        }
+        if (SelectedSpecialOffer.StartDate > SelectedSpecialOffer.EndDate)
+        {
+            SpecialOfferStartDateRequireMessage = "Ngày bắt đầu không được lớn hơn ngày kết thúc";
+            isValidate = false;
+        }
+        if (SelectedSpecialOffer.MaxItems <= 0)
+        {
+            SpecialOfferMaxItemsRequireMessage = "Số lượng tối đa không được nhỏ hơn hoặc bằng 0";
             isValidate = false;
         }
         if (!isValidate)
@@ -137,22 +206,46 @@ public partial class SpecialOfferManagementViewModel : ObservableRecipient
             return null;
         }
         var isValidate = true;
+        if (string.IsNullOrEmpty(SelectedSpecialOffer.Code))
+        {
+            SpecialOfferCodeRequireMessage = "Mã khuyến mãi không được để trống";
+            isValidate = false;
+        }
         if (string.IsNullOrEmpty(SelectedSpecialOffer.Name))
         {
-            SpecialOfferNameRequireMessage = "Tên sản phẩm không được để trống";
+            SpecialOfferNameRequireMessage = "Tên khuyến mãi không được để trống";
             isValidate = false;
         }
         if (string.IsNullOrEmpty(SelectedSpecialOffer.Description))
         {
-            SpecialOfferDescRequireMessage = "Mô tả sản phẩm không được để trống";
+            SpecialOfferDescRequireMessage = "Mô tả khuyến mãi không được để trống";
             isValidate = false;
         }
-        if (SelectedSpecialOffer.CategoryId == null)
+        if (SelectedSpecialOffer.CategoryId == null && SelectedSpecialOffer.Type == "CategoryPromotion")
         {
-            SpecialOfferCategoryRequireMessage = "Danh mục sản phẩm không được để trống";
+            SpecialOfferTypeRequireMessage = "Danh mục khuyến mãi không được để trống";
             isValidate = false;
         }
-
+        if (SelectedSpecialOffer.ProductId == null && SelectedSpecialOffer.Type == "ProductPromotion")
+        {
+            SpecialOfferTypeRequireMessage = "Sản phẩm khuyến mãi không được để trống";
+            isValidate = false;
+        }
+        if (SelectedSpecialOffer.PriceType == "Percentage" && SelectedSpecialOffer.DiscountPercentage <= 0)
+        {
+            SpecialOfferTypeRequireMessage = "Phần trăm khuyến mãi không được nhỏ hơn hoặc bằng 0";
+            isValidate = false;
+        }
+        if (SelectedSpecialOffer.StartDate > SelectedSpecialOffer.EndDate)
+        {
+            SpecialOfferStartDateRequireMessage = "Ngày bắt đầu không được lớn hơn ngày kết thúc";
+            isValidate = false;
+        }
+        if (SelectedSpecialOffer.MaxItems <= 0)
+        {
+            SpecialOfferMaxItemsRequireMessage = "Số lượng tối đa không được nhỏ hơn hoặc bằng 0";
+            isValidate = false;
+        }
         if (!isValidate)
         {
             return null;
@@ -177,6 +270,21 @@ public partial class SpecialOfferManagementViewModel : ObservableRecipient
         }
     }
 
+    public async void GetAllProduct()
+    {
+        Products.Clear();
+        ProductsFilter.Clear();
+        ProductsFilter.Add(new ProductDto { Id = null, Name = "Tất cả" });
+
+        var data = await _productService.GetAll();
+
+        foreach (var item in data)
+        {
+            Products.Add(item);
+            ProductsFilter.Add(item);
+        }
+    }
+
     public async void DeleteByIds()
     {
         List<long> ids = SpecialOffers.Where(x => x.IsSelected && x.Id.HasValue).
@@ -186,4 +294,5 @@ public partial class SpecialOfferManagementViewModel : ObservableRecipient
         await _specialOffersService.DeleteByIds(ids);
         UpdateSpecialOfferList();
     }
+
 }

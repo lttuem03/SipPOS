@@ -24,6 +24,7 @@ namespace SipPOS.Views.Promotion
             ViewModel = App.GetService<SpecialOfferManagementViewModel>();
             ViewModel.UpdateSpecialOfferList();
             ViewModel.GetAllCategory();
+            ViewModel.GetAllProduct();
             InitializeComponent();
             SizeChanged += OnPageSizeChanged;
         }
@@ -48,6 +49,10 @@ namespace SipPOS.Views.Promotion
         {
             SpecialOfferDto newSpecialOfferDto = new SpecialOfferDto();
             newSpecialOfferDto.Status = "Inactive";
+            newSpecialOfferDto.Type = "InvoicePromotion";
+            newSpecialOfferDto.PriceType = "Original";
+            newSpecialOfferDto.StartDate = DateTime.Now;
+            newSpecialOfferDto.EndDate = DateTime.Now;
             ViewModel.SelectedSpecialOffer = newSpecialOfferDto;
             Dialog.Title = "THÊM KHUYẾN MÃI";
             Dialog.IsPrimaryButtonEnabled = true;
@@ -74,6 +79,7 @@ namespace SipPOS.Views.Promotion
                 return;
             }
             ViewModel.SelectedSpecialOffer = selectedSpecialOffers[0];
+            UpdateConditionUI();
             Dialog.Title = "XEM KHUYẾN MÃI";
             Dialog.IsPrimaryButtonEnabled = false;
             ViewModel.ActionType = "VIEW";
@@ -94,6 +100,7 @@ namespace SipPOS.Views.Promotion
                 return;
             }
             ViewModel.SelectedSpecialOffer = selectedSpecialOffers[0];
+            UpdateConditionUI();
             Dialog.Title = "CHỈNH SỬA KHUYẾN MẠI";
             Dialog.IsPrimaryButtonEnabled = true;
             ViewModel.ActionType = "EDIT";
@@ -212,25 +219,85 @@ namespace SipPOS.Views.Promotion
         {
 
         }
+        private void SpecialOfferCode_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ViewModel.SpecialOfferCodeRequireMessage = string.Empty;
+        }
 
-        private void ProductName_TextChanged(object sender, TextChangedEventArgs e)
+        private void SpecialOfferName_TextChanged(object sender, TextChangedEventArgs e)
         {
             ViewModel.SpecialOfferNameRequireMessage = string.Empty;
         }
 
-        private void ProductDesc_TextChanged(object sender, TextChangedEventArgs e)
+        private void SpecialOfferDate_DateChanged(object sender, object args)
         {
-            ViewModel.SpecialOfferDescRequireMessage = string.Empty;
+            ViewModel.SpecialOfferStartDateRequireMessage = string.Empty;
         }
 
-        private void ProductPrice_ValueChanged(object sender, object args)
+        private void SpecialOfferMaxItems_ValueChanged(object sender, object args)
+        {
+            ViewModel.SpecialOfferMaxItemsRequireMessage = string.Empty;
+        }
+
+        private void SpecialOfferPrice_ValueChanged(object sender, object args)
         {
             ViewModel.SpecialOfferPriceRequireMessage = string.Empty;
         }
 
-        private void ProductCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void SpecialOfferDesc_TextChanged(object sender, TextChangedEventArgs e)
         {
-            ViewModel.SpecialOfferCategoryRequireMessage = string.Empty;
+            ViewModel.SpecialOfferDescRequireMessage = string.Empty;
+        }
+
+
+        public void PriceType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateConditionUI();
+            ViewModel.SpecialOfferPriceRequireMessage = string.Empty;
+        }
+
+        private void UpdateConditionUI()
+        {
+            if (ViewModel.SelectedSpecialOffer == null)
+            {
+                return;
+            }
+            if (ViewModel.SelectedSpecialOffer.PriceType == "Original")
+            {
+                ViewModel.DiscountPriceVisibility = Visibility.Visible;
+                ViewModel.DiscountPecentageVisibility = Visibility.Collapsed;
+            }
+            else if (ViewModel.SelectedSpecialOffer.PriceType == "Percentage")
+            {
+                ViewModel.DiscountPriceVisibility = Visibility.Collapsed;
+                ViewModel.DiscountPecentageVisibility = Visibility.Visible;
+            }
+
+            if (ViewModel.SelectedSpecialOffer == null)
+            {
+                return;
+            }
+            if (ViewModel.SelectedSpecialOffer.Type == "InvoicePromotion")
+            {
+                ViewModel.CategoryPromotionVisibility = Visibility.Collapsed;
+                ViewModel.ProductPromotionVisibility = Visibility.Collapsed;
+            }
+            else if (ViewModel.SelectedSpecialOffer.Type == "CategoryPromotion")
+            {
+                ViewModel.CategoryPromotionVisibility = Visibility.Visible;
+                ViewModel.ProductPromotionVisibility = Visibility.Collapsed;
+            }
+            else if (ViewModel.SelectedSpecialOffer.Type == "ProductPromotion")
+            {
+                ViewModel.CategoryPromotionVisibility = Visibility.Collapsed;
+                ViewModel.ProductPromotionVisibility = Visibility.Visible;
+            }
+        }
+
+        public void Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateConditionUI();
+            ViewModel.SpecialOfferTypeRequireMessage = string.Empty;
         }
 
     }
