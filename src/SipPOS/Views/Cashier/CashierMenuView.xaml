@@ -6,6 +6,7 @@
     xmlns:local="using:SipPOS.Views.Cashier"
     xmlns:data_transfer="using:SipPOS.DataTransfer.Entity"
     xmlns:model="using:SipPOS.Models.Entity"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:SipPOS.Converters"
@@ -28,6 +29,9 @@
         <!--New invoice id to its string format-->
         <converters:NewInvoiceIdToNewInvoiceIdStringConverter x:Key="NewInvoiceIdToNewInvoiceIdStringConverter"/>
 
+        <!--Thousand separated decimal formatter-->
+        <converters:DecimalToThousandSeparatedStringConverter x:Key="DecimalToThousandSeparatedStringConverter"/>
+
         <!--OrderItem ListView ItemTemplate-->
         <DataTemplate x:Key="OrderItemListViewTemplate" x:DataType="data_transfer:InvoiceItemDto">
             <Grid
@@ -46,7 +50,7 @@
                 <!--Ordinal number-->
                 <TextBlock
                     Grid.Row="0" Grid.Column="0"
-                    Text="{x:Bind Ordinal}"
+                    Text="{x:Bind Ordinal, Mode=TwoWay}"
                     FontSize="16"
                     FontWeight="SemiLight"/>
                 <!--Item name (option name)-->
@@ -226,7 +230,6 @@
 
     <Canvas
         Background="AliceBlue">
-
         <!--Left navigation pane-->
         <Canvas
             Canvas.Top="0" Canvas.Left="-400"
@@ -282,13 +285,13 @@
                     Grid.Row="0" Grid.Column="1"
                     Margin="0,10,0,0"
                     Width="180"
-                    Text="Mai Thị Quỳnh"
+                    Text="{x:Bind ViewModel.CurrentStaff.Name}"
                     TextWrapping="WrapWholeWords"
                     FontSize="20"/>
                 <TextBlock
                     Grid.Row="1" Grid.Column="1"
                     Width="180"
-                    Text="SM000000"
+                    Text="{x:Bind ViewModel.CurrentStaff.CompositeUsername}"
                     TextWrapping="WrapWholeWords"
                     FontSize="20"/>
                 <TextBlock
@@ -375,7 +378,6 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="500"/>
             </Grid.RowDefinitions>
-
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1000"/>
                 <ColumnDefinition Width="420"/>
@@ -417,7 +419,7 @@
                     Margin="10,10,0,0"
                     FontSize="18">
                     <Run FontWeight="Bold">Cửa hàng:</Run>
-                    <Run FontWeight="Light">Highlands Coffee Đồng Văn Cống</Run>
+                    <Run FontWeight="Light" Text="{x:Bind ViewModel.CurrentStore.Name}"/>
                 </TextBlock>
                 <!--Staff name-->
                 <TextBlock
@@ -427,7 +429,7 @@
                     Margin="10,0,0,0"
                     FontSize="18">
                     <Run FontWeight="Bold">Nhân viên:</Run>
-                    <Run FontWeight="Light">Mai Thị Quỳnh</Run>
+                    <Run FontWeight="Light" Text="{x:Bind ViewModel.CurrentStaff.Name}"/>
                 </TextBlock>
                 <!--Date-->
                 <TextBlock
@@ -436,8 +438,9 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     Margin="0,10,15,0"
-                    FontSize="18">
-                    <Run FontWeight="Light">01/01/2021</Run>
+                    FontSize="18"
+                    FontWeight="Light"
+                    x:Name="currentDateTextBlock">
                 </TextBlock>
                 <!--Time-->
                 <TextBlock
@@ -446,8 +449,9 @@
                     VerticalAlignment="Center"
                     TextWrapping="WrapWholeWords"
                     Margin="0,0,15,0"
-                    FontSize="18">
-                    <Run FontWeight="Light">5:15 PM</Run>
+                    FontSize="18"
+                    FontWeight="Light"
+                    x:Name="currentTimeTextBlock">
                 </TextBlock>
             </Grid>
             
@@ -605,7 +609,9 @@
                     VerticalAlignment="Stretch"
                     Foreground="Red"
                     Margin="10,0,10,0"
-                    Click="cancelOrderButton_Click">
+                    x:Name="cancelOrderButton"
+                    Click="cancelOrderButton_Click"
+                    IsEnabled="False">
                     <FontIcon Glyph="&#xE74D;"/>
                 </Button>
                 <!--Payment info-->
@@ -690,7 +696,7 @@
                         HorizontalAlignment="Right"
                         FontSize="18"
                         FontWeight="SemiLight"
-                        Text="{x:Bind ViewModel.NewInvoiceOrderBasedVAT, 
+                        Text="{x:Bind ViewModel.NewInvoiceInvoiceBasedVAT, 
                             Converter={StaticResource DecimalToVietnamDongFormattedStringConverter}, 
                             Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock
@@ -710,12 +716,12 @@
                     VerticalAlignment="Stretch"
                     Margin="10,0,10,10"
                     x:Name="openPaymentDialogButton"
-                    Click="openPaymentDialogButton_Click">
+                    Click="openPaymentDialogButton_Click"
+                    IsEnabled="False">
                     <TextBlock
                         Text="Thanh toán"
                         FontSize="20"/>
                 </Button>
-
                 <!--Note suggestion TeachingTip-->
                 <TeachingTip
                     Target="{x:Bind orderItemListView}"
@@ -743,7 +749,546 @@
         </Grid>
 
         <!--Payment dialog-->
-        
+        <ContentDialog
+            x:Name="paymentContentDialog"
+            Title="Thanh toán đơn hàng"
+            HorizontalAlignment="Stretch">
+            <Grid
+                Width="1400" Height="650"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+                ColumnSpacing="30"
+                Background="WhiteSmoke"
+                CornerRadius="20"
+                Padding="15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="7*"/>
+                </Grid.ColumnDefinitions>
+                <!--Left: Order info-->
+                <Grid
+                    Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <!--Header-->
+                    <TextBlock
+                        Grid.Row="0"
+                        Text="Thông tin đơn hàng"
+                        Margin="5,0,0,10"
+                        FontWeight="SemiBold"
+                        FontSize="16"/>
+                    <!--Data grid-->
+                    <Grid
+                        Grid.Row="1"
+                        BorderBrush="Gray"
+                        BorderThickness="3"
+                        CornerRadius="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <!--Headers only-->
+                        <controls:DataGrid
+                            Grid.Row="0"
+                            AutoGenerateColumns="False"
+                            GridLinesVisibility="All"
+                            CanUserReorderColumns="False"
+                            CanUserResizeColumns="False"
+                            CanUserSortColumns="False"
+                            IsReadOnly="True">
+                            <!--Columns-->
+                            <controls:DataGrid.Columns>
+                                <!--Ordinal-->
+                                <controls:DataGridTextColumn
+                                    Header="STT"
+                                    Width="2*"/>
+                                <!--Name-->
+                                <controls:DataGridTextColumn
+                                    Header="Tên sản phẩm"
+                                    Width="5*"/>
+                                <!--Option Name-->
+                                <controls:DataGridTextColumn
+                                    Header="Tùy chọn"
+                                    Width="3*"/>
+                                <!--Option Price-->
+                                <controls:DataGridTextColumn
+                                    Header="Đơn giá"
+                                    Width="3*"/>
+                                <!--Note-->
+                                <controls:DataGridTextColumn
+                                    Header="Ghi chú"
+                                    Tag="ItemOptionPrice"
+                                    Width="4*"/>
+                            </controls:DataGrid.Columns>
+                        </controls:DataGrid>
+                        <!--Items scrollable grid-->
+                        <ScrollView
+                            Grid.Row="1">
+                            <controls:DataGrid
+                                HeadersVisibility="None"
+                                AutoGenerateColumns="False"
+                                GridLinesVisibility="All"
+                                ItemsSource="{x:Bind ViewModel.InvoiceItems}"
+                                CanUserReorderColumns="False"
+                                CanUserResizeColumns="False"
+                                CanUserSortColumns="False"
+                                IsReadOnly="True">
+                                <!--Columns-->
+                                <controls:DataGrid.Columns>
+                                    <!--Ordinal-->
+                                    <controls:DataGridTextColumn
+                                        Header="STT"
+                                        Tag="ItemOrdinal"
+                                        Binding="{Binding Ordinal}"
+                                        Width="2*"/>
+                                    <!--Name-->
+                                    <controls:DataGridTextColumn
+                                        Header="Tên sản phẩm"
+                                        Tag="ItemName"
+                                        Binding="{Binding ItemName}"
+                                        Width="5*"/>
+                                    <!--Option Name-->
+                                    <controls:DataGridTextColumn
+                                        Header="Tùy chọn"
+                                        Tag="ItemOptionName"
+                                        Binding="{Binding OptionName}"
+                                        Width="3*"/>
+                                    <!--Option Price-->
+                                    <controls:DataGridTextColumn
+                                        Header="Đơn giá"
+                                        Tag="ItemOptionPrice"
+                                        Binding="{Binding OptionPrice, Converter={StaticResource DecimalToVietnamDongFormattedStringConverter}}"
+                                        Width="3*"/>
+                                    <!--Note-->
+                                    <controls:DataGridTextColumn
+                                        Header="Ghi chú"
+                                        Tag="ItemOptionPrice"
+                                        Binding="{Binding Note}"
+                                        Width="4*"/>
+                                </controls:DataGrid.Columns>
+                            </controls:DataGrid>
+                        </ScrollView>
+                    </Grid>
+                    <!--Monetary info-->
+                    <Grid
+                        Grid.Row="2"
+                        Padding="10"
+                        RowSpacing="5"
+                        Margin="0,0,0,10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <!--Field names-->
+                        <TextBlock
+                            Grid.Row="0" Grid.Column="0"
+                            FontSize="18"
+                            FontWeight="SemiLight">
+                            Tổng số lượng
+                        </TextBlock>
+                        <TextBlock
+                            Grid.Row="1" Grid.Column="0"
+                            FontSize="18"
+                            FontWeight="SemiLight">
+                            Thành tiền
+                        </TextBlock>
+                        <TextBlock
+                            Grid.Row="2" Grid.Column="0"
+                            FontSize="18"
+                            FontWeight="SemiLight">
+                            Tổng giảm
+                        </TextBlock>
+                        <TextBlock
+                            Grid.Row="3" Grid.Column="0"
+                            FontSize="18"
+                            FontWeight="SemiLight">
+                            <Run>Thuế VAT (</Run>
+                            <Run Text="{x:Bind ViewModel.VatRateString}"/>
+                            <Run>)</Run>
+                            <LineBreak/>
+                            <Run FontSize="14" Text="{x:Bind ViewModel.VatMessageString}"/>
+                        </TextBlock>
+                        <TextBlock
+                            Grid.Row="4" Grid.Column="0"
+                            VerticalAlignment="Bottom"
+                            FontSize="20"
+                            FontWeight="Bold">
+                            TỔNG THANH TOÁN
+                        </TextBlock>
+                        <!--Field values-->
+                        <TextBlock
+                            Grid.Row="0" Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            FontSize="18"
+                            FontWeight="SemiLight"
+                            Text="{x:Bind ViewModel.NewInvoiceItemCount, Mode=TwoWay}"/>
+                        <TextBlock
+                            Grid.Row="1" Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            FontSize="18"
+                            FontWeight="SemiLight"
+                            Text="{x:Bind ViewModel.NewInvoiceSubTotal, Mode=TwoWay,
+                                Converter={StaticResource DecimalToVietnamDongFormattedStringConverter}}"/>
+                        <TextBlock
+                            Grid.Row="2" Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            FontSize="18"
+                            FontWeight="SemiLight"
+                            Text="{x:Bind ViewModel.NewInvoiceTotalDiscount, Mode=TwoWay,
+                                Converter={StaticResource DecimalToVietnamDongFormattedStringConverter}}"/>
+                        <TextBlock
+                            Grid.Row="3" Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            FontSize="18"
+                            FontWeight="SemiLight"
+                            Text="{x:Bind ViewModel.NewInvoiceInvoiceBasedVAT, Mode=TwoWay,
+                                Converter={StaticResource DecimalToVietnamDongFormattedStringConverter}}"/>
+                        <TextBlock
+                            Grid.Row="4" Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Text="{x:Bind ViewModel.NewInvoiceTotal, Mode=TwoWay,
+                                Converter={StaticResource DecimalToVietnamDongFormattedStringConverter}}"/>
+                    </Grid>
+                </Grid>
+                <!--Right: Payment controls-->
+                <Grid
+                    Grid.Column="1"
+                    Margin="0,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="9*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <!--Payment method-->
+                    <RadioButtons
+                        Grid.Row="0"
+                        MaxColumns="2"
+                        SelectedIndex="0"
+                        x:Name="paymentMethodRadioButtons"
+                        SelectionChanged="paymentMethodRadioButtons_SelectionChanged">
+                        <RadioButtons.Header>
+                            <TextBlock 
+                                Text="Phương thức thanh toán"
+                                FontWeight="SemiBold"
+                                FontSize="16"/>
+                        </RadioButtons.Header>
+                        <!--Payment method options-->
+                        <x:String>Tiền mặt</x:String>
+                        <x:String>QR-PAY</x:String>
+                    </RadioButtons>
+                    <!--Payment method: Cash-->
+                    <Grid
+                        Grid.Row="1"
+                        MaxWidth="550"
+                        Padding="20"
+                        RowSpacing="10"
+                        x:Name="cashPaymentMethodGrid"
+                        Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="3*"/>
+                            <RowDefinition Height="3*"/>
+                            <RowDefinition Height="10*"/>
+                        </Grid.RowDefinitions>
+                        <!--Instruction / Validation error TextBlocks-->
+                        <Grid
+                            Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="Nhập số tiền khách đưa"
+                                FontWeight="SemiLight"
+                                FontSize="16"/>
+
+                            <TextBlock
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                x:Name="amountPaidValidationTextBlock"
+                                Text=""
+                                Foreground="Red"
+                                FontWeight="SemiLight"
+                                FontSize="16"/>
+                        </Grid>
+                        <!--Customer given amount-->
+                        <Grid
+                            Grid.Row="1"
+                            BorderBrush="Gray"
+                            BorderThickness="2">
+                            <TextBlock
+                                x:Name="customerGivenAmountTextBlock"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Text="{x:Bind ViewModel.NewInvoiceCustomerPaid, Mode=TwoWay,
+                                    Converter={StaticResource DecimalToThousandSeparatedStringConverter},
+                                    UpdateSourceTrigger=PropertyChanged}"
+                                Style="{StaticResource TitleTextBlockStyle}"/>
+                        </Grid>
+                        <!--Monetary summary-->
+                        <Grid
+                            Grid.Row="2"
+                            VerticalAlignment="Center"
+                            RowSpacing="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <!--Total-->
+                            <TextBlock
+                                Grid.Row="0" Grid.Column="0"
+                                Text="Tổng cộng:"
+                                FontSize="20"
+                                FontWeight="SemiLight"/>
+                            <TextBlock
+                                Grid.Row="0" Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                Text="{x:Bind ViewModel.NewInvoiceTotal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
+                                    Converter={StaticResource DecimalToVietnamDongFormattedStringConverter}}"
+                                FontSize="20"
+                                FontWeight="SemiLight"/>
+                            <!--Customer gives-->
+                            <TextBlock
+                                Grid.Row="1" Grid.Column="0"
+                                Text="Khách đưa:"
+                                FontSize="20"
+                                FontWeight="SemiLight"/>
+                            <TextBlock
+                                Grid.Row="1" Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                Text="{x:Bind ViewModel.NewInvoiceCustomerPaid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
+                                    Converter={StaticResource DecimalToVietnamDongFormattedStringConverter}}"
+                                FontSize="20"
+                                FontWeight="SemiLight"/>
+                            <!--Change-->
+                            <TextBlock
+                                Grid.Row="2" Grid.Column="0"
+                                Text="Trả lại:"
+                                FontSize="20"
+                                FontWeight="SemiLight"/>
+                            <TextBlock
+                                Grid.Row="2" Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                Text="{x:Bind ViewModel.NewInvoiceChange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
+                                    Converter={StaticResource DecimalToVietnamDongFormattedStringConverter}}"
+                                FontSize="20"
+                                FontWeight="SemiLight"/>
+                        </Grid>
+                        <!--Numpad-->
+                        <Grid
+                            Grid.Row="3"
+                            RowSpacing="3"
+                            ColumnSpacing="3">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <!--Clear-->
+                            <Button
+                                Grid.Row="0" Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="numpadClearAmountButton_Click">
+                                <TextBlock Text="XÓA HẾT"/>
+                            </Button>
+                            <!--Backspace-->
+                            <Button
+                                Grid.Row="0" Grid.Column="2"
+                                Grid.ColumnSpan="2"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="numpadBackspaceButton_Click">
+                                <FontIcon Glyph="&#xE94F;" />
+                            </Button>
+                            <!--Add 500.000-->
+                            <Button
+                                Grid.Row="1" Grid.Column="0"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="numpadAddAmountButton_Click">
+                                <TextBlock Text="+500K"/>
+                            </Button>
+                            <!--Add 200.000-->
+                            <Button
+                                Grid.Row="2" Grid.Column="0"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="numpadAddAmountButton_Click">
+                                <TextBlock Text="+200K"/>
+                            </Button>
+                            <!--Add 100.000-->
+                            <Button
+                                Grid.Row="3" Grid.Column="0"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="numpadAddAmountButton_Click">
+                                <TextBlock Text="+100K"/>
+                            </Button>
+                            <!--Add 50.000-->
+                            <Button
+                                Grid.Row="4" Grid.Column="0"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="numpadAddAmountButton_Click">
+                                <TextBlock Text="+50K"/>
+                            </Button>
+                            <!--0 to 9-->
+                            <Button
+                                Grid.Row="4" Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="numpadNumberButton_Click">
+                                <TextBlock Text="0"/>
+                            </Button>
+                            <Button
+                                Grid.Row="4" Grid.Column="2"
+                                Grid.ColumnSpan="2"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="numpadNumberButton_Click">
+                                <TextBlock Text="000"/>
+                            </Button>
+                            <Button
+                                Grid.Row="3" Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="numpadNumberButton_Click">
+                                <TextBlock Text="1"/>
+                            </Button>
+                            <Button
+                                Grid.Row="3" Grid.Column="2"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="numpadNumberButton_Click">
+                                <TextBlock Text="2"/>
+                            </Button>
+                            <Button
+                                Grid.Row="3" Grid.Column="3"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="numpadNumberButton_Click">
+                                <TextBlock Text="3"/>
+                            </Button>
+                            <Button
+                                Grid.Row="2" Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="numpadNumberButton_Click">
+                                <TextBlock Text="4"/>
+                            </Button>
+                            <Button
+                                Grid.Row="2" Grid.Column="2"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="numpadNumberButton_Click">
+                                <TextBlock Text="5"/>
+                            </Button>
+                            <Button
+                                Grid.Row="2" Grid.Column="3"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="numpadNumberButton_Click">
+                                <TextBlock Text="6"/>
+                            </Button>
+                            <Button
+                                Grid.Row="1" Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="numpadNumberButton_Click">
+                                <TextBlock Text="7"/>
+                            </Button>
+                            <Button
+                                Grid.Row="1" Grid.Column="2"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="numpadNumberButton_Click">
+                                <TextBlock Text="8"/>
+                            </Button>
+                            <Button
+                                Grid.Row="1" Grid.Column="3"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="numpadNumberButton_Click">
+                                <TextBlock Text="9"/>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                    <!--Payment method: QR-PAY-->
+                    <Grid
+                        Grid.Row="1"
+                        x:Name="qrPaymentMethodGrid"
+                        Visibility="Collapsed">
+                        <TextBlock Text="Đang chờ cập nhật..."/>
+                    </Grid>
+                    <!--Proceed / Cancel buttons-->
+                    <Grid
+                        Grid.Row="2"
+                        ColumnSpacing="15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <!--Cancel button-->
+                        <Button
+                            Grid.Column="0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            x:Name="closePaymentDialogButton"
+                            Click="closePaymentDialogButton_Click"
+                            CornerRadius="15">
+                            <TextBlock 
+                                FontWeight="SemiBold" 
+                                Text="QUAY LẠI"/>
+                        </Button>
+                        <!--Proceed payment button-->
+                        <Button
+                            Grid.Column="1"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Style="{StaticResource AccentButtonStyle}"
+                            CornerRadius="15"
+                            x:Name="proceedWithPaymentButton"
+                            Click="proceedWithPaymentButton_Click"
+                            IsEnabled="False">
+                            <TextBlock 
+                                FontSize="16"
+                                FontWeight="SemiBold" 
+                                Text="THANH TOÁN"/>
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </ContentDialog>
 
         <!--Cancel order confirmation dialog-->
         <ContentDialog

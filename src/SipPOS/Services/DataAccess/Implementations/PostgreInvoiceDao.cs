@@ -21,7 +21,7 @@ public class PostgreInvoiceDao : IInvoiceDao
     //Task<List<Invoice>?> GetAllAsync();
     //Task<List<Invoice>?> GetWithPaginationAsync();
 
-    public async Task<Invoice?> InsertAsync(long storeId, long staffId, InvoiceDto invoiceDto)
+    public async Task<Invoice?> InsertAsync(long storeId, InvoiceDto invoiceDto)
     {
         if (invoiceDto.InvoiceItems.Count == 0)
             throw new InvalidOperationException("Invoice must have at least one item.");
@@ -36,32 +36,34 @@ public class PostgreInvoiceDao : IInvoiceDao
             (
                 store_id,
                 staff_id,
+                staff_name,
                 created_at,
                 item_count,
                 sub_total,
                 total_discount,
                 invoice_based_vat,
                 total,
-                paid,
+                customer_paid,
                 change,
                 payment_method
             )
             VALUES 
-                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
             RETURNING *
         ", invoiceInsertConnection)
         {
             Parameters =
             {
                 new() { Value = storeId },
-                new() { Value = staffId },
+                new() { Value = invoiceDto.StaffId },
+                new() { Value = invoiceDto.StaffName },
                 new() { Value = invoiceDto.CreatedAt },
                 new() { Value = invoiceDto.ItemCount },
                 new() { Value = invoiceDto.SubTotal },
                 new() { Value = invoiceDto.TotalDiscount },
                 new() { Value = invoiceDto.InvoiceBasedVAT },
                 new() { Value = invoiceDto.Total },
-                new() { Value = invoiceDto.Paid },
+                new() { Value = invoiceDto.CustomerPaid },
                 new() { Value = invoiceDto.Change },
                 new() { Value = invoiceDto.PaymentMethod }
             }
@@ -95,7 +97,7 @@ public class PostgreInvoiceDao : IInvoiceDao
                     note
                 )
                 VALUES 
-                    ($1, $2, $3, $4, $5, $6, $7)
+                    ($1, $2, $3, $4, $5, $6, $7, $8)
                 RETURNING *
             ", invoiceItemInsertConnection)
             {
@@ -170,13 +172,14 @@ public class PostgreInvoiceDao : IInvoiceDao
         {
             Id = reader.GetInt64(reader.GetOrdinal("id")),
             StaffId = reader.GetInt64(reader.GetOrdinal("staff_id")),
+            StaffName = reader.GetString(reader.GetOrdinal("staff_name")),
             CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")),
             ItemCount = reader.GetInt64(reader.GetOrdinal("item_count")),
             SubTotal = reader.GetDecimal(reader.GetOrdinal("sub_total")),
             TotalDiscount = reader.GetDecimal(reader.GetOrdinal("total_discount")),
             InvoiceBasedVAT = reader.GetDecimal(reader.GetOrdinal("invoice_based_vat")),
             Total = reader.GetDecimal(reader.GetOrdinal("total")),
-            Paid = reader.GetDecimal(reader.GetOrdinal("paid")),
+            CustomerPaid = reader.GetDecimal(reader.GetOrdinal("customer_paid")),
             Change = reader.GetDecimal(reader.GetOrdinal("change")),
             PaymentMethod = reader.GetString(reader.GetOrdinal("payment_method"))
         };

@@ -546,13 +546,11 @@
             PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
             IsPrimaryButtonEnabled="False"
             CloseButtonText="Hủy"
-            MaxWidth="1500"
-            MaxHeight="1000"
             Closed="editStaffDetailsContentDialog_Closed">
             <Grid
                 ColumnSpacing="20"
                 RowSpacing="5"
-                Width="900"
+                Width="500"
                 Margin="0,20,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -566,7 +564,7 @@
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="400"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <!--Field names-->

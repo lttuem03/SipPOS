@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -9,43 +10,45 @@ using System.Threading.Tasks;
 
 namespace SipPOS.Resources.Helper;
 
-public sealed class TrulyObservableCollection<T> : ObservableCollection<T>
-    where T : INotifyPropertyChanged
+// Courtesy of: https://stackoverflow.com/a/269113
+public class TrulyObservableCollection<T> : ObservableCollection<T> where T : INotifyPropertyChanged
 {
-    public TrulyObservableCollection()
+    protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
     {
-        CollectionChanged += TrulyObservableCollectionCollectionChanged;
+        // ignore warnings here, if we add null checks then it doesn't work
+        Unsubscribe(e.OldItems);
+        Subscribe(e.NewItems);
+        base.OnCollectionChanged(e);
     }
 
-    public TrulyObservableCollection(IEnumerable<T> pItems) : this()
+    protected override void ClearItems()
     {
-        foreach (var item in pItems)
+        foreach (T element in this)
+            element.PropertyChanged -= ContainedElementChanged;
+
+        base.ClearItems();
+    }
+
+    private void Subscribe(IList iList)
+    {
+        if (iList != null)
         {
-            this.Add(item);
+            foreach (T element in iList)
+                element.PropertyChanged += ContainedElementChanged;
         }
     }
 
-    private void TrulyObservableCollectionCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private void Unsubscribe(IList iList)
     {
-        if (e.NewItems != null)
+        if (iList != null)
         {
-            foreach (var item in e.NewItems)
-            {
-                ((INotifyPropertyChanged)item).PropertyChanged += ItemPropertyChanged;
-            }
-        }
-        if (e.OldItems != null)
-        {
-            foreach (var item in e.OldItems)
-            {
-                ((INotifyPropertyChanged)item).PropertyChanged -= ItemPropertyChanged;
-            }
+            foreach (T element in iList)
+                element.PropertyChanged -= ContainedElementChanged;
         }
     }
 
-    private void ItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void ContainedElementChanged(object? sender, PropertyChangedEventArgs e)
     {
-        NotifyCollectionChangedEventArgs args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, sender, sender, IndexOf((T)sender));
-        OnCollectionChanged(args);
+        OnPropertyChanged(e);
     }
 }

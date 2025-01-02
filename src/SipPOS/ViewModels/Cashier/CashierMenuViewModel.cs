@@ -1,20 +1,29 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-using SipPOS.Resources.Helper;
+using Microsoft.UI.Xaml.Controls;
 
+using SipPOS.Resources.Helper;
 using SipPOS.DataTransfer.Entity;
 using SipPOS.Models.Entity;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.Configuration.Interfaces;
 using SipPOS.Context.Configuration.Interfaces;
-using Microsoft.UI.Xaml.Controls;
+using SipPOS.Services.Authentication.Interfaces;
+using System;
+using SipPOS.Services.General.Implementations;
+using SipPOS.Services.Authentication.Implementations;
+using Microsoft.VisualBasic;
+using Microsoft.UI.Xaml;
+
 
 namespace SipPOS.ViewModels.Cashier;
 
 public class CashierMenuViewModel : INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     // The way the current product list is loaded and displayed is
     // loading all the products of the store, and filter them using
     // direct LINQ queries. It works fine and smoothly now.
@@ -22,72 +31,60 @@ public class CashierMenuViewModel : INotifyPropertyChanged
     // But this gets troublesome if the store has a large number of products,
     // then we need to implement Pagination.
 
-    // Sample data
-    //public TrulyObservableCollection<OrderItemDto> OrderItems { get; set; } = new()
-    //{
-    //    new() 
-    //    { 
-    //        Ordinal = 0,
-    //        ItemName = "Phin Sữa",
-    //        OptionName = "L",
-    //        OptionPrice = 45_000m,
-    //        Discount = 12_000,
-    //        Note = ""
-    //    },
-    //    new()
-    //    {
-    //        Ordinal = 1,
-    //        ItemName = "Trà Thanh Đào",
-    //        OptionName = "M",
-    //        OptionPrice = 35_000m,
-    //        Discount = 0,
-    //        Note = ""
-    //    }
-    //};
-    //public OrderDto CurrentOrder { get; set; } = new()
-    //{
-    //    CreatedAt = DateTime.Now,
-    //    ItemCount = 2,
-    //    SubTotal = 80_000m,
-    //    TotalDiscount = 12_000m,
-    //    OrderBasedVAT = 0,
-    //    Total = 68_000m
-    //};
+    // Contextual properties
+    public Models.Entity.Store CurrentStore
+    {
+        get; private set;
+    }
+    public Models.Entity.Staff CurrentStaff
+    {
+        get; private set;
+    }
+    public Models.General.Configuration CurrentConfiguration
+    {
+        get; private set;
+    }
+    public DateTime CurrentTime
+    {
+        get; set;
+    }
+    public InvoiceItemDto? EditNoteTarget { get; set; } = null;
 
-    public Models.General.Configuration CurrentConfiguration { get; private set; }
-
-    public List<Category> Categories { get; set; }
-
+    // Data-bound properties
+    private List<Category> _categories = new() { new() { Name = "Đang tải danh mục" } };
+    private List<Product> _allProducts = new() { new() { Name = "Đang tải sản phẩm" } };
     private List<Product> _productsOnDisplay;
-    private List<Product> _allProducts;
 
-    public TrulyObservableCollection<InvoiceItemDto> InvoiceItems { get; private set; } = new();    
-
-
+    private TrulyObservableCollection<InvoiceItemDto> _invoiceItems = new();
     private readonly InvoiceDto _newInvoiceDto = new();
 
-    public InvoiceItemDto? EditNoteTarget { get; set; } = null;
-    
-    // Data bound
     private string _vatRateString = string.Empty;
     private string _vatMessageString = string.Empty;
-    
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     public CashierMenuViewModel()
     {
         var currentConfiguration = App.GetService<IConfigurationContext>().GetConfiguration();
 
+        if (App.GetService<IStoreAuthenticationService>() is not StoreAuthenticationService storeAuthenticationService)
+            throw new InvalidOperationException("Store authentication service is not registered.");
+
+        if (App.GetService<IStaffAuthenticationService>() is not StaffAuthenticationService staffAuthenticationService)
+            throw new InvalidOperationException("Staff authentication service is not registered.");
+
         if (currentConfiguration == null)
-        {
             throw new InvalidOperationException("Configuration is not loaded.");
-        }
 
+        if (storeAuthenticationService.Context.CurrentStore == null)
+            throw new InvalidOperationException("Store is not logged in.");
+
+        if (staffAuthenticationService.Context.CurrentStaff == null)
+            throw new InvalidOperationException("Staff is not logged in.");
+
+        CurrentStore = storeAuthenticationService.Context.CurrentStore;
+        CurrentStaff = staffAuthenticationService.Context.CurrentStaff;
         CurrentConfiguration = currentConfiguration;
+        CurrentTime = DateTime.Now;
 
-        Categories = new() { new() { Name = "Đang tải danh mục" } };
-
-        _allProducts = new() { new() { Name = "Đang tải sản phẩm" } };
         _productsOnDisplay = _allProducts;
 
         // ignore warning here
@@ -154,7 +151,7 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         ProductsOnDisplay = _allProducts.Where(p => p.CategoryId == selectedCategory.Id).ToList();
     }
 
-    public void HandleAddItemToOrderButtonClick(Product productItem)
+    public InvoiceItemDto HandleAddItemToOrderButtonClick(Product productItem)
     {
         if (InvoiceItems.Count == 0)
             NewInvoiceCreatedAt = DateTime.Now;
@@ -162,6 +159,7 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         var invoiceItemDto = new InvoiceItemDto
         {
             Ordinal = InvoiceItems.Count + 1,
+            ProductId = productItem.Id,
             ItemName = productItem.Name,
             OptionName = productItem.SelectedOption.name,
             OptionPrice = productItem.SelectedOption.price,
@@ -169,22 +167,22 @@ public class CashierMenuViewModel : INotifyPropertyChanged
             Note = ""
         };
 
-        // Kinda weird adding to 2 lists, but it is nessessary
-        InvoiceItems.Add(invoiceItemDto);           // this is to update the UI
-        _newInvoiceDto.InvoiceItems.Add(invoiceItemDto); // this is to calculate order payment details
+        InvoiceItems.Add(invoiceItemDto);
 
         // Update payment details
         NewInvoiceItemCount = InvoiceItems.Count;
         NewInvoiceSubTotal = InvoiceItems.Sum(orderItem => orderItem.OptionPrice);
         NewInvoiceTotalDiscount = InvoiceItems.Sum(orderItem => orderItem.Discount);
 
-        NewInvoiceOrderBasedVAT = CurrentConfiguration.VatMethod switch
+        NewInvoiceInvoiceBasedVAT = CurrentConfiguration.VatMethod switch
         {
             "ORDER_BASED" => NewInvoiceSubTotal * 0.05m,
             _ => 0m
         };
 
-        NewInvoiceTotal = NewInvoiceSubTotal - NewInvoiceTotalDiscount + NewInvoiceOrderBasedVAT;
+        NewInvoiceTotal = NewInvoiceSubTotal - NewInvoiceTotalDiscount + NewInvoiceInvoiceBasedVAT;
+
+        return invoiceItemDto;
     }
 
     public void HandleRemoveItemFromOrderButtonClick(InvoiceItemDto orderItemDto)
@@ -203,13 +201,13 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         NewInvoiceSubTotal = InvoiceItems.Sum(orderItem => orderItem.OptionPrice);
         NewInvoiceTotalDiscount = InvoiceItems.Sum(orderItem => orderItem.Discount);
 
-        NewInvoiceOrderBasedVAT = CurrentConfiguration.VatMethod switch
+        NewInvoiceInvoiceBasedVAT = CurrentConfiguration.VatMethod switch
         {
             "ORDER_BASED" => NewInvoiceSubTotal * 0.05m,
             _ => 0m
         };
 
-        NewInvoiceTotal = NewInvoiceSubTotal - NewInvoiceTotalDiscount + NewInvoiceOrderBasedVAT;
+        NewInvoiceTotal = NewInvoiceSubTotal - NewInvoiceTotalDiscount + NewInvoiceInvoiceBasedVAT;
 
         if (InvoiceItems.Count == 0)
             NewInvoiceCreatedAt = DateTime.MinValue;
@@ -221,7 +219,7 @@ public class CashierMenuViewModel : INotifyPropertyChanged
             return;
 
         var result = await cancelOrderConfimationContentDialog.ShowAsync();
-    
+
         if (result == ContentDialogResult.Primary)
         {
             InvoiceItems.Clear();
@@ -231,14 +229,165 @@ public class CashierMenuViewModel : INotifyPropertyChanged
             NewInvoiceItemCount = 0;
             NewInvoiceSubTotal = 0;
             NewInvoiceTotalDiscount = 0;
-            NewInvoiceOrderBasedVAT = 0;
+            NewInvoiceInvoiceBasedVAT = 0;
             NewInvoiceTotal = 0;
         }
+    }
+
+    public void HandlePaymentMethodRadioButtonsSelectionChanged(int selectedIndex)
+    {
+        ResetPaymentMonetaryDetails();
+
+        switch (selectedIndex)
+        {
+            case 0:
+                NewInvoicePaymentMethod = "CASH";
+                break;
+            case 1:
+                NewInvoicePaymentMethod = "QR_PAY";
+                break;
+        }
+    }
+
+    public void HandleNumpadAddAmountButtonClick(decimal amount)
+    {
+        NewInvoiceCustomerPaid += amount;
+        NewInvoiceChange = Math.Max(0, NewInvoiceCustomerPaid - NewInvoiceTotal);
+    }
+
+    public void HandleNumpadNumberButtonClick(string numberText)
+    {
+        if (numberText == "000")
+        {
+            NewInvoiceCustomerPaid *= 1000;
+            NewInvoiceChange = Math.Max(0, NewInvoiceCustomerPaid - NewInvoiceTotal);
+            return;
+        }
+
+        var number = decimal.Parse(numberText);
+
+        NewInvoiceCustomerPaid *= 10;
+        NewInvoiceCustomerPaid += number;
+
+        NewInvoiceChange = Math.Max(0, NewInvoiceCustomerPaid - NewInvoiceTotal);
+    }
+
+    public void HandleNumpadClearAmountButtonClick()
+    {
+        ResetPaymentMonetaryDetails();
+    }
+
+    public void HandleNumpadBackspaceButtonClick()
+    {
+        NewInvoiceCustomerPaid = Math.Floor(NewInvoiceCustomerPaid / 10);
+        NewInvoiceChange = Math.Max(0, NewInvoiceCustomerPaid - NewInvoiceTotal);
+    }
+
+    public async void HandleProceedWithPaymentButtonClick()
+    {
+        // All validation passed at this point
+
+        if (NewInvoicePaymentMethod == "CASH")
+        {
+            // Update current staff name and id to the new invoice
+            _newInvoiceDto.StaffId = CurrentStaff.Id;
+            _newInvoiceDto.StaffName = CurrentStaff.Name;
+
+            // Adding invoice items to the new invoice
+            _newInvoiceDto.InvoiceItems.Clear();
+
+            foreach (var invoiceItem in InvoiceItems)
+            {
+                invoiceItem.InvoiceId = NewInvoiceId;
+                
+                _newInvoiceDto.InvoiceItems.Add(invoiceItem);
+            }
+
+            // Insert to database
+            var invoiceDao = App.GetService<IInvoiceDao>();
+
+            var result = await invoiceDao.InsertAsync(CurrentStore.Id, _newInvoiceDto);
+
+            if (result == null)
+                throw new InvalidOperationException("Failed to insert new invoice");
+
+            // Reset to be ready for the next order
+            InvoiceItems.Clear();
+
+            _newInvoiceDto.StaffId = -1;
+            _newInvoiceDto.StaffName = string.Empty;
+            _newInvoiceDto.InvoiceItems.Clear();
+
+            NewInvoiceId = await invoiceDao.GetNextInvoiceIdAsync(CurrentStore.Id);
+            NewInvoiceCreatedAt = DateTime.MinValue;
+            NewInvoiceItemCount = 0;
+            NewInvoiceSubTotal = 0m;
+            NewInvoiceTotalDiscount = 0m;
+            NewInvoiceInvoiceBasedVAT = 0m;
+            NewInvoiceTotal = 0m;
+            NewInvoiceCustomerPaid = 0m;
+            NewInvoiceChange = 0m;
+            NewInvoicePaymentMethod = string.Empty;
+
+            return;
+        }
+        
+        // QR-PAY doesn't proceed through this button
+    }
+
+    public string ValidatePaymentMonetaryDetails()
+    {
+        if (NewInvoiceCustomerPaid % 500 != 0)
+            return "Số tiền khách trả phải chia hết cho 500";
+
+        if (NewInvoiceCustomerPaid < NewInvoiceTotal)
+            return "Số tiền khách trả chưa đủ";
+
+        if (NewInvoiceCustomerPaid - NewInvoiceTotal > 500_000m)
+            return "Vui lòng kiểm tra lại số tiền khách trả";
+
+        return "";
+    }
+
+    public void ResetPaymentMonetaryDetails()
+    {
+        NewInvoiceChange = 0m;
+        NewInvoiceCustomerPaid = 0m;
     }
 
     private void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public List<Category> Categories
+    {
+        get => _categories;
+        set
+        {
+            _categories = value;
+            OnPropertyChanged(nameof(Categories));
+        }
+    }
+
+    public List<Product> ProductsOnDisplay
+    {
+        get => _productsOnDisplay;
+        set
+        {
+            _productsOnDisplay = value;
+            OnPropertyChanged(nameof(ProductsOnDisplay));
+        }
+    }
+
+    public TrulyObservableCollection<InvoiceItemDto> InvoiceItems
+    {
+        get => _invoiceItems;
+        set
+        {
+            _invoiceItems = value;
+            OnPropertyChanged(nameof(InvoiceItems));
+        }
     }
 
     public string VatRateString
@@ -258,16 +407,6 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         {
             _vatMessageString = value;
             OnPropertyChanged(nameof(VatMessageString));
-        }
-    }
-
-    public List<Product> ProductsOnDisplay
-    {
-        get => _productsOnDisplay;
-        set
-        {
-            _productsOnDisplay = value;
-            OnPropertyChanged(nameof(ProductsOnDisplay));
         }
     }
 
@@ -321,13 +460,13 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
-    public decimal NewInvoiceOrderBasedVAT
+    public decimal NewInvoiceInvoiceBasedVAT
     {
         get => _newInvoiceDto.InvoiceBasedVAT;
         set
         {
             _newInvoiceDto.InvoiceBasedVAT = value;
-            OnPropertyChanged(nameof(NewInvoiceOrderBasedVAT));
+            OnPropertyChanged(nameof(NewInvoiceInvoiceBasedVAT));
         }
     }
 
@@ -338,6 +477,36 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         {
             _newInvoiceDto.Total = value;
             OnPropertyChanged(nameof(NewInvoiceTotal));
+        }
+    }
+
+    public decimal NewInvoiceCustomerPaid
+    {
+        get => _newInvoiceDto.CustomerPaid;
+        set
+        {
+            _newInvoiceDto.CustomerPaid = value;
+            OnPropertyChanged(nameof(NewInvoiceCustomerPaid));
+        }
+    }
+
+    public decimal NewInvoiceChange
+    {
+        get => _newInvoiceDto.Change;
+        set
+        {
+            _newInvoiceDto.Change = value;
+            OnPropertyChanged(nameof(NewInvoiceChange));
+        }
+    }
+
+    public string NewInvoicePaymentMethod
+    {
+        get => _newInvoiceDto.PaymentMethod;
+        set
+        {
+            _newInvoiceDto.PaymentMethod = value;
+            OnPropertyChanged(nameof(NewInvoicePaymentMethod));
         }
     }
 }
