@@ -42,10 +42,10 @@ namespace SipPOS.UnitTest.Services.Entity.Implementations
         [TestMethod]
         public async void GetSpecialOffers_WhenCalled_ShouldReturnSpecialOfferList()
         {
-            var categorys = await specialOfferService.GetAll();
+            var specialOffers = await specialOfferService.GetAll();
 
-            Assert.IsNotNull(categorys);
-            Assert.IsTrue(categorys.Count != 0);
+            Assert.IsNotNull(specialOffers);
+            Assert.IsTrue(specialOffers.Count != 0);
 
         }
 
