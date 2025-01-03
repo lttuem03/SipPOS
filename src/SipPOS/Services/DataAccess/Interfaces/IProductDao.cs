@@ -13,9 +13,9 @@ public interface IProductDao
     /// Inserts a new product.
     /// </summary>
     /// <param name="storeId">The store ID of the product.</param>
-    /// <param name="productDto">The product to insert.</param>
+    /// <param name="product">The product to insert.</param>
     /// <returns>The inserted product if successful; otherwise, null.</returns>
-    Task<Product?> InsertAsync(long storeId, Product productDto);
+    Task<Product?> InsertAsync(long storeId, Product product);
 
     /// <summary>
     /// Retrieves all products of a store.
@@ -54,9 +54,9 @@ public interface IProductDao
     /// Updates a product by its ID.
     /// </summary>
     /// <param name="storeId">The store ID of the store to update product from.</param>
-    /// <param name="productDto">The product to update.</param>
+    /// <param name="product">The product to update.</param>
     /// <returns>The updated product if successful; otherwise, null.</returns>
-    Task<Product?> UpdateByIdAsync(long storeId, Product productDto);
+    Task<Product?> UpdateByIdAsync(long storeId, Product product);
 
     /// <summary>
     /// "Soft" deletes a product by its ID.

@@ -53,6 +53,8 @@ public partial class ProductManagementViewModel : ObservableRecipient
     /// </summary>
     public ObservableCollection<string> ImageUrls { get; set; } = new ObservableCollection<string>();
 
+    public ObservableCollection<ProductOptionDto> ProductOptions { get; set; } = new ObservableCollection<ProductOptionDto>();
+
     /// <summary>
     /// Gets or sets the selected product.
     /// </summary>
@@ -163,14 +165,25 @@ public partial class ProductManagementViewModel : ObservableRecipient
             ProductDescRequireMessage = "Mô tả sản phẩm không được để trống";
             isValidate = false;
         }
-        //if (SelectedProduct.Price == null || double.IsNaN((double)SelectedProduct.Price) || SelectedProduct.Price <= 0)
-        //{
-        //    ProductPriceRequireMessage = "Giá sản phẩm không được để trống và phải lơn hơn bằng 0";
-        //    isValidate = false;
-        //}
         if (SelectedProduct.CategoryId == null)
         {
             ProductCategoryRequireMessage = "Danh mục sản phẩm không được để trống";
+            isValidate = false;
+        }
+        SelectedProduct.ProductOptions.Clear();
+        foreach (var item in ProductOptions)
+        {
+            if (item.Option == null || item.Price == null || double.IsNaN((double)item.Price) || item.Price < 0)
+            {
+                ProductPriceRequireMessage = "Giá sản phẩm không được để trống và phải lớn hơn hoặc bằng 0";
+                isValidate = false;
+                break;
+            }
+            SelectedProduct.ProductOptions.Add(new(item.Option, (decimal)item.Price));
+        }
+        if (SelectedProduct.ProductOptions.Count() == 0)
+        {
+            ProductPriceRequireMessage = "Phải có ít nhất một giá sản phẩm";
             isValidate = false;
         }
         if (!isValidate)
@@ -202,21 +215,31 @@ public partial class ProductManagementViewModel : ObservableRecipient
             ProductDescRequireMessage = "Mô tả sản phẩm không được để trống";
             isValidate = false;
         }
-        //if (SelectedProduct.Price == null || double.IsNaN((double)SelectedProduct.Price) || SelectedProduct.Price < 0)
-        //{
-        //    ProductPriceRequireMessage = "Giá sản phẩm không được để trống và phải lớn hơn hoặc bằng 0";
-        //    isValidate = false;
-        //}
         if (SelectedProduct.CategoryId == null)
         {
             ProductCategoryRequireMessage = "Danh mục sản phẩm không được để trống";
+            isValidate = false;
+        }
+        SelectedProduct.ProductOptions.Clear();
+        foreach (var item in ProductOptions)
+        {
+            if (item.Option == null || item.Price == null || double.IsNaN((double)item.Price) || item.Price < 0)
+            {
+                ProductPriceRequireMessage = "Giá sản phẩm không được để trống và phải lớn hơn hoặc bằng 0";
+                isValidate = false;
+                break;
+            }
+            SelectedProduct.ProductOptions.Add(new (item.Option,(decimal) item.Price));
+        }
+        if (SelectedProduct.ProductOptions.Count() == 0)
+        {
+            ProductPriceRequireMessage = "Phải có ít nhất một giá sản phẩm";
             isValidate = false;
         }
         if (!isValidate)
         {
             return null;
         }
-
         ProductDto? result = await _productService.UpdateById(SelectedProduct);
         UpdateProductList();
         return result;

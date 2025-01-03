@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="SipPOS.Views.Promotion.SpecialOffersManagementView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SipPOS.Views.Inventory"
+    xmlns:local_controls="using:SipPOS.Resources.Controls"
+    xmlns:local_conveters="using:SipPOS.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
+    xmlns:inventory="using:SipPOS.ViewModels.Inventory"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <!-- Add your ToastNotificationControl -->
+    <Page.Resources>
+        <local_conveters:DoubleToNullableDoubleConverter x:Key="DoubleToNullableDoubleConverter"/>
+        <local_conveters:DateTimeToDateTimeOffsetConverter x:Key="DateTimeToDateTimeOffsetConverter"/>
+        <local_conveters:DecimalToDoubleConverter x:Key="DecimalToDoubleConverter"/>
+        <local_conveters:StatusValueToStatusLableConverter x:Key="StatusValueToStatusLableConverter"/>
+        <local_conveters:CategoryIdToCategoryNameConverter x:Key="CategoryIdToCategoryNameConverter"/>
+        <local_conveters:DateToDisplayDateConverter x:Key="DateToDisplayDateConverter"/>
+    </Page.Resources>
+
+    <Grid Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid 
+            Grid.Row="0" 
+            HorizontalAlignment="Stretch" 
+            VerticalAlignment="Center"
+            ColumnSpacing="10">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <ComboBox
+                Grid.Row="0" Grid.Column="0"
+                Header="Chọn danh mục"
+                PlaceholderText="Chọn danh mục"  
+                HorizontalAlignment="Stretch"
+                DisplayMemberPath="Name" 
+                SelectedValuePath="Id"
+                SelectedValue="{x:Bind ViewModel.SpecialOffersFilterDto.CategoryId, Mode=TwoWay}"
+                ItemsSource="{x:Bind ViewModel.CategoriesFilter}"/>
+            <ComboBox
+                Grid.Row="0" Grid.Column="1"
+                Header="Chọn sản phẩm"
+                PlaceholderText="Chọn sản phẩm"  
+                HorizontalAlignment="Stretch"
+                DisplayMemberPath="Name" 
+                SelectedValuePath="Id"
+                SelectedValue="{x:Bind ViewModel.SpecialOffersFilterDto.ProductId, Mode=TwoWay}"
+                ItemsSource="{x:Bind ViewModel.ProductsFilter}"/>
+            <ComboBox 
+                Grid.Row="1" Grid.Column="0" 
+                Header="Chọn trạng thái"
+                PlaceholderText="Chọn trạng thái"  
+                HorizontalAlignment="Stretch"
+                DisplayMemberPath="Label" 
+                SelectedValuePath="Value"
+                SelectedValue="{x:Bind ViewModel.SpecialOffersFilterDto.Status, Mode=TwoWay}"
+                ItemsSource="{x:Bind ViewModel.StatusItemsFilter}"/>
+            <TextBox 
+                Text="{x:Bind ViewModel.SpecialOffersFilterDto.Code, Mode=TwoWay}"
+                Grid.Row="1" Grid.Column="1" 
+                Header="Mã khuyến mãi"
+                PlaceholderText="Nhập Mã khuyến mãi" 
+                IsSpellCheckEnabled="False"/>
+            <TextBox 
+                Text="{x:Bind ViewModel.SpecialOffersFilterDto.Name, Mode=TwoWay}"
+                Grid.Row="2" Grid.Column="0" 
+                Grid.ColumnSpan="2"
+                Header="Tên khuyến mãi"
+                PlaceholderText="Nhập tên khuyến mãi" 
+                IsSpellCheckEnabled="False"/>
+        </Grid>
+
+        <StackPanel Grid.Row="1" Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,10,0,10">
+                <Button Content="Tìm kiếm" Click="RefreshButton_Click" />
+                <Button Content="Xóa tìm kiếm" Click="EmptyButton_Click" Margin="10,0,0,0" />
+                <Button Content="Thêm mới" Click="AddButton_Click" Margin="10,0,0,0" />
+                <Button Content="Xem" Click="ViewButton_Click" Margin="10,0,0,0" />
+                <Button Content="Chỉnh sửa" Click="EditButton_Click" Margin="10,0,0,0" />
+                <Button Content="Xóa" Click="DeleteButton_Click" Margin="10,0,0,0" />
+            </StackPanel>
+        </StackPanel>
+
+        <controls:DataGrid
+            x:Name="dg"
+            Grid.Row="2"
+            ItemsSource="{x:Bind ViewModel.SpecialOffers, Mode=OneWay}"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Width="Auto" Height="Auto"
+            HorizontalScrollBarVisibility="Visible"
+            MaxHeight="{x:Bind ViewModel.TableHeight, Mode=OneWay}"
+            IsReadOnly="True"
+            Sorting="DataGrid_Sorting"
+            Margin="15,10,0,0"
+            BorderBrush="Black"
+            BorderThickness="1"
+            AutoGenerateColumns="False"
+            GridLinesVisibility="All"
+            ColumnWidth="*">
+            <controls:DataGrid.Resources>
+                <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush" Color="Transparent"/>
+                <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush" Color="Transparent"/>
+                <SolidColorBrush x:Key="DataGridColumnHeaderBackgroundColor" Color="Transparent" />
+            </controls:DataGrid.Resources>
+            <controls:DataGrid.Columns>
+                <controls:DataGridTemplateColumn Header="Chọn" Width="80" CanUserSort="False">
+                    <controls:DataGridTemplateColumn.CellTemplate >
+                        <DataTemplate >
+                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" Margin="30,0,0,0"/>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                </controls:DataGridTemplateColumn>
+                <controls:DataGridTextColumn Binding="{Binding Code}" Header="Mã" Tag="code" />
+                <controls:DataGridTextColumn Binding="{Binding Name}" Header="Tên" Tag="name" />
+                <controls:DataGridTextColumn Binding="{Binding Status, Converter={StaticResource StatusValueToStatusLableConverter}}" Header="Trạng thái" Tag="status" />
+            </controls:DataGrid.Columns>
+        </controls:DataGrid>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0">
+            <local_controls:PaginationControl 
+            PerPages="5,10,20,30" 
+            CurrentPage="{x:Bind ViewModel.Page, Mode=TwoWay}"
+            PerPage="{x:Bind ViewModel.PerPage, Mode=TwoWay}" 
+            TotalPage="{x:Bind ViewModel.TotalPage, Mode=OneWay}"
+            TotalRecord="{x:Bind ViewModel.TotalRecord, Mode=OneWay}"   
+            PageChanged="PaginationControl_PageChanged"/>
+        </StackPanel>
+
+        <ContentDialog
+            x:Name="Dialog"
+            Title="THÊM MỚI KHUYẾN MÃI"
+            PrimaryButtonText="Lưu"
+            SecondaryButtonText="Quay lại"
+            Closed="DialogClose"
+            Opened="DialogOpen"
+            PrimaryButtonClick="Dialog_YesClick"
+            SecondaryButtonClick="Dialog_NoButtonClick"
+            DefaultButton="Primary">
+            <ContentDialog.Resources>
+                <x:Double x:Key="ContentDialogMaxWidth">2000</x:Double>
+                <x:Double x:Key="ContentDialogMaxHeight">2000</x:Double>
+            </ContentDialog.Resources>
+            <TabView IsAddTabButtonVisible="False" Width="800">
+                <TabView.TabItems>
+                    <TabViewItem Header="Thông tin khuyến mãi" IsClosable="False">
+                        <TabViewItem.IconSource>
+                            <SymbolIconSource Symbol="Bookmarks" />
+                        </TabViewItem.IconSource>
+                        <Grid ColumnSpacing="10" RowSpacing="4" Padding="10,20,10,10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" >
+                                <TextBox
+                                    Text="{x:Bind ViewModel.SelectedSpecialOffer.Code, Mode=TwoWay}"
+                                    Header="Mã khuyến mãi" 
+                                    TextChanged="SpecialOfferCode_TextChanged"
+                                    PlaceholderText="Nhập tên khuyến mãi" 
+                                    IsSpellCheckEnabled="False"/>
+                                <TextBlock Text="{x:Bind ViewModel.SpecialOfferCodeRequireMessage, Mode=OneWay}" Foreground="Red" FontSize="12"/>
+                            </StackPanel>
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1" >
+                                <TextBox
+                                    Text="{x:Bind ViewModel.SelectedSpecialOffer.Name, Mode=TwoWay}"
+                                    Header="Tên khuyến mãi" 
+                                    TextChanged="SpecialOfferName_TextChanged"
+                                    PlaceholderText="Nhập tên khuyến mãi" 
+                                    IsSpellCheckEnabled="False"/>
+                                <TextBlock Text="{x:Bind ViewModel.SpecialOfferNameRequireMessage, Mode=OneWay}" Foreground="Red" FontSize="12"/>
+                            </StackPanel>
+                            <ComboBox 
+                                Header="Trạng thái"
+                                Grid.Row="1" Grid.Column="0" 
+                                PlaceholderText="Chọn trạng thái"  
+                                HorizontalAlignment="Stretch"
+                                DisplayMemberPath="Label" 
+                                SelectedValuePath="Value"
+                                SelectedValue="{x:Bind ViewModel.SelectedSpecialOffer.Status, Mode=TwoWay}"
+                                ItemsSource="{x:Bind ViewModel.StatusItems}"/>
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1">
+                                <CalendarDatePicker
+                                    DateChanged="SpecialOfferDate_DateChanged"
+                                    Date="{x:Bind ViewModel.SelectedSpecialOffer.StartDate, Mode=TwoWay, Converter={StaticResource DateTimeToDateTimeOffsetConverter}}"
+                                    Header="Ngày bắt đầu" HorizontalAlignment="Stretch"/>
+                                <TextBlock Text="{x:Bind ViewModel.SpecialOfferStartDateRequireMessage, Mode=OneWay}" Foreground="Red" FontSize="12"/>
+                            </StackPanel>
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="0">
+                                <CalendarDatePicker 
+                                    DateChanged="SpecialOfferDate_DateChanged"
+                                    Date="{x:Bind ViewModel.SelectedSpecialOffer.EndDate, Mode=TwoWay, Converter={StaticResource DateTimeToDateTimeOffsetConverter}}"
+                                    Header="Ngày kết thúc" HorizontalAlignment="Stretch"/>
+                                <TextBlock Text="" Foreground="Red" FontSize="12"/>
+                            </StackPanel>
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="1" >
+                                <ComboBox 
+                                   Header="Loại tiền giảm"
+                                   PlaceholderText="Chọn lại tiền giảm"  
+                                   HorizontalAlignment="Stretch"
+                                   DisplayMemberPath="Label" 
+                                   SelectedValuePath="Value"
+                                   SelectionChanged="PriceType_SelectionChanged"
+                                   SelectedValue="{x:Bind ViewModel.SelectedSpecialOffer.PriceType, Mode=TwoWay}"
+                                   ItemsSource="{x:Bind ViewModel.PriceTypes}"/>
+                                <TextBlock Text="" Foreground="Red" FontSize="12"/>
+                            </StackPanel>
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="3" Grid.Column="0">
+                                <NumberBox 
+                                   Header="Giá giảm"
+                                   Visibility="{x:Bind ViewModel.DiscountPriceVisibility, Mode=TwoWay}"
+                                   ValueChanged="SpecialOfferPrice_ValueChanged"
+                                   Value="{x:Bind ViewModel.SelectedSpecialOffer.DiscountPrice, Mode=TwoWay, Converter={StaticResource DoubleToNullableDoubleConverter}}"
+                                   PlaceholderText="Nhập giá giảm"/>
+                                <NumberBox 
+                                   Header="Phần trăm giảm"
+                                   Visibility="{x:Bind ViewModel.DiscountPecentageVisibility, Mode=TwoWay}"
+                                   ValueChanged="SpecialOfferPrice_ValueChanged"
+                                   Value="{x:Bind ViewModel.SelectedSpecialOffer.DiscountPercentage, Mode=TwoWay, Converter={StaticResource DoubleToNullableDoubleConverter}}"
+                                   PlaceholderText="Nhập phần trăm giảm"/>
+                                <TextBlock Text="{x:Bind ViewModel.SpecialOfferPriceRequireMessage, Mode=OneWay}" Foreground="Red" FontSize="12"/>
+                            </StackPanel>
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="3" Grid.Column="1" >
+                                <NumberBox 
+                                    Header="Số lượng tối đa"
+                                    ValueChanged="SpecialOfferMaxItems_ValueChanged"
+                                    Value="{x:Bind ViewModel.SelectedSpecialOffer.MaxItems, Mode=TwoWay, Converter={StaticResource DoubleToNullableDoubleConverter}}"
+                                    PlaceholderText="Nhập giá giảm"/>
+                                <TextBlock Text="{x:Bind ViewModel.SpecialOfferMaxItemsRequireMessage, Mode=OneWay}" Foreground="Red" FontSize="12"/>
+                            </StackPanel>
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="4" Grid.Column="0">
+                                <ComboBox 
+                                    Header="Loại khuyến mãi"
+                                    PlaceholderText="Loại khuyến mãi"  
+                                    HorizontalAlignment="Stretch"
+                                    DisplayMemberPath="Label" 
+                                    SelectedValuePath="Value"
+                                    SelectionChanged="Type_SelectionChanged"
+                                    SelectedValue="{x:Bind ViewModel.SelectedSpecialOffer.Type, Mode=TwoWay}"
+                                    ItemsSource="{x:Bind ViewModel.SpecialOfferTypes}"/>
+                            </StackPanel>
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="4" Grid.Column="1">
+                                <ComboBox 
+                                    Header="Danh mục"
+                                    PlaceholderText="Chọn danh mục"
+                                    HorizontalAlignment="Stretch"
+                                    DisplayMemberPath="Name"
+                                    SelectedValuePath="Id"
+                                    Visibility="{x:Bind ViewModel.CategoryPromotionVisibility, Mode=TwoWay}"
+                                    SelectedValue="{x:Bind ViewModel.SelectedSpecialOffer.CategoryId, Mode=TwoWay}"
+                                    ItemsSource="{x:Bind ViewModel.Categories}"/>
+                                <ComboBox 
+                                    Header="Sản phẩm"
+                                    PlaceholderText="Chọn sản phẩm"
+                                    HorizontalAlignment="Stretch"
+                                    DisplayMemberPath="Name"
+                                    SelectedValuePath="Id"
+                                    Visibility="{x:Bind ViewModel.ProductPromotionVisibility, Mode=TwoWay}"
+                                    SelectedValue="{x:Bind ViewModel.SelectedSpecialOffer.ProductId, Mode=TwoWay}"
+                                    ItemsSource="{x:Bind ViewModel.Products}"/>
+                                <TextBlock Text="{x:Bind ViewModel.SpecialOfferTypeRequireMessage, Mode=OneWay}" Foreground="Red" FontSize="12"/>
+                            </StackPanel>
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" >
+                                <TextBox 
+                                    AcceptsReturn="True"
+                                    Text="{x:Bind ViewModel.SelectedSpecialOffer.Description, Mode=TwoWay}"
+                                    Header="Mô tả khuyến mãi" Height="100"
+                                    TextChanged="SpecialOfferDesc_TextChanged"
+                                    PlaceholderText="Nhập mô tả khuyến mãi" 
+                                    IsSpellCheckEnabled="False"/>
+                                <TextBlock Text="{x:Bind ViewModel.SpecialOfferDescRequireMessage, Mode=OneWay}" Foreground="Red" FontSize="12"/>
+                            </StackPanel>
+                        </Grid>
+                    </TabViewItem>
+                </TabView.TabItems>
+            </TabView>
+        </ContentDialog>
+
+        <ContentDialog
+            x:Name="DeleteConfirmationDialog"
+            Title="THÔNG BÁO"
+            Content="Nếu 'có' thao tác này không thể hoàn tác. Bạn có chắc chắn muốn xóa khuyến mãi này không? "
+            PrimaryButtonText="Có"
+            PrimaryButtonClick="DeleteConfirmationDialog_YesClick"
+            SecondaryButtonText="Không"
+            SecondaryButtonClick="DeleteConfirmationDialog_NoClick"
+            DefaultButton="Primary">
+        </ContentDialog>
+        <local_controls:ToastNotificationControl x:Name="InAppToast" Visibility="Collapsed" />
+    </Grid>
+</Page>

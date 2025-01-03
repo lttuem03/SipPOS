@@ -18,6 +18,7 @@ using Windows.ApplicationModel.PackageExtensions;
 using Microsoft.UI.Xaml.Controls;
 using SipPOS.Views.Cashier;
 using SipPOS.Models.General;
+using SipPOS.Views.Promotion;
 
 namespace SipPOS.ViewModels.General;
 
@@ -191,6 +192,8 @@ public class MainMenuViewModel : INotifyPropertyChanged
             ShowAccessDeniedNotification(notificationInfoBar);
             return;
         }
+
+        App.NavigateTo(typeof(PromotionMenuView));
     }
 
     /// <summary>

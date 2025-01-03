@@ -23,7 +23,7 @@ public sealed partial class InventoryMenuView : Page
     {
         this.InitializeComponent();
         ViewModel = new InventoryMenuViewModel();
-        //ViewModel.SelectViewUponLoad(inventoryMenuNavigationView, inventoryMenuNavigationFrame);
+        ViewModel.SelectViewUponLoad(inventoryMenuNavigationView, inventoryMenuNavigationFrame);
     }
 
     /// <summary>

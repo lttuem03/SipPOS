@@ -219,7 +219,7 @@ public sealed partial class CategoryManagementView : Page
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="args">The event data.</param>
-    private void ProductDialog_YesClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+    private async void ProductDialog_YesClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
     {
         if (ViewModel.SelectedCategory == null)
         {
@@ -231,10 +231,10 @@ public sealed partial class CategoryManagementView : Page
         switch (ViewModel.ActionType)
         {
             case "ADD":
-                isOk = null != ViewModel.Insert();
+                isOk = null != await ViewModel.Insert();
                 break;
             case "EDIT":
-                isOk = null != ViewModel.UpdateById();
+                isOk = null != await ViewModel.UpdateById();
                 break;
             default:
                 break;
