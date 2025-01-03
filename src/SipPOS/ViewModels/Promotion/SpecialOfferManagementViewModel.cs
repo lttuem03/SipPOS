@@ -133,6 +133,21 @@ public partial class SpecialOfferManagementViewModel : ObservableRecipient
         TotalRecord = pagination.TotalRecord;
         foreach (var item in pagination.Data)
         {
+            if (item.PriceType == "Original")
+            {
+                if (item.DiscountPrice == null)
+                    item.DiscountAmountString = "0₫";
+                else
+                    item.DiscountAmountString = item.DiscountPrice.Value.ToString("C0", new System.Globalization.CultureInfo("vi-VN"));
+            }
+            else if (item.PriceType == "Percentage")
+            {
+                if (item.DiscountPercentage == null)
+                    item.DiscountAmountString = "0%";
+                else
+                    item.DiscountAmountString = $"{item.DiscountPercentage:0}%";
+            }
+
             SpecialOffers.Add(item);
         }
     }

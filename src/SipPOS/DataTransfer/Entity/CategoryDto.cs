@@ -18,7 +18,7 @@ public class CategoryDto : BaseEntityDto
     /// <summary>
     /// Gets or sets the description of the category.
     /// </summary>
-    public string? Description { get; set; }
+    public string? Description { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets a value indicating whether the category is selected.

@@ -34,13 +34,13 @@
             Text="QUẢN LÝ KHUYẾN MÃI" 
             Style="{StaticResource TitleLargeTextBlockStyle}"/>
 
-        <!--Inventory navigation view-->
+        <!--Promotion navigation view-->
         <Grid
             Canvas.Left="50" Canvas.Top="150"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Width="1440"
-            Height="700">
+            Height="720">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

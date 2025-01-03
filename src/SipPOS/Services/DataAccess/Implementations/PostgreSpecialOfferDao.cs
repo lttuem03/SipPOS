@@ -32,7 +32,7 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
                 category_id, 
                 status,
                 type,
-                sold_items,
+                items_sold,
                 max_items,
                 product_id,
                 start_date,
@@ -57,7 +57,7 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
                 new() { Value = specialOffersModel.CategoryId == null ? DBNull.Value : specialOffersModel.CategoryId},
                 new() { Value = specialOffersModel.Status },
                 new() { Value = specialOffersModel.Type },
-                new() { Value = specialOffersModel.SoldItems },
+                new() { Value = specialOffersModel.ItemsSold },
                 new() { Value = specialOffersModel.MaxItems },
                 new() { Value = specialOffersModel.ProductId == null ? DBNull.Value : specialOffersModel.ProductId},
                 new() { Value = specialOffersModel.StartDate },
@@ -301,7 +301,7 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
                 new() { Value = specialOffersModel.UpdatedAt },
                 new() { Value = specialOffersModel.Name },
                 new() { Value = specialOffersModel.Description },
-                new() { Value = specialOffersModel.SoldItems },
+                new() { Value = specialOffersModel.ItemsSold },
                 new() { Value = specialOffersModel.CategoryId == null ? DBNull.Value : specialOffersModel.CategoryId},
                 new() { Value = specialOffersModel.Status },
                 new() { Value = specialOffersModel.Type },
@@ -491,8 +491,8 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
             Description = reader.GetString(reader.GetOrdinal("description")),
             Type = reader.GetString(reader.GetOrdinal("type")),
             PriceType = reader.GetString(reader.GetOrdinal("price_type")),
-            SoldItems = reader.GetDouble(reader.GetOrdinal("sold_items")),
-            MaxItems = reader.GetDouble(reader.GetOrdinal("max_items")),
+            ItemsSold = reader.GetDecimal(reader.GetOrdinal("items_sold")),
+            MaxItems = reader.GetDecimal(reader.GetOrdinal("max_items")),
             Status = reader.GetString(reader.GetOrdinal("status")),
         };
 
@@ -514,9 +514,9 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
         specialOffer.EndDate = reader.IsDBNull(reader.GetOrdinal("end_date")) ?
             null : reader.GetDateTime(reader.GetOrdinal("end_date"));
         specialOffer.DiscountPrice = reader.IsDBNull(reader.GetOrdinal("discount_price")) ?
-            null : reader.GetDouble(reader.GetOrdinal("discount_price"));
+            null : reader.GetDecimal(reader.GetOrdinal("discount_price"));
         specialOffer.DiscountPercentage = reader.IsDBNull(reader.GetOrdinal("discount_percentage")) ?
-            null : reader.GetDouble(reader.GetOrdinal("discount_percentage"));
+            null : reader.GetDecimal(reader.GetOrdinal("discount_percentage"));
         return specialOffer;
     }
 

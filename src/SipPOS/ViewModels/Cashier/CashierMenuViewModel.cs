@@ -16,6 +16,7 @@ using SipPOS.Services.General.Implementations;
 using SipPOS.Services.Authentication.Implementations;
 using Microsoft.VisualBasic;
 using Microsoft.UI.Xaml;
+using System.Linq;
 
 
 namespace SipPOS.ViewModels.Cashier;
@@ -289,6 +290,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
 
         if (NewInvoicePaymentMethod == "CASH")
         {
+            var updateItemsSoldProductIds = new List<long>();
+            var productDao = App.GetService<IProductDao>();
+
             // Update current staff name and id to the new invoice
             _newInvoiceDto.StaffId = CurrentStaff.Id;
             _newInvoiceDto.StaffName = CurrentStaff.Name;
@@ -301,6 +305,24 @@ public class CashierMenuViewModel : INotifyPropertyChanged
                 invoiceItem.InvoiceId = NewInvoiceId;
                 
                 _newInvoiceDto.InvoiceItems.Add(invoiceItem);
+
+                // Update ItemsSold for the products
+                var product = await productDao.GetByIdAsync(CurrentStore.Id, invoiceItem.ProductId);
+
+                if (product == null)
+                    throw new InvalidOperationException("Product not found");
+
+                product.ItemsSold++;
+                product.UpdatedAt = DateTime.Now;
+                product.UpdatedBy = CurrentStaff.CompositeUsername;
+
+                var updatedProduct = await productDao.UpdateByIdAsync(CurrentStore.Id, product);
+
+                if (updatedProduct == null)
+                    throw new InvalidOperationException("Failed to update product");
+
+                if (!updateItemsSoldProductIds.Contains(product.Id))
+                    updateItemsSoldProductIds.Add(product.Id);
             }
 
             // Insert to database
@@ -310,6 +332,25 @@ public class CashierMenuViewModel : INotifyPropertyChanged
 
             if (result == null)
                 throw new InvalidOperationException("Failed to insert new invoice");
+
+            // Update the _allProducts where the "ItemsSold" for the product has changed
+            foreach (var productId in updateItemsSoldProductIds)
+            {
+                var productToUpdate = _allProducts.First(product => product.Id == productId);
+
+                var productInDatabase = await productDao.GetByIdAsync(CurrentStore.Id, productId);
+
+                if (productInDatabase == null)
+                    throw new InvalidOperationException("Product not found");
+
+                productToUpdate.ItemsSold = productInDatabase.ItemsSold;
+            }
+
+            ProductsOnDisplay = _allProducts;
+
+            // A litte trick to update the UI
+            HandleCategoryBrowsingGridViewSelectionChanged(Categories[1]);
+            HandleCategoryBrowsingGridViewSelectionChanged(Categories[0]);
 
             // Reset to be ready for the next order
             InvoiceItems.Clear();
@@ -327,7 +368,7 @@ public class CashierMenuViewModel : INotifyPropertyChanged
             NewInvoiceTotal = 0m;
             NewInvoiceCustomerPaid = 0m;
             NewInvoiceChange = 0m;
-            NewInvoicePaymentMethod = string.Empty;
+            NewInvoicePaymentMethod = "CASH";
 
             return;
         }

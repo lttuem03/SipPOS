@@ -12,25 +12,25 @@ public class SpecialOffer : BaseEntity
 
     public string Description { get; set; } = string.Empty;
 
-    public double SoldItems { get; set; } = 0;
+    public decimal ItemsSold { get; set; } = 0m;
 
-    public double MaxItems { get; set; } = 0;
+    public decimal MaxItems { get; set; } = 0m;
 
-    public string? Type { get; set; }
+    public string? Type { get; set; } = string.Empty;
 
-    public string? PriceType { get; set; }
+    public string? PriceType { get; set; } = string.Empty;
 
     public long? CategoryId { get; set; }
 
     public long? ProductId { get; set; }
 
-    public DateTime? StartDate { get; set; }
+    public DateTime? StartDate { get; set; } = DateTime.MinValue;
 
-    public DateTime? EndDate { get; set; }
+    public DateTime? EndDate { get; set; } = DateTime.MinValue;
 
-    public double? DiscountPrice { get; set; }
+    public decimal? DiscountPrice { get; set; } = 0m;
 
-    public double? DiscountPercentage { get; set; }
+    public decimal? DiscountPercentage { get; set; } = 0.0m;
 
     public string Status { get; set; } = string.Empty;
 
