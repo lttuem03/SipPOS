@@ -5,29 +5,32 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SipPOS.Views.Inventory"
     xmlns:local_controls="using:SipPOS.Resources.Controls"
-    xmlns:local_conveters="using:SipPOS.Converters"
+    xmlns:local_converters="using:SipPOS.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
     xmlns:inventory="using:SipPOS.ViewModels.Inventory"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="AliceBlue">
 
     <!-- Add your ToastNotificationControl -->
     <Page.Resources>
-        <local_conveters:DoubleToNullableDoubleConverter x:Key="DoubleToNullableDoubleConverter"/>
-        <local_conveters:DateTimeToDateTimeOffsetConverter x:Key="DateTimeToDateTimeOffsetConverter"/>
-        <local_conveters:DecimalToDoubleConverter x:Key="DecimalToDoubleConverter"/>
-        <local_conveters:StatusValueToStatusLableConverter x:Key="StatusValueToStatusLableConverter"/>
-        <local_conveters:CategoryIdToCategoryNameConverter x:Key="CategoryIdToCategoryNameConverter"/>
-        <local_conveters:DateToDisplayDateConverter x:Key="DateToDisplayDateConverter"/>
+        <local_converters:DoubleToNullableDoubleConverter x:Key="DoubleToNullableDoubleConverter"/>
+        <local_converters:NullableDecimalToDoubleConverter x:Key="NullableDecimalToDoubleConverter"/>
+        <local_converters:DateTimeToDateTimeOffsetConverter x:Key="DateTimeToDateTimeOffsetConverter"/>
+        <local_converters:DecimalToDoubleConverter x:Key="DecimalToDoubleConverter"/>
+        <local_converters:StatusValueToStatusLableConverter x:Key="StatusValueToStatusLableConverter"/>
+        <local_converters:CategoryIdToCategoryNameConverter x:Key="CategoryIdToCategoryNameConverter"/>
+        <local_converters:DateToDisplayDateConverter x:Key="DateToDisplayDateConverter"/>
+        <local_converters:SpecialOfferTypeToStringConverter x:Key="SpecialOfferTypeToStringConverter"/>
+        <local_converters:DateTimeToDateOnlyStringConverter x:Key="DateTimeToDateOnlyStringConverter"/>
     </Page.Resources>
 
     <Grid Padding="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -38,7 +41,8 @@
             Grid.Row="0" 
             HorizontalAlignment="Stretch" 
             VerticalAlignment="Center"
-            ColumnSpacing="10">
+            ColumnSpacing="10"
+            RowSpacing="15">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -104,41 +108,86 @@
             </StackPanel>
         </StackPanel>
 
-        <controls:DataGrid
-            x:Name="dg"
+        <Grid
             Grid.Row="2"
-            ItemsSource="{x:Bind ViewModel.SpecialOffers, Mode=OneWay}"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            Width="Auto" Height="Auto"
-            HorizontalScrollBarVisibility="Visible"
-            MaxHeight="{x:Bind ViewModel.TableHeight, Mode=OneWay}"
-            IsReadOnly="True"
-            Sorting="DataGrid_Sorting"
-            Margin="15,10,0,0"
-            BorderBrush="Black"
-            BorderThickness="1"
-            AutoGenerateColumns="False"
-            GridLinesVisibility="All"
-            ColumnWidth="*">
-            <controls:DataGrid.Resources>
-                <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush" Color="Transparent"/>
-                <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush" Color="Transparent"/>
-                <SolidColorBrush x:Key="DataGridColumnHeaderBackgroundColor" Color="Transparent" />
-            </controls:DataGrid.Resources>
-            <controls:DataGrid.Columns>
-                <controls:DataGridTemplateColumn Header="Chọn" Width="80" CanUserSort="False">
-                    <controls:DataGridTemplateColumn.CellTemplate >
-                        <DataTemplate >
-                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" Margin="30,0,0,0"/>
-                        </DataTemplate>
-                    </controls:DataGridTemplateColumn.CellTemplate>
-                </controls:DataGridTemplateColumn>
-                <controls:DataGridTextColumn Binding="{Binding Code}" Header="Mã" Tag="code" />
-                <controls:DataGridTextColumn Binding="{Binding Name}" Header="Tên" Tag="name" />
-                <controls:DataGridTextColumn Binding="{Binding Status, Converter={StaticResource StatusValueToStatusLableConverter}}" Header="Trạng thái" Tag="status" />
-            </controls:DataGrid.Columns>
-        </controls:DataGrid>
+            BorderBrush="Gray"
+            BorderThickness="3"
+            CornerRadius="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <!--Headers only-->
+            <controls:DataGrid
+                Grid.Row="0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Width="Auto" Height="Auto"
+                IsReadOnly="True"
+                Margin="0,10,0,0"
+                AutoGenerateColumns="False"
+                GridLinesVisibility="All">
+                <controls:DataGrid.Resources>
+                    <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush" Color="Transparent"/>
+                    <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush" Color="Transparent"/>
+                    <SolidColorBrush x:Key="DataGridColumnHeaderBackgroundColor" Color="Transparent" />
+                </controls:DataGrid.Resources>
+                <controls:DataGrid.Columns>
+                    <controls:DataGridTemplateColumn Header=" Chọn" Width="80" CanUserSort="False"/>
+                    <controls:DataGridTextColumn Width="2*" Header="Mã" Tag="code" />
+                    <controls:DataGridTextColumn Width="3*" Header="Tên khuyến mãi" Tag="name" />
+                    <controls:DataGridTextColumn Width="2*" Header="Loại" Tag="type" />
+                    <controls:DataGridTextColumn Width="2*" Header="Mức giảm" Tag="discount_price" />
+                    <controls:DataGridTextColumn Width="*" Header="Tối đa" Tag="max_items" />
+                    <controls:DataGridTextColumn Width="*" Header="Đã bán" Tag="items_sold" />
+                    <controls:DataGridTextColumn Width="2*" Header="Bắt đầu" Tag="start_date" />
+                    <controls:DataGridTextColumn Width="2*" Header="Kết thúc" Tag="end_date" />
+                    <controls:DataGridTextColumn Width="2*" Header="Trạng thái" Tag="status" />
+
+                </controls:DataGrid.Columns>
+            </controls:DataGrid>
+
+            <!--Rows only scrollable grid-->
+            <controls:DataGrid
+                x:Name="dg"
+                Grid.Row="1"
+                HeadersVisibility="None"
+                ItemsSource="{x:Bind ViewModel.SpecialOffers, Mode=OneWay}"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Width="Auto" Height="Auto"
+                HorizontalScrollBarVisibility="Visible"
+                MaxHeight="{x:Bind ViewModel.TableHeight, Mode=OneWay}"
+                IsReadOnly="True"
+                Sorting="DataGrid_Sorting"
+                Margin="0,0,0,0"
+                AutoGenerateColumns="False"
+                GridLinesVisibility="All">
+                <controls:DataGrid.Resources>
+                    <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush" Color="Transparent"/>
+                    <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush" Color="Transparent"/>
+                    <SolidColorBrush x:Key="DataGridColumnHeaderBackgroundColor" Color="Transparent" />
+                </controls:DataGrid.Resources>
+                <controls:DataGrid.Columns>
+                    <controls:DataGridTemplateColumn Header="Chọn" Width="80" CanUserSort="False">
+                        <controls:DataGridTemplateColumn.CellTemplate >
+                            <DataTemplate >
+                                <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" Margin="30,0,0,0"/>
+                            </DataTemplate>
+                        </controls:DataGridTemplateColumn.CellTemplate>
+                    </controls:DataGridTemplateColumn>
+                    <controls:DataGridTextColumn Width="2*" Binding="{Binding Code}" Header="Mã" Tag="code" />
+                    <controls:DataGridTextColumn Width="3*" Binding="{Binding Name}" Header="Tên khuyến mãi" Tag="name" />
+                    <controls:DataGridTextColumn Width="2*" Binding="{Binding Type, Converter={StaticResource SpecialOfferTypeToStringConverter}}" Header="Loại" Tag="type" />
+                    <controls:DataGridTextColumn Width="2*" Binding="{Binding DiscountAmountString}" Header="Mức giảm" Tag="discount_price" />
+                    <controls:DataGridTextColumn Width="*" Binding="{Binding MaxItems}" Header="Tối đa" Tag="max_items" />
+                    <controls:DataGridTextColumn Width="*" Binding="{Binding ItemsSold}" Header="Đã bán" Tag="items_sold" />
+                    <controls:DataGridTextColumn Width="2*" Binding="{Binding StartDate, Converter={StaticResource DateTimeToDateOnlyStringConverter}}" Header="Bắt đầu" Tag="start_date" />
+                    <controls:DataGridTextColumn Width="2*" Binding="{Binding EndDate, Converter={StaticResource DateTimeToDateOnlyStringConverter}}" Header="Kết thúc" Tag="end_date" />
+                    <controls:DataGridTextColumn Width="2*" Binding="{Binding Status, Converter={StaticResource StatusValueToStatusLableConverter}}" Header="Trạng thái" Tag="status" />
+                </controls:DataGrid.Columns>
+            </controls:DataGrid>
+        </Grid>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0">
             <local_controls:PaginationControl 
@@ -226,8 +275,8 @@
                             </StackPanel>
                             <StackPanel HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="1" >
                                 <ComboBox 
-                                   Header="Loại tiền giảm"
-                                   PlaceholderText="Chọn lại tiền giảm"  
+                                   Header="Kiểu giảm"
+                                   PlaceholderText="Chọn kiểu giảm"  
                                    HorizontalAlignment="Stretch"
                                    DisplayMemberPath="Label" 
                                    SelectedValuePath="Value"
@@ -241,21 +290,21 @@
                                    Header="Giá giảm"
                                    Visibility="{x:Bind ViewModel.DiscountPriceVisibility, Mode=TwoWay}"
                                    ValueChanged="SpecialOfferPrice_ValueChanged"
-                                   Value="{x:Bind ViewModel.SelectedSpecialOffer.DiscountPrice, Mode=TwoWay, Converter={StaticResource DoubleToNullableDoubleConverter}}"
+                                   Value="{x:Bind ViewModel.SelectedSpecialOffer.DiscountPrice, Mode=TwoWay, Converter={StaticResource NullableDecimalToDoubleConverter}}"
                                    PlaceholderText="Nhập giá giảm"/>
                                 <NumberBox 
                                    Header="Phần trăm giảm"
                                    Visibility="{x:Bind ViewModel.DiscountPecentageVisibility, Mode=TwoWay}"
                                    ValueChanged="SpecialOfferPrice_ValueChanged"
-                                   Value="{x:Bind ViewModel.SelectedSpecialOffer.DiscountPercentage, Mode=TwoWay, Converter={StaticResource DoubleToNullableDoubleConverter}}"
+                                   Value="{x:Bind ViewModel.SelectedSpecialOffer.DiscountPercentage, Mode=TwoWay, Converter={StaticResource NullableDecimalToDoubleConverter}}"
                                    PlaceholderText="Nhập phần trăm giảm"/>
                                 <TextBlock Text="{x:Bind ViewModel.SpecialOfferPriceRequireMessage, Mode=OneWay}" Foreground="Red" FontSize="12"/>
                             </StackPanel>
                             <StackPanel HorizontalAlignment="Stretch" Grid.Row="3" Grid.Column="1" >
-                                <NumberBox 
+                                <NumberBox
                                     Header="Số lượng tối đa"
                                     ValueChanged="SpecialOfferMaxItems_ValueChanged"
-                                    Value="{x:Bind ViewModel.SelectedSpecialOffer.MaxItems, Mode=TwoWay, Converter={StaticResource DoubleToNullableDoubleConverter}}"
+                                    Value="{x:Bind ViewModel.SelectedSpecialOffer.MaxItems, Mode=TwoWay, Converter={StaticResource NullableDecimalToDoubleConverter}}"
                                     PlaceholderText="Nhập giá giảm"/>
                                 <TextBlock Text="{x:Bind ViewModel.SpecialOfferMaxItemsRequireMessage, Mode=OneWay}" Foreground="Red" FontSize="12"/>
                             </StackPanel>

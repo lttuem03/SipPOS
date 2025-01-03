@@ -5,7 +5,7 @@ namespace SipPOS.Services.DataAccess.Interfaces;
 
 public interface IInvoiceDao
 {
-    Task<Invoice?> InsertAsync(long storeId, long staffId, InvoiceDto invoiceDto);
+    Task<Invoice?> InsertAsync(long storeId, InvoiceDto invoiceDto);
 
     Task<long> GetNextInvoiceIdAsync(long storeId);
 

@@ -11,6 +11,11 @@
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
+
+            <!--For content dialog-->
+            <x:Double x:Key="ContentDialogMaxWidth">1500</x:Double>
+            <x:Double x:Key="ContentDialogMaxHeight">750</x:Double>
         </ResourceDictionary>
+
     </Application.Resources>
 </Application>

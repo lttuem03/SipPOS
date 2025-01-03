@@ -7,53 +7,75 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <StackPanel Orientation="Horizontal">
+    <StackPanel 
+        Orientation="Vertical"
+        HorizontalAlignment="Center"
+        Margin="0,20,0,0">
         <TextBlock
-            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
             Text="{x:Bind Notify, Mode=OneWay}"/>
-        <HyperlinkButton
+
+        <StackPanel 
+            Orientation="Horizontal"
+            HorizontalAlignment="Center"
+            Margin="0,5,0,5">
+            <HyperlinkButton
             Padding="0"
             Margin="0"
             x:Name="FistPageButton"
             Click="FistPageButton_Click"
             IsEnabled="{x:Bind IsPreviousPageButtonEnabled, Mode=OneWay}"
             Content="&lt;&lt;" />
-        <HyperlinkButton
+            <HyperlinkButton
             Padding="5,2,5,2"
             Margin="0"
             x:Name="PreviousPageButton"
             Click="PreviousPageButton_Click"
             IsEnabled="{x:Bind IsPreviousPageButtonEnabled, Mode=OneWay}"
             Content="&lt;" />
-        <NumberBox
+            <NumberBox
             Maximum="{x:Bind TotalPage, Mode=OneWay}"
             Minimum="{x:Bind MinPage, Mode=OneWay}"
             ValueChanged="CurrentPageNumberBox_ValueChanged"
             Value="{x:Bind CurrentPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-        <TextBlock
+            <TextBlock
             VerticalAlignment="Center"
             Text=" /" />
-        <TextBlock
+            <TextBlock
             VerticalAlignment="Center"
             Text="{x:Bind TotalPage, Mode=OneWay}" />
-        <HyperlinkButton
+            <HyperlinkButton
             Padding="5,2,5,2"
             Margin="0"
             x:Name="NextPageButton"
             Click="NextPageButton_Click"
             IsEnabled="{x:Bind IsNextPageButtonEnabled, Mode=OneWay}"
             Content="&gt;" />
-        <HyperlinkButton
+            <HyperlinkButton
             Padding="0"
             Margin="0"
             x:Name="LastPageButton"
             Click="LastPageButton_Click"
             IsEnabled="{x:Bind IsNextPageButtonEnabled, Mode=OneWay}"
             Content="&gt;&gt;" />
-        <ComboBox 
-            x:Name="PerPageComboBox" 
-            ItemsSource="{x:Bind _PerPages, Mode=OneWay}"
-            SelectedValue="{x:Bind PerPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            SelectionChanged="PerPageComboBox_SelectionChanged"/>
+        </StackPanel>
+
+        <StackPanel 
+            Orientation="Horizontal">
+            <TextBlock 
+                Margin="0,0,5,0"
+                Text="Hiển thị" 
+                VerticalAlignment="Center"/>
+            <ComboBox 
+                x:Name="PerPageComboBox" 
+                ItemsSource="{x:Bind _PerPages, Mode=OneWay}"
+                SelectedValue="{x:Bind PerPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                SelectionChanged="PerPageComboBox_SelectionChanged"/>
+            <TextBlock 
+                Margin="5,0,0,0"
+                Text="dòng trong một trang"
+                VerticalAlignment="Center"/>
+        </StackPanel>
+        
     </StackPanel>
 </UserControl>

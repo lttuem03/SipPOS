@@ -17,10 +17,27 @@ public sealed partial class CashierMenuView : Page
 
     public CashierMenuViewModel ViewModel { get; }
 
+    private static readonly DispatcherTimer _cashierMenuTimer = new();
+
     public CashierMenuView()
     {
         this.InitializeComponent();
         ViewModel = new();
+
+        var now = DateTime.Now;
+
+        currentTimeTextBlock.Text = now.ToString("HH:mm:ss");
+        currentDateTextBlock.Text = now.ToString("dd/MM/yyyy");
+
+        // Because the timer needs to be setup in the UI thread, it is done here.
+        _cashierMenuTimer.Interval = TimeSpan.FromSeconds(1);
+        _cashierMenuTimer.Tick += (sender, e) =>
+        {
+            ViewModel.CurrentTime = ViewModel.CurrentTime.AddSeconds(1);
+            currentTimeTextBlock.Text = ViewModel.CurrentTime.ToString("HH:mm:ss");
+            currentDateTextBlock.Text = ViewModel.CurrentTime.ToString("dd/MM/yyyy");
+        };
+        _cashierMenuTimer.Start();
     }
 
     private void closePaneButton_Click(object sender, RoutedEventArgs e)
@@ -70,7 +87,15 @@ public sealed partial class CashierMenuView : Page
         if (addItemToOrderButton.DataContext is not Product productItem)
             return;
 
-        ViewModel.HandleAddItemToOrderButtonClick(productItem);
+        var newInvoiceItemDto = ViewModel.HandleAddItemToOrderButtonClick(productItem);
+
+        orderItemListView.ScrollIntoView(newInvoiceItemDto);
+
+        if (ViewModel.InvoiceItems.Count > 0)
+        {
+            openPaymentDialogButton.IsEnabled = true;
+            cancelOrderButton.IsEnabled = true;
+        }
     }
 
     private void removeItemFromOrderButton_Click(object sender, RoutedEventArgs e)
@@ -78,10 +103,16 @@ public sealed partial class CashierMenuView : Page
         if (sender is not Button removeItemFromOrderButton)
             return;
 
-        if (removeItemFromOrderButton.DataContext is not InvoiceItemDto orderItemDto)
+        if (removeItemFromOrderButton.DataContext is not InvoiceItemDto invoiceItemDto)
             return;
 
-        ViewModel.HandleRemoveItemFromOrderButtonClick(orderItemDto);
+        ViewModel.HandleRemoveItemFromOrderButtonClick(invoiceItemDto);
+
+        if (ViewModel.InvoiceItems.Count == 0)
+        {
+            openPaymentDialogButton.IsEnabled = false;
+            cancelOrderButton.IsEnabled = false;
+        }
     }
 
     private void noteSuggestionButton_Click(object sender, RoutedEventArgs e)
@@ -167,10 +198,122 @@ public sealed partial class CashierMenuView : Page
     private void cancelOrderButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.HandleCancelOrderButtonClick(cancelOrderConfimationContentDialog);
+
+        openPaymentDialogButton.IsEnabled = false;
+        cancelOrderButton.IsEnabled = false;
     }
 
-    private void openPaymentDialogButton_Click(object sender, RoutedEventArgs e)
+    private async void openPaymentDialogButton_Click(object sender, RoutedEventArgs e)
     {
+        _ = await paymentContentDialog.ShowAsync();
+    }
 
+    private void closePaymentDialogButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.ResetPaymentMonetaryDetails();
+
+        paymentContentDialog.Hide();
+    }
+
+    private void paymentMethodRadioButtons_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (ViewModel == null)
+            return;
+
+        if (sender is not RadioButtons radioButtons)
+            return;
+
+        ViewModel.HandlePaymentMethodRadioButtonsSelectionChanged(radioButtons.SelectedIndex);
+
+        switch (radioButtons.SelectedIndex)
+        {
+            case 0:
+                cashPaymentMethodGrid.Visibility = Visibility.Visible;
+                qrPaymentMethodGrid.Visibility = Visibility.Collapsed;
+                break;
+
+            case 1:
+                qrPaymentMethodGrid.Visibility = Visibility.Visible;
+                cashPaymentMethodGrid.Visibility = Visibility.Collapsed;
+                break;
+        }
+    }
+
+    private void numpadAddAmountButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button addAmountButton)
+            return;
+
+        if (addAmountButton.Content is not TextBlock amountTextBlock)
+            return;
+
+        var amountText = amountTextBlock.Text;
+
+        amountText = amountText.Replace("+", string.Empty);
+        amountText = amountText.Replace("K", string.Empty);
+
+        var amountDecimal = decimal.Parse(amountText);
+
+        amountDecimal *= 1000;
+
+        ViewModel.HandleNumpadAddAmountButtonClick(amountDecimal);
+
+        amountPaidValidationTextBlock.Text = ViewModel.ValidatePaymentMonetaryDetails();
+
+        if (amountPaidValidationTextBlock.Text == "")
+            proceedWithPaymentButton.IsEnabled = true;
+        else
+            proceedWithPaymentButton.IsEnabled = false;
+    }
+
+    private void numpadNumberButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button numberButton)
+            return;
+
+        if (numberButton.Content is not TextBlock numberTextBlock)
+            return;
+
+        var numberText = numberTextBlock.Text;
+
+        ViewModel.HandleNumpadNumberButtonClick(numberText);
+
+        amountPaidValidationTextBlock.Text = ViewModel.ValidatePaymentMonetaryDetails();
+
+        if (amountPaidValidationTextBlock.Text == "")
+            proceedWithPaymentButton.IsEnabled = true;
+        else
+            proceedWithPaymentButton.IsEnabled = false;
+    }
+
+    private void numpadClearAmountButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleNumpadClearAmountButtonClick();
+
+        amountPaidValidationTextBlock.Text = ViewModel.ValidatePaymentMonetaryDetails();
+
+        if (amountPaidValidationTextBlock.Text == "")
+            proceedWithPaymentButton.IsEnabled = true;
+        else
+            proceedWithPaymentButton.IsEnabled = false;
+    }
+
+    private void numpadBackspaceButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleNumpadBackspaceButtonClick();
+
+        amountPaidValidationTextBlock.Text = ViewModel.ValidatePaymentMonetaryDetails();
+
+        if (amountPaidValidationTextBlock.Text == "")
+            proceedWithPaymentButton.IsEnabled = true;
+        else
+            proceedWithPaymentButton.IsEnabled = false;
+    }
+
+    private void proceedWithPaymentButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleProceedWithPaymentButtonClick();
+
+        paymentContentDialog.Hide();
     }
 }

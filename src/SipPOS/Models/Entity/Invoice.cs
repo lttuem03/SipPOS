@@ -46,7 +46,7 @@ public class Invoice
         TotalDiscount = dto.TotalDiscount;
         InvoiceBasedVAT = dto.InvoiceBasedVAT;
         Total = dto.Total;
-        Paid = dto.Paid;
+        Paid = dto.CustomerPaid;
         Change = dto.Change;
         PaymentMethod = dto.PaymentMethod;
     }

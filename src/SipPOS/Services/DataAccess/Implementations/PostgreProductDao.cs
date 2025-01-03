@@ -245,8 +245,9 @@ public class PostgreProductDao : IProductDao
                     FROM product_option
                     WHERE 
                         product_id = $1
+                    AND
                         store_id = $2
-                ", productSelectConnection)
+                ", productOptionSelectConnection)
                 {
                     Parameters =
                     {
@@ -271,6 +272,8 @@ public class PostgreProductDao : IProductDao
                     productOptions.Add(productOptionReaderToProductOption(productOptionReader));
 
                 product.ProductOptions = productOptions;
+
+                return product;
             }
         }
 
@@ -426,6 +429,9 @@ public class PostgreProductDao : IProductDao
     /// <returns>The updated product if found; otherwise, null.</returns>
     public async Task<Product?> UpdateByIdAsync(long storeId, Product productModel)
     {
+        if (productModel.Id < 0)
+            throw new InvalidOperationException("Invalid Product id.");
+
         if (productModel.ProductOptions.Count == 0)
             throw new InvalidOperationException("Product must have at least one option.");
 

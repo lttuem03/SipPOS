@@ -170,7 +170,7 @@ public sealed partial class PaginationControl : UserControl
         IsPreviousPageButtonEnabled = CurrentPage > MinPage;
         var maxRecordShow = CurrentPage * PerPage > TotalRecord ? TotalRecord : CurrentPage * PerPage;
         var minRecordShow = CurrentPage * PerPage - PerPage + 1 >= 0 ? CurrentPage * PerPage - PerPage + 1 : 0;
-        Notify = $"{minRecordShow} - {maxRecordShow} của {TotalRecord}";
+        Notify = $"Đang hiển thị mục {minRecordShow} - {maxRecordShow} trên tổng {TotalRecord} mục";
     }
 
     /// <summary>

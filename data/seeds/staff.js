@@ -40,6 +40,40 @@ exports.seed = async function(knex) {
         employment_status: "OutOfEmployment",
         employment_start_date: "20231203",
         employment_end_date: "20240515"
+    },
+    // ST000002 - Nhân viên bán hàng Lý Văn Thanh - InEmployment
+    {
+        id: 2,
+        store_id: 0,
+        created_by: "system",
+        position_prefix: "ST",
+        password_hash: "8B7E4258694259386AF545199FDBF898CA9127C0BCAA2E81449F706789AA62A3",
+        salt: "C7FC0185B7C8F6A48C7E00AEE44B1EBF61CB60E4B4C4D62EE97BD07F4DD826DD",
+        name: "Lý Văn Thanh",
+        gender: "Nam",
+        date_of_birth: "20010303",
+        email: "vanthanh@gmail.com",
+        tel: "0903514265",
+        address: "14 Đường Trần Phú, Phường 6, Quận Phú Nhuận, Thành phố Hồ Chí Minh",
+        employment_status: "InEmployment",
+        employment_start_date: "20221005",
+    },
+    // AM000003 - Trợ lý cửa hàng Võ Hoàng Diễm - InEmployment
+    {
+        id: 3,
+        store_id: 0,
+        created_by: "system",
+        position_prefix: "AM",
+        password_hash: "8B7E4258694259386AF545199FDBF898CA9127C0BCAA2E81449F706789AA62A3",
+        salt: "C7FC0185B7C8F6A48C7E00AEE44B1EBF61CB60E4B4C4D62EE97BD07F4DD826DD",
+        name: "Võ Hoàng Diễm",
+        gender: "Nữ",
+        date_of_birth: "20000430",
+        email: "vohoangdiem@gmail.com",
+        tel: "0903514265",
+        address: "50 Đường Nguyễn An Ninh, Phường 2, Quận 4, Thành phố Hồ Chí Minh",
+        employment_status: "InEmployment",
+        employment_start_date: "20211203",
     }
   ]);
 };

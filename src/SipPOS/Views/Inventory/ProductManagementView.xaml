@@ -11,7 +11,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
     xmlns:inventory="using:SipPOS.ViewModels.Inventory"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="AliceBlue">
 
     <!-- Add your ToastNotificationControl -->
     <Page.Resources>
@@ -29,7 +29,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -102,11 +102,11 @@
             IsReadOnly="True"
             Sorting="DataGrid_Sorting"
             Margin="15,10,0,0"
-            BorderBrush="Black"
+            BorderBrush="Gray"
             BorderThickness="1"
+            CornerRadius="15"
             AutoGenerateColumns="False"
-            GridLinesVisibility="All"
-            ColumnWidth="*">
+            GridLinesVisibility="All">
             <controls:DataGrid.Resources>
                 <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush" Color="Transparent"/>
                 <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush" Color="Transparent"/>
@@ -120,17 +120,19 @@
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>
-                <controls:DataGridTextColumn Binding="{Binding Id}" Header="Mã" Tag="id" />
-                <controls:DataGridTextColumn Binding="{Binding Name}" Header="Tên" Tag="name" />
-                <controls:DataGridTextColumn Binding="{Binding CategoryId, Converter={StaticResource CategoryIdToCategoryNameConverter}}" Header="Danh mục" Tag="category_id" />
-                <controls:DataGridTemplateColumn Header="Ảnh" CanUserSort="False">
+                <controls:DataGridTextColumn Width="Auto" Binding="{Binding Id}" Header="Mã" Tag="id" />
+                <controls:DataGridTemplateColumn Width="Auto" Header="Ảnh" CanUserSort="False">
                     <controls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Source="{Binding ImageUrls[0]}" Width="80" Height="80" Stretch="Uniform" />
+                            <Image Source="{Binding ImageUris[0]}" Width="100" Height="100" Stretch="Uniform" />
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>
-                <controls:DataGridTextColumn Binding="{Binding Status, Converter={StaticResource StatusValueToStatusLableConverter}}" Header="Trạng thái" Tag="status" />
+                <controls:DataGridTextColumn Width="2*" Binding="{Binding Name}" Header="Tên" Tag="name" />
+                <controls:DataGridTextColumn Width="4*" Binding="{Binding Description}" Header="Mô tả" Tag="description" />
+                <controls:DataGridTextColumn Width="*" Binding="{Binding ItemsSold}" Header="Đã bán" Tag="items_sold" />
+                <controls:DataGridTextColumn Width="2*" Binding="{Binding CategoryId, Converter={StaticResource CategoryIdToCategoryNameConverter}}" Header="Danh mục" Tag="category_id" />
+                <controls:DataGridTextColumn Width="*" Binding="{Binding Status, Converter={StaticResource StatusValueToStatusLableConverter}}" Header="Trạng thái" Tag="status" />
             </controls:DataGrid.Columns>
         </controls:DataGrid>
 
@@ -206,9 +208,14 @@
                                 SelectedValue="{x:Bind ViewModel.SelectedProduct.Status, Mode=TwoWay}"
                                 ItemsSource="{x:Bind ViewModel.StatusItems}"/>
                             <ListView 
-                                Header="Giá sản phẩm" x:Name="productOptionsListView" DataContext="{x:Bind ViewModel, Mode=OneWay}"
+                                x:Name="productOptionsListView" DataContext="{x:Bind ViewModel, Mode=OneWay}"
                                 Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{x:Bind ViewModel.ProductOptions, Mode=TwoWay}" 
-                                Margin="0" Padding="5,5,5,10" BorderBrush="Black" BorderThickness="1" CornerRadius="2">
+                                Margin="0" Padding="10,10,10,5" BorderBrush="LightGray" BorderThickness="1" CornerRadius="2">
+                                <ListView.Header>
+                                    <TextBlock 
+                                        Text="Phân loại sản phẩm"
+                                        Margin="0,0,0,10"/>
+                                </ListView.Header>
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
                                         <Setter Property="Template">
@@ -231,10 +238,10 @@
                                             </Grid.ColumnDefinitions>
                                             <TextBox
                                                 Grid.Column="0" Text="{Binding Option, Mode=TwoWay}" Margin="0,5,0,0"
-                                                TextChanged="ProductPrice_ValueChanged" PlaceholderText="Nhập loại" IsSpellCheckEnabled="False"/>
+                                                TextChanged="ProductPrice_ValueChanged" PlaceholderText="Nhập tên phân loại" IsSpellCheckEnabled="False"/>
                                             <NumberBox 
                                                 Grid.Column="1" Margin="0,5,0,0" Value="{Binding Price, Mode=TwoWay, Converter={StaticResource DecimalToDoubleConverter}}"
-                                                ValueChanged="ProductPrice_ValueChanged" PlaceholderText="Nhập giá sản phẩm"/>
+                                                ValueChanged="ProductPrice_ValueChanged" PlaceholderText="Nhập giá phân loại"/>
                                             <Button 
                                                 Grid.Column="2" VerticalAlignment="Bottom" Width="40" Height="40" Background="Transparent" 
                                                 Padding="2,0,0,0" Margin="0,5,0,0" BorderThickness="1" CornerRadius="40"

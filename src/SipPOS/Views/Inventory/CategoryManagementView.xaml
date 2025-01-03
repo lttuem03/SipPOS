@@ -10,7 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="AliceBlue">
     <Page.Resources>
         <DataTemplate x:Key='ImageTemplate'>
             <Image Stretch = 'UniformToFill' Source = '{Binding}' Width = '200' Height = '150' AutomationProperties.AccessibilityView = 'Raw'/>
@@ -25,7 +25,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -82,11 +82,10 @@
             IsReadOnly="True"
             Sorting="DataGrid_Sorting"
             Margin="15,10,0,0"
-            BorderBrush="Black"
+            BorderBrush="Gray"
             BorderThickness="1"
             AutoGenerateColumns="False"
-            GridLinesVisibility="All"
-            ColumnWidth="*">
+            GridLinesVisibility="All">
             <controls:DataGrid.Resources>
                 <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush" Color="Transparent"/>
                 <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush" Color="Transparent"/>
@@ -100,9 +99,9 @@
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>
-                <controls:DataGridTextColumn Binding="{Binding Id}" Header="Mã" Tag="id" />
-                <controls:DataGridTextColumn Binding="{Binding Name}" Header="Tên" Tag="name" />
-                <controls:DataGridTextColumn Binding="{Binding Status, Converter={StaticResource StatusValueToStatusLableConverter}}" Header="Trạng thái" Tag="status" />
+                <controls:DataGridTextColumn Width="Auto" Binding="{Binding Id}" Header="Mã" Tag="id" />
+                <controls:DataGridTextColumn Width="2*" Binding="{Binding Name}" Header="Tên" Tag="name" />
+                <controls:DataGridTextColumn Width="8*" Binding="{Binding Description}" Header="Mô tả" Tag="description" />
             </controls:DataGrid.Columns>
         </controls:DataGrid>
 

@@ -15,7 +15,7 @@ public sealed partial class MainMenuView : Page
     /// </summary>
     public MainMenuViewModel ViewModel { get; }
 
-    private readonly DispatcherTimer _timer;
+    private readonly DispatcherTimer _mainMenuTimer;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MainMenuView"/> class.
@@ -24,16 +24,17 @@ public sealed partial class MainMenuView : Page
     {
         this.InitializeComponent();
         ViewModel = new MainMenuViewModel();
+
         clockTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
 
         // Because the timer needs to be instantiated in the UI thread, it is done here.
-        _timer = new DispatcherTimer();
-        _timer.Interval = TimeSpan.FromSeconds(1);
-        _timer.Tick += (sender, e) =>
+        _mainMenuTimer = new DispatcherTimer();
+        _mainMenuTimer.Interval = TimeSpan.FromSeconds(1);
+        _mainMenuTimer.Tick += (sender, e) =>
         {
             clockTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
         };
-        _timer.Start();
+        _mainMenuTimer.Start();
     }
 
     /// <summary>

@@ -6,6 +6,7 @@ using SipPOS.Services.Entity.Interfaces;
 using SipPOS.DataTransfer.Entity;
 using SipPOS.DataTransfer.General;
 using SipPOS.Models.General;
+using SipPOS.Models.Entity;
 
 namespace SipPOS.ViewModels.Inventory;
 
@@ -140,6 +141,13 @@ public partial class ProductManagementViewModel : ObservableRecipient
         TotalRecord = pagination.TotalRecord;
         foreach (var item in pagination.Data)
         {
+            // If the product has no image associated with it
+            // then use the default image
+            if (item.ImageUris.Count == 0)
+            {
+                item.ImageUris.Add("ms-appx:///Assets/default_product_image.png");
+            }
+
             Products.Add(item);
         }
     }

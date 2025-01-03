@@ -8,6 +8,8 @@ public class InvoiceDto
 
     public long StaffId { get; set; }
 
+    public string StaffName { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public List<InvoiceItemDto> InvoiceItems { get; set; }
@@ -22,7 +24,7 @@ public class InvoiceDto
 
     public decimal Total { get; set; }
 
-    public decimal Paid { get; set; }
+    public decimal CustomerPaid { get; set; }
 
     public decimal Change { get; set; }
 
@@ -32,6 +34,7 @@ public class InvoiceDto
     {
         Id = -1;
         StaffId = -1;
+        StaffName = string.Empty;
         CreatedAt = DateTime.MinValue;
         InvoiceItems = new List<InvoiceItemDto>();
         ItemCount = 0;
@@ -39,7 +42,7 @@ public class InvoiceDto
         TotalDiscount = 0m;
         InvoiceBasedVAT = 0m;
         Total = 0m;
-        Paid = 0m;
+        CustomerPaid = 0m;
         Change = 0m;
         PaymentMethod = string.Empty;
     }
