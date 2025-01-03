@@ -22,9 +22,9 @@ public class PostgreProductDao : IProductDao
     /// </summary>
     /// <param name="product">The product to insert.</param>
     /// <returns>The inserted product.</returns>
-    public async Task<Product?> InsertAsync(long storeId, Product productDto)
+    public async Task<Product?> InsertAsync(long storeId, Product productModel)
     {
-        if (productDto.ProductOptions.Count == 0)
+        if (productModel.ProductOptions.Count == 0)
             throw new InvalidOperationException("Product must have at least one option.");
         
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
@@ -53,14 +53,14 @@ public class PostgreProductDao : IProductDao
             Parameters =
             {
                 new() { Value = storeId },
-                new() { Value = productDto.CreatedBy },
-                new() { Value = productDto.CreatedAt },
-                new() { Value = productDto.Name },
-                new() { Value = productDto.Description },
-                new() { Value = productDto.CategoryId != null ? storeId : null },
-                new() { Value = productDto.CategoryId },
-                new() { Value = productDto.ImageUris },
-                new() { Value = productDto.Status }
+                new() { Value = productModel.CreatedBy },
+                new() { Value = productModel.CreatedAt },
+                new() { Value = productModel.Name },
+                new() { Value = productModel.Description },
+                new() { Value = productModel.CategoryId != null ? storeId : null },
+                new() { Value = productModel.CategoryId },
+                new() { Value = productModel.ImageUris },
+                new() { Value = productModel.Status }
             }
         };
         
@@ -76,7 +76,7 @@ public class PostgreProductDao : IProductDao
         // INSERT INTO product_option
         var productOptions = new List<(string name, decimal price)>();
 
-        foreach (var option in productDto.ProductOptions)
+        foreach (var option in productModel.ProductOptions)
         {
             using var productOptionInsertConnection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection;
             
@@ -422,11 +422,11 @@ public class PostgreProductDao : IProductDao
     /// <summary>
     /// Updates an existing product by its ID.
     /// </summary>
-    /// <param name="productDto">The product with updated information.</param>
+    /// <param name="productModel">The product with updated information.</param>
     /// <returns>The updated product if found; otherwise, null.</returns>
-    public async Task<Product?> UpdateByIdAsync(long storeId, Product productDto)
+    public async Task<Product?> UpdateByIdAsync(long storeId, Product productModel)
     {
-        if (productDto.ProductOptions.Count == 0)
+        if (productModel.ProductOptions.Count == 0)
             throw new InvalidOperationException("Product must have at least one option.");
 
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
@@ -455,17 +455,17 @@ public class PostgreProductDao : IProductDao
         {
             Parameters =
             {
-                new() { Value = productDto.UpdatedBy },
-                new() { Value = productDto.UpdatedAt },
-                new() { Value = productDto.Name },
-                new() { Value = productDto.Description },
-                new() { Value = productDto.ItemsSold },
-                new() { Value = productDto.CategoryId != null ? storeId : null },
-                new() { Value = productDto.CategoryId },
-                new() { Value = productDto.ImageUris },
-                new() { Value = productDto.Status },
+                new() { Value = productModel.UpdatedBy },
+                new() { Value = productModel.UpdatedAt },
+                new() { Value = productModel.Name },
+                new() { Value = productModel.Description },
+                new() { Value = productModel.ItemsSold },
+                new() { Value = productModel.CategoryId != null ? storeId : null },
+                new() { Value = productModel.CategoryId },
+                new() { Value = productModel.ImageUris },
+                new() { Value = productModel.Status },
                 new() { Value = storeId },
-                new() { Value = productDto.Id }
+                new() { Value = productModel.Id }
             }
         };
 
@@ -505,7 +505,7 @@ public class PostgreProductDao : IProductDao
         // INSERT INTO product_option
         var updatedProductOptions = new List<(string name, decimal price)>();
 
-        foreach (var option in productDto.ProductOptions)
+        foreach (var option in productModel.ProductOptions)
         {
             using var productOptionInsertConnection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection;
 

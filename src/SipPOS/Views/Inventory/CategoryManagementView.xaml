@@ -96,7 +96,7 @@
                 <controls:DataGridTemplateColumn Header="Chọn" Width="80" CanUserSort="False">
                     <controls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox IsChecked="{Binding IsSeteled, Mode=TwoWay}" Margin="30,0,0,0"/>
+                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" Margin="30,0,0,0"/>
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>
@@ -136,7 +136,7 @@
                         <TabViewItem.IconSource>
                             <SymbolIconSource Symbol="Bookmarks" />
                         </TabViewItem.IconSource>
-                        <Grid ColumnSpacing="10" RowSpacing="10" Padding="10,20,10,10">
+                        <Grid ColumnSpacing="10" RowSpacing="4" Padding="10,20,10,10">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -152,7 +152,7 @@
                                     TextChanged="CategoryName_TextChanged"
                                     PlaceholderText="Nhập tên danh mục" 
                                     IsSpellCheckEnabled="False"/>
-                                <TextBlock Text="{x:Bind ViewModel.CategoryNameReqireMessage, Mode=OneWay}" Foreground="Red"/>
+                                <TextBlock Text="{x:Bind ViewModel.CategoryNameReqireMessage, Mode=OneWay}" Foreground="Red" FontSize="12"/>
                             </StackPanel>
 
                             <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" >
@@ -163,7 +163,7 @@
                                     TextChanged="CategoryDesc_TextChanged"
                                     PlaceholderText="Nhập mô tả danh mục" 
                                     IsSpellCheckEnabled="False"/>
-                                <TextBlock Text="{x:Bind ViewModel.CategoryDescReqireMessage, Mode=OneWay}" Foreground="Red"/>
+                                <TextBlock Text="{x:Bind ViewModel.CategoryDescReqireMessage, Mode=OneWay}" Foreground="Red" FontSize="12"/>
                             </StackPanel>
                         </Grid>
                     </TabViewItem>
