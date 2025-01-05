@@ -58,7 +58,7 @@ public sealed partial class CashierMenuView : Page
                 // Check if timeout
                 if (ViewModel.QrPayOrderCode != 0 && ViewModel.QrPaySecondsRemaining == 0)
                 {
-                    await ViewModel.HandleQrPaymentTimeout();
+                    ViewModel.HandleQrPaymentTimeout();
 
                     // update UI
                     paymentMethodRadioButtons.IsEnabled = true;
@@ -385,9 +385,9 @@ public sealed partial class CashierMenuView : Page
         ViewModel.CancelQrPayOperationCountDownTimeSpan = ViewModel.CancelQrPayOperationCountDownTimeSpan.Add(TimeSpan.FromSeconds(60));
     }
 
-    private async void cancelQrPayOperationButton_Click(object sender, RoutedEventArgs e)
+    private void cancelQrPayOperationButton_Click(object sender, RoutedEventArgs e)
     {
-        await ViewModel.HandleQrPaymentTimeout();
+        ViewModel.HandleQrPaymentTimeout();
 
         paymentMethodRadioButtons.IsEnabled = true;
         closePaymentDialogButton.IsEnabled = true;
