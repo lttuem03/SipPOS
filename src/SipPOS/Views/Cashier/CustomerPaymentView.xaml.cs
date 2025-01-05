@@ -7,6 +7,9 @@ using SipPOS.ViewModels.Cashier;
 
 namespace SipPOS.Views.Cashier;
 
+// THIS IS THE OLD VERSION OF THE QR_PAY FEATURE
+// WHICH IS UN-USED NOW
+
 /// <summary>
 /// A page that handles customer payments.
 /// </summary>

@@ -141,8 +141,7 @@ public sealed partial class MainMenuView : Page
     /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void changeIdButton_Click(object sender, RoutedEventArgs e)
     {
-        App.NavigateTo(typeof(CustomerPaymentView));
-        //ViewModel.HandleChangeIdButtonClick();
+        ViewModel.HandleChangeIdButtonClick();
     }
 
     /// <summary>
