@@ -171,15 +171,17 @@ public class MainMenuViewModel : INotifyPropertyChanged
     }
 
     /// <summary>
-    /// Handles the button click to navigate to the Order History view.
+    /// Handles the button click to navigate to the Invoice History view.
     /// </summary>
-    public void HandleToOrderHistoryViewButtonClick(InfoBar notificationInfoBar)
+    public void HandleToInvoiceHistoryViewButtonClick(InfoBar notificationInfoBar)
     {
-        if (!CanAccessOrderHistoryMenu)
+        if (!CanAccessInvoiceHistoryMenu)
         {
             ShowAccessDeniedNotification(notificationInfoBar);
             return;
         }
+
+        App.NavigateTo(typeof(InvoiceHistoryView));
     }
 
     /// <summary>
@@ -324,13 +326,13 @@ public class MainMenuViewModel : INotifyPropertyChanged
         }
     }
 
-    public bool CanAccessOrderHistoryMenu
+    public bool CanAccessInvoiceHistoryMenu
     {
         get => _canAccessOrderHistoryMenu;
         set
         {
             _canAccessOrderHistoryMenu = value;
-            OnPropertyChanged(nameof(CanAccessOrderHistoryMenu));
+            OnPropertyChanged(nameof(CanAccessInvoiceHistoryMenu));
         }
     }    
 

@@ -15,7 +15,7 @@ public class DateTimeToDateTimeStringConverter : IValueConverter
             var dateTime = (DateTime)value;
 
             if (dateTime == DateTime.MinValue)
-                return "Đang chờ tạo";
+                return "";
 
             return dateTime.ToString("hh:mm tt dd/MM/yyyy");
         }

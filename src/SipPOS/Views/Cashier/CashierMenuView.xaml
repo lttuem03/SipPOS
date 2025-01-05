@@ -339,8 +339,8 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     CornerRadius="15"
-                    Name="toOrderHistoryButton"
-                    Click="toOrderHistoryButton_Click">
+                    Name="toInvoiceHistoryButton"
+                    Click="toInvoiceHistoryButton_Click">
                     <StackPanel
                         Orientation="Horizontal"
                         HorizontalAlignment="Left"

@@ -27,7 +27,7 @@ public sealed partial class CashierMenuView : Page
         var now = DateTime.Now;
 
         currentTimeTextBlock.Text = now.ToString("HH:mm:ss");
-        currentDateTextBlock.Text = now.ToString("dd/MM/yyyy");
+        currentDateTextBlock.Text = now.ToString("dddd, dd/MM/yyyy");
 
         // Because the timer needs to be setup in the UI thread, it is done here.
         _cashierMenuTimer.Interval = TimeSpan.FromSeconds(1);
@@ -35,7 +35,7 @@ public sealed partial class CashierMenuView : Page
         {
             ViewModel.CurrentTime = ViewModel.CurrentTime.AddSeconds(1);
             currentTimeTextBlock.Text = ViewModel.CurrentTime.ToString("HH:mm:ss");
-            currentDateTextBlock.Text = ViewModel.CurrentTime.ToString("dd/MM/yyyy");
+            currentDateTextBlock.Text = ViewModel.CurrentTime.ToString("dddd, dd/MM/yyyy");
         };
         _cashierMenuTimer.Start();
     }
@@ -55,9 +55,9 @@ public sealed partial class CashierMenuView : Page
         App.NavigateTo(typeof(MainMenuView));
     }
 
-    private void toOrderHistoryButton_Click(object sender, RoutedEventArgs e)
+    private void toInvoiceHistoryButton_Click(object sender, RoutedEventArgs e)
     {
-
+        App.NavigateTo(typeof(InvoiceHistoryView));
     }
 
     private void categoryBrowsingGridView_SelectionChanged(object sender, SelectionChangedEventArgs e)

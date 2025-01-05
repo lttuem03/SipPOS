@@ -78,9 +78,9 @@ public sealed partial class MainMenuView : Page
     }
 
     
-    private void toOrderHistoryViewButton_Click(object sender, RoutedEventArgs e)
+    private void toInvoiceHistoryViewButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleToOrderHistoryViewButtonClick(mainMenuNotificationInfoBar);
+        ViewModel.HandleToInvoiceHistoryViewButtonClick(mainMenuNotificationInfoBar);
     }
 
     /// <summary>

@@ -1,8 +1,9 @@
 ﻿namespace SipPOS.Models.Entity;
 
+using System.ComponentModel;
 using SipPOS.DataTransfer.Entity;
 
-public class InvoiceItem
+public class InvoiceItem : INotifyPropertyChanged
 {
     public long Id { get; }
 
@@ -34,4 +35,6 @@ public class InvoiceItem
         Discount = dto.Discount;
         Note = dto.Note;
     }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 }

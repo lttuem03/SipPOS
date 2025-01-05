@@ -61,6 +61,7 @@
     <None Remove="Resources\Controls\EditableTextField.xaml" />
     <None Remove="Resources\Styles\Background.xaml" />
     <None Remove="Views\Cashier\CashierMenuView.xaml" />
+    <None Remove="Views\Cashier\InvoiceHistoryView.xaml" />
     <None Remove="Views\CategoryManagementView.xaml" />
     <None Remove="Views\ConfigurationMenuView.xaml" />
     <None Remove="Views\Configuration\SalaryConfigurationView.xaml" />
@@ -179,6 +180,9 @@
     <None Update="Assets\StoreLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\Cashier\InvoiceHistoryView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Promotion\SpecialOfferManagementView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
