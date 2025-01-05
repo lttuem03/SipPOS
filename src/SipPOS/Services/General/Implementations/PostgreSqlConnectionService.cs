@@ -13,7 +13,7 @@ public class PostgreSqlConnectionService : IDatabaseConnectionService
 {
     private readonly NpgsqlDataSource _dataSource;
     private const int MIN_POOL_SIZE = 5;
-    private const int MAX_POOL_SIZE = 20;
+    private const int MAX_POOL_SIZE = 50;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PostgreSqlConnectionService"/> class with specified connection parameters.

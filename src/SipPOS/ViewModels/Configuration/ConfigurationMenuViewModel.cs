@@ -41,6 +41,9 @@ public class ConfigurationMenuViewModel
                 case "SalaryConfiguration":
                     configurationMenuNavigationFrame.Navigate(typeof(SalaryConfigurationView));
                     break;
+                case "QrPayConfiguration":
+                    configurationMenuNavigationFrame.Navigate(typeof(QrPayConfigurationView));
+                    break;
             }
         }
     }

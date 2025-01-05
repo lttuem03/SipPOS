@@ -231,7 +231,7 @@ public class PostgreStaffDao : IStaffDao
         using var getDataConnection = databaseConnectionService.GetOpenConnection() as NpgsqlConnection;
 
         var countQuery = new StringBuilder();  // to count total rows matched the criterias
-        var pagedQuery = new StringBuilder();  // to get actual data
+        var pagedQuery = new StringBuilder();  // to get actual data // THIS IS BAD, SHOULD'VE SPLIT THESE THINGS
         var take = rowsPerPage;
         var skip = (page - 1) * rowsPerPage;
 
@@ -440,7 +440,7 @@ public class PostgreStaffDao : IStaffDao
                 }
             }
         }
-        else // DO NOT nnclude search by keywords
+        else // DO NOT include search by keywords
         {
             // Sorting options if not provided
             sortBy ??= "position_prefix";

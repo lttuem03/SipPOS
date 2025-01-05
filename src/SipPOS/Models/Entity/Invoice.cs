@@ -1,13 +1,16 @@
 ﻿using System.Collections.ObjectModel;
 using SipPOS.DataTransfer.Entity;
+using System.ComponentModel;
 
 namespace SipPOS.Models.Entity;
 
-public class Invoice
+public class Invoice : INotifyPropertyChanged
 {
     public long Id { get; }
 
     public long StaffId { get; }
+
+    public string StaffName { get; }
 
     public DateTime CreatedAt { get; }
 
@@ -33,6 +36,7 @@ public class Invoice
     {
         Id = dto.Id;
         StaffId = dto.StaffId;
+        StaffName = dto.StaffName;
         CreatedAt = dto.CreatedAt;
 
         InvoiceItems = new();
@@ -50,4 +54,9 @@ public class Invoice
         Change = dto.Change;
         PaymentMethod = dto.PaymentMethod;
     }
+
+    // To use TrulyObservableCollection because 
+    // ObservableCollection is on Microsoft's github issue
+    // and can't be bind with a ListView
+    public event PropertyChangedEventHandler? PropertyChanged;
 }

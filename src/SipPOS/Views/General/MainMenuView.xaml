@@ -212,12 +212,12 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!--To OrderHistoryView Button-->
+                <!--To InvoiceHistoryView Button-->
                 <Button 
                     Grid.Row="0" Grid.Column="0"
-                    x:Name="toOrderHistoryViewButton"
-                    Click="toOrderHistoryViewButton_Click"
-                    Opacity="{x:Bind ViewModel.CanAccessOrderHistoryMenu,
+                    x:Name="toInvoiceHistoryViewButton"
+                    Click="toInvoiceHistoryViewButton_Click"
+                    Opacity="{x:Bind ViewModel.CanAccessInvoiceHistoryMenu,
                                      Converter={StaticResource ButtonAccessibilyToButtonOpacityConverter}}">
                     <StackPanel
                         Orientation="Vertical"
@@ -225,7 +225,7 @@
                         VerticalAlignment="Center">
                         <Image Source="/Assets/Iconography/order-history.png" Width="100" Height="100"/>
                         <TextBlock 
-                            Text="Đơn bán" 
+                            Text="Đơn hàng" 
                             HorizontalAlignment="Center" 
                             Margin="5,0,0,0"
                             Style="{StaticResource SubtitleTextBlockStyle}"

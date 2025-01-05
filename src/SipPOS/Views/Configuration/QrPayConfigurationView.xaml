@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="SipPOS.Views.Configuration.QrPayConfigurationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SipPOS.Views.Configuration"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Canvas
+        Background="AliceBlue">
+        <TextBlock
+            HorizontalAlignment="Center"
+            TextWrapping="WrapWholeWords"
+            Width="640"
+            Margin="0,100,0,0"
+            FontSize="18"
+            TextAlignment="Center">
+            Để thiết lập chủ tài khoản và ngân hàng thụ thưởng cho tính năng thanh toán qua QR-PAY,
+            vui lòng liên hệ với nhà cung cấp dịch vụ SipPOS.
+        </TextBlock>
+    </Canvas>
+</Page>

@@ -18,6 +18,12 @@ using Microsoft.VisualBasic;
 using Microsoft.UI.Xaml;
 using System.Linq;
 
+using Microsoft.UI.Xaml.Media.Imaging;
+using Net.payOS;
+using Net.payOS.Types;
+using System.Drawing;
+using QRCoder;
+
 
 namespace SipPOS.ViewModels.Cashier;
 
@@ -33,23 +39,12 @@ public class CashierMenuViewModel : INotifyPropertyChanged
     // then we need to implement Pagination.
 
     // Contextual properties
-    public Models.Entity.Store CurrentStore
-    {
-        get; private set;
-    }
-    public Models.Entity.Staff CurrentStaff
-    {
-        get; private set;
-    }
-    public Models.General.Configuration CurrentConfiguration
-    {
-        get; private set;
-    }
-    public DateTime CurrentTime
-    {
-        get; set;
-    }
+    public Models.Entity.Store CurrentStore { get; private set; }
+    public Models.Entity.Staff CurrentStaff { get; private set; }
+    public Models.General.Configuration CurrentConfiguration { get; private set; }
+    public DateTime CurrentTime { get; set; }
     public InvoiceItemDto? EditNoteTarget { get; set; } = null;
+    public TimeSpan CancelQrPayOperationCountDownTimeSpan { get; set; } = TimeSpan.Zero;
 
     // Data-bound properties
     private List<Category> _categories = new() { new() { Name = "Đang tải danh mục" } };
@@ -61,6 +56,20 @@ public class CashierMenuViewModel : INotifyPropertyChanged
 
     private string _vatRateString = string.Empty;
     private string _vatMessageString = string.Empty;
+
+    // QR-Pay properties
+    private readonly long QRPAY_EXPIRE_DURATION_IN_SECONDS = 300; // 5 min
+
+    private BitmapImage _qrCode = new(new Uri("ms-appx:///Assets/blank_qr.png"));
+    private long _qrPaySecondsRemaining = 0;
+    private long _qrPayOrderCode = 0;
+    private string _qrPayAccountNumber = string.Empty;
+    private string _qrCodeData = string.Empty;
+
+    private string _qrPayOrderCodeString = string.Empty;
+
+
+    private readonly PayOS payOsClient;
 
     public CashierMenuViewModel()
     {
@@ -87,6 +96,13 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         CurrentTime = DateTime.Now;
 
         _productsOnDisplay = _allProducts;
+
+        // initialize PayOS
+        var clientId = DotNetEnv.Env.GetString("PAYOS_CLIENT_ID");
+        var apiKey = DotNetEnv.Env.GetString("PAYOS_API_KEY");
+        var checksumKey = DotNetEnv.Env.GetString("PAYOS_CHECKSUM_KEY");
+
+        payOsClient = new PayOS(clientId, apiKey, checksumKey);
 
         // ignore warning here
         _ = Initialize();
@@ -284,96 +300,196 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         NewInvoiceChange = Math.Max(0, NewInvoiceCustomerPaid - NewInvoiceTotal);
     }
 
-    public async void HandleProceedWithPaymentButtonClick()
+    public async Task ProceedWithPayment()
     {
         // All validation passed at this point
+        var updateItemsSoldProductIds = new List<long>();
+        var productDao = App.GetService<IProductDao>();
 
-        if (NewInvoicePaymentMethod == "CASH")
+        // Update current staff name and id to the new invoice
+        _newInvoiceDto.StaffId = CurrentStaff.Id;
+        _newInvoiceDto.StaffName = CurrentStaff.Name;
+
+        // Adding invoice items to the new invoice
+        _newInvoiceDto.InvoiceItems.Clear();
+
+        foreach (var invoiceItem in InvoiceItems)
         {
-            var updateItemsSoldProductIds = new List<long>();
-            var productDao = App.GetService<IProductDao>();
+            invoiceItem.InvoiceId = NewInvoiceId;
+            
+            _newInvoiceDto.InvoiceItems.Add(invoiceItem);
 
-            // Update current staff name and id to the new invoice
-            _newInvoiceDto.StaffId = CurrentStaff.Id;
-            _newInvoiceDto.StaffName = CurrentStaff.Name;
+            // Update ItemsSold for the products
+            var product = await productDao.GetByIdAsync(CurrentStore.Id, invoiceItem.ProductId);
 
-            // Adding invoice items to the new invoice
-            _newInvoiceDto.InvoiceItems.Clear();
-
-            foreach (var invoiceItem in InvoiceItems)
+            if (product == null)
             {
-                invoiceItem.InvoiceId = NewInvoiceId;
-                
-                _newInvoiceDto.InvoiceItems.Add(invoiceItem);
-
-                // Update ItemsSold for the products
-                var product = await productDao.GetByIdAsync(CurrentStore.Id, invoiceItem.ProductId);
-
-                if (product == null)
-                    throw new InvalidOperationException("Product not found");
-
-                product.ItemsSold++;
-                product.UpdatedAt = DateTime.Now;
-                product.UpdatedBy = CurrentStaff.CompositeUsername;
-
-                var updatedProduct = await productDao.UpdateByIdAsync(CurrentStore.Id, product);
-
-                if (updatedProduct == null)
-                    throw new InvalidOperationException("Failed to update product");
-
-                if (!updateItemsSoldProductIds.Contains(product.Id))
-                    updateItemsSoldProductIds.Add(product.Id);
+                // DO NOT THROW EXCEPTION HERE, BECAUSE
+                // WHEN THERE'S MONEY INVOLVE, BE EXTRA CAREFUL,
+                // If the product is not found, then just skip it
+                continue;
             }
 
-            // Insert to database
-            var invoiceDao = App.GetService<IInvoiceDao>();
+            product.ItemsSold++;
+            product.UpdatedAt = DateTime.Now;
+            product.UpdatedBy = CurrentStaff.CompositeUsername;
 
-            var result = await invoiceDao.InsertAsync(CurrentStore.Id, _newInvoiceDto);
+            var updatedProduct = await productDao.UpdateByIdAsync(CurrentStore.Id, product);
 
-            if (result == null)
-                throw new InvalidOperationException("Failed to insert new invoice");
-
-            // Update the _allProducts where the "ItemsSold" for the product has changed
-            foreach (var productId in updateItemsSoldProductIds)
+            if (updatedProduct == null)
             {
-                var productToUpdate = _allProducts.First(product => product.Id == productId);
-
-                var productInDatabase = await productDao.GetByIdAsync(CurrentStore.Id, productId);
-
-                if (productInDatabase == null)
-                    throw new InvalidOperationException("Product not found");
-
-                productToUpdate.ItemsSold = productInDatabase.ItemsSold;
+                // DO NOT THROW EXCEPTION, SAME REASON AS ABOVE
+                continue;
             }
 
-            ProductsOnDisplay = _allProducts;
-
-            // A litte trick to update the UI
-            HandleCategoryBrowsingGridViewSelectionChanged(Categories[1]);
-            HandleCategoryBrowsingGridViewSelectionChanged(Categories[0]);
-
-            // Reset to be ready for the next order
-            InvoiceItems.Clear();
-
-            _newInvoiceDto.StaffId = -1;
-            _newInvoiceDto.StaffName = string.Empty;
-            _newInvoiceDto.InvoiceItems.Clear();
-
-            NewInvoiceId = await invoiceDao.GetNextInvoiceIdAsync(CurrentStore.Id);
-            NewInvoiceCreatedAt = DateTime.MinValue;
-            NewInvoiceItemCount = 0;
-            NewInvoiceSubTotal = 0m;
-            NewInvoiceTotalDiscount = 0m;
-            NewInvoiceInvoiceBasedVAT = 0m;
-            NewInvoiceTotal = 0m;
-            NewInvoiceCustomerPaid = 0m;
-            NewInvoiceChange = 0m;
-            NewInvoicePaymentMethod = "CASH";
-
-            return;
+            if (!updateItemsSoldProductIds.Contains(product.Id))
+                updateItemsSoldProductIds.Add(product.Id);
         }
-        
-        // QR-PAY doesn't proceed through this button
+
+        // Insert to database
+        var invoiceDao = App.GetService<IInvoiceDao>();
+
+        var result = await invoiceDao.InsertAsync(CurrentStore.Id, _newInvoiceDto);
+
+        if (result == null)
+        {
+            // IF THE PAYMENT WENT THROUGH, BUT THE INVOICE INSERTION FAILED
+            // MIGHT AS WELL BREAK THE APP, TO STOP ANY FURTHER PAYMENT
+
+            // ASK CUSTOMER TO CALL IT DEPARTMENT (AKA US) FOR HELP
+
+            throw new InvalidOperationException("Failed to insert new invoice");
+        }
+            
+
+        // Update the _allProducts where the "ItemsSold" for the product has changed
+        foreach (var productId in updateItemsSoldProductIds)
+        {
+            var productToUpdate = _allProducts.First(product => product.Id == productId);
+
+            var productInDatabase = await productDao.GetByIdAsync(CurrentStore.Id, productId);
+
+            if (productInDatabase == null)
+            {
+                // DO NOT THROW EXCEPTION, SAME REASON AS ABOVE
+                continue;
+            }
+
+            productToUpdate.ItemsSold = productInDatabase.ItemsSold;
+        }
+
+        ProductsOnDisplay = _allProducts;
+
+        // A litte trick to update the UI
+        HandleCategoryBrowsingGridViewSelectionChanged(Categories[1]);
+        HandleCategoryBrowsingGridViewSelectionChanged(Categories[0]);
+
+        // Reset to be ready for the next order
+        InvoiceItems.Clear();
+
+        _newInvoiceDto.StaffId = -1;
+        _newInvoiceDto.StaffName = string.Empty;
+        _newInvoiceDto.InvoiceItems.Clear();
+
+        NewInvoiceId = await invoiceDao.GetNextInvoiceIdAsync(CurrentStore.Id);
+        NewInvoiceCreatedAt = DateTime.MinValue;
+        NewInvoiceItemCount = 0;
+        NewInvoiceSubTotal = 0m;
+        NewInvoiceTotalDiscount = 0m;
+        NewInvoiceInvoiceBasedVAT = 0m;
+        NewInvoiceTotal = 0m;
+        NewInvoiceCustomerPaid = 0m;
+        NewInvoiceChange = 0m;
+        NewInvoicePaymentMethod = "CASH"; // default
+    }
+
+    public async Task HandleCreateQrPaymentCodeButtonClick()
+    {
+        // Setup Payment link to use with PayOS
+        List<ItemData> paymentItems = new();
+
+        foreach (var invoiceItem in InvoiceItems)
+        {
+            var itemNameWithOption = $"{invoiceItem.ItemName} ({invoiceItem.OptionName})";
+
+            paymentItems.Add(new(itemNameWithOption, 1, (int)invoiceItem.OptionPrice));
+        }
+
+        QrPayOrderCode = Int64.Parse(DateTime.Now.ToString("yyyyMMddHHmmss")); // Precision of Order Code: 1 second
+
+        PaymentData paymentData = new
+        (
+            orderCode: QrPayOrderCode,
+            amount: (int)NewInvoiceTotal,
+            description: "Thanh toan don hang",
+            items: paymentItems,
+            cancelUrl: "",
+            returnUrl: "",
+            expiredAt: DateTimeOffset.UtcNow.AddSeconds(QRPAY_EXPIRE_DURATION_IN_SECONDS).ToUnixTimeSeconds()
+        );
+
+        CreatePaymentResult createPaymentResult = await payOsClient.createPaymentLink(paymentData);
+
+        _qrCodeData = createPaymentResult.qrCode;
+        QrPayAccountNumber = createPaymentResult.accountNumber;
+
+        QrCode = await GenerateQrCodeAsync();
+        QrPaySecondsRemaining = QRPAY_EXPIRE_DURATION_IN_SECONDS;
+    }
+
+    public async Task<bool> CheckQrPaymentCompleted()
+    {
+        if (QrPaySecondsRemaining <= 0)
+        {
+            // no QR-Pay payment at the moment
+
+            return false;
+        }
+
+        if (QrPayOrderCode == 0)
+            return false;
+
+        PaymentLinkInformation paymentLinkInformation = await payOsClient.getPaymentLinkInformation(QrPayOrderCode);
+    
+        if (paymentLinkInformation.status == "PAID")
+        {
+            await handlePaymentComplete();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private async Task handlePaymentComplete()
+    {
+        // Reset QR-Pay properties, be ready for next time
+        QrPaySecondsRemaining = 0;
+        QrPayOrderCode = 0;
+        QrPayOrderCodeString = string.Empty;
+        _qrCodeData = string.Empty;
+        QrPayAccountNumber = string.Empty;
+        QrCode = new(new Uri("ms-appx:///Assets/blank_qr.png"));
+
+        // Handle invoice complete
+        await ProceedWithPayment();
+    }
+
+    public void HandleQrPaymentTimeout()
+    {
+        // Cancel payment link (no need, it auto-expires)
+        // await payOsClient.cancelPaymentLink(QrPayOrderCode);
+
+        // Reset QR-Pay properties, be ready for next time
+        // QrPaySecondsRemaining already reached 0
+        QrPayOrderCode = 0;
+        QrPayOrderCodeString = string.Empty;
+        _qrCodeData = string.Empty;
+        QrPayAccountNumber = string.Empty;
+        QrCode = new(new Uri("ms-appx:///Assets/blank_qr.png"));
+
+        // UI elements was updated in the UI thread
+        // (check timer constructor of CashierMenuView)
     }
 
     public string ValidatePaymentMonetaryDetails()
@@ -399,6 +515,27 @@ public class CashierMenuViewModel : INotifyPropertyChanged
     private void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private BitmapImage ConvertBitmapToBitmapImage(Bitmap bitmap)
+    {
+        using MemoryStream memoryStream = new MemoryStream();
+        bitmap.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
+        memoryStream.Seek(0, SeekOrigin.Begin);
+
+        BitmapImage bitmapImage = new BitmapImage();
+        bitmapImage.SetSource(memoryStream.AsRandomAccessStream());
+        return bitmapImage;
+    }
+
+    private Task<BitmapImage> GenerateQrCodeAsync()
+    {
+        using QRCodeGenerator qrGenerator = new();
+        using QRCode qrCode = new QRCode(qrGenerator.CreateQrCode(_qrCodeData, QRCodeGenerator.ECCLevel.Q));
+        
+        Bitmap qrCodeImage = qrCode.GetGraphic(20);
+        
+        return Task.FromResult(ConvertBitmapToBitmapImage(qrCodeImage));
     }
 
     public List<Category> Categories
@@ -548,6 +685,57 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         {
             _newInvoiceDto.PaymentMethod = value;
             OnPropertyChanged(nameof(NewInvoicePaymentMethod));
+        }
+    }
+
+    public BitmapImage QrCode
+    {
+        get => _qrCode;
+        set
+        {
+            _qrCode = value;
+            OnPropertyChanged(nameof(QrCode));
+        }
+    }
+
+    public long QrPaySecondsRemaining
+    {
+        get => _qrPaySecondsRemaining;
+        set
+        {
+            _qrPaySecondsRemaining = value;
+            OnPropertyChanged(nameof(QrPaySecondsRemaining));
+        }
+    }
+
+    public long QrPayOrderCode
+    {
+        get => _qrPayOrderCode;
+        set
+        {
+            _qrPayOrderCode = value;
+            QrPayOrderCodeString = value.ToString();
+            OnPropertyChanged(nameof(QrPayOrderCode));
+        }
+    }
+
+    public string QrPayAccountNumber
+    {
+        get => _qrPayAccountNumber;
+        set
+        {
+            _qrPayAccountNumber = value;
+            OnPropertyChanged(nameof(QrPayAccountNumber));
+        }
+    }
+
+    public string QrPayOrderCodeString
+    {
+        get => _qrPayOrderCodeString;
+        set
+        {
+            _qrPayOrderCodeString = value;
+            OnPropertyChanged(nameof(QrPayOrderCodeString));
         }
     }
 }

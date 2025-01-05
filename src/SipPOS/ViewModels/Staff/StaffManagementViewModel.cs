@@ -212,21 +212,14 @@ public class StaffManagementViewModel : INotifyPropertyChanged
     /// <param name="comboBoxIndex">The selected index of the ComboBox.</param>
     public void HandleRowsPerPageComboBoxSelectionChanged(int comboBoxIndex)
     {
-        switch (comboBoxIndex)
+        RowsPerPage = comboBoxIndex switch
         {
-            case 0:
-                RowsPerPage = 5;
-                break;
-            case 1:
-                RowsPerPage = 10;
-                break;
-            case 2:
-                RowsPerPage = 15;
-                break;
-            case 3:
-                RowsPerPage = 20;
-                break;
-        }
+            0 => 5,
+            1 => 10,
+            2 => 15,
+            3 => 20,
+            _ => RowsPerPage
+        };
 
         UpdateStaffList();
     }

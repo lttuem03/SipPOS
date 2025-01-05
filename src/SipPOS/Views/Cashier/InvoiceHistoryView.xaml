@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="SipPOS.Views.Cashier.InvoiceHistoryView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SipPOS.Views.Cashier"
+    xmlns:models="using:SipPOS.Models.Entity"
+    xmlns:converters="using:SipPOS.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <!--Vietnam Dong decimal converter-->
+        <converters:DecimalToVietnamDongFormattedStringConverter x:Key="DecimalToVietnamDongFormattedStringConverter"/>
+
+        <!--Created at to Created at string converter-->
+        <converters:InvoiceCreatedAtToCreatedAtStringConverter x:Key="InvoiceCreatedAtToCreatedAtStringConverter"/>
+
+        <!--Item count to string converter-->
+        <converters:InvoiceItemCountToStringConverter x:Key="InvoiceItemCountToStringConverter"/>
+
+        <!--Invoice id to invoice id string converter-->
+        <converters:NewInvoiceIdToNewInvoiceIdStringConverter x:Key="NewInvoiceIdToNewInvoiceIdStringConverter"/>
+
+        <!--Payment method to string converter-->
+        <converters:InvoicePaymentMethodToStringConverter x:Key="InvoicePaymentMethodToStringConverter"/>
+
+        <!--Invoice ListView ItemTemplate-->
+        <DataTemplate x:Key="InvoiceListViewItemTemplate" x:DataType="models:Invoice">
+            <Grid
+                BorderBrush="LightGray"
+                BorderThickness="0"
+                CornerRadius="10"
+                Padding="10"
+                RowSpacing="2"
+                Margin="0,5,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <!--Invoice id-->
+                <TextBlock
+                    Grid.Row="0" Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    Text="{x:Bind Id, Converter={StaticResource NewInvoiceIdToNewInvoiceIdStringConverter}}"
+                    Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <!--Created at-->
+                <TextBlock
+                    Grid.Row="1" Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    Text="{x:Bind CreatedAt, Converter={StaticResource InvoiceCreatedAtToCreatedAtStringConverter}}"
+                    FontSize="14"/>
+                <!--Staff name-->
+                <TextBlock
+                    Grid.Row="2" Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    Text="{x:Bind StaffName}"
+                    FontSize="14"/>
+                <!--Total-->
+                <TextBlock
+                    Grid.Row="0" Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Text="{x:Bind Total, Converter={StaticResource DecimalToVietnamDongFormattedStringConverter}}"
+                    Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <!--Item count-->
+                <TextBlock
+                    Grid.Row="1" Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Text="{x:Bind ItemCount, Converter={StaticResource InvoiceItemCountToStringConverter}}"
+                    FontSize="14"/>
+                <!--Payment method-->
+                <TextBlock
+                    Grid.Row="2" Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Text="{x:Bind PaymentMethod, Converter={StaticResource InvoicePaymentMethodToStringConverter}}"
+                    FontSize="14"/>
+            </Grid>
+        </DataTemplate>
+
+        <!--Invoice item ListView ItemTemplate-->
+        <DataTemplate x:Key="InvoiceItemListViewItemTemplate" x:DataType="models:InvoiceItem">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <!--Invoice item ordinal-->
+                <TextBlock
+                    Grid.Column="0"
+                    Text="{x:Bind Ordinal}"
+                    HorizontalAlignment="Right"
+                    TextWrapping="WrapWholeWords"
+                    Margin="0,0,20,0"/>
+                <!--Invoice item name-->
+                <TextBlock
+                    Grid.Column="1"
+                    Text="{x:Bind ItemName}"
+                    HorizontalAlignment="Left"
+                    TextWrapping="WrapWholeWords"/>
+                <!--Invoice item option name-->
+                <TextBlock
+                    Grid.Column="2"
+                    Text="{x:Bind OptionName}"
+                    HorizontalAlignment="Center"
+                    TextWrapping="WrapWholeWords"/>
+                <!--Invoice item note-->
+                <TextBlock
+                    Grid.Column="3"
+                    Text="{x:Bind Note}"
+                    HorizontalAlignment="Center"
+                    TextWrapping="WrapWholeWords"/>
+                <!--Invoice item option price-->
+                <TextBlock
+                    Grid.Column="4"
+                    Text="{x:Bind OptionPrice, Converter={StaticResource DecimalToVietnamDongFormattedStringConverter}}"
+                    HorizontalAlignment="Right"
+                    TextWrapping="WrapWholeWords"
+                    Margin="0,0,20,0"/>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Canvas
+        Background="AliceBlue">
+        
+        <!--Page content-->
+        <Grid
+            Canvas.Left="50" Canvas.Top="50"
+            Width="1440" Height="720"
+            ColumnSpacing="30"
+            RowSpacing="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Navigation buttons + Page title-->
+            <Grid
+                Grid.Row="0" Grid.Column="0"
+                Grid.ColumnSpan="2"
+                ColumnSpacing="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="45"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!--Go back button-->
+                <Button
+                    Grid.Row="0" Grid.Column="0"
+                    Click="goBackButton_Click"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch">
+                    <StackPanel 
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <Image Source="/Assets/Iconography/back-button.png" Width="25" Height="25"/>
+                        <TextBlock 
+                            Text="Quay lại" 
+                            VerticalAlignment="Center"
+                            Margin="10,0,0,0"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            FontSize="16"/>
+                    </StackPanel>
+                </Button>
+                <!--Page title-->
+                <TextBlock 
+                    Grid.Row="0" Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Text="DANH SÁCH ĐƠN HÀNG" 
+                    Style="{StaticResource TitleTextBlockStyle}"/>
+                <!--To CashierMenuView button-->
+                <Button
+                    Grid.Row="0" Grid.Column="2"
+                    Click="toCashierMenuViewButton_Click"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Stretch">
+                    <StackPanel 
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <TextBlock 
+                            Text="Về menu Bán hàng" 
+                            VerticalAlignment="Center"
+                            Margin="0,0,10,0"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            FontSize="16"/>
+                        <Image Source="/Assets/Iconography/food-and-beverages.png" Width="25" Height="25"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <!--Left pane: Invoice list-->
+            <Grid
+                Grid.Row="1" Grid.Column="0"
+                BorderBrush="LightGray"
+                BorderThickness="2"
+                CornerRadius="15"
+                Padding="20"
+                Background="BlanchedAlmond">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <!--Filter controls-->
+                <Grid
+                    Grid.Row="0" Grid.Column="0"
+                    ColumnSpacing="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <!--Date-->
+                    <CalendarDatePicker
+                        Grid.Column="0"
+                        Header="Ngày"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        x:Name="dateCalendarDatePicker"
+                        DateChanged="dateCalendarDatePicker_DateChanged"/>
+                    <!--From Time-->
+                    <TimePicker
+                        Grid.Column="1"
+                        ClockIdentifier="24HourClock"
+                        MinuteIncrement="30"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        x:Name="fromTimePicker"
+                        TimeChanged="fromTimePicker_TimeChanged">
+                        <TimePicker.Header>
+                            <TextBlock Text="Từ" Margin="0,0,0,4"/>
+                        </TimePicker.Header>
+                    </TimePicker>
+                    <!--To Time-->
+                    <TimePicker
+                        Grid.Column="2"
+                        ClockIdentifier="24HourClock"
+                        MinuteIncrement="30"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        x:Name="toTimePicker"
+                        TimeChanged="toTimePicker_TimeChanged">
+                        <TimePicker.Header>
+                            <TextBlock Text="Đến" Margin="0,0,0,4"/>
+                        </TimePicker.Header>
+                    </TimePicker>
+                </Grid>
+                <!--Invoice ListView-->
+                <ListView
+                    Grid.Row="1" Grid.Column="0"
+                    x:Name="invoiceListView"
+                    SelectionMode="Single"
+                    SelectionChanged="invoiceListView_SelectionChanged"
+                    ItemTemplate="{StaticResource InvoiceListViewItemTemplate}"
+                    ItemsSource="{x:Bind ViewModel.CurrentPageInvoiceList}"
+                    Background="Wheat"
+                    CornerRadius="16"
+                    Padding="0,10,0,10"
+                    Margin="10,10,10,10"/>
+                <!--Pagination controls-->
+                <Grid
+                    Grid.Row="2" Grid.Column="0"
+                    RowSpacing="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--Select Rows per page-->
+                    <StackPanel
+                        Grid.Row="0" Grid.Column="0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <TextBlock
+                            Text="Hiển thị"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"/>
+                        <ComboBox
+                            Name="rowsPerPageComboBox"
+                            Width="70"
+                            Margin="7,0,7,0"
+                            SelectedIndex="0"
+                            SelectionChanged="rowsPerPageComboBox_SelectionChanged">
+                            <x:String>5</x:String>
+                            <x:String>10</x:String>
+                            <x:String>15</x:String>
+                            <x:String>20</x:String>
+                        </ComboBox>
+                        <TextBlock
+                            Text="đơn hàng trong một trang"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!--Displaying invoices from/to out of-->
+                    <StackPanel
+                        Grid.Row="1" Grid.Column="0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="0,20,0,0">
+                        <TextBlock Text="Đang hiển thị:" FontWeight="SemiBold" Margin="0,0,5,0"/>
+                        <TextBlock Text="{x:Bind ViewModel.FromIndex, Mode=TwoWay}" Margin="0,0,3,0"/>
+                        <TextBlock Text="-" Margin="0,0,3,0"/>
+                        <TextBlock Text="{x:Bind ViewModel.ToIndex, Mode=TwoWay}" Margin="0,0,5,0"/>
+                        <TextBlock Text="trên" Margin="0,0,5,0"/>
+                        <TextBlock Text="{x:Bind ViewModel.TotalRowsCount, Mode=TwoWay}" Margin="0,0,5,0"/>
+                        <TextBlock Text="đơn hàng" Margin="0,0,0,0"/>
+                    </StackPanel>
+
+                    <!--Page number and paging buttons-->
+                    <Grid
+                        Grid.Row="2" Grid.Column="0"
+                        HorizontalAlignment="Center"
+                        ColumnSpacing="20">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!--Previous page button-->
+                        <Button
+                            Grid.Row="0" Grid.Column="0"
+                            Name="previousPageButton"
+                            Click="previousPageButton_Click">
+                            Trang trước
+                        </Button>
+                        <!--Current page-->
+                        <StackPanel
+                            Grid.Row="0" Grid.Column="1"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                            <TextBlock Text="{x:Bind ViewModel.CurrentPage, Mode=TwoWay}" Margin="0,0,5,0"/>
+                            <TextBlock Text="/" Margin="0,0,5,0"/>
+                            <TextBlock Text="{x:Bind ViewModel.TotalPages, Mode=TwoWay}"/>
+                        </StackPanel>
+                        <!--Next page button-->
+                        <Button
+                            Grid.Row="0" Grid.Column="2"
+                            Name="nextPageButton"
+                            Click="nextPageButton_Click">
+                            Trang sau
+                        </Button>
+                    </Grid>
+                </Grid>
+
+            </Grid>
+
+            <!--Right pane: Invoice details-->
+            <Grid
+                Grid.Row="1" Grid.Column="1"
+                BorderBrush="LightGray"
+                BorderThickness="2"
+                CornerRadius="15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <!--Invoice meta data-->
+                <Grid
+                    Grid.Row="0" Grid.Column="0"
+                    Padding="20"
+                    RowSpacing="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!--Invoice Id-->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <TextBlock Text="SỐ HÓA ĐƠN:" FontWeight="Bold" FontSize="16" Margin="0,0,5,0"/>
+                        <TextBlock Text="{x:Bind ViewModel.CurrentInvoiceId, 
+                            Converter={StaticResource NewInvoiceIdToNewInvoiceIdStringConverter},
+                            Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16"/>
+                    </StackPanel>
+                    <!--Created at-->
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <TextBlock Text="Ngày giờ tạo:" FontWeight="Bold" FontSize="15" Margin="0,0,5,0"/>
+                        <TextBlock Text="{x:Bind ViewModel.CurrentInvoiceCreatedAt, 
+                            Converter={StaticResource InvoiceCreatedAtToCreatedAtStringConverter},
+                            Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="15"/>
+                    </StackPanel>
+                    <!--Staff name-->
+                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                        <TextBlock Text="Nhân viên:" FontWeight="Bold" FontSize="15" Margin="0,0,5,0"/>
+                        <TextBlock Text="{x:Bind ViewModel.CurrentInvoiceStaffName,
+                            Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="15"/>
+                    </StackPanel>
+                </Grid>
+                <!--Invoice items ListView-->
+                <Grid
+                    Grid.Row="1" Grid.Column="0"
+                    Background="BlanchedAlmond"
+                    Margin="20,0,20,0"
+                    CornerRadius="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <!--Headers-->
+                    <Grid
+                        Grid.Row="0"
+                        Margin="0,0,0,0"
+                        CornerRadius="10"
+                        Height="30"
+                        Background="Wheat">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <!--Invoice item ordinal-->
+                        <TextBlock
+                            Grid.Column="0"
+                            Text="STT"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            FontWeight="SemiBold"/>
+                        <!--Invoice item name-->
+                        <TextBlock
+                            Grid.Column="1"
+                            Text="Tên sản phẩm"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontWeight="SemiBold"/>
+                        <!--Invoice item option name-->
+                        <TextBlock
+                            Grid.Column="2"
+                            Text="Tùy chọn"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontWeight="SemiBold"/>
+                        <!--Invoice item note-->
+                        <TextBlock
+                            Grid.Column="3"
+                            Text="Ghi chú"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontWeight="SemiBold"/>
+                        <!--Invoice item option price-->
+                        <TextBlock
+                            Grid.Column="4"
+                            Text="Đơn giá"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontWeight="SemiBold"/>
+                    </Grid>
+                    <!--Invoice item ListView-->
+                    <ListView
+                        Grid.Row="1"
+                        x:Name="orderItemListView"
+                        SelectionMode="None"
+                        ItemTemplate="{StaticResource InvoiceItemListViewItemTemplate}"
+                        ItemsSource="{x:Bind ViewModel.CurrentInvoiceItemList}"
+                        CornerRadius="15"/>
+                </Grid>
+                <!--Monetary details-->
+                <Grid
+                    Grid.Row="2"
+                    Padding="24"
+                    RowSpacing="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <!--Field names-->
+                    <TextBlock
+                        Grid.Row="0" Grid.Column="0"
+                        FontSize="18"
+                        FontWeight="SemiLight">
+                        Tổng số lượng
+                    </TextBlock>
+                    <TextBlock
+                        Grid.Row="1" Grid.Column="0"
+                        FontSize="18"
+                        FontWeight="SemiLight">
+                        Thành tiền
+                    </TextBlock>
+                    <TextBlock
+                        Grid.Row="2" Grid.Column="0"
+                        FontSize="18"
+                        FontWeight="SemiLight">
+                        Tổng giảm
+                    </TextBlock>
+                    <TextBlock
+                        Grid.Row="3" Grid.Column="0"
+                        FontSize="18"
+                        FontWeight="SemiLight">
+                        <Run>Thuế VAT (</Run>
+                        <Run Text="{x:Bind ViewModel.VatRateString}"/>
+                        <Run>)</Run>
+                        <LineBreak/>
+                        <Run FontSize="14" Text="{x:Bind ViewModel.VatMessageString}"/>
+                    </TextBlock>
+                    <TextBlock
+                        Grid.Row="4" Grid.Column="0"
+                        VerticalAlignment="Bottom"
+                        FontSize="20"
+                        FontWeight="Bold"  
+                        Margin="0,10,0,0">
+                        TỔNG THANH TOÁN
+                    </TextBlock>
+                    <TextBlock
+                        Grid.Row="5" Grid.Column="0"
+                        VerticalAlignment="Bottom"
+                        FontSize="20"
+                        FontWeight="Bold"  
+                        Margin="0,0,0,0">
+                        KHÁCH ĐƯA
+                    </TextBlock>
+                    <TextBlock
+                        Grid.Row="6" Grid.Column="0"
+                        VerticalAlignment="Bottom"
+                        FontSize="20"
+                        FontWeight="Bold"  
+                        Margin="0,0,0,0">
+                        TRẢ LẠI
+                    </TextBlock>
+
+                    <!--Field values-->
+                    <TextBlock
+                        Grid.Row="0" Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        FontSize="18"
+                        FontWeight="SemiLight"
+                        Text="{x:Bind ViewModel.CurrentInvoiceItemCount,
+                            Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock
+                        Grid.Row="1" Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        FontSize="18"
+                        FontWeight="SemiLight"
+                        Text="{x:Bind ViewModel.CurrentInvoiceSubTotal, 
+                            Converter={StaticResource DecimalToVietnamDongFormattedStringConverter},
+                            Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock
+                        Grid.Row="2" Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        FontSize="18"
+                        FontWeight="SemiLight"
+                        Text="{x:Bind ViewModel.CurrentInvoiceTotalDiscount, 
+                            Converter={StaticResource DecimalToVietnamDongFormattedStringConverter},
+                            Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock
+                        Grid.Row="3" Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        FontSize="18"
+                        FontWeight="SemiLight"
+                        Text="{x:Bind ViewModel.CurrentInvoiceInvoiceBasedVAT, 
+                            Converter={StaticResource DecimalToVietnamDongFormattedStringConverter},
+                            Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock
+                        Grid.Row="4" Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Text="{x:Bind ViewModel.CurrentInvoiceTotal, 
+                            Converter={StaticResource DecimalToVietnamDongFormattedStringConverter},
+                            Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Margin="0,10,0,0"/>
+                    <TextBlock
+                        Grid.Row="5" Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Text="{x:Bind ViewModel.CurrentInvoicePaid, 
+                            Converter={StaticResource DecimalToVietnamDongFormattedStringConverter},
+                            Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Margin="0,0,0,0"/>
+                    <TextBlock
+                        Grid.Row="6" Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Text="{x:Bind ViewModel.CurrentInvoiceChange, 
+                            Converter={StaticResource DecimalToVietnamDongFormattedStringConverter},
+                            Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Margin="0,0,0,0"/>
+                </Grid>
+                <!--Re-print invoice button-->
+                <Button
+                    Grid.Row="3" Grid.Column="0"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Center"
+                    Width="200" Height="50"
+                    Margin="0,0,0,20">
+                    <TextBlock Text="In hóa đơn" FontSize="18" FontWeight="SemiLight"/>
+                </Button>
+            </Grid>
+        </Grid>
+    </Canvas>
+</Page>

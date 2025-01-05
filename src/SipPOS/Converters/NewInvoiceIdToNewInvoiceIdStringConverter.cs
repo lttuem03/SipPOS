@@ -11,9 +11,9 @@ class NewInvoiceIdToNewInvoiceIdStringConverter : IValueConverter
             var newInvoiceId = (long)value;
 
             if (newInvoiceId == -1)
-                return "Đang chờ tạo";
+                return "";
 
-            return newInvoiceId.ToString("D6");
+            return "HD" + newInvoiceId.ToString("D6");
         }
 
         return "Lỗi chuyển định dạng";    
@@ -25,8 +25,10 @@ class NewInvoiceIdToNewInvoiceIdStringConverter : IValueConverter
         {
             var newInvoiceIdString = (string)value;
 
-            if (newInvoiceIdString == "Đang chờ tạo")
+            if (newInvoiceIdString == "")
                 return -1;
+
+            newInvoiceIdString = newInvoiceIdString.Substring(2);
 
             return long.Parse(newInvoiceIdString);
         }
