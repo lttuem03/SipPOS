@@ -32,6 +32,9 @@
         <!--Thousand separated decimal formatter-->
         <converters:DecimalToThousandSeparatedStringConverter x:Key="DecimalToThousandSeparatedStringConverter"/>
 
+        <!--SecondsRemainingToDisplayConverter-->
+        <converters:SecondsRemainingToDisplayConverter x:Key="SecondsRemainingToDisplayConverter"/>
+        
         <!--OrderItem ListView ItemTemplate-->
         <DataTemplate x:Key="OrderItemListViewTemplate" x:DataType="data_transfer:InvoiceItemDto">
             <Grid
@@ -1248,7 +1251,158 @@
                         Grid.Row="1"
                         x:Name="qrPaymentMethodGrid"
                         Visibility="Collapsed">
-                        <TextBlock Text="Đang chờ cập nhật..."/>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <!--Create QR code button / warning / error-->
+                        <StackPanel
+                            Grid.Row="0"
+                            Grid.RowSpan="5"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Orientation="Vertical"
+                            x:Name="createQrPaymentCodeButton">
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                TextWrapping="WrapWholeWords"
+                                Foreground="Red"
+                                x:Name="qrPaymentTimeoutErrorMessage"
+                                Opacity="0.0"
+                                Margin="0,0,0,20">
+                                Thanh toán thất bại do quá thời gian thanh toán
+                            </TextBlock>
+                            <Button
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Width="200" Height="50"
+                                Margin="0,0,0,50"
+                                Click="createQrPaymentCodeButton_Click">
+                                <TextBlock 
+                                    Text="Tạo mã QR thanh toán"
+                                    FontWeight="SemiLight"
+                                    FontSize="16"/>
+                            </Button>
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                TextWrapping="WrapWholeWords">
+                                Sau khi nhấn tạo mã QR thanh toán, phải chờ đến khi giao dịch thành công hoặc ít nhất 60 giây để có thể hủy thao tác để chọn phương thức thanh toán khác.
+                            </TextBlock>
+                        </StackPanel>
+                        
+                        <!--Instruction-->
+                        <TextBlock
+                            Grid.Row="0"
+                            Text="Quét mã bằng ứng dụng ngân hàng hoặc ví điện tử"
+                            FontWeight="Bold"
+                            FontSize="16"
+                            Margin="0,5,0,5"
+                            HorizontalAlignment="Center"
+                            x:Name="qrPayInstructionTextBlock"
+                            Visibility="Collapsed"/>
+                        <!--QR code-->
+                        <Border 
+                            Grid.Row="1"
+                            Margin="0,10,0,10"
+                            Height="240" Width="240" Background="#CCCCCC" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            x:Name="qrPayCodeBorder"
+                            Visibility="Collapsed">
+                            <StackPanel Orientation="Vertical">
+                                <Image x:Name="VietQRLogo" Source="ms-appx:///Assets/Vietqr-Logo.png" Width="100" Height="40"/>
+                                <Image x:Name="QRCodeImage" Source="{x:Bind ViewModel.QrCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="175" Height="175"/>
+                            </StackPanel>
+                        </Border>
+                        <!--QR-Payment metadata-->
+                        <Grid
+                            Grid.Row="2"
+                            HorizontalAlignment="Center"
+                            Margin="-50,0,0,0"
+                            ColumnSpacing="20"
+                            RowSpacing="5"
+                            x:Name="qrPayMetadata"
+                            Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <!--Account number-->
+                            <TextBlock 
+                                Grid.Row="0" Grid.Column="0"
+                                Text="Số tài khoản:" Margin="0,0,5,0" FontWeight="SemiBold"/>
+                            <TextBlock 
+                                Grid.Row="0" Grid.Column="1"
+                                Text="{x:Bind ViewModel.QrPayAccountNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <!--Order id-->
+                            <TextBlock 
+                                Grid.Row="1" Grid.Column="0"
+                                Text="Mã đơn hàng:" Margin="0,0,5,0" FontWeight="SemiBold"/>
+                            <TextBlock 
+                                Grid.Row="1" Grid.Column="1"
+                                Text="{x:Bind ViewModel.QrPayOrderCodeString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <!--Order expiring in-->
+                            <TextBlock 
+                                Grid.Row="2" Grid.Column="0"
+                                Text="Đơn hàng hết hạn sau:" Margin="0,0,5,0" FontWeight="SemiBold"/>
+                            <TextBlock 
+                                Grid.Row="2" Grid.Column="1"
+                                Text="{x:Bind ViewModel.QrPaySecondsRemaining,
+                                    Converter={StaticResource SecondsRemainingToDisplayConverter},
+                                    Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Grid>
+                        <!--Print QR code button-->
+                        <Button
+                            Grid.Row="3"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Center"
+                            Width="200" Height="35"
+                            Margin="0,10,0,0"
+                            x:Name="qrPayPrintCodeButton"
+                            Visibility="Collapsed">
+                            <TextBlock Text="In mã QR"/>
+                        </Button>
+                        <!--About QR payment / cancel operation countdown button-->
+                        <Grid 
+                            Grid.Row="4"
+                            x:Name="qrPayAboutTextBlockAndCancelButton"
+                            Visibility="Collapsed">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <!--About QR payment-->
+                            <TextBlock
+                                Grid.Column="0"
+                                FontSize="12"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Bottom"
+                                TextWrapping="WrapWholeWords">
+                                <Run Text="Lưu ý:"/> <LineBreak/>
+                                <Run Text="- Vui lòng không thao tác khi thanh toán cho đến khi nhận được kết quả giao dịch." FontWeight="SemiBold"/> <LineBreak/>
+                                <Run Text="- Đơn hàng sẽ tự động hủy sau 5 phút nếu không thanh toán." FontWeight="SemiBold"/> <LineBreak/>
+                                <Run Text="- Chỉ thanh toán một lần duy nhất cho mỗi đơn hàng." FontWeight="SemiBold"/> <LineBreak/>
+                            </TextBlock>
+                            <!--Cancel operation countdown button-->
+                            <Button
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Width="200" Height="35"
+                                x:Name="cancelQrPayOperationButton"
+                                Click="cancelQrPayOperationButton_Click"
+                                IsEnabled="False">
+                                <TextBlock
+                                    Text="Hủy (60s)"
+                                    x:Name="cancelQrPayOperationButtonTextBlock"/>
+                            </Button>
+                        </Grid>
                     </Grid>
                     <!--Proceed / Cancel buttons-->
                     <Grid

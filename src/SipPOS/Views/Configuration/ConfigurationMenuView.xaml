@@ -60,6 +60,7 @@
                     <NavigationViewItem Content="Cửa hàng" Tag="StoreConfiguration"/>
                     <NavigationViewItem Content="Thuế" Tag="TaxConfiguration"/>
                     <NavigationViewItem Content="Lương" Tag="SalaryConfiguration"/>
+                    <NavigationViewItem Content="QR-PAY" Tag="QrPayConfiguration"/>
                 </NavigationView.MenuItems>
             </NavigationView>
 

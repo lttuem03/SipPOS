@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel;
 
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+
 using SipPOS.Context.Configuration.Interfaces;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.General.Interfaces;
@@ -9,6 +12,7 @@ using SipPOS.Models.Entity;
 using SipPOS.Resources.Helper;
 using SipPOS.DataTransfer.Entity;
 using System.Security.Cryptography;
+using Microsoft.UI.Xaml.Media;
 
 namespace SipPOS.ViewModels.Cashier;
 
@@ -151,9 +155,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
             CurrentInvoice = _noInvoiceSelected;
     }
 
-    public void HandleInvoiceListViewSelectionChanged(int selectedIndex)
+    public void HandleInvoiceListViewSelectionChanged(ListView invoiceListView)
     {
-        CurrentInvoice = CurrentPageInvoiceList[selectedIndex];
+        CurrentInvoice = CurrentPageInvoiceList[invoiceListView.SelectedIndex];
     }
 
     public async Task HandleDateCalendarDatePickerDateChanged(DateTime newDate)

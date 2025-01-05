@@ -34,6 +34,7 @@
     <Page Remove="Views\Management\**" />
   </ItemGroup>
   <ItemGroup>
+    <Content Remove="Assets\blank_qr.png" />
     <Content Remove="Assets\default_product_image.png" />
     <Content Remove="Assets\Iconography\back-button.png" />
     <Content Remove="Assets\Iconography\cancel.png" />
@@ -64,6 +65,7 @@
     <None Remove="Views\Cashier\InvoiceHistoryView.xaml" />
     <None Remove="Views\CategoryManagementView.xaml" />
     <None Remove="Views\ConfigurationMenuView.xaml" />
+    <None Remove="Views\Configuration\QrPayConfigurationView.xaml" />
     <None Remove="Views\Configuration\SalaryConfigurationView.xaml" />
     <None Remove="Views\Configuration\TaxConfigurationView.xaml" />
     <None Remove="Views\General\InventoryMenuView.xaml" />
@@ -115,6 +117,9 @@
     <Page Update="AppStartupCheckWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <None Update="Assets\blank_qr.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\default_product_image.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -180,6 +185,9 @@
     <None Update="Assets\StoreLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\Configuration\QrPayConfigurationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Cashier\InvoiceHistoryView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

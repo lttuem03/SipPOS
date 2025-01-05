@@ -2,6 +2,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 using SipPOS.ViewModels.General;
+using SipPOS.Views.Cashier;
 
 namespace SipPOS.Views.General;
 
@@ -140,7 +141,8 @@ public sealed partial class MainMenuView : Page
     /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     private void changeIdButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleChangeIdButtonClick();
+        App.NavigateTo(typeof(CustomerPaymentView));
+        //ViewModel.HandleChangeIdButtonClick();
     }
 
     /// <summary>

@@ -20,8 +20,10 @@ public class SecondsRemainingToDisplayConverter : IValueConverter
         if (value is long secondsRemaining)
         {
             var timeSpan = TimeSpan.FromSeconds(secondsRemaining);
+
             return timeSpan.ToString(@"mm\:ss");
         }
+
         return "00:00";
     }
 
@@ -36,6 +38,17 @@ public class SecondsRemainingToDisplayConverter : IValueConverter
     /// <exception cref="NotImplementedException">Always thrown when this method is called.</exception>
     object IValueConverter.ConvertBack(object value, Type targetType, object parameter, string language)
     {
-        throw new NotImplementedException();
+        if (value is string secondsRemainingString)
+        {
+            var minuteString = secondsRemainingString.Substring(0, 2);
+            var secondString = secondsRemainingString.Substring(3, 2);
+
+            var minute = Int64.Parse(minuteString);
+            var second = Int64.Parse(secondString);
+
+            return minute * 60 + second;
+        }
+
+        return (long)0;
     }
 }

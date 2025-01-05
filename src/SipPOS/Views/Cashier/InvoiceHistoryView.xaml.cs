@@ -101,6 +101,9 @@ public sealed partial class InvoiceHistoryView : Page
         if (ViewModel is not InvoiceHistoryViewModel)
             return;
 
-        ViewModel.HandleInvoiceListViewSelectionChanged(invoiceListView.SelectedIndex);
+        if (sender is not ListView invoiceListView)
+            return;
+
+        ViewModel.HandleInvoiceListViewSelectionChanged(invoiceListView);
     }
 }

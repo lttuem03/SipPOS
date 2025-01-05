@@ -29,7 +29,7 @@ public class DateTimeToDateTimeStringConverter : IValueConverter
         {
             var dateTimeString = (string)value;
 
-            if (dateTimeString == "Đang chờ tạo")
+            if (dateTimeString == "")
                 return DateTime.MinValue;
 
             return DateTime.Parse(dateTimeString);

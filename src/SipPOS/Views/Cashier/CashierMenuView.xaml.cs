@@ -7,6 +7,7 @@ using SipPOS.Views.General;
 using SipPOS.Models.Entity;
 using SipPOS.ViewModels.Cashier;
 using SipPOS.DataTransfer.Entity;
+using Windows.Gaming.Input.ForceFeedback;
 
 namespace SipPOS.Views.Cashier;
 
@@ -31,11 +32,62 @@ public sealed partial class CashierMenuView : Page
 
         // Because the timer needs to be setup in the UI thread, it is done here.
         _cashierMenuTimer.Interval = TimeSpan.FromSeconds(1);
-        _cashierMenuTimer.Tick += (sender, e) =>
+        _cashierMenuTimer.Tick += async (sender, e) =>
         {
+            // Update the current time every second
             ViewModel.CurrentTime = ViewModel.CurrentTime.AddSeconds(1);
             currentTimeTextBlock.Text = ViewModel.CurrentTime.ToString("HH:mm:ss");
             currentDateTextBlock.Text = ViewModel.CurrentTime.ToString("dddd, dd/MM/yyyy");
+
+            // If there is a countdown for any operation, update it
+
+            // Countdown for processing QR-Pay payment
+            if (ViewModel.QrPaySecondsRemaining > 0)
+            {
+                ViewModel.QrPaySecondsRemaining -= 1;
+
+                // Check if the payment has been completed
+                if (await ViewModel.CheckQrPaymentCompleted())
+                {
+                    // proceed payment logic handled in CheckQrPaymentCompleted()
+
+                    qrPaymentTimeoutErrorMessage.Opacity = 0.0F;
+                    paymentContentDialog.Hide();
+                }
+
+                // Check if timeout
+                if (ViewModel.QrPayOrderCode != 0 && ViewModel.QrPaySecondsRemaining == 0)
+                {
+                    await ViewModel.HandleQrPaymentTimeout();
+
+                    // update UI
+                    paymentMethodRadioButtons.IsEnabled = true;
+                    closePaymentDialogButton.IsEnabled = true;
+                    cancelQrPayOperationButton.IsEnabled = true;
+                    hideQrPaymentControls();
+
+                    createQrPaymentCodeButton.Visibility = Visibility.Visible;
+
+                    // show error message
+                    qrPaymentTimeoutErrorMessage.Opacity = 1.0F;
+                }
+            }
+
+            // Countdown for cancel QR Pay operation
+            if (ViewModel.CancelQrPayOperationCountDownTimeSpan > TimeSpan.Zero)
+            {
+                ViewModel.CancelQrPayOperationCountDownTimeSpan = ViewModel.CancelQrPayOperationCountDownTimeSpan.Subtract(TimeSpan.FromSeconds(1));
+
+                if (ViewModel.CancelQrPayOperationCountDownTimeSpan > TimeSpan.Zero)
+                {
+                    cancelQrPayOperationButtonTextBlock.Text = $"Hủy ({ViewModel.CancelQrPayOperationCountDownTimeSpan.TotalSeconds}s)";
+                }
+                else
+                {
+                    cancelQrPayOperationButtonTextBlock.Text = "Hủy";
+                    cancelQrPayOperationButton.IsEnabled = true;
+                }
+            }
         };
         _cashierMenuTimer.Start();
     }
@@ -235,6 +287,8 @@ public sealed partial class CashierMenuView : Page
             case 1:
                 qrPaymentMethodGrid.Visibility = Visibility.Visible;
                 cashPaymentMethodGrid.Visibility = Visibility.Collapsed;
+                hideQrPaymentControls();
+                createQrPaymentCodeButton.Visibility = Visibility.Visible;
                 break;
         }
     }
@@ -310,10 +364,55 @@ public sealed partial class CashierMenuView : Page
             proceedWithPaymentButton.IsEnabled = false;
     }
 
-    private void proceedWithPaymentButton_Click(object sender, RoutedEventArgs e)
+    private async void proceedWithPaymentButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.HandleProceedWithPaymentButtonClick();
+        // WITH CASH PAYMENT METHOD
+        await ViewModel.ProceedWithPayment();
 
         paymentContentDialog.Hide();
     }
+
+    private async void createQrPaymentCodeButton_Click(object sender, RoutedEventArgs e)
+    {
+        createQrPaymentCodeButton.Visibility = Visibility.Collapsed;
+
+        await ViewModel.HandleCreateQrPaymentCodeButtonClick();
+
+        showQrPaymentControls();
+        paymentMethodRadioButtons.IsEnabled = false;
+        closePaymentDialogButton.IsEnabled = false;
+        cancelQrPayOperationButton.IsEnabled = false;
+        ViewModel.CancelQrPayOperationCountDownTimeSpan = ViewModel.CancelQrPayOperationCountDownTimeSpan.Add(TimeSpan.FromSeconds(60));
+    }
+
+    private async void cancelQrPayOperationButton_Click(object sender, RoutedEventArgs e)
+    {
+        await ViewModel.HandleQrPaymentTimeout();
+
+        paymentMethodRadioButtons.IsEnabled = true;
+        closePaymentDialogButton.IsEnabled = true;
+        cancelQrPayOperationButton.IsEnabled = true;
+        hideQrPaymentControls();
+
+        createQrPaymentCodeButton.Visibility = Visibility.Visible;
+    }
+
+    private void showQrPaymentControls()
+    {
+        qrPayInstructionTextBlock.Visibility = Visibility.Visible;
+        qrPayCodeBorder.Visibility = Visibility.Visible;
+        qrPayMetadata.Visibility = Visibility.Visible;
+        qrPayPrintCodeButton.Visibility = Visibility.Visible;
+        qrPayAboutTextBlockAndCancelButton.Visibility = Visibility.Visible;
+    }
+
+    private void hideQrPaymentControls()
+    {
+        qrPayInstructionTextBlock.Visibility = Visibility.Collapsed;
+        qrPayCodeBorder.Visibility = Visibility.Collapsed;
+        qrPayMetadata.Visibility = Visibility.Collapsed;
+        qrPayPrintCodeButton.Visibility = Visibility.Collapsed;
+        qrPayAboutTextBlockAndCancelButton.Visibility = Visibility.Collapsed;
+    }
+
 }
