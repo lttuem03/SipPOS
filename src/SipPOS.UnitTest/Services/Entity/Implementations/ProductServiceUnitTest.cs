@@ -19,82 +19,79 @@ namespace SipPOS.UnitTest.Services.Entity.Implementations
 
 
         [TestMethod]
-        public void GetProductById_WhenProductExists_ShouldReturnProduct()
+        public async void GetProductById_WhenProductExists_ShouldReturnProduct()
         {
             var productId = 1;
 
-            var product = productService.GetById(productId);
+            var product = await productService.GetById(productId);
 
             Assert.IsNotNull(product);
             Assert.AreEqual(productId, product.Id);
         }
 
         [TestMethod]
-        public void GetProductById_WhenProductDoesNotExist_ShouldReturnNull()
+        public async void GetProductById_WhenProductDoesNotExist_ShouldReturnNull()
         {
             var productId = -1;
 
-            var product = productService.GetById(productId);
+            var product = await productService.GetById(productId);
 
             Assert.IsNull(product);
         }
 
         [TestMethod]
-        public void GetProducts_WhenCalled_ShouldReturnProductList()
+        public async void GetProducts_WhenCalled_ShouldReturnProductList()
         {
-            var products = productService.GetAll();
+            var products = await productService.GetAll();
 
             Assert.IsNotNull(products);
             Assert.IsTrue(products.Count != 0);
-
         }
 
         [TestMethod]
-        public void DeleteProduct_WhenProductExists_ShouldDeleteProduct()
+        public async void DeleteProduct_WhenProductExists_ShouldDeleteProduct()
         {
             var productDto = new ProductDto
             {
                 Name = "Test Product",
-                Desc = "Test Description",
-                Price = 10.0,
+                Description = "Test Description",
                 CategoryId = 1
             };
 
-            productDto = productService.Insert(productDto);
+            productDto = await productService.Insert(productDto);
 
-            productDto = productService.DeleteById((long)productDto.Id);
+            productDto = await productService.DeleteById((long)productDto.Id);
 
             Assert.IsNotNull(productDto.DeletedAt);
         }
 
         [TestMethod]
-        public void DeleteProduct_WhenProductDoesNotExist_ShouldNotDeleteProduct()
+        public async void DeleteProduct_WhenProductDoesNotExist_ShouldNotDeleteProduct()
         {
             var productId = -1;
 
-            var product = productService.DeleteById(productId);
+            var product = await productService.DeleteById(productId);
 
             Assert.IsNull(product);
         }
 
         [TestMethod]
-        public void AddProduct_WhenProductIsValid_ShouldAddProduct()
+        public async void AddProduct_WhenProductIsValid_ShouldAddProduct()
         {
             var product = new ProductDto
             {
                 Name = "Test Product",
-                Desc = "Test Description",
-                Price = 10.0,
+                Description = "Test Description",
                 CategoryId = 1
             };
 
-            var productDto = productService.Insert(product);
+            var productDto = await productService.Insert(product);
 
             Assert.IsNotNull(productDto);
             Assert.AreEqual(product.Name, productDto.Name);
-            Assert.AreEqual(product.Desc, productDto.Desc);
+            Assert.AreEqual(product.Description, productDto.Description);
 
-            productService.DeleteById((long)product.Id);
+            await productService.DeleteById((long)product.Id);
         }
 
     }

@@ -19,78 +19,78 @@ namespace SipPOS.UnitTest.Services.Entity.Implementations
 
 
         [TestMethod]
-        public void GetCategoryById_WhenCategoryExists_ShouldReturnCategory()
+        public async void GetCategoryById_WhenCategoryExists_ShouldReturnCategory()
         {
             var categoryId = 1;
 
-            var category = categoryService.GetById(categoryId);
+            var category = await categoryService.GetById(categoryId);
 
             Assert.IsNotNull(category);
             Assert.AreEqual(categoryId, category.Id);
         }
 
         [TestMethod]
-        public void GetCategoryById_WhenCategoryDoesNotExist_ShouldReturnNull()
+        public async void GetCategoryById_WhenCategoryDoesNotExist_ShouldReturnNull()
         {
             var categoryId = -1;
 
-            var category = categoryService.GetById(categoryId);
+            var category = await categoryService.GetById(categoryId);
 
             Assert.IsNull(category);
         }
 
         [TestMethod]
-        public void GetCategorys_WhenCalled_ShouldReturnCategoryList()
+        public async void GetCategorys_WhenCalled_ShouldReturnCategoryList()
         {
-            var categorys = categoryService.GetAll();
+            var categories = await categoryService.GetAll();
 
-            Assert.IsNotNull(categorys);
-            Assert.IsTrue(categorys.Count != 0);
+            Assert.IsNotNull(categories);
+            Assert.IsTrue(categories.Count != 0);
 
         }
 
         [TestMethod]
-        public void DeleteCategory_WhenCategoryExists_ShouldDeleteCategory()
+        public async void DeleteCategory_WhenCategoryExists_ShouldDeleteCategory()
         {
             var categoryDto = new CategoryDto
             {
                 Name = "Test Category",
-                Desc = "Test Description"
+                Description = "Test Description"
             };
 
-            categoryDto = categoryService.Insert(categoryDto);
+            categoryDto = await categoryService.Insert(categoryDto);
 
-            categoryDto = categoryService.DeleteById((long)categoryDto.Id);
+            categoryDto = await categoryService.DeleteById((long)categoryDto.Id);
 
             Assert.IsNotNull(categoryDto.DeletedAt);
         }
 
         [TestMethod]
-        public void DeleteCategory_WhenCategoryDoesNotExist_ShouldNotDeleteCategory()
+        public async void DeleteCategory_WhenCategoryDoesNotExist_ShouldNotDeleteCategory()
         {
             var categoryId = -1;
 
-            var category = categoryService.DeleteById(categoryId);
+            var category = await categoryService.DeleteById(categoryId);
 
             Assert.IsNull(category);
         }
 
         [TestMethod]
-        public void AddCategory_WhenCategoryIsValid_ShouldAddCategory()
+        public async void AddCategory_WhenCategoryIsValid_ShouldAddCategory()
         {
             var category = new CategoryDto
             {
                 Name = "Test Category",
-                Desc = "Test Description"
+                Description = "Test Description"
             };
 
-            var categoryDto = categoryService.Insert(category);
+            var categoryDto = await categoryService.Insert(category);
 
             Assert.IsNotNull(categoryDto);
             Assert.AreEqual(category.Name, categoryDto.Name);
-            Assert.AreEqual(category.Desc, categoryDto.Desc);
+            Assert.AreEqual(category.Description, categoryDto.Description);
 
-            categoryService.DeleteById((long)category.Id);
+            await categoryService.DeleteById((long)category.Id);
         }
 
     }
