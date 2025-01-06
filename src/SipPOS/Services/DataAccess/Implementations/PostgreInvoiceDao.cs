@@ -64,10 +64,11 @@ public class PostgreInvoiceDao : IInvoiceDao
                 total,
                 customer_paid,
                 change,
+                coupon_code,
                 payment_method
             )
             VALUES 
-                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
             RETURNING *
         ", invoiceInsertConnection)
         {
@@ -84,6 +85,7 @@ public class PostgreInvoiceDao : IInvoiceDao
                 new() { Value = invoiceDto.Total },
                 new() { Value = invoiceDto.CustomerPaid },
                 new() { Value = invoiceDto.Change },
+                new() { Value = invoiceDto.CouponCode },
                 new() { Value = invoiceDto.PaymentMethod }
             }
         };
@@ -308,6 +310,7 @@ public class PostgreInvoiceDao : IInvoiceDao
             Total = reader.GetDecimal(reader.GetOrdinal("total")),
             CustomerPaid = reader.GetDecimal(reader.GetOrdinal("customer_paid")),
             Change = reader.GetDecimal(reader.GetOrdinal("change")),
+            CouponCode = reader.GetString(reader.GetOrdinal("coupon_code")),
             PaymentMethod = reader.GetString(reader.GetOrdinal("payment_method"))
         };
 

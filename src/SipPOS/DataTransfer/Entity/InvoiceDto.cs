@@ -28,6 +28,8 @@ public class InvoiceDto
 
     public decimal Change { get; set; }
 
+    public string CouponCode { get; set; }    
+
     public string PaymentMethod { get; set; }
 
     public InvoiceDto()
@@ -44,6 +46,7 @@ public class InvoiceDto
         Total = 0m;
         CustomerPaid = 0m;
         Change = 0m;
+        CouponCode = string.Empty;
         PaymentMethod = string.Empty;
     }
 }

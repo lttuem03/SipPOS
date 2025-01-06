@@ -277,7 +277,7 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
                 updated_at = $2,
                 name = $3,
                 description = $4,
-                sold_items = $5, 
+                items_sold = $5, 
                 category_id = $6,
                 status = $7,
                 type = $8,

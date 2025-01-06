@@ -21,7 +21,7 @@ exports.up = async function(knex) {
             category_store_id INT,
             category_id INT,
             product_id INT,
-            type VARCHAR(50),
+            type VARCHAR(50) NOT NULL CHECK (type IN ('ProductPromotion', 'CategoryPromotion', 'InvoicePromotion')),
             price_type VARCHAR(50),
             start_date TIMESTAMP,
             end_date TIMESTAMP,

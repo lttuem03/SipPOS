@@ -80,13 +80,19 @@
                     Giảm giá
                 </TextBlock>
                 <!--Discount value-->
-                <TextBlock
+                <StackPanel
                     Grid.Row="1" Grid.Column="2"
-                    FontSize="13"
+                    Orientation="Horizontal"
                     HorizontalAlignment="Right">
-                    <Run>-</Run>
-                    <Run Text="{x:Bind Discount, Converter={StaticResource DecimalToVietnamDongFormattedStringConverter}}"/>
-                </TextBlock>
+                    <TextBlock
+                        FontSize="13"
+                        Text="-"/>
+                    <TextBlock
+                        FontSize="13"
+                        HorizontalAlignment="Right" 
+                        Text="{x:Bind Discount, Converter={StaticResource DecimalToVietnamDongFormattedStringConverter},
+                            Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
                 <!--Note field-->
                 <StackPanel
                     Grid.Row="2" Grid.Column="1"
@@ -175,7 +181,6 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-
                 <!--Product image-->
                 <Image
                     Grid.Row="0" Grid.Column="0"
@@ -183,11 +188,14 @@
                     Source="{Binding ImageUris[0]}" Stretch="Uniform"
                     Margin="0,0,0,0"/>
                 <!--Product name-->
-                <TextBlock
+                <StackPanel
                     Grid.Row="1" Grid.Column="0"
                     Grid.ColumnSpan="1"
-                    Text="{Binding Name}"
-                    HorizontalTextAlignment="Left"/>
+                    Orientation="Horizontal">
+                    <TextBlock
+                        Text="{Binding Name}"
+                        HorizontalTextAlignment="Left"/>
+                </StackPanel>
                 <!--Option price-->
                 <TextBlock
                     Grid.Row="1" Grid.Column="1"
@@ -227,6 +235,64 @@
                     <Run Text="Đã bán:"/>
                     <Run Text="{Binding ItemsSold}"/>
                 </TextBlock>
+            </Grid>
+        </DataTemplate>
+
+        <!--Special offers suggestion ListView ItemTemplate-->
+        <DataTemplate x:Key="SpecialOffersListViewItemTemplate" x:DataType="model:SpecialOffer">
+            <Grid
+                BorderBrush="LightGray"
+                BorderThickness="1"
+                CornerRadius="10"
+                Padding="5"
+                Margin="0,10,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!--Code-->
+                <TextBlock
+                    Grid.Row="0" Grid.Column="0"
+                    Text="{Binding Code}"
+                    FontWeight="SemiBold"/>
+
+                <!--Description-->
+                <TextBlock
+                    Grid.Row="1" Grid.Column="0"
+                    Text="{Binding Description}"
+                    TextWrapping="WrapWholeWords"/>
+
+                <!--# of usages used-->
+                <StackPanel
+                    Grid.Row="2" Grid.Column="0"
+                    Orientation="Horizontal">
+                    <TextBlock>
+                        Đã sử dụng: 
+                    </TextBlock>
+                    <TextBlock
+                        Margin="5,0,0,0"
+                        Text="{Binding ItemsSold}"/>
+                    <TextBlock
+                        Text="/"/>
+                    <TextBlock
+                        Text="{Binding MaxItems}"/>
+                </StackPanel>
+
+                <!--Apply button-->
+                <Button
+                    Grid.Row="0" Grid.Column="1"
+                    Grid.RowSpan="3"
+                    Margin="10,0,10,0"
+                    Click="applyCouponButton_Click">
+                    <TextBlock
+                        Text="Áp dụng"/>
+                </Button>
             </Grid>
         </DataTemplate>
     </Page.Resources>
@@ -374,7 +440,7 @@
 
         <!--Page content-->
         <Grid
-            Canvas.Left="50" Canvas.Top="50"
+            Canvas.Left="50" Canvas.Top="35"
             ColumnSpacing="30"
             RowSpacing="30">
             <Grid.RowDefinitions>
@@ -536,7 +602,7 @@
 
                     <GridView.ItemContainerStyle>
                         <Style TargetType="GridViewItem">
-                            <Setter Property="Margin" Value="20"/>
+                            <Setter Property="Margin" Value="30,20,30,20"/>
                         </Style>
                     </GridView.ItemContainerStyle>
                 </GridView>
@@ -552,8 +618,9 @@
                 Background="BlanchedAlmond">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"/> <!--Order number-->
-                    <RowDefinition Height="350"/> <!--Order items ListView-->
-                    <RowDefinition Height="60"/> <!--Cancel order button-->
+                    <RowDefinition Height="330"/> <!--Order items ListView-->
+                    <RowDefinition Height="65"/> <!--Apply coupon text box-->
+                    <RowDefinition Height="50"/> <!--Cancel order button-->
                     <RowDefinition Height="180"/> <!--Payment details-->
                     <RowDefinition Height="70"/> <!--Open payment window-->
                 </Grid.RowDefinitions>
@@ -605,9 +672,47 @@
                     CornerRadius="16"
                     Padding="10"
                     Margin="10,10,10,10"/>
+                <!--Apply coupon text box / warning-->
+                <StackPanel
+                    Grid.Row="2" Grid.Column="0"
+                    Orientation="Vertical">
+                    <TextBlock
+                        Foreground="Red"
+                        HorizontalAlignment="Center"
+                        Text="Không thể áp dụng mã khuyến mãi này"
+                        Opacity="0"
+                        x:Name="couponNotApplicableWarningTextBlock"/>
+                    <Grid
+                         Margin="10,5,10,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox
+                            Grid.Column="0"
+                            PlaceholderText="Nhập mã giảm giá (nếu có)"
+                            Text="{x:Bind ViewModel.NewInvoiceCouponCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            IsSpellCheckEnabled="False"
+                            x:Name="applyCouponTextBox"
+                            VerticalAlignment="Stretch"
+                            IsEnabled="False"
+                            GettingFocus="applyCouponTextBox_GettingFocus"
+                            LosingFocus="applyCouponTextBox_LosingFocus"/>
+                        <Button
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            x:Name="applyHiddenCouponButton"
+                            Click="applyHiddenCouponButton_Click"
+                            IsEnabled="False">
+                            <TextBlock>Áp dụng</TextBlock>
+                        </Button>
+                    </Grid>
+                    
+                </StackPanel>
+                
                 <!--Cancel order button-->
                 <Button
-                    Grid.Row="2"
+                    Grid.Row="3"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Foreground="Red"
@@ -619,7 +724,7 @@
                 </Button>
                 <!--Payment info-->
                 <Grid
-                    Grid.Row="3"
+                    Grid.Row="4"
                     Padding="10"
                     RowSpacing="5">
                     <Grid.RowDefinitions>
@@ -714,7 +819,7 @@
                 </Grid>
                 <!--Payment button-->
                 <Button
-                    Grid.Row="4"
+                    Grid.Row="5"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Margin="10,0,10,10"
@@ -747,6 +852,22 @@
                         <Button Grid.Row="2" Click="noteSuggestionButton_Click" Width="150">Giảm đường</Button>
                         <Button Grid.Row="3" Click="noteSuggestionButton_Click" Width="150">Không đường</Button>
                     </Grid>
+                </TeachingTip>
+
+                <!--Coupon suggestion TeachingTip-->
+                <TeachingTip
+                    Target="{x:Bind applyCouponTextBox}"
+                    x:Name="couponSuggestionTeachingTip"
+                    IsOpen="False"
+                    Title="Các mã khuyến mãi hiện có"
+                    PreferredPlacement="Left"
+                    Width="600">
+                    <ListView
+                        x:Name="couponSuggestionListView"
+                        SelectionMode="None"
+                        ItemTemplate="{StaticResource SpecialOffersListViewItemTemplate}"
+                        ItemsSource="{x:Bind ViewModel.SpecialOffers}">
+                    </ListView>
                 </TeachingTip>
             </Grid>
         </Grid>
