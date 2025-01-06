@@ -234,9 +234,7 @@ public class MainMenuViewModel : INotifyPropertyChanged
     public void HandleChangeIdButtonClick()
     {
         if (App.GetService<IStaffAuthenticationService>() is not StaffAuthenticationService staffAuthenticationService)
-        {
             return;
-        }
 
         staffAuthenticationService.Logout();
 

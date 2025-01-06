@@ -153,5 +153,4 @@ public sealed partial class MainMenuView : Page
     {
         App.Current.Exit();
     }
-
 }

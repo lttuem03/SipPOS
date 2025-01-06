@@ -23,8 +23,10 @@ using Net.payOS;
 using Net.payOS.Types;
 using System.Drawing;
 using QRCoder;
+using SipPOS.Views.Login;
 using SipPOS.Services.Entity.Interfaces;
 using SipPOS.Services.Entity.Implementations;
+
 
 
 namespace SipPOS.ViewModels.Cashier;
@@ -529,6 +531,7 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         NewInvoiceCustomerPaid = 0m;
         NewInvoiceChange = 0m;
         NewInvoicePaymentMethod = "CASH"; // default
+        NewInvoiceCouponCode = string.Empty;
     }
 
     public void NotifyPaymentSuccess()
@@ -760,6 +763,18 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         NewInvoiceTotal = NewInvoiceSubTotal - NewInvoiceTotalDiscount + NewInvoiceInvoiceBasedVAT;
 
         return false;
+    }
+
+    public void HandleChangeStaffIdButtonClick()
+    {
+        if (App.GetService<IStaffAuthenticationService>() is not StaffAuthenticationService staffAuthenticationService)
+            return;
+
+        staffAuthenticationService.Logout();
+
+        // Store is logged in, so return to LoginView
+        // will change the login tab to StaffLogin
+        App.NavigateTo(typeof(LoginView));
     }
 
     private void OnPropertyChanged(string propertyName)

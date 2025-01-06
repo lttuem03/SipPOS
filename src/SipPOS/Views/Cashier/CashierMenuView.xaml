@@ -430,7 +430,8 @@
             <Button
                 Canvas.Left="75" Canvas.Top="760"
                 Width="250" Height="40"
-                CornerRadius="10">
+                CornerRadius="10"
+                Click="changeStaffIdButton_Click">
                 <TextBlock
                     FontSize="16">
                     Đổi ID nhân viên

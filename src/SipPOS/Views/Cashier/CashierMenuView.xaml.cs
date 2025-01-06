@@ -481,4 +481,9 @@ public sealed partial class CashierMenuView : Page
             couponNotApplicableWarningTextBlock.Opacity = 0.0F;
         }
     }
+
+    private void changeStaffIdButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.HandleChangeStaffIdButtonClick();
+    }
 }
