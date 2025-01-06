@@ -88,13 +88,6 @@
                 Header="Mã khuyến mãi"
                 PlaceholderText="Nhập Mã khuyến mãi" 
                 IsSpellCheckEnabled="False"/>
-            <TextBox 
-                Text="{x:Bind ViewModel.SpecialOffersFilterDto.Name, Mode=TwoWay}"
-                Grid.Row="2" Grid.Column="0" 
-                Grid.ColumnSpan="2"
-                Header="Tên khuyến mãi"
-                PlaceholderText="Nhập tên khuyến mãi" 
-                IsSpellCheckEnabled="False"/>
         </Grid>
 
         <StackPanel Grid.Row="1" Orientation="Vertical">

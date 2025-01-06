@@ -92,6 +92,7 @@ public partial class App : Application
             services.AddSingleton<IInvoiceDao, PostgreInvoiceDao>();
 
             // Services
+            services.AddSingleton<ITextToSpeechService, TextToSpeechService>();
             services.AddSingleton<ISpecialOfferService, SpecialOfferService>();
             services.AddSingleton<IProductService, ProductService>();
             services.AddSingleton<ICategoryService, CategoryService>();
