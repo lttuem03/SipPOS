@@ -312,18 +312,18 @@
                 Width="250"
                 Height="50"
                 Margin="0,0,0,10"
-                Content="Mở ca">
-                
+                Content="Mở ca"
+                CornerRadius="10">
             </Button>
             
             <!--Currently in-shift staffs ListView-->
             <Grid
                 BorderBrush="Gray"
                 BorderThickness="1"
-                >
+                CornerRadius="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="400"/>
                 </Grid.RowDefinitions>
 
                 <TextBlock
@@ -341,8 +341,6 @@
                     MaxHeight="400"
                     HorizontalAlignment="Center"/>
             </Grid>
-
-            
         </StackPanel>
 
         <!--Returns to LoginViews buttons-->

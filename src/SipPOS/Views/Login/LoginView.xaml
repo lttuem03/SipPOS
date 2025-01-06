@@ -13,20 +13,30 @@
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
         Width="700"
-        Height="550">
+        Height="600">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        
+        <!--Welcome message-->
+        <TextBlock
+            Grid.Row="0"
+            Text="Đăng nhập vào SipPOS"
+            HorizontalAlignment="Left"
+            Style="{StaticResource TitleLargeTextBlockStyle}"/>
 
+        <!--Login navigation view-->
         <NavigationView
+            Grid.Row="1"
             Name="loginNavigationView"
             PaneDisplayMode="Top"
             IsBackButtonVisible="Collapsed"
             IsSettingsVisible="False"
             SelectionChanged="loginNavigationView_SelectionChanged"
-            Grid.Row="0"
+            
             Margin="0,50,0,0">
             <NavigationView.MenuItems>
                 <NavigationViewItem 
@@ -41,16 +51,17 @@
             </NavigationView.MenuItems>
         </NavigationView>
 
+        <!--Login navigation frame-->
         <Frame 
             x:Name="loginNavigationFrame" 
-            Grid.Row="1"
+            Grid.Row="2"
             Margin="0,0,0,50"/>
 
         <!--Exit program button-->
         <Button
             x:Name="exitProgramButton"
             Click="exitProgramButton_Click"
-            Grid.Row="2"
+            Grid.Row="3"
             HorizontalAlignment="Center">
             <StackPanel
                 Orientation="Vertical"
