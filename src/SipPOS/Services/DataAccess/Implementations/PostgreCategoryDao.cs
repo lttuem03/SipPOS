@@ -77,8 +77,17 @@ public class PostgreCategoryDao : ICategoryDao
         await using var command = new NpgsqlCommand(@"
             SELECT *
             FROM category
-            WHERE deleted_at IS NULL
-        ", connection);
+            WHERE 
+                deleted_at IS NULL
+            AND
+                store_id = $1
+        ", connection)
+        {
+            Parameters =
+            {
+                new() { Value = storeId }
+            }
+        };
 
         await using var reader = command.ExecuteReader();
 
