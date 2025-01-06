@@ -1,20 +1,26 @@
-﻿using SipPOS.Models.Entity;
+﻿using System.Text;
+
+using SipPOS.Models.Entity;
 using SipPOS.Models.General;
 using SipPOS.DataTransfer.General;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.General.Interfaces;
-using SipPOS.DataTransfer.Entity;
+
 using Npgsql;
-using System.Text.Json;
-using System.Threading.Tasks;
-using System.Text;
-using NpgsqlTypes;
 
 namespace SipPOS.Services.DataAccess.Implementations;
 
-
+/// <summary>
+/// Data access object for special offers using PostgreSQL.
+/// </summary>
 public class PostgreSpecialOfferDao : ISpecialOfferDao
 {
+    /// <summary>
+    /// Inserts a new special offer into the database.
+    /// </summary>
+    /// <param name="storeId">The ID of the store.</param>
+    /// <param name="specialOffersModel">The special offer model to insert.</param>
+    /// <returns>The inserted special offer, or null if the insertion failed.</returns>
     public async Task<SpecialOffer?> InsertAsync(long storeId, SpecialOffer specialOffersModel)
     {
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
@@ -79,6 +85,11 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
         return specialOfferReaderToSpecialOffer(specialOfferReader);
     }
 
+    /// <summary>
+    /// Retrieves all special offers for a given store.
+    /// </summary>
+    /// <param name="storeId">The ID of the store.</param>
+    /// <returns>A list of special offers.</returns>
     public async Task<List<SpecialOffer>> GetAllAsync(long storeId)
     {
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
@@ -120,6 +131,12 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
         return new();
     }
 
+    /// <summary>
+    /// Retrieves a special offer by its ID.
+    /// </summary>
+    /// <param name="storeId">The ID of the store.</param>
+    /// <param name="id">The ID of the special offer.</param>
+    /// <returns>The special offer, or null if not found.</returns>
     public async Task<SpecialOffer?> GetByIdAsync(long storeId, long id)
     {
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>() ?? throw new InvalidOperationException("Failed to open database connection.");
@@ -153,6 +170,15 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
         return null;
     }
 
+    /// <summary>
+    /// Retrieves special offers with pagination and filtering.
+    /// </summary>
+    /// <param name="storeId">The ID of the store.</param>
+    /// <param name="specialOffersFilterDto">The filter criteria for special offers.</param>
+    /// <param name="sortDto">The sorting criteria.</param>
+    /// <param name="page">The page number.</param>
+    /// <param name="perPage">The number of items per page.</param>
+    /// <returns>A pagination object containing the special offers.</returns>
     public async Task<Pagination<SpecialOffer>> GetWithPaginationAsync
     (
         long storeId,
@@ -263,6 +289,12 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
         };
     }
 
+    /// <summary>
+    /// Updates a special offer by its ID.
+    /// </summary>
+    /// <param name="storeId">The ID of the store.</param>
+    /// <param name="specialOffersModel">The special offer model to update.</param>
+    /// <returns>The updated special offer, or null if the update failed.</returns>
     public async Task<SpecialOffer?> UpdateByIdAsync(long storeId, SpecialOffer specialOffersModel)
     {
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
@@ -329,6 +361,13 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
         return specialOffer;
     }
 
+    /// <summary>
+    /// Deletes a special offer by its ID.
+    /// </summary>
+    /// <param name="storeId">The ID of the store.</param>
+    /// <param name="id">The ID of the special offer to delete.</param>
+    /// <param name="author">The staff member performing the deletion.</param>
+    /// <returns>The deleted special offer, or null if the deletion failed.</returns>
     public async Task<SpecialOffer?> DeleteByIdAsync(long storeId, long id, Staff author)
     {
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
@@ -367,6 +406,13 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
         return specialOfferReaderToSpecialOffer(reader);
     }
 
+    /// <summary>
+    /// Deletes multiple special offers by their IDs.
+    /// </summary>
+    /// <param name="storeId">The ID of the store.</param>
+    /// <param name="ids">The list of IDs of the special offers to delete.</param>
+    /// <param name="author">The staff member performing the deletion.</param>
+    /// <returns>A list of deleted special offers.</returns>
     public async Task<List<SpecialOffer>> DeleteByIdsAsync(long storeId, List<long> ids, Staff author)
     {
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
@@ -410,6 +456,12 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
         return new();
     }
 
+    /// <summary>
+    /// Counts the number of special offers that match the given filter criteria.
+    /// </summary>
+    /// <param name="storeId">The ID of the store.</param>
+    /// <param name="specialOffersFilterDto">The filter criteria for special offers.</param>
+    /// <returns>The count of special offers that match the filter criteria.</returns>
     public async Task<long> CountAsync(long storeId, SpecialOfferFilterDto specialOffersFilterDto)
     {
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
@@ -476,6 +528,11 @@ public class PostgreSpecialOfferDao : ISpecialOfferDao
         return await command.ExecuteScalarAsync() as long? ?? 0;
     }
 
+    /// <summary>
+    /// Converts a data reader to a SpecialOffer object.
+    /// </summary>
+    /// <param name="reader">The data reader containing special offer data.</param>
+    /// <returns>A SpecialOffer object populated with data from the reader.</returns>
     private SpecialOffer specialOfferReaderToSpecialOffer(NpgsqlDataReader reader)
     {
         SpecialOffer specialOffer = new SpecialOffer

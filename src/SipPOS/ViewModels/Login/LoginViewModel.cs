@@ -21,9 +21,15 @@ public class LoginViewModel
 
     private LoginViewModel()
     {
-    
+        // Default constructor is hidden
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LoginViewModel"/> class.
+    /// </summary>
+    /// <param name="navigationView">The navigation view to select the item in.</param>
+    /// <param name="storeLoginNavigationViewItem">The navigation view item for store login.</param>
+    /// <param name="loginNavigationFrame">The frame to navigate within.</param>
     public LoginViewModel(NavigationView navigationView,
                           NavigationViewItem storeLoginNavigationViewItem,
                           Frame loginNavigationFrame)

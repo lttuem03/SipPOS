@@ -1,19 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace SipPOS.Services.Entity.Interfaces;
 
-namespace SipPOS.Services.Entity.Interfaces
+/// <summary>
+/// Interface for text-to-speech services.
+/// </summary>
+public interface ITextToSpeechService
 {
-    public interface ITextToSpeechService
-    {
-        bool Speak(string text);
+    /// <summary>
+    /// Converts the given text to speech and plays it.
+    /// </summary>
+    /// <param name="text">The text to convert to speech.</param>
+    /// <returns>True if the text was successfully converted and played, otherwise false.</returns>
+    bool Speak(string text);
 
-        bool SpeakPaymentSuccess(decimal amount);
+    /// <summary>
+    /// Converts a payment success message to speech and plays it.
+    /// </summary>
+    /// <param name="amount">The amount paid.</param>
+    /// <returns>True if the message was successfully converted and played, otherwise false.</returns>
+    bool SpeakPaymentSuccess(decimal amount);
 
-        bool SpeakPaymentSuccessViaQRPay(decimal amount);
+    /// <summary>
+    /// Converts a QR payment success message to speech and plays it.
+    /// </summary>
+    /// <param name="amount">The amount paid.</param>
+    /// <returns>True if the message was successfully converted and played, otherwise false.</returns>
+    bool SpeakPaymentSuccessViaQRPay(decimal amount);
 
-        bool SpeakPaymentSuccessViaCash(decimal amount);
-    }
+    /// <summary>
+    /// Converts a cash payment success message to speech and plays it.
+    /// </summary>
+    /// <param name="amount">The amount paid.</param>
+    /// <returns>True if the message was successfully converted and played, otherwise false.</returns>
+    bool SpeakPaymentSuccessViaCash(decimal amount);
 }

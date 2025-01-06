@@ -4,10 +4,19 @@ using SipPOS.ViewModels.Setup;
 
 namespace SipPOS.Views.Setup.Pages;
 
+/// <summary>
+/// Represents the initial setup page for salary configuration.
+/// </summary>
 public sealed partial class SalaryConfigurationInitialSetupPage : Page
 {
+    /// <summary>
+    /// Gets the ViewModel for the Store Setup.
+    /// </summary>
     public StoreSetupViewModel? ViewModel { get; } // SINGLETON, USED ACROSS ALL SETUP PAGES
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SalaryConfigurationInitialSetupPage"/> class.
+    /// </summary>
     public SalaryConfigurationInitialSetupPage()
     {
         this.InitializeComponent();
@@ -37,6 +46,9 @@ public sealed partial class SalaryConfigurationInitialSetupPage : Page
         }
     }
 
+    /// <summary>
+    /// Handles the CheckedChanged event of the staff base salary checkbox.
+    /// </summary>
     private void staffBaseSalaryCheckBox_Changed(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         if (ViewModel == null)
@@ -58,6 +70,9 @@ public sealed partial class SalaryConfigurationInitialSetupPage : Page
         }
     }
 
+    /// <summary>
+    /// Handles the CheckedChanged event of the staff hourly salary checkbox.
+    /// </summary>
     private void staffHourlySalaryCheckBox_Changed(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         if (ViewModel == null)
@@ -79,6 +94,9 @@ public sealed partial class SalaryConfigurationInitialSetupPage : Page
         }
     }
 
+    /// <summary>
+    /// Handles the CheckedChanged event of the assistant manager base salary checkbox.
+    /// </summary>
     private void assistantManagerBaseSalaryCheckBox_Changed(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         if (ViewModel == null)
@@ -100,6 +118,9 @@ public sealed partial class SalaryConfigurationInitialSetupPage : Page
         }
     }
 
+    /// <summary>
+    /// Handles the CheckedChanged event of the assistant manager hourly salary checkbox.
+    /// </summary>
     private void assistantManagerHourlySalaryCheckBox_Changed(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         if (ViewModel == null)
@@ -121,6 +142,9 @@ public sealed partial class SalaryConfigurationInitialSetupPage : Page
         }
     }
 
+    /// <summary>
+    /// Handles the CheckedChanged event of the store manager base salary checkbox.
+    /// </summary>
     private void storeManagerBaseSalaryCheckBox_Changed(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         if (ViewModel == null)
@@ -142,6 +166,9 @@ public sealed partial class SalaryConfigurationInitialSetupPage : Page
         }
     }
 
+    /// <summary>
+    /// Handles the CheckedChanged event of the store manager hourly salary checkbox.
+    /// </summary>
     private void storeManagerHourlySalaryCheckBox_Changed(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         if (ViewModel == null)
@@ -163,6 +190,10 @@ public sealed partial class SalaryConfigurationInitialSetupPage : Page
         }
     }
 
+    /// <summary>
+    /// Handles the TextChanging event of the salary text boxes.
+    /// Ensures the contents entered in the salary text boxes are rendered as numeric characters only, and applies formatting if needed.
+    /// </summary>
     private void salaryTextBox_TextChanging(TextBox sender, TextBoxTextChangingEventArgs args)
     {
         // Ensured the contents entered in the salary text boxes

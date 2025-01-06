@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+
 using SipPOS.DataTransfer.Entity;
 
 namespace SipPOS.Context.Shift.Interface;

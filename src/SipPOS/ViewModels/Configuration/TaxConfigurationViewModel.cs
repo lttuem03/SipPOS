@@ -1,15 +1,19 @@
 ﻿using System.ComponentModel;
 using System.Text.RegularExpressions;
+
 using Microsoft.UI.Xaml.Controls;
-using SipPOS.Context.Configuration.Interfaces;
+
 using SipPOS.DataTransfer.General;
 using SipPOS.Resources.Controls;
 using SipPOS.Services.Configuration.Interfaces;
 using SipPOS.Services.General.Interfaces;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
+using SipPOS.Context.Configuration.Interfaces;
 
 namespace SipPOS.ViewModels.Configuration;
 
+/// <summary>
+/// ViewModel for managing tax configuration settings.
+/// </summary>
 public class TaxConfigurationViewModel : INotifyPropertyChanged
 {
     private Models.General.Configuration? _currentConfiguration;
@@ -17,14 +21,22 @@ public class TaxConfigurationViewModel : INotifyPropertyChanged
     private string _editTaxCode = string.Empty;
     private decimal _editVatRate = -1.0m;
     private string _editVatMethod = string.Empty;
-    
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    /// <summary>
+    /// Raises the PropertyChanged event for the specified property.
+    /// </summary>
+    /// <param name="propertyName">The name of the property that changed.</param>
     public void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TaxConfigurationViewModel"/> class.
+    /// Loads the current tax configuration settings from the configuration context.
+    /// </summary>
     public TaxConfigurationViewModel()
     {
         var configurationContext = App.GetService<IConfigurationContext>();
@@ -36,12 +48,17 @@ public class TaxConfigurationViewModel : INotifyPropertyChanged
 
         if (_currentConfiguration == null)
             return;
-    
+
         EditTaxCode = _currentConfiguration.TaxCode;
         EditVatRate = _currentConfiguration.VatRate;
         EditVatMethod = _currentConfiguration.VatMethod;
     }
 
+    /// <summary>
+    /// Handles the save click event for the tax configuration.
+    /// </summary>
+    /// <param name="editStoreConfigurationResultContentDialog">The content dialog to show the result message.</param>
+    /// <param name="saveChangesOnTaxConfigurationButton">The button to save changes on tax configuration.</param>
     public async void HandleSaveChangesOnTaxConfigurationButtonClick(ContentDialog editStoreConfigurationResultContentDialog, Button saveChangesOnTaxConfigurationButton)
     {
         if (_currentConfiguration == null)
@@ -81,6 +98,10 @@ public class TaxConfigurationViewModel : INotifyPropertyChanged
         showResultContentDialog("Cập nhật thiết lập thuế thành công", editStoreConfigurationResultContentDialog);
     }
 
+    /// <summary>
+    /// Handles the cancel click event for the tax configuration.
+    /// </summary>
+    /// <param name="saveChangesOnTaxConfigurationButton">The button to save changes on tax configuration.</param>
     public void HandleCancelChangesOnTaxConfigurationButtonClick(Button saveChangesOnTaxConfigurationButton)
     {
         resetToCurrentTaxConfiguration();
@@ -88,6 +109,10 @@ public class TaxConfigurationViewModel : INotifyPropertyChanged
         saveChangesOnTaxConfigurationButton.IsEnabled = false;
     }
 
+    /// <summary>
+    /// Handles the text modified event for the tax code editable text field.
+    /// </summary>
+    /// <param name="saveChangesOnTaxConfigurationButton">The button to save changes on tax configuration.</param>
     public void HandleTaxCodeEditableTextFieldTextModified(Button saveChangesOnTaxConfigurationButton)
     {
         if (_currentConfiguration == null)
@@ -99,6 +124,11 @@ public class TaxConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the save click event for the tax code editable text field.
+    /// </summary>
+    /// <param name="taxCodeErrorMessageTeachingTip">The teaching tip to show error messages.</param>
+    /// <param name="taxCodeEditableTextField">The editable text field for the tax code.</param>
     public void HandleTaxCodeEditableTextField_SaveClicked
     (
         TeachingTip taxCodeErrorMessageTeachingTip,
@@ -126,6 +156,11 @@ public class TaxConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the selection changed event for the VAT rate combo box.
+    /// </summary>
+    /// <param name="selectedIndex">The selected index of the combo box.</param>
+    /// <param name="saveChangesOnTaxConfigurationButton">The button to save changes on tax configuration.</param>
     public void HandleGeneralVatRateComboBoxSelectionChanged(int selectedIndex, Button saveChangesOnTaxConfigurationButton)
     {
         var newVatRate = selectedIndex switch
@@ -150,6 +185,11 @@ public class TaxConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the selection changed event for the VAT method combo box.
+    /// </summary>
+    /// <param name="selectedIndex">The selected index of the combo box.</param>
+    /// <param name="saveChangesOnTaxConfigurationButton">The button to save changes on tax configuration.</param>
     public void HandleSelectVatMethodComboBoxSelectionChanged(int selectedIndex, Button saveChangesOnTaxConfigurationButton)
     {
         var newVatMethod = selectedIndex switch
@@ -170,6 +210,9 @@ public class TaxConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Resets the editable fields to the current tax configuration.
+    /// </summary>
     private void resetToCurrentTaxConfiguration()
     {
         EditTaxCode = _currentConfiguration == null ? "Lỗi tải thiết lập" : _currentConfiguration.TaxCode;
@@ -177,6 +220,11 @@ public class TaxConfigurationViewModel : INotifyPropertyChanged
         EditVatMethod = _currentConfiguration == null ? "Lỗi tải thiết lập" : _currentConfiguration.VatMethod;
     }
 
+    /// <summary>
+    /// Shows a content dialog with the specified message.
+    /// </summary>
+    /// <param name="message">The message to display in the content dialog.</param>
+    /// <param name="editStoreConfigurationContentDialog">The content dialog to show the message.</param>
     private async void showResultContentDialog(string message, ContentDialog editStoreConfigurationContentDialog)
     {
         editStoreConfigurationContentDialog.Content = message;
@@ -184,6 +232,9 @@ public class TaxConfigurationViewModel : INotifyPropertyChanged
         _ = await editStoreConfigurationContentDialog.ShowAsync();
     }
 
+    /// <summary>
+    /// Gets or sets the tax code.
+    /// </summary>
     public string EditTaxCode
     {
         get => _editTaxCode;
@@ -194,6 +245,9 @@ public class TaxConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the VAT rate.
+    /// </summary>
     public decimal EditVatRate
     {
         get => _editVatRate;
@@ -204,6 +258,9 @@ public class TaxConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the VAT method.
+    /// </summary>
     public string EditVatMethod
     {
         get => _editVatMethod;

@@ -1,10 +1,10 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+
 using SipPOS.DataTransfer.Entity;
+using SipPOS.ViewModels.Staff;
 using SipPOS.Services.Authentication.Implementations;
 using SipPOS.Services.Authentication.Interfaces;
-using SipPOS.Services.DataAccess.Interfaces;
-using SipPOS.ViewModels.Staff;
 
 namespace SipPOS.Views.Staff;
 
@@ -380,6 +380,11 @@ public sealed partial class StaffManagementView : Page
             editStaffDetailsContentDialog.IsPrimaryButtonEnabled = true;
     }
 
+    /// <summary>
+    /// Handles the SaveClicked event of the editStaffNameEditableTextField control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void editStaffNameEditableTextField_SaveClicked(object sender, EventArgs e)
     {
         ViewModel.HandleEditStaffNameEditableTextFieldSaveClicked
@@ -389,6 +394,11 @@ public sealed partial class StaffManagementView : Page
         );
     }
 
+    /// <summary>
+    /// Handles the SaveClicked event of the editStaffEmailEditableTextField control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void editStaffEmailEditableTextField_SaveClicked(object sender, EventArgs e)
     {
         ViewModel.HandleEditStaffEmailEditableTextFieldSaveClicked
@@ -398,6 +408,11 @@ public sealed partial class StaffManagementView : Page
         );
     }
 
+    /// <summary>
+    /// Handles the SaveClicked event of the editStaffTelEditableTextField control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void editStaffTelEditableTextField_SaveClicked(object sender, EventArgs e)
     {
         ViewModel.HandleEditStaffTelEditableTextFieldSaveClicked
@@ -407,6 +422,11 @@ public sealed partial class StaffManagementView : Page
         );
     }
 
+    /// <summary>
+    /// Handles the SaveClicked event of the editStaffAddressEditableTextField control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void editStaffAddressEditableTextField_SaveClicked(object sender, EventArgs e)
     {
         ViewModel.HandleEditStaffAddressEditableTextFieldSaveClicked

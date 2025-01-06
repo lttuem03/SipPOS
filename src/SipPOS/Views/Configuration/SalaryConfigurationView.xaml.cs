@@ -7,10 +7,17 @@ using SipPOS.Resources.Helper;
 
 namespace SipPOS.Views.Configuration;
 
+/// <summary>
+/// Represents the view for configuring salary settings.
+/// </summary>
 public sealed partial class SalaryConfigurationView : Page
 {
     public SalaryConfigurationViewModel ViewModel { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SalaryConfigurationView"/> class.
+    /// Sets up the ViewModel and initializes the salary configuration fields.
+    /// </summary>
     public SalaryConfigurationView()
     {
         this.InitializeComponent();
@@ -23,17 +30,17 @@ public sealed partial class SalaryConfigurationView : Page
         var currentConfiguration = ViewModel.CurrentConfiguration;
 
         // Fills the current-cycle salary configuration
-        currentStaffBaseSalaryTextBlock.Text = 
+        currentStaffBaseSalaryTextBlock.Text =
             currentConfiguration.CurrentStaffBaseSalary.ToVietnamDongFormatString();
-        currentStaffHourlySalaryTextBlock.Text = 
+        currentStaffHourlySalaryTextBlock.Text =
             currentConfiguration.CurrentStaffHourlySalary.ToVietnamDongFormatString();
-        currentAssistantManagerBaseSalaryTextBlock.Text = 
+        currentAssistantManagerBaseSalaryTextBlock.Text =
             currentConfiguration.CurrentAssistantManagerBaseSalary.ToVietnamDongFormatString();
-        currentAssistantManagerHourlySalaryTextBlock.Text = 
+        currentAssistantManagerHourlySalaryTextBlock.Text =
             currentConfiguration.CurrentAssistantManagerHourlySalary.ToVietnamDongFormatString();
-        currentStoreManagerBaseSalaryTextBlock.Text = 
+        currentStoreManagerBaseSalaryTextBlock.Text =
             currentConfiguration.CurrentStoreManagerBaseSalary.ToVietnamDongFormatString();
-        currentStoreManagerHourlySalaryTextBlock.Text = 
+        currentStoreManagerHourlySalaryTextBlock.Text =
             currentConfiguration.CurrentStoreManagerHourlySalary.ToVietnamDongFormatString();
 
         // Fills the next-cycle salary configuration
@@ -45,6 +52,12 @@ public sealed partial class SalaryConfigurationView : Page
         nextStoreManagerHourlySalaryTextBox.Text = $"{currentConfiguration.NextStoreManagerHourlySalary:0N}";
     }
 
+    /// <summary>
+    /// Handles the click event for the save changes button.
+    /// Saves the changes made to the salary configuration.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void saveChangesOnSalaryConfigurationButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.HandleSaveChangesOnSalaryConfigurationButtonClick
@@ -74,6 +87,12 @@ public sealed partial class SalaryConfigurationView : Page
         unsavedChangesWarningTextBlock.Visibility = Visibility.Collapsed;
     }
 
+    /// <summary>
+    /// Handles the click event for the cancel changes button.
+    /// Cancels the changes made to the salary configuration.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void cancelChangesOnSalaryConfigurationButton_Click(object sender, RoutedEventArgs e)
     {
         if (ViewModel.CurrentConfiguration == null)
@@ -105,6 +124,12 @@ public sealed partial class SalaryConfigurationView : Page
         saveChangesOnSalaryConfigurationButton.IsEnabled = false;
     }
 
+    /// <summary>
+    /// Handles the click event for the enable edit button.
+    /// Enables the text boxes for editing the salary configuration.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void enableEditButton_Click(object sender, RoutedEventArgs e)
     {
         // Enables all text boxes
@@ -115,12 +140,18 @@ public sealed partial class SalaryConfigurationView : Page
         cancelChangesButton.Visibility = Visibility.Visible;
     }
 
+    /// <summary>
+    /// Handles the click event for the save changes button.
+    /// Saves the changes made to the salary configuration.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void saveChangesButton_Click(object sender, RoutedEventArgs e)
     {
         // Make sure no field is empty, if somehow the user tries to do so
         checkForEmptySalaryTextBoxes();
 
-         var unsavedChangesConfigurationDto = new ConfigurationDto()
+        var unsavedChangesConfigurationDto = new ConfigurationDto()
         {
             NextStaffBaseSalary = decimal.Parse(nextStaffBaseSalaryTextBox.Text.Replace(".", "")),
             NextStaffHourlySalary = decimal.Parse(nextStaffHourlySalaryTextBox.Text.Replace(".", "")),
@@ -145,6 +176,12 @@ public sealed partial class SalaryConfigurationView : Page
         cancelChangesButton.Visibility = Visibility.Collapsed;
     }
 
+    /// <summary>
+    /// Handles the click event for the cancel changes button.
+    /// Cancels the changes made to the salary configuration.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void cancelChangesButton_Click(object sender, RoutedEventArgs e)
     {
         // Make sure no field is empty, if somehow the user tries to do so
@@ -158,6 +195,12 @@ public sealed partial class SalaryConfigurationView : Page
         cancelChangesButton.Visibility = Visibility.Collapsed;
     }
 
+    /// <summary>
+    /// Handles the text changing event for the salary text boxes.
+    /// Ensures the contents entered in the salary text boxes are rendered as numeric characters only, and applies formatting if needed.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void salaryTextBox_TextChanging(TextBox sender, TextBoxTextChangingEventArgs e)
     {
         // Ensured the contents entered in the salary text boxes
@@ -201,6 +244,12 @@ public sealed partial class SalaryConfigurationView : Page
         sender.SelectionStart = sender.Text.Length;
     }
 
+    /// <summary>
+    /// Handles the got focus event for the salary text boxes.
+    /// Selects all text in the text box when it receives focus.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void salaryTextBox_GotFocus(object sender, RoutedEventArgs e)
     {
         if (sender is TextBox textBox)
@@ -209,6 +258,9 @@ public sealed partial class SalaryConfigurationView : Page
         }
     }
 
+    /// <summary>
+    /// Enables the salary text boxes for editing.
+    /// </summary>
     private void enableSalaryTextBoxes()
     {
         nextStaffBaseSalaryTextBox.IsEnabled = true;
@@ -219,6 +271,9 @@ public sealed partial class SalaryConfigurationView : Page
         nextStoreManagerHourlySalaryTextBox.IsEnabled = true;
     }
 
+    /// <summary>
+    /// Disables the salary text boxes to prevent editing.
+    /// </summary>
     private void disableSalaryTextBoxes()
     {
         nextStaffBaseSalaryTextBox.IsEnabled = false;
@@ -229,6 +284,9 @@ public sealed partial class SalaryConfigurationView : Page
         nextStoreManagerHourlySalaryTextBox.IsEnabled = false;
     }
 
+    /// <summary>
+    /// Checks for empty salary text boxes and fills them with the appropriate values.
+    /// </summary>
     private void checkForEmptySalaryTextBoxes()
     {
         if (ViewModel.CurrentConfiguration == null)

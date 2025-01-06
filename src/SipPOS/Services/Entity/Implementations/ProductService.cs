@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
+
+using SipPOS.Models.Entity;
+using SipPOS.Models.General;
 using SipPOS.DataTransfer.Entity;
 using SipPOS.DataTransfer.General;
 using SipPOS.Services.Entity.Interfaces;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.Authentication.Implementations;
 using SipPOS.Services.Authentication.Interfaces;
-using SipPOS.Models.Entity;
-using SipPOS.Models.General;
 using SipPOS.Services.General.Interfaces;
 
 namespace SipPOS.Services.Entity.Implementations;

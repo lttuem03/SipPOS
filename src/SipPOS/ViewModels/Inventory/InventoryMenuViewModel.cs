@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Controls;
+
 using SipPOS.Views.Inventory;
 
 namespace SipPOS.ViewModels.Inventory;

@@ -400,6 +400,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the operating hours string.
+    /// </summary>
     public string OperatingHoursString
     {
         get => _operatingHoursString;
@@ -410,6 +413,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opening time.
+    /// </summary>
     public TimeOnly OpeningTime
     {
         get => _initialConfigurationDto.OpeningTime;
@@ -420,6 +426,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the closing time.
+    /// </summary>
     public TimeOnly ClosingTime
     {
         get => _initialConfigurationDto.ClosingTime;
@@ -430,6 +439,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opacity of the operating hours error message.
+    /// </summary>
     public float OperatingHoursErrorMessageOpacity
     {
         get => _operatingHoursErrorMessageOpacity;
@@ -440,6 +452,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text of the operating hours error message.
+    /// </summary>
     public string OperatingHoursErrorMessageText
     {
         get => _operatingHoursErrorMessageText;
@@ -450,6 +465,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the tax code.
+    /// </summary>
     public string TaxCode
     {
         get => _initialConfigurationDto.TaxCode;
@@ -460,6 +478,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the VAT rate.
+    /// </summary>
     public decimal VatRate
     {
         get => _initialConfigurationDto.VatRate;
@@ -470,6 +491,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the VAT method.
+    /// </summary>
     public string VatMethod
     {
         get => _initialConfigurationDto.VatMethod;
@@ -480,6 +504,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opacity of the tax configuration error message.
+    /// </summary>
     public float TaxConfigurationErrorMessageOpacity
     {
         get => _taxConfigurationErrorMessageOpacity;
@@ -490,6 +517,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text of the tax configuration error message.
+    /// </summary>
     public string TaxConfigurationErrorMessageText
     {
         get => _taxConfigurationErrorMessageText;
@@ -500,6 +530,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the base salary for staff.
+    /// </summary>
     public decimal StaffBaseSalary
     {
         get => _initialConfigurationDto.CurrentStaffBaseSalary;
@@ -511,6 +544,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the hourly salary for staff.
+    /// </summary>
     public decimal StaffHourlySalary
     {
         get => _initialConfigurationDto.CurrentStaffHourlySalary;
@@ -522,6 +558,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the base salary for assistant managers.
+    /// </summary>
     public decimal AssistantManagerBaseSalary
     {
         get => _initialConfigurationDto.CurrentAssistantManagerBaseSalary;
@@ -533,6 +572,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the hourly salary for assistant managers.
+    /// </summary>
     public decimal AssistantManagerHourlySalary
     {
         get => _initialConfigurationDto.CurrentAssistantManagerHourlySalary;
@@ -544,6 +586,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the base salary for store managers.
+    /// </summary>
     public decimal StoreManagerBaseSalary
     {
         get => _initialConfigurationDto.CurrentStoreManagerBaseSalary;
@@ -555,6 +600,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the hourly salary for store managers.
+    /// </summary>
     public decimal StoreManagerHourlySalary
     {
         get => _initialConfigurationDto.CurrentStoreManagerHourlySalary;
@@ -566,6 +614,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the staff base salary checkbox is checked.
+    /// </summary>
     public bool StaffBaseSalaryCheckBoxChecked
     {
         get => _staffBaseSalaryCheckBoxChecked;
@@ -576,6 +627,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the staff hourly salary checkbox is checked.
+    /// </summary>
     public bool StaffHourlySalaryCheckBoxChecked
     {
         get => _staffHourlySalaryCheckBoxChecked;
@@ -586,6 +640,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the assistant manager base salary checkbox is checked.
+    /// </summary>
     public bool AssistantManagerBaseSalaryCheckBoxChecked
     {
         get => _assistantManagerBaseSalaryCheckBoxChecked;
@@ -596,6 +653,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the assistant manager hourly salary checkbox is checked.
+    /// </summary>
     public bool AssistantManagerHourlySalaryCheckBoxChecked
     {
         get => _assistantManagerHourlySalaryCheckBoxChecked;
@@ -606,6 +666,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the store manager base salary checkbox is checked.
+    /// </summary>
     public bool StoreManagerBaseSalaryCheckBoxChecked
     {
         get => _storeManagerBaseSalaryCheckBoxChecked;
@@ -616,6 +679,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the store manager hourly salary checkbox is checked.
+    /// </summary>
     public bool StoreManagerHourlySalaryCheckBoxChecked
     {
         get => _storeManagerHourlySalaryCheckBoxChecked;
@@ -626,6 +692,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the string representation of the staff base salary.
+    /// </summary>
     public string StaffBaseSalaryString
     {
         get => _staffBaseSalaryString;
@@ -636,6 +705,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the string representation of the staff hourly salary.
+    /// </summary>
     public string StaffHourlySalaryString
     {
         get => _staffHourlySalaryString;
@@ -646,6 +718,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the string representation of the assistant manager base salary.
+    /// </summary>
     public string AssistantManagerBaseSalaryString
     {
         get => _assistantManagerBaseSalaryString;
@@ -656,6 +731,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the string representation of the assistant manager hourly salary.
+    /// </summary>
     public string AssistantManagerHourlySalaryString
     {
         get => _assistantManagerHourlySalaryString;
@@ -666,6 +744,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the string representation of the store manager base salary.
+    /// </summary>
     public string StoreManagerBaseSalaryString
     {
         get => _storeManagerBaseSalaryString;
@@ -676,6 +757,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the string representation of the store manager hourly salary.
+    /// </summary>
     public string StoreManagerHourlySalaryString
     {
         get => _storeManagerHourlySalaryString;
@@ -686,6 +770,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text of the salary error message.
+    /// </summary>
     public string SalaryErrorMessageText
     {
         get => _salaryErrorMessageText;
@@ -696,6 +783,9 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opacity of the salary error message.
+    /// </summary>
     public float SalaryErrorMessageOpacity
     {
         get => _salaryErrorMessageOpacity;

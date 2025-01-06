@@ -383,7 +383,7 @@ public sealed partial class ProductManagementView : Page
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The event data.</param>
-    private async void ContentGridView_ItemClick(object sender, ItemClickEventArgs e)
+    private void ContentGridView_ItemClick(object sender, ItemClickEventArgs e)
     {
         // Handle item click
 
@@ -408,26 +408,51 @@ public sealed partial class ProductManagementView : Page
 
     }
 
+    /// <summary>
+    /// Handles the text changed event of the product name text box.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void ProductName_TextChanged(object sender, TextChangedEventArgs e)
     {
         ViewModel.ProductNameRequireMessage = string.Empty;
     }
 
+    /// <summary>
+    /// Handles the text changed event of the product description text box.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void ProductDesc_TextChanged(object sender, TextChangedEventArgs e)
     {
         ViewModel.ProductDescRequireMessage = string.Empty;
     }
 
+    /// <summary>
+    /// Handles the value changed event of the product price control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="args">The event data.</param>
     private void ProductPrice_ValueChanged(object sender, object args)
     {
         ViewModel.ProductPriceRequireMessage = string.Empty;
     }
 
+    /// <summary>
+    /// Handles the selection changed event of the product category combo box.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void ProductCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         ViewModel.ProductCategoryRequireMessage = string.Empty;
     }
 
+    /// <summary>
+    /// Handles the click event of the delete price option button.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void DeletePriceOption_Click(object sender, RoutedEventArgs e)
     {
         if (ViewModel.SelectedProduct == null)
@@ -459,6 +484,11 @@ public sealed partial class ProductManagementView : Page
         }
     }
 
+    /// <summary>
+    /// Handles the click event of the add price option button.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void AddPriceOption_Click(object sender, RoutedEventArgs e)
     {
         if (ViewModel.SelectedProduct == null)

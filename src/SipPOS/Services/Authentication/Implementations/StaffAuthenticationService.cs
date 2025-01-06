@@ -1,9 +1,9 @@
-﻿using SipPOS.Context.Authentication;
-using SipPOS.Models.Entity;
+﻿using SipPOS.Models.Entity;
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.Authentication.Interfaces;
+using SipPOS.Context.Authentication;
 
 namespace SipPOS.Services.Authentication.Implementations;
 

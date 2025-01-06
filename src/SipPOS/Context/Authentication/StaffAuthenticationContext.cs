@@ -10,19 +10,16 @@ public class StaffAuthenticationContext
     /// <summary>
     /// Gets a value indicating whether a staff member is logged in.
     /// </summary>
-    public bool LoggedIn
-    {
-        get; private set;
-    }
+    public bool LoggedIn { get; private set; }
 
     /// <summary>
     /// Gets the login time of the current staff member.
     /// </summary>
-    public DateTime? LoginTime
-    {
-        get; private set;
-    }
+    public DateTime? LoginTime { get; private set; }
 
+    /// <summary>
+    /// Represent the currently authenticated staff.
+    /// </summary>
     private Staff? _currentStaff;
 
     /// <summary>

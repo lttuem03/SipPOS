@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace SipPOS.DataTransfer.General;
 
-namespace SipPOS.DataTransfer.General
+/// <summary>
+/// Represents a type of special offer.
+/// </summary>
+public class SpecialOfferType
 {
-    public class SpecialOfferType
-    {
-        public string? Label { get; set; }
+    /// <summary>
+    /// Gets or sets the label of the special offer type.
+    /// </summary>
+    public string? Label { get; set; }
 
-        public string? Value { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the value of the special offer type.
+    /// </summary>
+    public string? Value { get; set; }
 }

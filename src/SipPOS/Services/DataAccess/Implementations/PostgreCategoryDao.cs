@@ -1,13 +1,12 @@
-﻿using SipPOS.Models.Entity;
+﻿using System.Text;
+
+using SipPOS.Models.Entity;
 using SipPOS.Models.General;
 using SipPOS.DataTransfer.General;
 using SipPOS.Services.DataAccess.Interfaces;
-using Npgsql;
-using SipPOS.DataTransfer.Entity;
 using SipPOS.Services.General.Interfaces;
-using System.Text.Json;
-using System.Text;
-using NpgsqlTypes;
+
+using Npgsql;
 
 namespace SipPOS.Services.DataAccess.Implementations;
 

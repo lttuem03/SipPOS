@@ -1,14 +1,22 @@
-﻿using Npgsql;
-
-using SipPOS.DataTransfer.General;
+﻿using SipPOS.DataTransfer.General;
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.DataAccess.Interfaces;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
+
+using Npgsql;
 
 namespace SipPOS.Services.DataAccess.Implementations;
 
+/// <summary>
+/// Data access object for configuration settings using PostgreSQL.
+/// </summary>
 public class PostgreConfigurationDao : IConfigurationDao
 {
+    /// <summary>
+    /// Inserts a new configuration into the database.
+    /// </summary>
+    /// <param name="storeId">The store ID.</param>
+    /// <param name="configurationDto">The configuration data transfer object.</param>
+    /// <returns>The inserted configuration data transfer object, or <c>null</c> if the insertion failed.</returns>
     public async Task<ConfigurationDto?> InsertAsync(long storeId, ConfigurationDto configurationDto)
     {
         if (storeId < 0)
@@ -100,6 +108,11 @@ public class PostgreConfigurationDao : IConfigurationDao
         return null;
     }
 
+    /// <summary>
+    /// Retrieves a configuration by store ID.
+    /// </summary>
+    /// <param name="storeId">The store ID.</param>
+    /// <returns>The configuration data transfer object, or <c>null</c> if not found.</returns>
     public async Task<ConfigurationDto?> GetByIdAsync(long storeId)
     {
         if (storeId < 0)
@@ -153,6 +166,12 @@ public class PostgreConfigurationDao : IConfigurationDao
         return null;
     }
 
+    /// <summary>
+    /// Updates a configuration by store ID.
+    /// </summary>
+    /// <param name="storeId">The store ID.</param>
+    /// <param name="updatedConfigurationDto">The updated configuration data transfer object.</param>
+    /// <returns>The updated configuration data transfer object, or <c>null</c> if the update failed.</returns>
     public async Task<ConfigurationDto?> UpdateByIdAsync(long storeId, ConfigurationDto updatedConfigurationDto)
     {
         if (storeId < 0)

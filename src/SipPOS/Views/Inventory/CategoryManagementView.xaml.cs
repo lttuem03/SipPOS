@@ -364,11 +364,21 @@ public sealed partial class CategoryManagementView : Page
 
     }
 
+    /// <summary>
+    /// Handles the text changed event for the category name text box.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void CategoryName_TextChanged(object sender, TextChangedEventArgs e)
     {
         ViewModel.CategoryNameReqireMessage = string.Empty;
     }
 
+    /// <summary>
+    /// Handles the text changed event for the category description text box.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void CategoryDesc_TextChanged(object sender, TextChangedEventArgs e)
     {
         ViewModel.CategoryDescReqireMessage = string.Empty;

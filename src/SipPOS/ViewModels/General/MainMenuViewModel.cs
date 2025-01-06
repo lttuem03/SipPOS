@@ -1,24 +1,22 @@
 ﻿using System.ComponentModel;
 using System.Collections.ObjectModel;
 
+using Microsoft.UI.Xaml.Controls;
 
 using SipPOS.Context.Shift.Interface;
 using SipPOS.Views.Login;
 using SipPOS.Views.Staff;
+using SipPOS.Views.Cashier;
 using SipPOS.Views.Configuration;
 using SipPOS.Views.Inventory;
+using SipPOS.Views.Promotion;
+using SipPOS.Models.General;
 using SipPOS.DataTransfer.Entity;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Services.Authentication.Implementations;
-
 using SipPOS.Services.Accessibility.Interfaces;
-using Windows.ApplicationModel.PackageExtensions;
-using Microsoft.UI.Xaml.Controls;
-using SipPOS.Views.Cashier;
-using SipPOS.Models.General;
-using SipPOS.Views.Promotion;
 
 namespace SipPOS.ViewModels.General;
 
@@ -284,6 +282,9 @@ public class MainMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the user can access the Cashier Menu.
+    /// </summary>
     public bool CanAccessCashierMenu
     {
         get => _canAccessCashierMenu;
@@ -294,6 +295,9 @@ public class MainMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the user can access the Inventory Menu.
+    /// </summary>
     public bool CanAccessInventoryMenu
     {
         get => _canAccessInventoryMenu;
@@ -304,6 +308,9 @@ public class MainMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the user can access the Staff Management Menu.
+    /// </summary>
     public bool CanAccessStaffManagementMenu
     {
         get => _canAccessStaffManagementMenu;
@@ -314,6 +321,9 @@ public class MainMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the user can access the Profile Menu.
+    /// </summary>
     public bool CanAccessProfileMenu
     {
         get => _canAccessProfileMenu;
@@ -324,6 +334,9 @@ public class MainMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the user can access the Invoice History Menu.
+    /// </summary>
     public bool CanAccessInvoiceHistoryMenu
     {
         get => _canAccessOrderHistoryMenu;
@@ -332,8 +345,11 @@ public class MainMenuViewModel : INotifyPropertyChanged
             _canAccessOrderHistoryMenu = value;
             OnPropertyChanged(nameof(CanAccessInvoiceHistoryMenu));
         }
-    }    
+    }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the user can access the Revenue Dashboard Menu.
+    /// </summary>
     public bool CanAccessRevenueDashboardMenu
     {
         get => _canAccessRevenueDashboardMenu;
@@ -344,6 +360,9 @@ public class MainMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the user can access the Special Offers Management Menu.
+    /// </summary>
     public bool CanAccessSpecialOffersManagementMenu
     {
         get => _canAccessSpecialOffersManagementMenu;
@@ -354,6 +373,9 @@ public class MainMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the user can access the Configuration Menu.
+    /// </summary>
     public bool CanAccessConfigurationMenu
     {
         get => _canAccessConfigurationMenu;

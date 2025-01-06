@@ -5,8 +5,6 @@ using Microsoft.UI.Xaml.Controls;
 
 using SipPOS.Views.General;
 using SipPOS.Views.Login;
-using SipPOS.Views.Setup;
-using SipPOS.ViewModels.Login;
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.Authentication.Interfaces;
@@ -15,6 +13,9 @@ using SipPOS.Services.Configuration.Interfaces;
 
 namespace SipPOS.ViewModels.Login;
 
+/// <summary>
+/// ViewModel for handling store login and logout operations.
+/// </summary>
 public class StoreLoginViewModel : INotifyPropertyChanged
 {
     // Data-bound properties
@@ -26,6 +27,9 @@ public class StoreLoginViewModel : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StoreLoginViewModel"/> class.
+    /// </summary>
     public StoreLoginViewModel()
     {
         _saveStoreCredentials = false;
@@ -172,11 +176,18 @@ public class StoreLoginViewModel : INotifyPropertyChanged
         App.NavigateTo(typeof(StoreAccountCreationView));
     }
 
+    /// <summary>
+    /// Raises the <see cref="PropertyChanged"/> event.
+    /// </summary>
+    /// <param name="propertyName">The name of the property that changed.</param>
     public void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
+    /// <summary>
+    /// Gets or sets the visibility of the store login form.
+    /// </summary>
     public Visibility StoreLoginFormVisibility
     {
         get => _storeLoginFormVisibility;
@@ -187,6 +198,9 @@ public class StoreLoginViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the visibility of the store logout button.
+    /// </summary>
     public Visibility StoreLogoutButtonVisibility
     {
         get => _storeLogoutButtonVisibility;
@@ -197,6 +211,9 @@ public class StoreLoginViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the last login status of the store.
+    /// </summary>
     public string StoreLastLoginStatus
     {
         get => _storeLastLoginStatus;

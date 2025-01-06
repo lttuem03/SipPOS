@@ -13,6 +13,9 @@ using SipPOS.DataTransfer.Entity;
 
 namespace SipPOS.ViewModels.Cashier;
 
+// THIS IS THE OLD VERSION OF THE QR-PAY FEATURE,
+// WE NO LONGER USES THIS
+
 /// <summary>
 /// ViewModel for handling customer payments.
 /// </summary>

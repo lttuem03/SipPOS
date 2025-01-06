@@ -1,26 +1,26 @@
 ﻿using System.Collections.ObjectModel;
 
+using Microsoft.UI.Xaml;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 
-using SipPOS.Services.Entity.Interfaces;
+using SipPOS.Models.General;
 using SipPOS.DataTransfer.Entity;
 using SipPOS.DataTransfer.General;
-using SipPOS.Models.General;
-using Microsoft.UI.Xaml;
+using SipPOS.Services.Entity.Interfaces;
 
 namespace SipPOS.ViewModels.Inventory;
 
+/// <summary>
+/// ViewModel for managing special offers, including CRUD operations and filtering.
+/// </summary>
 public partial class SpecialOfferManagementViewModel : ObservableRecipient
 {
-
     public ObservableCollection<SpecialOfferDto> SpecialOffers { get; } = new ObservableCollection<SpecialOfferDto>();
-
     public ObservableCollection<CategoryDto> Categories { get; } = new ObservableCollection<CategoryDto>();
     public ObservableCollection<ProductDto> Products { get; } = new ObservableCollection<ProductDto>();
     public ObservableCollection<ProductDto> ProductsFilter { get; } = new ObservableCollection<ProductDto>();
-
     public ObservableCollection<CategoryDto> CategoriesFilter { get; } = new ObservableCollection<CategoryDto>();
-
     public ObservableCollection<StatusItem> StatusItems { get; } = new ObservableCollection<StatusItem>()
     {
         new() { Label = "Chưa áp dụng", Value = "Inactive" },
@@ -116,6 +116,12 @@ public partial class SpecialOfferManagementViewModel : ObservableRecipient
     private readonly ICategoryService _categoryService;
     private readonly IProductService _productService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SpecialOfferManagementViewModel"/> class.
+    /// </summary>
+    /// <param name="specialOffersService">The service for managing special offers.</param>
+    /// <param name="categoryService">The service for managing categories.</param>
+    /// <param name="productService">The service for managing products.</param>
     public SpecialOfferManagementViewModel(ISpecialOfferService specialOffersService, ICategoryService categoryService, IProductService productService)
     {
         _specialOffersService = specialOffersService;
@@ -123,6 +129,9 @@ public partial class SpecialOfferManagementViewModel : ObservableRecipient
         _productService = productService;
     }
 
+    /// <summary>
+    /// Updates the list of special offers with pagination and sorting.
+    /// </summary>
     public async void UpdateSpecialOfferList()
     {
         SpecialOffers.Clear();
@@ -152,6 +161,10 @@ public partial class SpecialOfferManagementViewModel : ObservableRecipient
         }
     }
 
+    /// <summary>
+    /// Inserts a new special offer.
+    /// </summary>
+    /// <returns>The inserted special offer, or null if validation fails.</returns>
     public async Task<SpecialOfferDto?> Insert()
     {
         if (SelectedSpecialOffer == null)
@@ -214,6 +227,10 @@ public partial class SpecialOfferManagementViewModel : ObservableRecipient
         return result;
     }
 
+    /// <summary>
+    /// Updates an existing special offer by its ID.
+    /// </summary>
+    /// <returns>The updated special offer, or null if validation fails.</returns>
     public async Task<SpecialOfferDto?> UpdateById()
     {
         if (SelectedSpecialOffer == null)
@@ -270,6 +287,9 @@ public partial class SpecialOfferManagementViewModel : ObservableRecipient
         return result;
     }
 
+    /// <summary>
+    /// Retrieves all categories and updates the Categories and CategoriesFilter collections.
+    /// </summary>
     public async void GetAllCategory()
     {
         Categories.Clear();
@@ -285,6 +305,9 @@ public partial class SpecialOfferManagementViewModel : ObservableRecipient
         }
     }
 
+    /// <summary>
+    /// Retrieves all products and updates the Products and ProductsFilter collections.
+    /// </summary>
     public async void GetAllProduct()
     {
         Products.Clear();
@@ -300,6 +323,9 @@ public partial class SpecialOfferManagementViewModel : ObservableRecipient
         }
     }
 
+    /// <summary>
+    /// Deletes special offers by their IDs and updates the special offer list.
+    /// </summary>
     public async void DeleteByIds()
     {
         List<long> ids = SpecialOffers.Where(x => x.IsSelected && x.Id.HasValue).

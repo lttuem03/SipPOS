@@ -8,18 +8,12 @@ public class Position : IComparable<Position>
     /// <summary>
     /// Gets the access level of the position.
     /// </summary>
-    public int AccessLevel
-    {
-        get;
-    }
+    public int AccessLevel { get; }
 
     /// <summary>
     /// Gets the name of the position.
     /// </summary>
-    public string Name
-    {
-        get;
-    }
+    public string Name { get; }
 
     /// <summary>
     /// Represents the Staff position.

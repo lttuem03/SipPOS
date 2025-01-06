@@ -3,16 +3,14 @@ using System.Text.RegularExpressions;
 
 using Microsoft.UI.Xaml.Controls;
 
-using SipPOS.Context.Configuration.Interfaces;
-
-using SipPOS.Services.General.Interfaces;
-using SipPOS.Services.General.Implementations;
 using SipPOS.Resources.Controls;
 using SipPOS.Models.Entity;
-using SipPOS.Services.Configuration.Interfaces;
 using SipPOS.DataTransfer.General;
+using SipPOS.Services.General.Interfaces;
+using SipPOS.Services.General.Implementations;
+using SipPOS.Services.Configuration.Interfaces;
 using SipPOS.Services.DataAccess.Interfaces;
-using Windows.Media.Capture;
+using SipPOS.Context.Configuration.Interfaces;
 
 namespace SipPOS.ViewModels.Configuration;
 
@@ -72,11 +70,19 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         OperatingHoursText = $"{_currentConfiguration.OpeningTime.ToString("HH:mm")} đến {_currentConfiguration.ClosingTime.ToString("HH:mm")}";
     }
 
+    /// <summary>
+    /// Raises the PropertyChanged event.
+    /// </summary>
+    /// <param name="propertyName">The name of the property that changed.</param>
     public void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
+    /// <summary>
+    /// Handles the modification of editable text fields and enables the save button if changes are detected.
+    /// </summary>
+    /// <param name="saveChangesOnStoreConfigurationButton">The button to enable if changes are detected.</param>
     public void HandleEditableTextFieldTextModified(Button saveChangesOnStoreConfigurationButton)
     {
         if (_currentStore == null)
@@ -93,6 +99,11 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the change of the opening hour time picker and updates the operating hours text.
+    /// </summary>
+    /// <param name="newOpeningTime">The new opening time.</param>
+    /// <param name="saveChangesOnStoreConfigurationButton">The button to enable if changes are detected.</param>
     public void HandleEditOpeningHourTimePickerSelectedTimeChanged(TimeSpan newOpeningTime, Button saveChangesOnStoreConfigurationButton)
     {
         if (_currentConfiguration == null)
@@ -107,6 +118,11 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         saveChangesOnStoreConfigurationButton.IsEnabled = true;
     }
 
+    /// <summary>
+    /// Handles the change of the closing hour time picker and updates the operating hours text.
+    /// </summary>
+    /// <param name="newClosingTime">The new closing time.</param>
+    /// <param name="saveChangesOnStoreConfigurationButton">The button to enable if changes are detected.</param>
     public void HandleEditClosingHourTimePickerSelectedTimeChanged(TimeSpan newClosingTime, Button saveChangesOnStoreConfigurationButton)
     {
         if (_currentConfiguration == null)
@@ -121,6 +137,11 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         saveChangesOnStoreConfigurationButton.IsEnabled = true;
     }
 
+    /// <summary>
+    /// Handles the save button click event to save changes to the store configuration.
+    /// </summary>
+    /// <param name="editStoreConfigurationResultContentDialog">The content dialog to show the result of the save operation.</param>
+    /// <param name="saveChangesOnStoreConfigurationButton">The button to disable after saving changes.</param>
     public async void HandleSaveChangesOnStoreConfigurationButtonClick(ContentDialog editStoreConfigurationResultContentDialog, Button saveChangesOnStoreConfigurationButton)
     {
         // Other validations is already done in "SaveClicked" event handlers
@@ -183,7 +204,7 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
 
         storeAuthenticationService.Context.ClearStore();
         storeAuthenticationService.Context.SetStore(new Store(currentStoreId, updatedStoreDto));
-        
+
         _currentStore = storeAuthenticationService.Context.CurrentStore;
 
         await configurationService.LoadAsync(currentStoreId);
@@ -207,6 +228,10 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         showResultContentDialog("Cập nhật thiết lập cửa hàng thành công", editStoreConfigurationResultContentDialog);
     }
 
+    /// <summary>
+    /// Handles the cancel button click event to reset changes to the store configuration.
+    /// </summary>
+    /// <param name="saveChangesOnStoreConfigurationButton">The button to disable after canceling changes.</param>
     public void HandleCancelChangesOnStoreConfigurationButtonClick(Button saveChangesOnStoreConfigurationButton)
     {
         resetToCurrentStoreConfiguration();
@@ -214,6 +239,11 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         saveChangesOnStoreConfigurationButton.IsEnabled = false;
     }
 
+    /// <summary>
+    /// Handles the save click event for the store name editable text field.
+    /// </summary>
+    /// <param name="storeNameErrorMessageTeachingTip">The teaching tip to show error messages.</param>
+    /// <param name="storeNameEditableTextField">The editable text field for the store name.</param>
     public void HandleStoreNameEditableTextFieldSaveClicked
     (
         TeachingTip storeNameErrorMessageTeachingTip,
@@ -228,6 +258,11 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the save click event for the store address editable text field.
+    /// </summary>
+    /// <param name="storeAddressErrorMessageTeachingTip">The teaching tip to show error messages.</param>
+    /// <param name="storeAddressEditableTextField">The editable text field for the store address.</param>
     public void HandleStoreAddressEditableTextFieldSaveClicked
     (
         TeachingTip storeAddressErrorMessageTeachingTip,
@@ -242,6 +277,11 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the save click event for the store email editable text field.
+    /// </summary>
+    /// <param name="storeEmailErrorMessageTeachingTip">The teaching tip to show error messages.</param>
+    /// <param name="storeEmailEditableTextField">The editable text field for the store email.</param>
     public void HandleStoreEmailEditableTextFieldSaveClicked
     (
         TeachingTip storeEmailErrorMessageTeachingTip,
@@ -267,6 +307,11 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the save click event for the store telephone editable text field.
+    /// </summary>
+    /// <param name="storeTelErrorMessageTeachingTip">The teaching tip to show error messages.</param>
+    /// <param name="storeTelEditableTextField">The editable text field for the store telephone.</param>
     public void HandleStoreTelEditableTextFieldSaveClicked
     (
         TeachingTip storeTelErrorMessageTeachingTip,
@@ -293,6 +338,9 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Resets the editable fields to the current store configuration.
+    /// </summary>
     private void resetToCurrentStoreConfiguration()
     {
         EditStoreNameText = _currentStore == null ? "Lỗi đăng nhập" : _currentStore.Name;
@@ -308,6 +356,10 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         EditOperatingHoursErrorMessageOpacity = 0.0F;
     }
 
+    /// <summary>
+    /// Validates the operating hours to ensure the opening time is before the closing time.
+    /// </summary>
+    /// <returns>True if the operating hours are valid, otherwise false.</returns>
     private bool validateOperatingHours()
     {
         var allFieldsValid = true;
@@ -328,6 +380,11 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         return allFieldsValid;
     }
 
+    /// <summary>
+    /// Shows a content dialog with the specified message.
+    /// </summary>
+    /// <param name="message">The message to display in the content dialog.</param>
+    /// <param name="editStoreConfigurationContentDialog">The content dialog to show the message.</param>
     private async void showResultContentDialog(string message, ContentDialog editStoreConfigurationContentDialog)
     {
         editStoreConfigurationContentDialog.Content = message;
@@ -387,6 +444,9 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the store opening time.
+    /// </summary>
     public TimeSpan EditOpeningTime
     {
         get => _editOpeningTime;
@@ -397,6 +457,9 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the store closing time.
+    /// </summary>
     public TimeSpan EditClosingTime
     {
         get => _editClosingTime;
@@ -407,6 +470,9 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the opacity of the operating hours error message.
+    /// </summary>
     public float EditOperatingHoursErrorMessageOpacity
     {
         get => _editOperatingHoursErrorMessageOpacity;
@@ -417,6 +483,9 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text of the operating hours error message.
+    /// </summary>
     public string EditOperatingHoursErrorMessageText
     {
         get => _editOperatingHoursErrorMessageText;
@@ -427,6 +496,9 @@ public class StoreConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the operating hours text.
+    /// </summary>
     public string OperatingHoursText
     {
         get => _operatingHoursText;

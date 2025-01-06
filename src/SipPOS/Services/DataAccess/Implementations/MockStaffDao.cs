@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
-using SipPOS.DataTransfer.Entity;
+
 using SipPOS.Models.Entity;
+using SipPOS.DataTransfer.Entity;
 using SipPOS.Services.DataAccess.Interfaces;
 
 namespace SipPOS.Services.DataAccess.Implementations;

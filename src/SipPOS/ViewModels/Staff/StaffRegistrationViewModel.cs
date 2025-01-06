@@ -2,8 +2,8 @@
 
 using Microsoft.UI.Xaml.Controls;
 
-using SipPOS.DataTransfer.Entity;
 using SipPOS.Views.Staff;
+using SipPOS.DataTransfer.Entity;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.DataAccess.Interfaces;

@@ -2,16 +2,16 @@
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
+using Microsoft.UI.Xaml.Controls;
+
 using SipPOS.Views.General;
 using SipPOS.Views.Staff;
 using SipPOS.DataTransfer.Entity;
-
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Services.Authentication.Implementations;
-using Microsoft.UI.Xaml.Controls;
 using SipPOS.Resources.Controls;
 
 namespace SipPOS.ViewModels.Staff;

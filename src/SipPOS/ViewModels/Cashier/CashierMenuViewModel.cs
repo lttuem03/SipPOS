@@ -1,36 +1,30 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Drawing;
 using System.ComponentModel;
 
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Controls;
 
 using SipPOS.Resources.Helper;
-using SipPOS.DataTransfer.Entity;
+using SipPOS.Views.Login;
 using SipPOS.Models.Entity;
+using SipPOS.DataTransfer.Entity;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.General.Interfaces;
-using SipPOS.Services.Configuration.Interfaces;
-using SipPOS.Context.Configuration.Interfaces;
 using SipPOS.Services.Authentication.Interfaces;
-using System;
+using SipPOS.Services.Entity.Interfaces;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.Authentication.Implementations;
-using Microsoft.VisualBasic;
-using Microsoft.UI.Xaml;
-using System.Linq;
+using SipPOS.Context.Configuration.Interfaces;
 
-using Microsoft.UI.Xaml.Media.Imaging;
+using QRCoder;
 using Net.payOS;
 using Net.payOS.Types;
-using System.Drawing;
-using QRCoder;
-using SipPOS.Views.Login;
-using SipPOS.Services.Entity.Interfaces;
-using SipPOS.Services.Entity.Implementations;
-
-
 
 namespace SipPOS.ViewModels.Cashier;
 
+/// <summary>
+/// ViewModel for the cashier menu, handling various operations such as item search, category browsing, order management, and payment processing.
+/// </summary>
 public class CashierMenuViewModel : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -73,10 +67,17 @@ public class CashierMenuViewModel : INotifyPropertyChanged
 
     private string _qrPayOrderCodeString = string.Empty;
 
-    private ITextToSpeechService textToSpeechService;
+    private readonly ITextToSpeechService textToSpeechService;
 
     private readonly PayOS payOsClient;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CashierMenuViewModel"/> class.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the store authentication service, staff authentication service, or configuration is not registered or loaded,
+    /// or when the store or staff is not logged in.
+    /// </exception>
     public CashierMenuViewModel()
     {
         var currentConfiguration = App.GetService<IConfigurationContext>().GetConfiguration();
@@ -116,6 +117,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         _ = Initialize();
     }
 
+    /// <summary>
+    /// Asynchronously initializes the ViewModel by loading configuration, categories, products, and special offers.
+    /// </summary>
     private async Task Initialize()
     {
         var storeId = App.GetService<IStoreAuthenticationService>().GetCurrentStoreId();
@@ -174,11 +178,19 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         _newInvoiceDto.Id = await App.GetService<IInvoiceDao>().GetNextInvoiceIdAsync(storeId);
     }
 
+    /// <summary>
+    /// Handles the text changed event of the item search TextBox.
+    /// </summary>
+    /// <param name="keywords">The search keywords.</param>
     public void HandleItemSearchTextBoxTextChanged(string keywords)
     {
         ProductsOnDisplay = _allProducts.Where(p => p.Name.Contains(keywords)).ToList();
     }
 
+    /// <summary>
+    /// Handles the selection changed event of the category browsing GridView.
+    /// </summary>
+    /// <param name="selectedCategory">The selected category.</param>
     public void HandleCategoryBrowsingGridViewSelectionChanged(Category selectedCategory)
     {
         // "All category" selected
@@ -191,6 +203,12 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         ProductsOnDisplay = _allProducts.Where(p => p.CategoryId == selectedCategory.Id).ToList();
     }
 
+    /// <summary>
+    /// Handles the add item to order button click event.
+    /// </summary>
+    /// <param name="productItem">The product item to add.</param>
+    /// <param name="couponNotApplicableWarningTextBlock">The TextBlock to display a warning if the coupon is not applicable.</param>
+    /// <returns>The added invoice item.</returns>
     public InvoiceItemDto HandleAddItemToOrderButtonClick(Product productItem, TextBlock couponNotApplicableWarningTextBlock)
     {
         if (InvoiceItems.Count == 0)
@@ -253,6 +271,11 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         return invoiceItemDto;
     }
 
+    /// <summary>
+    /// Handles the remove item from order button click event.
+    /// </summary>
+    /// <param name="invoiceItemDto">The invoice item to remove.</param>
+    /// <param name="couponNotApplicableWarningTextBlock">The TextBlock to display a warning if the coupon is not applicable.</param>
     public void HandleRemoveItemFromOrderButtonClick(InvoiceItemDto invoiceItemDto, TextBlock couponNotApplicableWarningTextBlock)
     {
         long? specialOfferProductId = null;
@@ -332,6 +355,10 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the cancel order button click event.
+    /// </summary>
+    /// <param name="cancelOrderConfimationContentDialog">The content dialog to confirm order cancellation.</param>
     public async void HandleCancelOrderButtonClick(ContentDialog cancelOrderConfimationContentDialog)
     {
         if (InvoiceItems.Count == 0)
@@ -353,6 +380,10 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the selection changed event of the payment method radio buttons.
+    /// </summary>
+    /// <param name="selectedIndex">The index of the selected payment method.</param>
     public void HandlePaymentMethodRadioButtonsSelectionChanged(int selectedIndex)
     {
         ResetPaymentMonetaryDetails();
@@ -368,12 +399,20 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the add amount button click event on the numpad.
+    /// </summary>
+    /// <param name="amount">The amount to add.</param>
     public void HandleNumpadAddAmountButtonClick(decimal amount)
     {
         NewInvoiceCustomerPaid += amount;
         NewInvoiceChange = Math.Max(0, NewInvoiceCustomerPaid - NewInvoiceTotal);
     }
 
+    /// <summary>
+    /// Handles the number button click event on the numpad.
+    /// </summary>
+    /// <param name="numberText">The text of the number button clicked.</param>
     public void HandleNumpadNumberButtonClick(string numberText)
     {
         if (numberText == "000")
@@ -391,17 +430,28 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         NewInvoiceChange = Math.Max(0, NewInvoiceCustomerPaid - NewInvoiceTotal);
     }
 
+    /// <summary>
+    /// Handles the clear amount button click event on the numpad.
+    /// </summary>
     public void HandleNumpadClearAmountButtonClick()
     {
         ResetPaymentMonetaryDetails();
     }
 
+    /// <summary>
+    /// Handles the backspace button click event on the numpad.
+    /// </summary>
     public void HandleNumpadBackspaceButtonClick()
     {
         NewInvoiceCustomerPaid = Math.Floor(NewInvoiceCustomerPaid / 10);
         NewInvoiceChange = Math.Max(0, NewInvoiceCustomerPaid - NewInvoiceTotal);
     }
 
+    /// <summary>
+    /// Proceeds with the payment process.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the invoice insertion fails.</exception>
     public async Task ProceedWithPayment()
     {
         // All validation passed at this point
@@ -418,7 +468,7 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         foreach (var invoiceItem in InvoiceItems)
         {
             invoiceItem.InvoiceId = NewInvoiceId;
-            
+
             _newInvoiceDto.InvoiceItems.Add(invoiceItem);
 
             // Update ItemsSold for the products
@@ -462,7 +512,7 @@ public class CashierMenuViewModel : INotifyPropertyChanged
 
             throw new InvalidOperationException("Failed to insert new invoice");
         }
-        
+
         // Update the _allProducts where the "ItemsSold" for the product has changed
         foreach (var productId in updateItemsSoldProductIds)
         {
@@ -534,6 +584,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         NewInvoiceCouponCode = string.Empty;
     }
 
+    /// <summary>
+    /// Notifies the user of a successful payment.
+    /// </summary>
     public void NotifyPaymentSuccess()
     {
         if (NewInvoicePaymentMethod == "CASH")
@@ -546,6 +599,10 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the creation of a QR payment code.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task HandleCreateQrPaymentCodeButtonClick()
     {
         // Setup Payment link to use with PayOS
@@ -580,6 +637,10 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         QrPaySecondsRemaining = QRPAY_EXPIRE_DURATION_IN_SECONDS;
     }
 
+    /// <summary>
+    /// Checks if the QR payment has been completed.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation, with a boolean result indicating whether the payment is completed.</returns>
     public async Task<bool> CheckQrPaymentCompleted()
     {
         if (QrPaySecondsRemaining <= 0)
@@ -593,7 +654,7 @@ public class CashierMenuViewModel : INotifyPropertyChanged
             return false;
 
         PaymentLinkInformation paymentLinkInformation = await payOsClient.getPaymentLinkInformation(QrPayOrderCode);
-    
+
         if (paymentLinkInformation.status == "PAID")
         {
             await handlePaymentComplete();
@@ -604,6 +665,10 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         return false;
     }
 
+    /// <summary>
+    /// Handles the completion of a payment.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task handlePaymentComplete()
     {
         // Reset QR-Pay properties, be ready for next time
@@ -618,6 +683,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         await ProceedWithPayment();
     }
 
+    /// <summary>
+    /// Handles the timeout of a QR payment.
+    /// </summary>
     public void HandleQrPaymentTimeout()
     {
         // Cancel payment link (no need, it auto-expires)
@@ -635,6 +703,10 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         // (check timer constructor of CashierMenuView)
     }
 
+    /// <summary>
+    /// Validates the payment monetary details.
+    /// </summary>
+    /// <returns>A string containing the validation message, or an empty string if validation passes.</returns>
     public string ValidatePaymentMonetaryDetails()
     {
         if (NewInvoiceCustomerPaid % 500 != 0)
@@ -649,12 +721,20 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         return "";
     }
 
+    /// <summary>
+    /// Resets the payment monetary details.
+    /// </summary>
     public void ResetPaymentMonetaryDetails()
     {
         NewInvoiceChange = 0m;
         NewInvoiceCustomerPaid = 0m;
     }
 
+    /// <summary>
+    /// Handles the application of a coupon when the apply coupon button is clicked.
+    /// </summary>
+    /// <param name="specialOffer">The special offer to apply.</param>
+    /// <returns>True if the coupon was successfully applied, otherwise false.</returns>
     public bool HandleApplyCouponButtonClick(SpecialOffer specialOffer)
     {
         switch (specialOffer.Type)
@@ -663,7 +743,7 @@ public class CashierMenuViewModel : INotifyPropertyChanged
                 // Search in the current order item list,
                 // for any product that matches the special offer
                 // product id (ONLY ONE IS APPLICABLE)
-                foreach(var invoiceItem in InvoiceItems)
+                foreach (var invoiceItem in InvoiceItems)
                 {
                     if (invoiceItem.ProductId == specialOffer.ProductId)
                     {
@@ -746,6 +826,11 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         return false;
     }
 
+    /// <summary>
+    /// Handles the application of a hidden coupon.
+    /// </summary>
+    /// <param name="hiddenCoupon">The hidden coupon code.</param>
+    /// <returns>True if the hidden coupon was successfully applied, otherwise false.</returns>
     public bool HandleApplyHiddenCoupon(string hiddenCoupon)
     {
         // The hidden coupon is not implemented yet
@@ -754,8 +839,8 @@ public class CashierMenuViewModel : INotifyPropertyChanged
 
         // Reset discount information
         NewInvoiceTotalDiscount = 0m;
-        
-        foreach(var invoiceItem in InvoiceItems)
+
+        foreach (var invoiceItem in InvoiceItems)
         {
             invoiceItem.Discount = 0m;
         }
@@ -765,6 +850,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         return false;
     }
 
+    /// <summary>
+    /// Handles the change of staff ID button click event.
+    /// </summary>
     public void HandleChangeStaffIdButtonClick()
     {
         if (App.GetService<IStaffAuthenticationService>() is not StaffAuthenticationService staffAuthenticationService)
@@ -777,11 +865,20 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         App.NavigateTo(typeof(LoginView));
     }
 
+    /// <summary>
+    /// Raises the PropertyChanged event.
+    /// </summary>
+    /// <param name="propertyName">The name of the property that changed.</param>
     private void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
+    /// <summary>
+    /// Converts a Bitmap to a BitmapImage.
+    /// </summary>
+    /// <param name="bitmap">The Bitmap to convert.</param>
+    /// <returns>A BitmapImage created from the Bitmap.</returns>
     private BitmapImage ConvertBitmapToBitmapImage(Bitmap bitmap)
     {
         using MemoryStream memoryStream = new MemoryStream();
@@ -793,16 +890,23 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         return bitmapImage;
     }
 
+    /// <summary>
+    /// Generates a QR code asynchronously.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the generated QR code as a BitmapImage.</returns>
     private Task<BitmapImage> GenerateQrCodeAsync()
     {
         using QRCodeGenerator qrGenerator = new();
         using QRCode qrCode = new QRCode(qrGenerator.CreateQrCode(_qrCodeData, QRCodeGenerator.ECCLevel.Q));
-        
+
         Bitmap qrCodeImage = qrCode.GetGraphic(20);
-        
+
         return Task.FromResult(ConvertBitmapToBitmapImage(qrCodeImage));
     }
 
+    /// <summary>
+    /// Gets or sets the list of categories.
+    /// </summary>
     public List<Category> Categories
     {
         get => _categories;
@@ -813,6 +917,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the list of products on display.
+    /// </summary>
     public List<Product> ProductsOnDisplay
     {
         get => _productsOnDisplay;
@@ -823,6 +930,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the collection of special offers.
+    /// </summary>
     public TrulyObservableCollection<SpecialOffer> SpecialOffers
     {
         get => _specialOffers;
@@ -833,6 +943,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the collection of invoice items.
+    /// </summary>
     public TrulyObservableCollection<InvoiceItemDto> InvoiceItems
     {
         get => _invoiceItems;
@@ -843,6 +956,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the VAT rate string.
+    /// </summary>
     public string VatRateString
     {
         get => _vatRateString;
@@ -853,6 +969,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the VAT message string.
+    /// </summary>
     public string VatMessageString
     {
         get => _vatMessageString;
@@ -863,6 +982,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the new invoice ID.
+    /// </summary>
     public long NewInvoiceId
     {
         get => _newInvoiceDto.Id;
@@ -873,6 +995,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the creation date and time of the new invoice.
+    /// </summary>
     public DateTime NewInvoiceCreatedAt
     {
         get => _newInvoiceDto.CreatedAt;
@@ -883,6 +1008,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the item count of the new invoice.
+    /// </summary>
     public long NewInvoiceItemCount
     {
         get => _newInvoiceDto.ItemCount;
@@ -893,6 +1021,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the subtotal of the new invoice.
+    /// </summary>
     public decimal NewInvoiceSubTotal
     {
         get => _newInvoiceDto.SubTotal;
@@ -903,6 +1034,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the total discount of the new invoice.
+    /// </summary>
     public decimal NewInvoiceTotalDiscount
     {
         get => _newInvoiceDto.TotalDiscount;
@@ -913,6 +1047,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the invoice-based VAT for the new invoice.
+    /// </summary>
     public decimal NewInvoiceInvoiceBasedVAT
     {
         get => _newInvoiceDto.InvoiceBasedVAT;
@@ -923,6 +1060,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the total amount for the new invoice.
+    /// </summary>
     public decimal NewInvoiceTotal
     {
         get => _newInvoiceDto.Total;
@@ -933,6 +1073,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the amount paid by the customer for the new invoice.
+    /// </summary>
     public decimal NewInvoiceCustomerPaid
     {
         get => _newInvoiceDto.CustomerPaid;
@@ -943,6 +1086,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the change to be given to the customer for the new invoice.
+    /// </summary>
     public decimal NewInvoiceChange
     {
         get => _newInvoiceDto.Change;
@@ -953,6 +1099,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the coupon code applied to the new invoice.
+    /// </summary>
     public string NewInvoiceCouponCode
     {
         get => _newInvoiceDto.CouponCode;
@@ -963,6 +1112,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the payment method used for the new invoice.
+    /// </summary>
     public string NewInvoicePaymentMethod
     {
         get => _newInvoiceDto.PaymentMethod;
@@ -973,6 +1125,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the QR code image.
+    /// </summary>
     public BitmapImage QrCode
     {
         get => _qrCode;
@@ -983,6 +1138,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the remaining seconds for QR payment expiration.
+    /// </summary>
     public long QrPaySecondsRemaining
     {
         get => _qrPaySecondsRemaining;
@@ -993,6 +1151,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the QR payment order code.
+    /// </summary>
     public long QrPayOrderCode
     {
         get => _qrPayOrderCode;
@@ -1004,6 +1165,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the QR payment account number.
+    /// </summary>
     public string QrPayAccountNumber
     {
         get => _qrPayAccountNumber;
@@ -1014,6 +1178,9 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the QR payment order code as a string.
+    /// </summary>
     public string QrPayOrderCodeString
     {
         get => _qrPayOrderCodeString;

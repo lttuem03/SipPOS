@@ -8,7 +8,6 @@ using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Services.Authentication.Implementations;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.General.Interfaces;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SipPOS.ViewModels.Login;
 

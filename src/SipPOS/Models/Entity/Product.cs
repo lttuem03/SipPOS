@@ -60,10 +60,20 @@ public class Product : BaseEntity, INotifyPropertyChanged
     /// </summary>
     public string Status { get; set; } = string.Empty;
 
+    /// <summary>
+    /// The currently selected option for the product.
+    /// </summary>
     private (string name, decimal price) _selectedOption = ("Chưa chọn loại", 0m);
 
+    /// <summary>
+    /// Occurs when a property value changes.
+    /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    /// <summary>
+    /// Raises the PropertyChanged event.
+    /// </summary>
+    /// <param name="propertyName">Name of the property that changed.</param>
     public void OnPropertyChanged(string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

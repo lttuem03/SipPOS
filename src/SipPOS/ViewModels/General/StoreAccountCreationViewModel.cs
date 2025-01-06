@@ -3,13 +3,16 @@
 using Microsoft.UI.Xaml.Controls;
 
 using SipPOS.Views.Setup;
+using SipPOS.Models.Entity;
 using SipPOS.DataTransfer.Entity;
 using SipPOS.Services.Account.Interfaces;
 using SipPOS.Services.General.Interfaces;
-using SipPOS.Models.Entity;
 
 namespace SipPOS.ViewModels.General;
 
+/// <summary>
+/// ViewModel for managing the creation of store accounts.
+/// </summary>
 public class StoreAccountCreationViewModel : INotifyPropertyChanged
 {
     // Properties used for data binding -> Implement setter that fires a PropertyChanged event

@@ -1,18 +1,14 @@
 ﻿using System.ComponentModel;
 
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-using SipPOS.Context.Configuration.Interfaces;
+using SipPOS.Models.Entity;
+using SipPOS.DataTransfer.Entity;
 using SipPOS.Services.General.Implementations;
 using SipPOS.Services.General.Interfaces;
 using SipPOS.Services.DataAccess.Interfaces;
-using System.Collections.ObjectModel;
-using SipPOS.Models.Entity;
+using SipPOS.Context.Configuration.Interfaces;
 using SipPOS.Resources.Helper;
-using SipPOS.DataTransfer.Entity;
-using System.Security.Cryptography;
-using Microsoft.UI.Xaml.Media;
 
 namespace SipPOS.ViewModels.Cashier;
 
@@ -55,6 +51,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
     private decimal _currentInvoiceChange = 0m;
     private string _currentInvoiceCouponCode = string.Empty;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="InvoiceHistoryViewModel"/> class.
+    /// </summary>
     public InvoiceHistoryViewModel()
     {
         var currentConfiguration = App.GetService<IConfigurationContext>().GetConfiguration();
@@ -98,10 +97,13 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
+    /// <summary>
+    /// Updates the invoice list based on the current filters and pagination settings.
+    /// </summary>
     private async Task UpdateInvoiceList()
     {
         var invoiceDao = App.GetService<IInvoiceDao>();
-        
+
         var totalCount = await invoiceDao.GetTotalCountWithDateTimeFilterAsync
         (
             storeId: CurrentStore.Id,
@@ -156,6 +158,10 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
             CurrentInvoice = _noInvoiceSelected;
     }
 
+    /// <summary>
+    /// Handles the selection change event of the invoice list view.
+    /// </summary>
+    /// <param name="invoiceListView">The invoice list view.</param>
     public void HandleInvoiceListViewSelectionChanged(ListView invoiceListView)
     {
         var selectedIndex = invoiceListView.SelectedIndex;
@@ -166,24 +172,39 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         CurrentInvoice = CurrentPageInvoiceList[selectedIndex];
     }
 
+    /// <summary>
+    /// Handles the date change event of the calendar date picker.
+    /// </summary>
+    /// <param name="newDate">The new date selected.</param>
     public async Task HandleDateCalendarDatePickerDateChanged(DateTime newDate)
     {
         DateFilter = DateOnly.FromDateTime(newDate);
         await UpdateInvoiceList();
     }
 
+    /// <summary>
+    /// Handles the time change event of the from time picker.
+    /// </summary>
+    /// <param name="newFromTime">The new from time selected.</param>
     public async Task HandleFromTimePickerTimeChanged(TimeSpan newFromTime)
     {
         FromTimeFilter = TimeOnly.FromTimeSpan(newFromTime);
         await UpdateInvoiceList();
     }
 
+    /// <summary>
+    /// Handles the time change event of the to time picker.
+    /// </summary>
+    /// <param name="newToTime">The new to time selected.</param>
     public async Task HandleToTimePickerTimeChanged(TimeSpan newToTime)
     {
         ToTimeFilter = TimeOnly.FromTimeSpan(newToTime);
         await UpdateInvoiceList();
     }
 
+    /// <summary>
+    /// Handles the click event of the previous page button.
+    /// </summary>
     public async Task HandlePreviousPageButtonClick()
     {
         if (CurrentPage - 1 >= 1)
@@ -193,6 +214,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the click event of the next page button.
+    /// </summary>
     public async Task HandleNextPageButtonClick()
     {
         if (CurrentPage + 1 <= TotalPages)
@@ -202,6 +226,10 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the selection change event of the rows per page combo box.
+    /// </summary>
+    /// <param name="comboBoxIndex">The selected index of the combo box.</param>
     public async Task HandleRowsPerPageComboBoxSelectionChanged(int comboBoxIndex)
     {
         RowsPerPage = comboBoxIndex switch
@@ -216,6 +244,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         await UpdateInvoiceList();
     }
 
+    /// <summary>
+    /// Gets or sets the current page invoice list.
+    /// </summary>
     public TrulyObservableCollection<Invoice> CurrentPageInvoiceList
     {
         get => _currentPageInvoiceList;
@@ -304,6 +335,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the date filter.
+    /// </summary>
     public DateOnly DateFilter
     {
         get => _dateFilter;
@@ -314,6 +348,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the from time filter.
+    /// </summary>
     public TimeOnly FromTimeFilter
     {
         get => _fromTimeFilter;
@@ -324,6 +361,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the to time filter.
+    /// </summary>
     public TimeOnly ToTimeFilter
     {
         get => _toTimeFilter;
@@ -334,6 +374,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the current invoice.
+    /// </summary>
     public Invoice CurrentInvoice
     {
         get => _currentInvoice;
@@ -363,6 +406,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the current invoice ID.
+    /// </summary>
     public long CurrentInvoiceId
     {
         get => _currentInvoiceId;
@@ -373,6 +419,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the creation date and time of the current invoice.
+    /// </summary>
     public DateTime CurrentInvoiceCreatedAt
     {
         get => _currentInvoiceCreatedAt;
@@ -383,6 +432,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the staff name associated with the current invoice.
+    /// </summary>
     public string CurrentInvoiceStaffName
     {
         get => _currentInvoiceStaffName;
@@ -393,6 +445,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the item count of the current invoice.
+    /// </summary>
     public long CurrentInvoiceItemCount
     {
         get => _currentInvoiceItemCount;
@@ -403,6 +458,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the subtotal of the current invoice.
+    /// </summary>
     public decimal CurrentInvoiceSubTotal
     {
         get => _currentInvoiceSubTotal;
@@ -413,6 +471,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the total discount of the current invoice.
+    /// </summary>
     public decimal CurrentInvoiceTotalDiscount
     {
         get => _currentInvoiceTotalDiscount;
@@ -423,6 +484,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the invoice-based VAT for the current invoice.
+    /// </summary>
     public decimal CurrentInvoiceInvoiceBasedVAT
     {
         get => _currentInvoiceInvoiceBasedVAT;
@@ -433,6 +497,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the total amount for the current invoice.
+    /// </summary>
     public decimal CurrentInvoiceTotal
     {
         get => _currentInvoiceTotal;
@@ -443,6 +510,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the amount paid by the customer for the current invoice.
+    /// </summary>
     public decimal CurrentInvoicePaid
     {
         get => _currentInvoicePaid;
@@ -453,6 +523,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the change to be given to the customer for the current invoice.
+    /// </summary>
     public decimal CurrentInvoiceChange
     {
         get => _currentInvoiceChange;
@@ -463,6 +536,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the coupon code applied to the current invoice.
+    /// </summary>
     public string CurrentInvoiceCouponCode
     {
         get => _currentInvoiceCouponCode;
@@ -473,6 +549,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the list of items in the current invoice.
+    /// </summary>
     public TrulyObservableCollection<InvoiceItem> CurrentInvoiceItemList
     {
         get => _currentInvoiceItemList;
@@ -483,6 +562,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the VAT rate string.
+    /// </summary>
     public string VatRateString
     {
         get => _vatRateString;
@@ -493,6 +575,9 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the VAT message string.
+    /// </summary>
     public string VatMessageString
     {
         get => _vatMessageString;
@@ -502,6 +587,4 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(VatMessageString));
         }
     }
-
-    
 }

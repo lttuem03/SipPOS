@@ -2,11 +2,10 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
-using SipPOS.Services.Entity.Interfaces;
+using SipPOS.Models.General;
 using SipPOS.DataTransfer.Entity;
 using SipPOS.DataTransfer.General;
-using SipPOS.Models.General;
-using SipPOS.Models.Entity;
+using SipPOS.Services.Entity.Interfaces;
 
 namespace SipPOS.ViewModels.Inventory;
 

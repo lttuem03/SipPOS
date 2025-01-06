@@ -6,26 +6,45 @@ using Microsoft.UI.Xaml.Controls;
 using SipPOS.DataTransfer.General;
 using SipPOS.Context.Configuration.Interfaces;
 using SipPOS.Services.Configuration.Interfaces;
-using SipPOS.Services.Authentication.Interfaces;
 using SipPOS.Services.General.Interfaces;
 
 namespace SipPOS.ViewModels.Configuration;
 
+/// <summary>
+/// ViewModel for managing salary configuration.
+/// </summary>
 public class SalaryConfigurationViewModel : INotifyPropertyChanged
 {
+    /// <summary>
+    /// Gets the current configuration.
+    /// </summary>
     public Models.General.Configuration? CurrentConfiguration { get; private set; }
+
+    /// <summary>
+    /// Gets the DTO for editing salary configuration.
+    /// </summary>
     public ConfigurationDto EditSalaryConfigurationDto { get; private set; }
 
     private string _currentCycleText = string.Empty;
     private string _nextCycleText = string.Empty;
 
+    /// <summary>
+    /// Event triggered when a property value changes.
+    /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    /// <summary>
+    /// Raises the PropertyChanged event.
+    /// </summary>
+    /// <param name="propertyName">The name of the property that changed.</param>
     private void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SalaryConfigurationViewModel"/> class.
+    /// </summary>
     public SalaryConfigurationViewModel()
     {
         EditSalaryConfigurationDto = new();
@@ -37,15 +56,21 @@ public class SalaryConfigurationViewModel : INotifyPropertyChanged
         var currentDate = DateOnly.FromDateTime(DateTime.Now);
         var currentCycleStart = new DateOnly(currentDate.Year, currentDate.Month, 1);
         var nextCycleStart = currentCycleStart.AddMonths(1);
-    
+
         CurrentCycleText = $"{currentCycleStart.ToString("dd/MM/yyyy")} - {nextCycleStart.AddDays(-1).ToString("dd/MM/yyyy")}";
         NextCycleText = $"{nextCycleStart.ToString("dd/MM/yyyy")} - {nextCycleStart.AddMonths(1).AddDays(-1).ToString("dd/MM/yyyy")}";
     }
 
+    /// <summary>
+    /// Handles the save changes button click event.
+    /// </summary>
+    /// <param name="unsavedChangesConfigurationDto">The DTO containing unsaved changes.</param>
+    /// <param name="unsavedChangesWarningTextBlock">The text block to display unsaved changes warning.</param>
+    /// <param name="saveChangesOnSalaryConfigurationButton">The button to save changes.</param>
     public void HandleSaveChangesButtonClick
     (
         ConfigurationDto unsavedChangesConfigurationDto,
-        TextBlock unsavedChangesWarningTextBlock, 
+        TextBlock unsavedChangesWarningTextBlock,
         Button saveChangesOnSalaryConfigurationButton
     )
     {
@@ -57,7 +82,7 @@ public class SalaryConfigurationViewModel : INotifyPropertyChanged
             CurrentConfiguration.NextAssistantManagerBaseSalary != unsavedChangesConfigurationDto.NextAssistantManagerBaseSalary ||
             CurrentConfiguration.NextAssistantManagerHourlySalary != unsavedChangesConfigurationDto.NextAssistantManagerHourlySalary ||
             CurrentConfiguration.NextStoreManagerBaseSalary != unsavedChangesConfigurationDto.NextStoreManagerBaseSalary ||
-            CurrentConfiguration.NextStoreManagerHourlySalary != unsavedChangesConfigurationDto.NextStoreManagerHourlySalary )
+            CurrentConfiguration.NextStoreManagerHourlySalary != unsavedChangesConfigurationDto.NextStoreManagerHourlySalary)
         {
             // Set the new changes as "unsaved changes" in the ViewModel
 
@@ -89,6 +114,11 @@ public class SalaryConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles the save changes on salary configuration button click event.
+    /// </summary>
+    /// <param name="editSalaryConfigurationResultContentDialog">The content dialog to display the result.</param>
+    /// <param name="saveChangesOnSalaryConfigurationButton">The button to save changes.</param>
     public async void HandleSaveChangesOnSalaryConfigurationButtonClick
     (
         ContentDialog editSalaryConfigurationResultContentDialog,
@@ -136,6 +166,9 @@ public class SalaryConfigurationViewModel : INotifyPropertyChanged
         _ = await editSalaryConfigurationResultContentDialog.ShowAsync();
     }
 
+    /// <summary>
+    /// Handles the cancel changes button click event.
+    /// </summary>
     public void HandleCancelChangesOnSalaryConfigurationButtonClick()
     {
         // Re-assigns the salary properties back to their
@@ -150,6 +183,9 @@ public class SalaryConfigurationViewModel : INotifyPropertyChanged
         EditSalaryConfigurationDto.NextStoreManagerHourlySalary = -1m;
     }
 
+    /// <summary>
+    /// Gets or sets the current cycle text.
+    /// </summary>
     public string CurrentCycleText
     {
         get => _currentCycleText;
@@ -160,6 +196,9 @@ public class SalaryConfigurationViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the next cycle text.
+    /// </summary>
     public string NextCycleText
     {
         get => _nextCycleText;

@@ -1,19 +1,17 @@
-﻿using SipPOS.Models.Entity;
+﻿using System.Text;
+
+using SipPOS.Models.Entity;
 using SipPOS.Models.General;
 using SipPOS.DataTransfer.General;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.General.Interfaces;
-using SipPOS.DataTransfer.Entity;
+
 using Npgsql;
-using System.Text.Json;
-using System.Threading.Tasks;
-using System.Text;
-using NpgsqlTypes;
 
 namespace SipPOS.Services.DataAccess.Implementations;
 
 /// <summary>
-/// Mock implementation of the IProductDao interface for testing purposes.
+/// Data access object for Products using PostgreSQL.
 /// </summary>
 public class PostgreProductDao : IProductDao
 {
@@ -698,6 +696,11 @@ public class PostgreProductDao : IProductDao
         return await command.ExecuteScalarAsync() as long? ?? 0;
     }
 
+    /// <summary>
+    /// Converts a data reader to a Product object.
+    /// </summary>
+    /// <param name="reader">The data reader containing product data.</param>
+    /// <returns>A Product object populated with data from the reader.</returns>
     private Product productReaderToProduct(NpgsqlDataReader reader)
     {
         Product product = new Product
@@ -723,22 +726,27 @@ public class PostgreProductDao : IProductDao
             null : reader.GetString(reader.GetOrdinal("deleted_by"));
         product.DeletedAt = reader.IsDBNull(reader.GetOrdinal("deleted_at")) ?
             null : reader.GetDateTime(reader.GetOrdinal("deleted_at"));
-        product.CategoryId = reader.IsDBNull(reader.GetOrdinal("category_id")) ? 
+        product.CategoryId = reader.IsDBNull(reader.GetOrdinal("category_id")) ?
             null : reader.GetInt64(reader.GetOrdinal("category_id"));
-        product.ImageUris = reader.IsDBNull(reader.GetOrdinal("image_uris"))  ?
+        product.ImageUris = reader.IsDBNull(reader.GetOrdinal("image_uris")) ?
             new List<string>() : new List<string>(reader.GetFieldValue<string[]>(reader.GetOrdinal("image_uris")));
-        
+
         return product;
     }
 
+    /// <summary>
+    /// Converts a data reader to a product option tuple.
+    /// </summary>
+    /// <param name="productOptionReader">The data reader containing product option data.</param>
+    /// <returns>A tuple containing the product option name and price.</returns>
     private (string name, decimal price) productOptionReaderToProductOption(NpgsqlDataReader productOptionReader)
     {
-        var productOption = 
+        var productOption =
         (
             productOptionReader.GetString(productOptionReader.GetOrdinal("name")),
             productOptionReader.GetDecimal(productOptionReader.GetOrdinal("price"))
         );
-        
+
         return productOption;
     }
 }

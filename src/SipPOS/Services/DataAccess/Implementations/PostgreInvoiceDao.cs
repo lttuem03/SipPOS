@@ -1,19 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Npgsql;
+﻿using SipPOS.Models.Entity;
 using SipPOS.DataTransfer.Entity;
-using SipPOS.Models.Entity;
 using SipPOS.Services.DataAccess.Interfaces;
 using SipPOS.Services.General.Interfaces;
-using Windows.UI.Xaml.Documents;
+
+using Npgsql;
 
 namespace SipPOS.Services.DataAccess.Implementations;
 
+/// <summary>
+/// Data access object for invoices using PostgreSQL.
+/// </summary>
 public class PostgreInvoiceDao : IInvoiceDao
 {
+    /// <summary>
+    /// Gets the next invoice ID for the specified store.
+    /// </summary>
+    /// <param name="storeId">The store ID.</param>
+    /// <returns>The next invoice ID.</returns>
     public async Task<long> GetNextInvoiceIdAsync(long storeId)
     {
         var databaseConnectionService = App.GetService<IDatabaseConnectionService>();
@@ -40,6 +43,12 @@ public class PostgreInvoiceDao : IInvoiceDao
         return (long)selectInvoiceCountResult;
     }
 
+    /// <summary>
+    /// Inserts a new invoice into the database.
+    /// </summary>
+    /// <param name="storeId">The store ID.</param>
+    /// <param name="invoiceDto">The invoice data transfer object.</param>
+    /// <returns>The inserted invoice, or <c>null</c> if the insertion failed.</returns>
     public async Task<Invoice?> InsertAsync(long storeId, InvoiceDto invoiceDto)
     {
         if (invoiceDto.InvoiceItems.Count == 0)
@@ -161,6 +170,14 @@ public class PostgreInvoiceDao : IInvoiceDao
         return new Invoice(resultInvoiceDto);
     }
 
+    /// <summary>
+    /// Gets the total count of invoices with a date and time filter.
+    /// </summary>
+    /// <param name="storeId">The store ID.</param>
+    /// <param name="date">The date to filter.</param>
+    /// <param name="fromTime">The start time to filter.</param>
+    /// <param name="toTime">The end time to filter.</param>
+    /// <returns>The total count of invoices.</returns>
     public async Task<long> GetTotalCountWithDateTimeFilterAsync
     (
         long storeId,
@@ -196,6 +213,14 @@ public class PostgreInvoiceDao : IInvoiceDao
         return count;
     }
 
+    /// </summary>
+    /// <param name="storeId">The store ID.</param>
+    /// <param name="page">The page number.</param>
+    /// <param name="rowsPerPage">The number of rows per page.</param>
+    /// <param name="date">The date to filter.</param>
+    /// <param name="fromTime">The start time to filter.</param>
+    /// <param name="toTime">The end time to filter.</param>
+    /// <returns>A list of invoices, or <c>null</c> if no invoices found.</returns>
     public async Task<List<Invoice>?> GetWithPaginationAsync
     (
         long storeId,
@@ -295,6 +320,11 @@ public class PostgreInvoiceDao : IInvoiceDao
         return invoices;
     }
 
+    /// <summary>
+    /// Converts a data reader to an InvoiceDto object.
+    /// </summary>
+    /// <param name="reader">The data reader containing invoice data.</param>
+    /// <returns>An InvoiceDto object populated with data from the reader.</returns>
     private InvoiceDto invoiceReaderToInvoiceDto(NpgsqlDataReader reader)
     {
         var invoiceDto = new InvoiceDto

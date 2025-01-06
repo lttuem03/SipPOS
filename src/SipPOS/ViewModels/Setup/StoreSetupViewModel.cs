@@ -293,6 +293,10 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         StoreManagerEmploymentStartDateString = StoreManagerEmploymentStartDate.ToString("dd/MM/yyyy");
     }
 
+    /// <summary>
+    /// Handles the event when the selected time for opening hours is changed.
+    /// </summary>
+    /// <param name="selectOpeningHourTimePicker">The TimePicker control for selecting the opening time.</param>
     public void HandleSelectOpeningHourTimePickerSelectedTimeChanged(TimePicker selectOpeningHourTimePicker)
     {
         OpeningTime = TimeOnly.FromTimeSpan(selectOpeningHourTimePicker.Time);
@@ -300,6 +304,10 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         OperatingHoursString = $"{OpeningTime.ToString("HH:mm")} đến {ClosingTime.ToString("HH:mm")}";
     }
 
+    /// <summary>
+    /// Handles the event when the selected time for closing hours is changed.
+    /// </summary>
+    /// <param name="selectClosingHourTimePicker">The TimePicker control for selecting the closing time.</param>
     public void HandleSelectClosingHourTimePickerSelectedTimeChanged(TimePicker selectClosingHourTimePicker)
     {
         ClosingTime = TimeOnly.FromTimeSpan(selectClosingHourTimePicker.Time);
@@ -307,6 +315,10 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         OperatingHoursString = $"{OpeningTime.ToString("HH:mm")} đến {ClosingTime.ToString("HH:mm")}";
     }
 
+    /// <summary>
+    /// Handles the event when the selected VAT rate is changed.
+    /// </summary>
+    /// <param name="selectedIndex">The index of the selected VAT rate.</param>
     public void HandleGeneralVatRateComboBoxSelectionChanged(int selectedIndex)
     {
         switch (selectedIndex)
@@ -332,6 +344,10 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         }
     }
 
+    /// <summary>
+    /// Handles the event when the selected VAT method is changed.
+    /// </summary>
+    /// <param name="selectedIndex">The index of the selected VAT method.</param>
     public void HandleSelectVatMethodComboBoxSelectionChanged(int selectedIndex)
     {
         switch (selectedIndex)
@@ -417,6 +433,10 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         return allFieldsValid;
     }
 
+    /// <summary>
+    /// Validates the store configuration information.
+    /// </summary>
+    /// <returns>True if all fields are valid, otherwise false.</returns>
     private bool validateStoreConfigurationInformation()
     {
         var allFieldsValid = true;
@@ -467,6 +487,10 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         return allFieldsValid;
     }
 
+    /// <summary>
+    /// Validates the tax configuration information.
+    /// </summary>
+    /// <returns>True if all fields are valid, otherwise false.</returns>
     private bool validateTaxConfigurationInformation()
     {
         var allFieldsValid = true;
@@ -502,6 +526,10 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
         return allFieldsValid;
     }
 
+    /// <summary>
+    /// Validates the salary configuration information.
+    /// </summary>
+    /// <returns>True if all fields are valid, otherwise false.</returns>
     private bool validateSalaryConfigurationInformation()
     {
         var allFieldsValid = true;

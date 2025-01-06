@@ -1,5 +1,5 @@
-﻿using SipPOS.DataTransfer.Entity;
-using SipPOS.Models.Entity;
+﻿using SipPOS.Models.Entity;
+using SipPOS.DataTransfer.Entity;
 
 namespace SipPOS.Services.Account.Interfaces;
 
