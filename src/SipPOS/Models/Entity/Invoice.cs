@@ -30,6 +30,8 @@ public class Invoice : INotifyPropertyChanged
 
     public decimal Change { get; }
 
+    public string CouponCode { get; }
+
     public string PaymentMethod { get; }
 
     public Invoice(InvoiceDto dto)
@@ -52,6 +54,7 @@ public class Invoice : INotifyPropertyChanged
         Total = dto.Total;
         Paid = dto.CustomerPaid;
         Change = dto.Change;
+        CouponCode = dto.CouponCode;
         PaymentMethod = dto.PaymentMethod;
     }
 

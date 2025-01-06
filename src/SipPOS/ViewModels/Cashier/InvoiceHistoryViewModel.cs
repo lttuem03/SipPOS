@@ -53,6 +53,7 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
     private decimal _currentInvoiceTotal = 0m;
     private decimal _currentInvoicePaid = 0m;
     private decimal _currentInvoiceChange = 0m;
+    private string _currentInvoiceCouponCode = string.Empty;
 
     public InvoiceHistoryViewModel()
     {
@@ -157,7 +158,12 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
 
     public void HandleInvoiceListViewSelectionChanged(ListView invoiceListView)
     {
-        CurrentInvoice = CurrentPageInvoiceList[invoiceListView.SelectedIndex];
+        var selectedIndex = invoiceListView.SelectedIndex;
+
+        if (selectedIndex < 0 || selectedIndex >= CurrentPageInvoiceList.Count)
+            return;
+
+        CurrentInvoice = CurrentPageInvoiceList[selectedIndex];
     }
 
     public async Task HandleDateCalendarDatePickerDateChanged(DateTime newDate)
@@ -336,7 +342,6 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
             _currentInvoice = value;
             CurrentInvoiceItemList.Clear();
 
-
             foreach (var invoiceItem in value.InvoiceItems)
             {
                 CurrentInvoiceItemList.Add(invoiceItem);
@@ -352,15 +357,7 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
             CurrentInvoiceTotal = value.Total;
             CurrentInvoicePaid = value.Paid;
             CurrentInvoiceChange = value.Change;
-
-            //OnPropertyChanged(nameof(CurrentInvoiceId));
-            //OnPropertyChanged(nameof(CurrentInvoiceCreatedAt));
-            //OnPropertyChanged(nameof(CurrentInvoiceStaffName));
-            //OnPropertyChanged(nameof(CurrentInvoiceItemCount));
-            //OnPropertyChanged(nameof(CurrentInvoiceSubTotal));
-            //OnPropertyChanged(nameof(CurrentInvoiceTotalDiscount));
-            //OnPropertyChanged(nameof(CurrentInvoiceInvoiceBasedVAT));
-            //OnPropertyChanged(nameof(CurrentInvoiceTotal));
+            CurrentInvoiceCouponCode = value.CouponCode;
 
             OnPropertyChanged(nameof(CurrentInvoice));
         }
@@ -463,6 +460,16 @@ public class InvoiceHistoryViewModel : INotifyPropertyChanged
         {
             _currentInvoiceChange = value;
             OnPropertyChanged(nameof(CurrentInvoiceChange));
+        }
+    }
+
+    public string CurrentInvoiceCouponCode
+    {
+        get => _currentInvoiceCouponCode;
+        set
+        {
+            _currentInvoiceCouponCode = value;
+            OnPropertyChanged(nameof(CurrentInvoiceCouponCode));
         }
     }
 

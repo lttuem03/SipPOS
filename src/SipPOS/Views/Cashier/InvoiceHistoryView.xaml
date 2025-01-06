@@ -27,6 +27,9 @@
         <!--Payment method to string converter-->
         <converters:InvoicePaymentMethodToStringConverter x:Key="InvoicePaymentMethodToStringConverter"/>
 
+        <!--Coupon code to coupon code string converter-->
+        <converters:CouponCodeToCouponCodeStringConverter x:Key="CouponCodeToCouponCodeStringConverter"/>
+
         <!--Invoice ListView ItemTemplate-->
         <DataTemplate x:Key="InvoiceListViewItemTemplate" x:DataType="models:Invoice">
             <Grid
@@ -529,12 +532,23 @@
                         FontWeight="SemiLight">
                         Thành tiền
                     </TextBlock>
-                    <TextBlock
+
+                    <StackPanel
                         Grid.Row="2" Grid.Column="0"
-                        FontSize="18"
-                        FontWeight="SemiLight">
-                        Tổng giảm
-                    </TextBlock>
+                        Orientation="Horizontal">
+                        <TextBlock
+                            FontSize="18"
+                            FontWeight="SemiLight" 
+                            Text="Tổng giảm"/>
+                        <TextBlock 
+                            Margin="5,0,0,0"
+                            FontSize="18"
+                            FontWeight="SemiLight" 
+                            Text="{x:Bind ViewModel.CurrentInvoiceCouponCode, 
+                                Converter={StaticResource CouponCodeToCouponCodeStringConverter},
+                                Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                    
                     <TextBlock
                         Grid.Row="3" Grid.Column="0"
                         FontSize="18"

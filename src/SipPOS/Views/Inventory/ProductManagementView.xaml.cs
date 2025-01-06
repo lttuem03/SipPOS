@@ -313,8 +313,26 @@ public sealed partial class ProductManagementView : Page
         {
             foreach (StorageFile file in files)
             {
-                ViewModel.SelectedProduct.ImageUris.Add(file.Path);
-                ViewModel.ImageUrls.Add(file.Path);
+                var localFolder = ApplicationData.Current.LocalFolder;
+
+                // copy images to the local folder (make uri stable)
+                var newFile = await file.CopyAsync(localFolder, file.Name, NameCollisionOption.ReplaceExisting);
+
+                ViewModel.SelectedProduct.ImageUris.Add(newFile.Path);
+
+                // if the image was using the default image before, remove it
+
+                if (ViewModel.SelectedProduct.ImageUris.Count > 1 && ViewModel.SelectedProduct.ImageUris[0] == "ms-appx:///Assets/default_product_image.png")
+                {
+                    ViewModel.SelectedProduct.ImageUris.RemoveAt(0);
+                }
+
+                ViewModel.ImageUrls.Add(newFile.Path);
+
+                if (ViewModel.ImageUrls.Count > 1 && ViewModel.ImageUrls[0] == "ms-appx:///Assets/default_product_image.png")
+                {
+                    ViewModel.ImageUrls.RemoveAt(0);
+                }
             }
         }
         else
@@ -370,14 +388,14 @@ public sealed partial class ProductManagementView : Page
         // Handle item click
 
         // deletes when implemented this method
-        var dialog = new ContentDialog
-        {
-            Title = "Not implemented",
-            Content = $"Not implemented",
-            CloseButtonText = "Ok"
-        };
-
-        await dialog.ShowAsync();
+        //var dialog = new ContentDialog
+        //{
+        //    Title = "Not implemented",
+        //    Content = $"Not implemented",
+        //    CloseButtonText = "Ok"
+        //};
+        //
+        //await dialog.ShowAsync();
     }
 
     /// <summary>

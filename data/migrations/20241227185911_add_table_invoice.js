@@ -17,6 +17,7 @@ exports.up = async function(knex) {
             total NUMERIC(12, 2) NOT NULL,
             customer_paid NUMERIC(12, 2) NOT NULL,
             change NUMERIC(12, 2) NOT NULL,
+            coupon_code VARCHAR(36) NOT NULL DEFAULT '',
             payment_method VARCHAR(24) NOT NULL 
                 CHECK (payment_method IN ('CASH', 'QR_PAY')),
 

@@ -2,7 +2,7 @@
 
 namespace SipPOS.Models.Entity;
 
-public class SpecialOffer : BaseEntity
+public class SpecialOffer : BaseEntity, INotifyPropertyChanged
 {
     public long StoreId { get; set; }
 
@@ -34,4 +34,5 @@ public class SpecialOffer : BaseEntity
 
     public string Status { get; set; } = string.Empty;
 
+    public event PropertyChangedEventHandler? PropertyChanged;
 }

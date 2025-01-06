@@ -139,7 +139,7 @@ public sealed partial class CashierMenuView : Page
         if (addItemToOrderButton.DataContext is not Product productItem)
             return;
 
-        var newInvoiceItemDto = ViewModel.HandleAddItemToOrderButtonClick(productItem);
+        var newInvoiceItemDto = ViewModel.HandleAddItemToOrderButtonClick(productItem, couponNotApplicableWarningTextBlock);
 
         orderItemListView.ScrollIntoView(newInvoiceItemDto);
 
@@ -147,7 +147,12 @@ public sealed partial class CashierMenuView : Page
         {
             openPaymentDialogButton.IsEnabled = true;
             cancelOrderButton.IsEnabled = true;
+            applyCouponTextBox.IsEnabled = true;
+            applyHiddenCouponButton.IsEnabled = true;
+            couponSuggestionTeachingTip.IsEnabled = true;
         }
+
+        couponSuggestionTeachingTip.IsOpen = false;
     }
 
     private void removeItemFromOrderButton_Click(object sender, RoutedEventArgs e)
@@ -158,13 +163,19 @@ public sealed partial class CashierMenuView : Page
         if (removeItemFromOrderButton.DataContext is not InvoiceItemDto invoiceItemDto)
             return;
 
-        ViewModel.HandleRemoveItemFromOrderButtonClick(invoiceItemDto);
+        ViewModel.HandleRemoveItemFromOrderButtonClick(invoiceItemDto, couponNotApplicableWarningTextBlock);
 
         if (ViewModel.InvoiceItems.Count == 0)
         {
             openPaymentDialogButton.IsEnabled = false;
             cancelOrderButton.IsEnabled = false;
+            applyCouponTextBox.IsEnabled = false;
+            applyHiddenCouponButton.IsEnabled = false;
+            couponSuggestionTeachingTip.IsEnabled = false;
+            couponNotApplicableWarningTextBlock.Opacity = 0.0F;
         }
+
+        couponSuggestionTeachingTip.IsOpen = false;
     }
 
     private void noteSuggestionButton_Click(object sender, RoutedEventArgs e)
@@ -415,4 +426,59 @@ public sealed partial class CashierMenuView : Page
         qrPayAboutTextBlockAndCancelButton.Visibility = Visibility.Collapsed;
     }
 
+
+    private void applyCouponButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button applyCouponButton)
+            return;
+
+        if (applyCouponButton.DataContext is not SpecialOffer specialOffer)
+            return;
+
+        applyCouponTextBox.Text = specialOffer.Code;
+
+        var isCouponApplicable = ViewModel.HandleApplyCouponButtonClick(specialOffer);
+
+        couponSuggestionTeachingTip.IsOpen = false;
+
+        if (!isCouponApplicable)
+        {
+            couponNotApplicableWarningTextBlock.Opacity = 1.0F;
+        }
+        else
+            couponNotApplicableWarningTextBlock.Opacity = 0.0F;
+    }
+
+    private void applyCouponTextBox_GettingFocus(UIElement sender, GettingFocusEventArgs args)
+    {
+        couponSuggestionTeachingTip.IsOpen = true;
+    }
+
+    private void applyCouponTextBox_LosingFocus(UIElement sender, LosingFocusEventArgs args)
+    {
+        var doesCouponExist = ViewModel.HandleApplyHiddenCoupon(applyCouponTextBox.Text);
+
+        if (!doesCouponExist)
+        {
+            couponNotApplicableWarningTextBlock.Opacity = 1.0F;
+        }
+        else
+        {
+            couponNotApplicableWarningTextBlock.Opacity = 0.0F;
+        }
+    }
+
+    private void applyHiddenCouponButton_Click(object sender, RoutedEventArgs e)
+    {
+        var doesCouponExist = ViewModel.HandleApplyHiddenCoupon(applyCouponTextBox.Text);
+
+        if (!doesCouponExist)
+        {
+            couponNotApplicableWarningTextBlock.Opacity = 1.0F;
+        }
+        else
+        {
+            couponNotApplicableWarningTextBlock.Opacity = 0.0F;
+        }
+    }
 }

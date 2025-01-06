@@ -51,6 +51,7 @@ public class CashierMenuViewModel : INotifyPropertyChanged
     private List<Product> _allProducts = new() { new() { Name = "Đang tải sản phẩm" } };
     private List<Product> _productsOnDisplay;
 
+    private TrulyObservableCollection<SpecialOffer> _specialOffers = new();
     private TrulyObservableCollection<InvoiceItemDto> _invoiceItems = new();
     private readonly InvoiceDto _newInvoiceDto = new();
 
@@ -144,6 +145,21 @@ public class CashierMenuViewModel : INotifyPropertyChanged
             product.SelectedOption = product.ProductOptions[0];
         }
 
+        // Load special offers
+        var specialOfferDao = App.GetService<ISpecialOfferDao>();
+        var specialOffers = await specialOfferDao.GetAllAsync(storeId);
+
+        foreach (var specialOffer in specialOffers)
+        {
+            // status is "Active"
+            if (specialOffer.Status != "Active")
+                continue;
+
+            // still has times of usage
+            if (specialOffer.ItemsSold < specialOffer.MaxItems)
+                _specialOffers.Add(specialOffer);
+        }
+
         // Initial "All categories" is chosen
         ProductsOnDisplay = _allProducts;
 
@@ -168,7 +184,7 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         ProductsOnDisplay = _allProducts.Where(p => p.CategoryId == selectedCategory.Id).ToList();
     }
 
-    public InvoiceItemDto HandleAddItemToOrderButtonClick(Product productItem)
+    public InvoiceItemDto HandleAddItemToOrderButtonClick(Product productItem, TextBlock couponNotApplicableWarningTextBlock)
     {
         if (InvoiceItems.Count == 0)
             NewInvoiceCreatedAt = DateTime.Now;
@@ -184,12 +200,40 @@ public class CashierMenuViewModel : INotifyPropertyChanged
             Note = ""
         };
 
+        // Check if there was any ProductPromotion
+        // coupon applied to the product of this invoice item
+        if (NewInvoiceCouponCode != string.Empty && NewInvoiceTotalDiscount == 0m)
+        {
+            var specialOffer = SpecialOffers.First(sp => sp.Code == NewInvoiceCouponCode);
+
+            if (specialOffer.Type == "ProductPromotion")
+            {
+                if (invoiceItemDto.ProductId == specialOffer.ProductId)
+                {
+                    switch (specialOffer.PriceType)
+                    {
+                        case "Original":
+                            invoiceItemDto.Discount = specialOffer.DiscountPrice ?? 0m;
+                            break;
+                        case "Percentage":
+                            invoiceItemDto.Discount = invoiceItemDto.OptionPrice * (specialOffer.DiscountPercentage ?? 0m) * 0.01m;
+                            break;
+                    }
+
+                    NewInvoiceTotalDiscount = invoiceItemDto.Discount;
+
+                    // Un-show the warning
+                    couponNotApplicableWarningTextBlock.Opacity = 0F; 
+                }
+            }
+        }
+
         InvoiceItems.Add(invoiceItemDto);
 
         // Update payment details
         NewInvoiceItemCount = InvoiceItems.Count;
         NewInvoiceSubTotal = InvoiceItems.Sum(orderItem => orderItem.OptionPrice);
-        NewInvoiceTotalDiscount = InvoiceItems.Sum(orderItem => orderItem.Discount);
+        //NewInvoiceTotalDiscount = InvoiceItems.Sum(orderItem => orderItem.Discount); // removed cuz discount is handled when coupon is applied
 
         NewInvoiceInvoiceBasedVAT = CurrentConfiguration.VatMethod switch
         {
@@ -202,21 +246,55 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         return invoiceItemDto;
     }
 
-    public void HandleRemoveItemFromOrderButtonClick(InvoiceItemDto orderItemDto)
+    public void HandleRemoveItemFromOrderButtonClick(InvoiceItemDto invoiceItemDto, TextBlock couponNotApplicableWarningTextBlock)
     {
-        InvoiceItems.Remove(orderItemDto);
-        _newInvoiceDto.InvoiceItems.Remove(orderItemDto);
+        long? specialOfferProductId = null;
+        decimal? specialOfferDiscountValue = null;
+
+        // Check if any coupon was applied on this InvoiceItem
+        if (invoiceItemDto.Discount != 0m)
+        {
+            // if it has, before we remove it,
+            // we save its product id and discount
+            // value, and then we can check for any
+            // other item that is of the same product
+            // (In case the coupon applied was of
+            // ProductPromotion type)
+
+            // Find which special offer was applied
+            var specialOffer = SpecialOffers.First(sp => sp.Code == NewInvoiceCouponCode);
+
+            if (specialOffer.Type == "ProductPromotion")
+            {
+                specialOfferProductId = invoiceItemDto.ProductId;
+                specialOfferDiscountValue = invoiceItemDto.Discount;
+            }
+        }
+
+        InvoiceItems.Remove(invoiceItemDto);
+        _newInvoiceDto.InvoiceItems.Remove(invoiceItemDto);
 
         // Update the UI
-        foreach (var orderItem in InvoiceItems)
+        foreach (var invoiceItem in InvoiceItems)
         {
-            orderItem.Ordinal = InvoiceItems.IndexOf(orderItem) + 1;
+            invoiceItem.Ordinal = InvoiceItems.IndexOf(invoiceItem) + 1;
+
+            if (specialOfferProductId != null)
+            {
+                if (invoiceItem.ProductId == specialOfferProductId)
+                {
+                    invoiceItem.Discount = specialOfferDiscountValue ?? 0m;
+
+                    specialOfferProductId = null;
+                    specialOfferDiscountValue = null;
+                }
+            }
         }
 
         // Update payment details
         NewInvoiceItemCount = InvoiceItems.Count;
-        NewInvoiceSubTotal = InvoiceItems.Sum(orderItem => orderItem.OptionPrice);
-        NewInvoiceTotalDiscount = InvoiceItems.Sum(orderItem => orderItem.Discount);
+        NewInvoiceSubTotal = InvoiceItems.Sum(invoiceItem => invoiceItem.OptionPrice);
+        //NewInvoiceTotalDiscount = InvoiceItems.Sum(orderItem => orderItem.Discount); // removed cuz discount is handled when coupon is applied
 
         NewInvoiceInvoiceBasedVAT = CurrentConfiguration.VatMethod switch
         {
@@ -227,7 +305,24 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         NewInvoiceTotal = NewInvoiceSubTotal - NewInvoiceTotalDiscount + NewInvoiceInvoiceBasedVAT;
 
         if (InvoiceItems.Count == 0)
+        {
             NewInvoiceCreatedAt = DateTime.MinValue;
+            NewInvoiceCouponCode = string.Empty;
+
+            return;
+        }
+
+        // If there is still invoice items left,
+        // but the previously applied ProductPromotion
+        // coupon was never re-applied to any other
+        // item, we show warning to the cashier
+        if (specialOfferProductId != null && specialOfferDiscountValue != null)
+        {
+            NewInvoiceTotalDiscount = 0m;
+            NewInvoiceTotal = NewInvoiceSubTotal - NewInvoiceTotalDiscount + NewInvoiceInvoiceBasedVAT;
+
+            couponNotApplicableWarningTextBlock.Opacity = 1F;
+        }
     }
 
     public async void HandleCancelOrderButtonClick(ContentDialog cancelOrderConfimationContentDialog)
@@ -360,8 +455,7 @@ public class CashierMenuViewModel : INotifyPropertyChanged
 
             throw new InvalidOperationException("Failed to insert new invoice");
         }
-            
-
+        
         // Update the _allProducts where the "ItemsSold" for the product has changed
         foreach (var productId in updateItemsSoldProductIds)
         {
@@ -376,6 +470,33 @@ public class CashierMenuViewModel : INotifyPropertyChanged
             }
 
             productToUpdate.ItemsSold = productInDatabase.ItemsSold;
+        }
+
+        // Update the coupon's # of usage (if one was applied)
+        if (NewInvoiceCouponCode != string.Empty && NewInvoiceTotalDiscount != 0m)
+        {
+            var specialOffer = SpecialOffers.First(sp => sp.Code == NewInvoiceCouponCode);
+
+            var specialOfferDao = App.GetService<ISpecialOfferDao>();
+            var specialOfferOriginal = await specialOfferDao.GetByIdAsync(CurrentStore.Id, specialOffer.Id);
+
+            if (specialOfferOriginal != null)
+            {
+                specialOfferOriginal.ItemsSold++;
+                specialOfferOriginal.UpdatedAt = DateTime.Now;
+                specialOfferOriginal.UpdatedBy = CurrentStaff.CompositeUsername;
+
+                var specialOfferUpdated = await specialOfferDao.UpdateByIdAsync(CurrentStore.Id, specialOfferOriginal);
+
+                if (specialOfferUpdated == null)
+                {
+                    // DO NOT THROW EXCEPTION, SAME REASON AS ABOVE
+                }
+                else
+                {
+                    specialOffer.ItemsSold = specialOfferUpdated.ItemsSold;
+                }
+            }
         }
 
         ProductsOnDisplay = _allProducts;
@@ -512,6 +633,116 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         NewInvoiceCustomerPaid = 0m;
     }
 
+    public bool HandleApplyCouponButtonClick(SpecialOffer specialOffer)
+    {
+        switch (specialOffer.Type)
+        {
+            case "ProductPromotion":
+                // Search in the current order item list,
+                // for any product that matches the special offer
+                // product id (ONLY ONE IS APPLICABLE)
+                foreach(var invoiceItem in InvoiceItems)
+                {
+                    if (invoiceItem.ProductId == specialOffer.ProductId)
+                    {
+                        // Apply the discount
+                        switch (specialOffer.PriceType)
+                        {
+                            case "Original":
+                                invoiceItem.Discount = specialOffer.DiscountPrice ?? 0m;
+                                break;
+                            case "Percentage":
+                                invoiceItem.Discount = invoiceItem.OptionPrice * (specialOffer.DiscountPercentage ?? 0m) * 0.01m;
+                                break;
+                        }
+
+                        // Update new invoice
+                        NewInvoiceTotalDiscount = invoiceItem.Discount;
+                        NewInvoiceTotal = NewInvoiceSubTotal - NewInvoiceTotalDiscount + NewInvoiceInvoiceBasedVAT;
+
+                        // Only 1 coupon per order
+                        return true;
+                    }
+                }
+
+                return false;
+
+            case "CategoryPromotion":
+                // Search in the current order item list,
+                // for any product that matches the special offer
+                // category id (ANY NUMBER OF PRODUCTS CAN BE APPLICABLE)
+
+                var couponApplied = false;
+
+                foreach (var invoiceItem in InvoiceItems)
+                {
+                    // Kind of tedious to do it this way
+                    var product = _allProducts.First(p => p.Id == invoiceItem.ProductId);
+
+                    if (product.CategoryId == specialOffer.CategoryId)
+                    {
+                        // Apply the discount
+                        switch (specialOffer.PriceType)
+                        {
+                            case "Original":
+                                invoiceItem.Discount = specialOffer.DiscountPrice ?? 0m;
+                                break;
+                            case "Percentage":
+                                invoiceItem.Discount = invoiceItem.OptionPrice * (specialOffer.DiscountPercentage ?? 0m) * 0.01m;
+                                break;
+                        }
+
+                        // Update new invoice
+                        NewInvoiceTotalDiscount += invoiceItem.Discount;
+                        NewInvoiceTotal = NewInvoiceSubTotal - NewInvoiceTotalDiscount + NewInvoiceInvoiceBasedVAT;
+
+                        couponApplied = true;
+                    }
+                }
+
+                return couponApplied;
+
+            case "InvoicePromotion":
+                // update every invoice item's discount to 0m
+                foreach (var invoiceItem in InvoiceItems)
+                    invoiceItem.Discount = 0m;
+
+                switch (specialOffer.PriceType)
+                {
+                    case "Original":
+                        NewInvoiceTotalDiscount = specialOffer.DiscountPrice ?? 0m;
+                        break;
+                    case "Percentage":
+                        NewInvoiceTotalDiscount = NewInvoiceSubTotal * (specialOffer.DiscountPercentage ?? 0m) * 0.01m;
+                        break;
+                }
+
+                NewInvoiceTotal = NewInvoiceSubTotal - NewInvoiceTotalDiscount + NewInvoiceInvoiceBasedVAT;
+                return true;
+        }
+
+        return false;
+    }
+
+    public bool HandleApplyHiddenCoupon(string hiddenCoupon)
+    {
+        // The hidden coupon is not implemented yet
+        // so at this point the cashier can only choose from the list
+        // of coupons
+
+        // Reset discount information
+        NewInvoiceTotalDiscount = 0m;
+        
+        foreach(var invoiceItem in InvoiceItems)
+        {
+            invoiceItem.Discount = 0m;
+        }
+
+        NewInvoiceTotal = NewInvoiceSubTotal - NewInvoiceTotalDiscount + NewInvoiceInvoiceBasedVAT;
+
+        return false;
+    }
+
     private void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -555,6 +786,16 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         {
             _productsOnDisplay = value;
             OnPropertyChanged(nameof(ProductsOnDisplay));
+        }
+    }
+
+    public TrulyObservableCollection<SpecialOffer> SpecialOffers
+    {
+        get => _specialOffers;
+        set
+        {
+            _specialOffers = value;
+            OnPropertyChanged(nameof(SpecialOffers));
         }
     }
 
@@ -675,6 +916,16 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         {
             _newInvoiceDto.Change = value;
             OnPropertyChanged(nameof(NewInvoiceChange));
+        }
+    }
+
+    public string NewInvoiceCouponCode
+    {
+        get => _newInvoiceDto.CouponCode;
+        set
+        {
+            _newInvoiceDto.CouponCode = value;
+            OnPropertyChanged(nameof(NewInvoiceCouponCode));
         }
     }
 

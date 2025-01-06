@@ -7,7 +7,7 @@ exports.seed = async function(knex) {
 
     await knex('special_offer').insert([
         {
-            code: "TET20",
+            code: "TET20K",
             store_id: 0,
             created_by: "SM000000",
             created_at: "2025-01-03 00:09:16.466516",
@@ -16,7 +16,7 @@ exports.seed = async function(knex) {
             deleted_by: null,
             deleted_at: null,
             name: "Khuyến mãi của ngày tết",
-            description: "TET",
+            description: "Giảm 20.000 giá trị hóa đơn",
             items_sold: 0,
             max_items: 1000,
             category_store_id: null,
@@ -31,7 +31,7 @@ exports.seed = async function(knex) {
             status: "Inactive"
         },
         {
-            code: "TET10%",
+            code: "TET10",
             store_id: 0,
             created_by: "SM000000",
             created_at: "2025-01-03 00:10:19.017869",
@@ -40,17 +40,17 @@ exports.seed = async function(knex) {
             deleted_by: null,
             deleted_at: null,
             name: "Khuyến mãi tết",
-            description: "TET",
+            description: "Giảm 10% giá trị hóa đơn",
             items_sold: 0,
             max_items: 1000,
             category_store_id: null,
-            category_id: 1,
+            category_id: null,
             product_id: null,
-            type: "CategoryPromotion",
+            type: "InvoicePromotion",
             price_type: "Percentage",
             start_date: "2025-01-03 00:09:41.517738",
             end_date: "2025-01-25 00:08:51.184751",
-            discount_price: 1.00,
+            discount_price: 0.00,
             discount_percentage: 10.00,
             status: "Active"
         }
