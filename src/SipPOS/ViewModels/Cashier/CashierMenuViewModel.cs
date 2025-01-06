@@ -24,6 +24,9 @@ using Net.payOS.Types;
 using System.Drawing;
 using QRCoder;
 using SipPOS.Views.Login;
+using SipPOS.Services.Entity.Interfaces;
+using SipPOS.Services.Entity.Implementations;
+
 
 
 namespace SipPOS.ViewModels.Cashier;
@@ -70,6 +73,7 @@ public class CashierMenuViewModel : INotifyPropertyChanged
 
     private string _qrPayOrderCodeString = string.Empty;
 
+    private ITextToSpeechService textToSpeechService;
 
     private readonly PayOS payOsClient;
 
@@ -105,6 +109,8 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         var checksumKey = DotNetEnv.Env.GetString("PAYOS_CHECKSUM_KEY");
 
         payOsClient = new PayOS(clientId, apiKey, checksumKey);
+
+        textToSpeechService = App.GetService<ITextToSpeechService>();
 
         // ignore warning here
         _ = Initialize();
@@ -506,6 +512,8 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         HandleCategoryBrowsingGridViewSelectionChanged(Categories[1]);
         HandleCategoryBrowsingGridViewSelectionChanged(Categories[0]);
 
+        NotifyPaymentSuccess();
+
         // Reset to be ready for the next order
         InvoiceItems.Clear();
 
@@ -524,6 +532,18 @@ public class CashierMenuViewModel : INotifyPropertyChanged
         NewInvoiceChange = 0m;
         NewInvoicePaymentMethod = "CASH"; // default
         NewInvoiceCouponCode = string.Empty;
+    }
+
+    public void NotifyPaymentSuccess()
+    {
+        if (NewInvoicePaymentMethod == "CASH")
+        {
+            textToSpeechService.SpeakPaymentSuccessViaCash(NewInvoiceTotal);
+        }
+        else if (NewInvoicePaymentMethod == "QR_PAY")
+        {
+            textToSpeechService.SpeakPaymentSuccessViaQRPay(NewInvoiceTotal);
+        }
     }
 
     public async Task HandleCreateQrPaymentCodeButtonClick()
