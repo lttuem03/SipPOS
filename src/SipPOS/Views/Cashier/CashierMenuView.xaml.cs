@@ -623,16 +623,16 @@ public sealed partial class CashierMenuView : Page
     /// <param name="args">The event data.</param>
     private void applyCouponTextBox_LosingFocus(UIElement sender, LosingFocusEventArgs args)
     {
-        var doesCouponExist = ViewModel.HandleApplyHiddenCoupon(applyCouponTextBox.Text);
-
-        if (!doesCouponExist)
-        {
-            couponNotApplicableWarningTextBlock.Opacity = 1.0F;
-        }
-        else
-        {
-            couponNotApplicableWarningTextBlock.Opacity = 0.0F;
-        }
+        //var doesCouponExist = ViewModel.HandleApplyHiddenCoupon(applyCouponTextBox.Text);
+        //
+        //if (!doesCouponExist)
+        //{
+        //    couponNotApplicableWarningTextBlock.Opacity = 1.0F;
+        //}
+        //else
+        //{
+        //    couponNotApplicableWarningTextBlock.Opacity = 0.0F;
+        //}
     }
 
     /// <summary>
