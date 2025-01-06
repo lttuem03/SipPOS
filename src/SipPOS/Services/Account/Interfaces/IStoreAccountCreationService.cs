@@ -21,5 +21,5 @@ public interface IStoreAccountCreationService
     /// </summary>
     /// <param name="storeDto">The data transfer object containing store details (the fields the user entered).</param>
     /// <returns>A dictionary containing validation results, where the key is the field name and the value is the error message or "OK".</returns>
-    Dictionary<string, string> ValidateFields(StoreDto storeDto);
+    Task<Dictionary<string, string>> ValidateFieldsAsync(StoreDto storeDto);
 }

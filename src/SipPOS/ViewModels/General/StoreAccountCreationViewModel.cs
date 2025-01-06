@@ -75,7 +75,7 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
     /// </summary>
     /// <param name="rawInfoStoreDto">The raw information of the store entered in the fields.</param>
     /// <param name="repeatPasswordString">The repeated password string.</param>
-    public async void HandleConfirmStoreAccountCreationButtonClick(StoreDto rawInfoStoreDto, string repeatPasswordString, ContentDialog comfirmationDialog)
+    public async Task HandleConfirmStoreAccountCreationButtonClick(StoreDto rawInfoStoreDto, string repeatPasswordString, ContentDialog comfirmationDialog)
     {
         var allFieldsValid = true;
 
@@ -92,7 +92,7 @@ public class StoreAccountCreationViewModel : INotifyPropertyChanged
         }
 
         var storeAccountCreationService = App.GetService<IStoreAccountCreationService>();
-        var fieldValidationResults = storeAccountCreationService.ValidateFields(rawInfoStoreDto);
+        var fieldValidationResults = await storeAccountCreationService.ValidateFieldsAsync(rawInfoStoreDto);
         
         foreach (var fieldValidationResult in fieldValidationResults)
         {

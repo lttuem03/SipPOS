@@ -31,7 +31,7 @@ public sealed partial class StoreAccountCreationView : Page
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The event data.</param>
-    private void confirmStoreAccountCreationButton_Click(object sender, RoutedEventArgs e)
+    private async void confirmStoreAccountCreationButton_Click(object sender, RoutedEventArgs e)
     {
         StoreDto rawInfoStoreDto = new StoreDto
         {
@@ -45,7 +45,7 @@ public sealed partial class StoreAccountCreationView : Page
 
         var repeatPasswordString = confirmStorePasswordFieldPasswordBox.Password;
 
-        ViewModel.HandleConfirmStoreAccountCreationButtonClick(rawInfoStoreDto, repeatPasswordString, confirmStoreInformationContentDialog);
+        await ViewModel.HandleConfirmStoreAccountCreationButtonClick(rawInfoStoreDto, repeatPasswordString, confirmStoreInformationContentDialog);
     }
 
     /// <summary>

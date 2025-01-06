@@ -57,7 +57,7 @@ public class StoreAccountCreationService : IStoreAccountCreationService
     /// <param name="storeDto">The store DTO with raw field informations to validate.</param>
     /// <returns>A dictionary containing validation results (with each field, result is "OK" or details of the
     /// failed validation).</returns>
-    public Dictionary<string, string> ValidateFields(StoreDto storeDto)
+    public async Task<Dictionary<string, string>> ValidateFieldsAsync(StoreDto storeDto)
     {
         var validationResults = new Dictionary<string, string>();
 
@@ -66,7 +66,7 @@ public class StoreAccountCreationService : IStoreAccountCreationService
         validationResults.Add("email", _validateEmail(storeDto.Email));
         validationResults.Add("tel", _validateTel(storeDto.Tel));
 
-        validationResults.Add("username", _validateUsername(storeDto.Username));
+        validationResults.Add("username", await _validateUsername(storeDto.Username));
         validationResults.Add("password", _validatePassword(storeDto.PasswordHash)); // UN-HASHED PASSWORD
 
         // add more if needed
@@ -153,7 +153,7 @@ public class StoreAccountCreationService : IStoreAccountCreationService
     /// </summary>
     /// <param name="username">The store username to validate.</param>
     /// <returns>A validation message.</returns>
-    private string _validateUsername(string username)
+    private async Task<string> _validateUsername(string username)
     {
         if (string.IsNullOrWhiteSpace(username))
         {
@@ -162,7 +162,7 @@ public class StoreAccountCreationService : IStoreAccountCreationService
 
         var storeDao = App.GetService<IStoreDao>();
 
-        var storeWithUsernameExists = storeDao.GetByUsernameAsync(username).Result;
+        var storeWithUsernameExists = await storeDao.GetByUsernameAsync(username);
 
         if (storeWithUsernameExists != null)
         {

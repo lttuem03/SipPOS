@@ -505,7 +505,7 @@ public partial class StoreSetupViewModel : INotifyPropertyChanged, IStoreSetupVi
             return allFieldsValid;
         }
 
-        var taxCodePattern = @"^\d{8}[1-9]\d(-\d\d[1-9])?$";
+        var taxCodePattern = @"^\d{10}(-\d\d[1-9])?$";
 
         if (!Regex.IsMatch(TaxCode, taxCodePattern))
         {
